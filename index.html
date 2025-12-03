@@ -32,8 +32,15 @@
         <a href="#contact" data-lang="en">Contact</a>
         <a href="#contact" data-lang="es" class="hidden">Contacto</a>
         
-        <a href="app/evosustainhub.html" data-lang="en">Product Demo</a>
-        <a href="app/evosustainhub.html" data-lang="es" class="hidden">Demo del producto</a>
+        <a href="app/evosustainhub.html" data-lang="en">Open Demo</a>
+        <a href="app/evosustainhub.html" data-lang="es" class="hidden">Abrir Demo</a>
+        
+        <a href="#demo" data-lang="en">Open Demo</a>
+        <a href="#demo" data-lang="es" class="hidden">Abrir Demo</a>
+
+        <a href="#donate" data-lang="en">Donate</a>
+        <a href="#donate" data-lang="es" class="hidden">Donar</a>
+
       </nav>
 
       <div class="lang-switch">
@@ -357,48 +364,76 @@
       </div>
     </section>
 
-  <!-- PRODUCT DEMO / DEMO DEL PRODUCTO -->
-<section id="demo" class="section">
+  <!-- DEMO + DONATE EN DOS CARDS -->
+<section class="section">
   <div class="container">
+    <div class="grid-2">
 
-    <!-- ENGLISH -->
-    <div class="section-header" data-lang="en">
-      <div class="section-kicker">Product Demo</div>
-      <h2>Access the EvoSustain operational and analytics hub.</h2>
-      <p>
-        The EvoSustain Hub provides access to the digital waste platform,
-        live dashboards, route data, operational KPIs and integration tools.
-      </p>
+      <!-- CARD: PRODUCT DEMO -->
+      <div class="card" id="demo">
+        <!-- ENGLISH -->
+        <div data-lang="en">
+          <div class="section-kicker">App Demo</div>
+          <h3>Access the EvoSustain operational and analytics hub.</h3>
+          <p>
+            The EvoSustain Hub provides access to the digital waste platform, live dashboards,
+            route data, operational KPIs and integration tools.
+          </p>
+          <button class="btn btn-primary"
+            onclick="location.href='app/evosustainhub.html'">
+            Open Demo
+          </button>
+        </div>
+
+        <!-- SPANISH -->
+        <div data-lang="es" class="hidden">
+          <div class="section-kicker">Demo App</div>
+          <h3>Accede al hub operativo y de analítica de EvoSustain.</h3>
+          <p>
+            El EvoSustain Hub permite acceder a la plataforma digital de residuos, dashboards en vivo,
+            datos de rutas, KPIs operativos y herramientas de integración.
+          </p>
+          <button class="btn btn-primary"
+            onclick="location.href='app/evosustainhub.html'">
+            Abrir demo
+          </button>
+        </div>
+      </div>
+
+      <!-- CARD: DONATE -->
+      <div class="card" id="donate">
+        <!-- ENGLISH -->
+        <div data-lang="en">
+          <div class="section-kicker">Support Us</div>
+          <h3>Donate to support EvoSustain’s mission.</h3>
+          <p>
+            Your contribution helps us continue developing digital tools for waste management,
+            sustainability and environmental innovation.
+          </p>
+          <button class="btn btn-primary"
+            onclick="location.href='https://www.paypal.com/donate/?hosted_button_id=VPPKADAE4RAXQ'">
+            Donate via PayPal
+          </button>
+        </div>
+
+        <!-- SPANISH -->
+        <div data-lang="es" class="hidden">
+          <div class="section-kicker">Apóyanos</div>
+          <h3>Dona para apoyar la misión de EvoSustain.</h3>
+          <p>
+            Tu contribución nos ayuda a seguir desarrollando herramientas digitales para la gestión
+            de residuos, la sostenibilidad y la innovación medioambiental.
+          </p>
+          <button class="btn btn-primary"
+            onclick="location.href='https://www.paypal.com/donate/?hosted_button_id=VPPKADAE4RAXQ'">
+            Donar con PayPal
+          </button>
+        </div>
+      </div>
+
     </div>
-
-    <!-- SPANISH -->
-    <div class="section-header hidden" data-lang="es">
-      <div class="section-kicker">Demo del producto</div>
-      <h2>Accede al hub operativo y de analítica de EvoSustain.</h2>
-      <p>
-        El EvoSustain Hub permite acceder a la plataforma digital de residuos,
-        dashboards en vivo, datos de rutas, KPIs operativos y herramientas de integración.
-      </p>
-    </div>
-
-   <div class="contact-inner">
-  <!-- ENGLISH -->
-  <button class="btn btn-primary" data-lang="en"
-    onclick="location.href='app/evosustainhub.html'">
-    Open Demo
-  </button>
-
-  <!-- SPANISH -->
-  <button class="btn btn-primary hidden" data-lang="es"
-    onclick="location.href='app/evosustainhub.html'">
-    Abrir demo
-  </button>
-</div>
-
-
   </div>
 </section>
-
  
     <!-- CONTACT / CONTACTO -->
     <section id="contact" class="section">

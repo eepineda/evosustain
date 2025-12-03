@@ -296,26 +296,17 @@ footer {
 }
 
 /* RESPONSIVE */
-@media(max-width:900px){
-  /* Ocultar el menú en versión móvil */
-  .navbar {
+@media (max-width: 900px) {
+  nav {
     display: none;
   }
-
-  .hero-inner { 
-    grid-template-columns:1fr; 
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
-
-  .grid-3,
-  .grid-2 { 
-    grid-template-columns:1fr; 
+  .hero-card {
+    margin-top: 1.4rem;
   }
-
-  .hero { 
-    padding-top:90px; 
-  }
-
-  .hero-card { 
-    margin-top:10px; 
+  .grid-3 {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

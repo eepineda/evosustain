@@ -436,35 +436,42 @@
   </div>
 </section>
 
+    <!-- SOCIAL / REDES -->
     <section id="social" class="section">
-  <div class="container">
-    <!-- ENGLISH -->
-    <div data-lang="en">
-      <div class="section-kicker">Social</div>
-      <h2>Latest updates from EvoSustain on X.</h2>
-      <p>
-        Follow our work on digital waste, cleantech and IT services directly from our X feed.
-      </p>
-    </div>
+      <div class="container">
 
-    <!-- SPANISH -->
-    <div data-lang="es" class="hidden">
-      <div class="section-kicker">Redes</div>
-      <h2>Últimas novedades de EvoSustain en X.</h2>
-      <p>
-        Sigue nuestro trabajo en residuos digitales, cleantech y servicios IT directamente desde nuestro perfil de X.
-      </p>
-    </div>
+        <!-- ENGLISH -->
+        <div class="section-header" data-lang="en">
+          <div class="section-kicker">Social</div>
+          <h2>Latest updates from EvoSustain on X.</h2>
+          <p>
+            Follow our work on digital waste, cleantech and IT services directly from our X feed.
+          </p>
+        </div>
 
-    <div class="card">
-      <a class="twitter-timeline"
-         data-height="450"
-         href="https://x.com/EvoSustain">
-        Posts by EvoSustain
-      </a>
-    </div>
-  </div>
-</section>
+        <!-- ESPAÑOL -->
+        <div class="section-header hidden" data-lang="es">
+          <div class="section-kicker">Redes</div>
+          <h2>Últimas novedades de EvoSustain en X.</h2>
+          <p>
+            Sigue nuestro trabajo en residuos digitales, cleantech y servicios IT directamente desde nuestro perfil de X.
+          </p>
+        </div>
+
+        <div class="card">
+          <!-- Timeline de X: se ve igual en ambos idiomas -->
+          <a class="twitter-timeline"
+             data-width="100%"
+             data-height="500"
+             data-dnt="true"
+             href="https://x.com/EvoSustain">
+            Posts by @EvoSustain
+          </a>
+        </div>
+
+      </div>
+    </section>
+
     <!-- CONTACT / CONTACTO -->
     <section id="contact" class="section">
       <div class="container contact-inner">
@@ -492,7 +499,7 @@
     </section>
   </main>
 
-  <!-- FOOTER / PIE -->
+    <!-- FOOTER / PIE -->
   <footer>
     © <span id="year"></span> EvoSustain Ltd · Cleantech · Software · IT Services
   </footer>
@@ -500,12 +507,10 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
-    <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
 
-  <!-- Script para que el timeline de X/Twitter se renderice automáticamente -->
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  <!-- Script necesario para que se renderice el timeline de X -->
+  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </body>
 </html>
+
 

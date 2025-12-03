@@ -1,23 +1,22 @@
-/* LANGUAGE SWITCHING / CAMBIO DE IDIOMA */
-const enBtn = document.getElementById("lang-en");
-const esBtn = document.getElementById("lang-es");
+document.addEventListener("DOMContentLoaded", () => {
+  const btnEN = document.getElementById("lang-en");
+  const btnES = document.getElementById("lang-es");
 
-/**
- * Switch site language
- * Cambia el idioma del sitio
- */
-function setLanguage(lang) {
   const blocks = document.querySelectorAll("[data-lang]");
-  blocks.forEach((el) => {
-    const elLang = el.getAttribute("data-lang");
-    el.classList.toggle("hidden", elLang !== lang);
-  });
 
-  enBtn.classList.toggle("active", lang === "en");
-  esBtn.classList.toggle("active", lang === "es");
+  function setLang(lang) {
+    blocks.forEach(el => {
+      el.classList.toggle("hidden", el.dataset.lang !== lang);
+    });
+    if (btnEN && btnES) {
+      btnEN.classList.toggle("active", lang === "en");
+      btnES.classList.toggle("active", lang === "es");
+    }
+    localStorage.setItem("lang", lang);
+  }
 
-  document.documentElement.lang = lang;
-}
+  setLang(localStorage.getItem("lang") || "en");
 
-enBtn.addEventListener("click", () => setLanguage("en"));
-esBtn.addEventListener("click", () => setLanguage("es"));
+  if (btnEN) btnEN.onclick = () => setLang("en");
+  if (btnES) btnES.onclick = () => setLang("es");
+});

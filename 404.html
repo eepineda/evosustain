@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page Not Found · EvoSustain</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="404 - Page Not Found">
+
+  <!-- Base styles (reuse your style palette) -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    .error-wrapper {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      text-align: center;
+      flex-direction: column;
+    }
+
+    .error-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      opacity: 0.8;
+    }
+
+    .error-code {
+      font-size: 6rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: var(--accent, #38bdf8);
+    }
+
+    .error-msg {
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      max-width: 600px;
+      line-height: 1.4;
+    }
+
+    .error-sub {
+      color: #94a3b8;
+      max-width: 600px;
+    }
+
+    .error-actions {
+      margin-top: 30px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <span>EvoSustain Ltd</span>
+      </div>
+
+      <nav>
+        <a href="index.html#overview">Overview</a>
+        <a href="index.html#platform">Platform</a>
+        <a href="index.html#it">IT Services</a>
+        <a href="index.html#poc">PoC</a>
+        <a href="index.html#contact">Contact</a>
+        <a href="app/evosustainhub.html">Open Demo</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ERROR CONTENT -->
+  <section class="error-wrapper">
+    <div class="error-icon">⚠️</div>
+    <div class="error-code">404</div>
+
+    <h1 class="error-msg">Page Not Found</h1>
+    <p class="error-sub">
+      The page you are trying to access does not exist or may have been moved.
+      Please check the URL or return to the homepage.
+    </p>
+
+    <div class="error-actions">
+      <button class="btn btn-primary" onclick="location.href='index.html'">
+        Go to Homepage
+      </button>
+
+      <button class="btn btn-outline" onclick="location.href='index.html#contact'">
+        Contact Us
+      </button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    © <span id="year"></span> EvoSustain Ltd · Cleantech · Waste · IT
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+
+</body>
+</html>

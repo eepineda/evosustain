@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="description" content="404 - Page Not Found">
 
-  <!-- Base styles (reuse your style palette) -->
+  <!-- Base styles -->
   <link rel="stylesheet" href="css/style.css">
 
   <style>
@@ -46,12 +46,33 @@
       max-width: 600px;
     }
 
-    .error-actions {
-      margin-top: 30px;
+    /* Ensure Home is visible on mobile */
+    header .header-inner {
       display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-      justify-content: center;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    /* Override any mobile-hidden nav rules */
+    header nav {
+      display: flex !important;
+      align-items: center;
+    }
+
+    header nav a {
+      display: inline-block;
+      padding: 10px 12px;
+      text-decoration: none;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+      header .container.header-inner {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
     }
   </style>
 </head>
@@ -63,7 +84,7 @@
     <div class="container header-inner">
       <div class="brand">
         <div class="brand-mark"></div>
-        </div>
+      </div>
 
       <nav>
         <a href="https://evoford.com/">Home</a>
@@ -81,7 +102,6 @@
       The page you are trying to access does not exist or may have been moved.
       Please check the URL or return to the homepage.
     </p>
-    </div>
   </section>
 
   <!-- FOOTER -->

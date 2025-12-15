@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="css/style.css" />
   <script defer src="js/lang.js"></script>
+  <script defer src="js/menu.js"></script>
 </head>
 <body>
   <!-- HEADER / CABECERA -->
@@ -16,33 +17,40 @@
         <span>EvoSustain Ltd</span>
       </div>
 
-      <nav>
-        <a href="#overview" data-lang="en">Overview</a>
-        <a href="#overview" data-lang="es" class="hidden">Visión</a>
-
-        <a href="#platform" data-lang="en">Platform</a>
-        <a href="#platform" data-lang="es" class="hidden">Plataforma</a>
-
-        <a href="#it" data-lang="en">IT Services</a>
-        <a href="#it" data-lang="es" class="hidden">Servicios IT</a>
-
-        <a href="#poc" data-lang="en">PoC</a>
-        <a href="#poc" data-lang="es" class="hidden">PoC</a>
-
-        <a href="#contact" data-lang="en">Contact</a>
-        <a href="#contact" data-lang="es" class="hidden">Contacto</a>
-
-        <a href="app/evosustainhub.html" data-lang="en">Open Demo</a>
-        <a href="app/evosustainhub.html" data-lang="es" class="hidden">Abrir Demo</a>
-
-        <a href="#donate" data-lang="en">Donate</a>
-        <a href="#donate" data-lang="es" class="hidden">Donar</a>
-
-        <a href="private-consulting.html" data-lang="en">Private Advisory</a>
-        <a href="private-consulting.html" data-lang="es" class="hidden">Asesoría privada</a>
+          
+<button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="siteNav">
+  <span class="menu-icon" aria-hidden="true"></span>
+  <span class="menu-label" data-lang="en">Menu</span>
+  <span class="menu-label hidden" data-lang="es">Menú</span>
+</button>
 
 
-      </nav>
+          <nav id="siteNav">
+            <a href="#overview" data-lang="en">Overview</a>
+            <a href="#overview" data-lang="es" class="hidden">Visión</a>
+
+            <a href="#platform" data-lang="en">Platform</a>
+            <a href="#platform" data-lang="es" class="hidden">Plataforma</a>
+
+            <a href="#it" data-lang="en">IT Services</a>
+            <a href="#it" data-lang="es" class="hidden">Servicios IT</a>
+
+            <a href="#poc" data-lang="en">PoC</a>
+            <a href="#poc" data-lang="es" class="hidden">PoC</a>
+
+            <a href="app/evosustainhub.html" data-lang="en" class="nav-cta">Open Demo</a>
+            <a href="app/evosustainhub.html" data-lang="es" class="hidden" nav-cta>Abrir Demo</a>
+
+            <a href="#donate" data-lang="en">Donate</a>
+            <a href="#donate" data-lang="es" class="hidden">Donar</a>
+
+            <a href="#contact" data-lang="en">Contact</a>
+            <a href="#contact" data-lang="es" class="hidden">Contacto</a>
+
+            <a href="private-consulting.html" data-lang="en">Private Advisory</a>
+            <a href="private-consulting.html" data-lang="es" class="hidden">Asesoría privada</a>
+          </nav>
+
 
       <div class="lang-switch">
         <button id="lang-en" class="active">EN</button>
@@ -422,7 +430,33 @@
         </div>
       </div>
 
-      <!-- CARD: DONATE -->
+  <!-- CONTACT / CONTACTO -->
+    <section id="contact" class="section">
+      <div class="container contact-inner">
+        <div data-lang="en">
+          <div class="section-kicker">Contact</div>
+          <h2>Let’s talk about your PoC or IT Services.</h2>
+          <p>
+            Share a short description of your context and challenges. We will
+            respond with a tailored proposal.
+          </p>
+        </div>
+        <div class="hidden" data-lang="es">
+          <div class="section-kicker">Contacto</div>
+          <h2>Hablemos sobre tu PoC o Servicios IT.</h2>
+          <p>
+            Cuéntanos brevemente tu contexto y retos principales. Te responderemos
+            con una propuesta adaptada.
+          </p>
+        </div>
+
+        <button class="btn btn-primary" onclick="location.href='mailto:info@evoford.com'">
+          info@evoford.com
+        </button>
+      </div>
+    </section>
+
+    <!-- CARD: DONATE -->
       <div class="card" id="donate">
         <!-- ENGLISH -->
         <div data-lang="en">
@@ -456,32 +490,6 @@
     </div>
   </div>
 </section>
-
-  <!-- CONTACT / CONTACTO -->
-    <section id="contact" class="section">
-      <div class="container contact-inner">
-        <div data-lang="en">
-          <div class="section-kicker">Contact</div>
-          <h2>Let’s talk about your PoC or IT project.</h2>
-          <p>
-            Share a short description of your context and challenges. We will
-            respond with a tailored proposal.
-          </p>
-        </div>
-        <div class="hidden" data-lang="es">
-          <div class="section-kicker">Contacto</div>
-          <h2>Hablemos sobre tu PoC o proyecto IT.</h2>
-          <p>
-            Cuéntanos brevemente tu contexto y retos principales. Te responderemos
-            con una propuesta adaptada.
-          </p>
-        </div>
-
-        <button class="btn btn-primary" onclick="location.href='mailto:info@evoford.com'">
-          info@evoford.com
-        </button>
-      </div>
-    </section>
   </main>
 
     <!-- FOOTER / PIE -->

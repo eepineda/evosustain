@@ -46,35 +46,8 @@
       max-width: 600px;
     }
 
-    /* Ensure Home is visible on mobile */
-    header .header-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    /* Override any mobile-hidden nav rules */
-    header nav {
-      display: flex !important;
-      align-items: center;
-    }
-
-    header nav a {
-      display: inline-block;
-      padding: 10px 12px;
-      text-decoration: none;
-      border-radius: 10px;
-      white-space: nowrap;
-    }
-
-    @media (max-width: 768px) {
-      header .container.header-inner {
-        padding-left: 16px;
-        padding-right: 16px;
-      }
-    }
-  </style>
+    </style>
+  <script defer src="js/menu.js"></script>
 </head>
 
 <body>
@@ -86,7 +59,15 @@
         <div class="brand-mark"></div>
       </div>
 
-      <nav>
+      
+<button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="siteNav">
+  <span class="menu-icon" aria-hidden="true"></span>
+  <span class="menu-label" data-lang="en">Menu</span>
+  <span class="menu-label hidden" data-lang="es">Menú</span>
+</button>
+
+
+      <nav id="siteNav">
         <a href="https://evoford.com/">Home</a>
       </nav>
     </div>

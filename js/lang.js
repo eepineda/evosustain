@@ -1,23 +1,24 @@
-/* LANGUAGE SWITCHING / CAMBIO DE IDIOMA */
-const enBtn = document.getElementById("lang-en");
-const esBtn = document.getElementById("lang-es");
-
-/**
- * Switch site language
- * Cambia el idioma del sitio
- */
-function setLanguage(lang) {
-  const blocks = document.querySelectorAll("[data-lang]");
-  blocks.forEach((el) => {
-    const elLang = el.getAttribute("data-lang");
-    el.classList.toggle("hidden", elLang !== lang);
+function setLang(lang) {
+  document.querySelectorAll("[data-lang]").forEach((el) => {
+    el.classList.toggle("hidden", el.dataset.lang !== lang);
   });
+  localStorage.setItem("lang", lang);
 
-  enBtn.classList.toggle("active", lang === "en");
-  esBtn.classList.toggle("active", lang === "es");
-
-  document.documentElement.lang = lang;
+  // Update buttons active state (if present)
+  const enBtn = document.getElementById("lang-en");
+  const esBtn = document.getElementById("lang-es");
+  if (enBtn && esBtn) {
+    enBtn.classList.toggle("active", lang === "en");
+    esBtn.classList.toggle("active", lang === "es");
+  }
 }
 
-enBtn.addEventListener("click", () => setLanguage("en"));
-esBtn.addEventListener("click", () => setLanguage("es"));
+document.addEventListener("DOMContentLoaded", () => {
+  const enBtn = document.getElementById("lang-en");
+  const esBtn = document.getElementById("lang-es");
+
+  if (enBtn) enBtn.addEventListener("click", () => setLang("en"));
+  if (esBtn) esBtn.addEventListener("click", () => setLang("es"));
+
+  setLang(localStorage.getItem("lang") || "en");
+});

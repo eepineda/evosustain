@@ -25,6 +25,7 @@
       font-size: 0.95rem;
     }
   </style>
+  <script defer src="js/menu.js"></script>
 </head>
 
 <body>
@@ -37,7 +38,15 @@
       <span>EvoSustain Ltd</span>
     </div>
 
-    <nav>
+    
+<button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="siteNav">
+  <span class="menu-icon" aria-hidden="true"></span>
+  <span class="menu-label" data-lang="en">Menu</span>
+  <span class="menu-label hidden" data-lang="es">Menú</span>
+</button>
+
+
+    <nav id="siteNav">
       <a href="index.html" data-lang="en">← Back to EvoSustain</a>
       <a href="index.html" data-lang="es" class="hidden">← Volver a EvoSustain</a>
     </nav>

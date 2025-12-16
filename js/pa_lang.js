@@ -4,6 +4,7 @@
 
   function setLang(lang){
     document.documentElement.lang = lang;
+
     const all = document.querySelectorAll('[data-lang]');
     all.forEach(el => {
       const isMatch = el.getAttribute('data-lang') === lang;

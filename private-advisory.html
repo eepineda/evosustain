@@ -8,9 +8,9 @@
   <meta name="description"
     content="Independent private advisory services in the UK. Residency, banking, education, business setup, trademarks, Amazon selling and debt guidance." />
 
-  <link rel="stylesheet" href="https://evoford.com/css/pa_style.css" />
-  <script defer src="https://evoford.com/js/pa_lang.js"></script>
-  <script defer src="https://evoford.com/js/pa_menu.js"></script>
+  <link rel="stylesheet" href="css/style.css" />
+  <script defer src="js/pa_lang.js"></script>
+  <script defer src="js/pa_menu.js"></script>
 
   <style>
     .note {
@@ -49,10 +49,16 @@
       <a href="https://evoford.com/index.html" data-lang="es" class="hidden">← Volver a EvoSustain</a>
     </nav>
 
-    <div class="lang-switch" aria-label="Language switch">
+    <div class="header-actions">
+    <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch theme">
+      <span class="icon sun" aria-hidden="true">☀️</span>
+      <span class="icon moon" aria-hidden="true">🌙</span>
+    </button>
+<div class="lang-switch" aria-label="Language switch">
       <button id="lang-en" class="active" type="button">EN</button>
       <button id="lang-es" type="button">ES</button>
     </div>
+</div>
   </div>
 </header>
 
@@ -530,5 +536,6 @@
   document.getElementById("year").textContent = new Date().getFullYear();
 </script>
 
+  <script src="js/theme.js"></script>
 </body>
 </html>

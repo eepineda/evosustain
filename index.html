@@ -52,11 +52,17 @@
           </nav>
 
 
+      <div class="header-actions">
+      <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch theme">
+        <span class="icon sun" aria-hidden="true">☀️</span>
+        <span class="icon moon" aria-hidden="true">🌙</span>
+      </button>
       <div class="lang-switch">
         <button id="lang-en" class="active">EN</button>
         <button id="lang-es">ES</button>
       </div>
-    </div>
+      </div>
+    </div
   </header>
 
   <main>
@@ -508,6 +514,7 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
+  <script src="js/theme.js"></script>
 </body>
 </html>
 

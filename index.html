@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="css/style.css" />
   <script defer src="js/lang.js"></script>
   <script defer src="js/menu.js"></script>
+  <script defer src="js/theme.js"></script>
 </head>
 <body>
   <!-- HEADER / CABECERA -->
@@ -26,43 +27,63 @@
 
 
           <nav id="siteNav">
-            <a href="#overview" data-lang="en">Overview</a>
-            <a href="#overview" data-lang="es" class="hidden">Visión</a>
+            <a href="index.html#overview" data-lang="en">Overview</a>
+            <a href="index.html#overview" data-lang="es" class="hidden">Visión</a>
 
-            <a href="#platform" data-lang="en">Platform</a>
-            <a href="#platform" data-lang="es" class="hidden">Plataforma</a>
+            <div class="has-sub">
+              <button class="nav-btn" type="button" aria-expanded="false">
+                <span data-lang="en">Services</span>
+                <span data-lang="es" class="hidden">Servicios</span>
+                <span class="chev" aria-hidden="true">▾</span>
+              </button>
+              <div class="sub" role="menu">
+                <a role="menuitem" href="index.html#platform" data-lang="en">Platform</a>
+                <a role="menuitem" href="index.html#platform" data-lang="es" class="hidden">Plataforma</a>
 
-            <a href="#it" data-lang="en">IT Services</a>
-            <a href="#it" data-lang="es" class="hidden">Servicios IT</a>
+                <a role="menuitem" href="index.html#it" data-lang="en">IT Services</a>
+                <a role="menuitem" href="index.html#it" data-lang="es" class="hidden">Servicios IT</a>
 
-            <a href="#poc" data-lang="en">PoC</a>
-            <a href="#poc" data-lang="es" class="hidden">PoC</a>
+                <a role="menuitem" href="index.html#poc" data-lang="en">PoC</a>
+                <a role="menuitem" href="index.html#poc" data-lang="es" class="hidden">PoC</a>
+              </div>
+            </div>
 
-            <a href="#demo" data-lang="en" class="nav-cta">Open Demo</a>
-            <a href="#demo" data-lang="es" class="hidden" nav-cta>Abrir Demo</a>
+            <a href="index.html#demo" data-lang="en" class="nav-cta">Open Demo</a>
+            <a href="index.html#demo" data-lang="es" class="hidden nav-cta">Abrir Demo</a>
 
-            <a href="#donate" data-lang="en">Donate</a>
-            <a href="#donate" data-lang="es" class="hidden">Donar</a>
+            <div class="has-sub">
+              <button class="nav-btn" type="button" aria-expanded="false">
+                <span data-lang="en">More</span>
+                <span data-lang="es" class="hidden">Más</span>
+                <span class="chev" aria-hidden="true">▾</span>
+              </button>
+              <div class="sub" role="menu">
+                <a role="menuitem" href="index.html#donate" data-lang="en">Donate</a>
+                <a role="menuitem" href="index.html#donate" data-lang="es" class="hidden">Donar</a>
 
-            <a href="#contact" data-lang="en">Contact</a>
-            <a href="#contact" data-lang="es" class="hidden">Contacto</a>
+                <a role="menuitem" href="index.html#contact" data-lang="en">Contact</a>
+                <a role="menuitem" href="index.html#contact" data-lang="es" class="hidden">Contacto</a>
 
-            <a href="private-advisory.html" data-lang="en">Private Advisory</a>
-            <a href="private-advisory.html" data-lang="es" class="hidden">Asesoría privada</a>
+                <a role="menuitem" href="private-advisory.html" data-lang="en">Private Advisory</a>
+                <a role="menuitem" href="private-advisory.html" data-lang="es" class="hidden">Asesoría privada</a>
+              </div>
+            </div>
+    
           </nav>
 
-
       <div class="header-actions">
-      <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch theme">
-        <span class="icon sun" aria-hidden="true">☀️</span>
-        <span class="icon moon" aria-hidden="true">🌙</span>
-      </button>
+        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="icon sun" aria-hidden="true">☀️</span>
+          <span class="icon moon" aria-hidden="true">🌙</span>
+        </button>
+
       <div class="lang-switch">
         <button id="lang-en" class="active">EN</button>
         <button id="lang-es">ES</button>
       </div>
+    
       </div>
-    </div
+</div>
   </header>
 
   <main>
@@ -514,7 +535,6 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
-  <script src="js/theme.js"></script>
 </body>
 </html>
 

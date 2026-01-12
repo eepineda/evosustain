@@ -1,22 +1,19 @@
 (function () {
+  const STORAGE_KEY = "theme";
   const btn = document.getElementById("themeToggle");
+
+  function applyTheme(mode) {
+    document.body.classList.toggle("light", mode === "light");
+  }
+
+  // Load saved preference (default: dark)
+  const saved = localStorage.getItem(STORAGE_KEY);
+  applyTheme(saved === "light" ? "light" : "dark");
+
   if (!btn) return;
 
-  const apply = (mode) => {
-    document.body.classList.toggle("light", mode === "light");
-    try { localStorage.setItem("theme", mode); } catch (e) {}
-    btn.setAttribute("aria-label", mode === "light" ? "Switch to dark mode" : "Switch to light mode");
-    btn.setAttribute("title", mode === "light" ? "Dark" : "Light");
-  };
-
-  // Load saved preference; otherwise keep default (dark)
-  let saved = null;
-  try { saved = localStorage.getItem("theme"); } catch (e) {}
-  if (saved === "light" || saved === "dark") apply(saved);
-  else apply("dark");
-
   btn.addEventListener("click", () => {
-    const isLight = document.body.classList.contains("light");
-    apply(isLight ? "dark" : "light");
+    const isLight = document.body.classList.toggle("light");
+    localStorage.setItem(STORAGE_KEY, isLight ? "light" : "dark");
   });
 })();

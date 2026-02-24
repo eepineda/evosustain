@@ -1,8 +1,0 @@
-title: EvoSustain Blog
-description: Smart Waste Logistics Platform
-url: "https://eepineda.github.io"
-baseurl: "/evosustain/blog"
-
-theme: minima
-
-permalink: /:year/:month/:day/:title/

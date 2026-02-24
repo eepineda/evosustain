@@ -1,4 +1,4 @@
-name: Deploy Jekyll site to GitHub Pages
+name: Deploy Pages (Jekyll blog)
 
 on:
   push:
@@ -24,11 +24,13 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      # Construye el sitio cuyo source está en ./blog
+      # y lo deja publicado bajo /blog (en el artifact final)
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
-          source: ./
-          destination: ./_site
+          source: ./blog
+          destination: ./_site/blog
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

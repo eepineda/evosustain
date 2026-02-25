@@ -1,0 +1,50 @@
+backend:
+  name: github
+  repo: plausible-insights/website
+publish_mode: editorial_workflow
+media_folder: "uploads"
+collections:
+  - name: "blog"
+    label: "Blog"
+    folder: "_posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    preview_path: blog/{{slug}}
+    editor:
+      preview: false
+    fields:
+      - {label: "Layout", name: "layout", widget: "hidden", default: "post"}
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Description", name: "description", widget: "string"}
+      - {label: "Slug", name: "slug", widget: "string"}
+      - {label: "Publish Date", name: "date", widget: "datetime"}
+      - {label: "Author", name: "author", widget: "select", options: ["uku-taht", "marko-saric", "hricha-shandily", "greg-dickens"]}
+      - {label: "Featured Image", name: "image", widget: "string", required: false}
+      - {label: "Featured Image Alt", name: "image-alt", widget: "string", required: false}
+      - {label: "Body", name: "body", widget: "markdown"}
+  - name: "articles"
+    label: "Articles"
+    folder: "_articles"
+    create: true
+    slug: "{{slug}}"
+    editor:
+      preview: false
+    fields:
+      - {label: "Layout", name: "layout", widget: "hidden", default: "article"}
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Description", name: "description", widget: "string"}
+      - {label: "Permalink", name: "permalink", widget: "string", hint: "e.g. '/my-article'"}
+      - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "changes"
+    label: "Changes"
+    folder: "_changes"
+    create: true
+    slug: "{{slug}}"
+    editor:
+      preview: false
+    fields:
+      - {label: "Layout", name: "layout", widget: "hidden", default: "change"}
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Date", name: "date", widget: "date"}
+      - {label: "Body", name: "body", widget: "markdown"}

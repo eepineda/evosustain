@@ -1,0 +1,6 @@
+.bundle
+.sass-cache
+_site
+*.gem
+changes.txt
+node_modules

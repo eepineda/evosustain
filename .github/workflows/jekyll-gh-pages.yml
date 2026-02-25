@@ -22,6 +22,11 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+- name: Build with Jekyll
+  uses: actions/jekyll-build-pages@v1
+  with:
+    source: ./blog
+    destination: ./_site
   # Build job
   build:
     runs-on: ubuntu-latest

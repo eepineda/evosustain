@@ -20,7 +20,6 @@ excerpt: |
   [Buy me a Coffee](https://ko-fi.com/dennisdoomen){: .btn .btn--kofi}
   [Sponsor Me](https://www.patreon.com/bePatron?u=9250052&redirect_uri=http%3A%2F%2Ffluentassertions.com%2F&utm_medium=widget){: .btn .btn--patreon}
 ---
-
 {{ site.data.ui-text[site.locale].recent_posts | default: "Recent Posts" }}
 
 {% for post in site.posts limit:10 %}

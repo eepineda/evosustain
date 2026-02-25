@@ -1,0 +1,11 @@
+- name: Blog
+  route: /
+
+- name: Archive
+  route: /archive
+
+- name: Portfolio
+  route: /portfolio
+
+- name: About
+  route: /about

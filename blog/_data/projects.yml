@@ -1,0 +1,188 @@
+- title: "AI video podcast production"
+  year: 2025
+  stack: ["ComfyUI", "Ollama", "Kdenlive", "Audacity"]
+  homepage: "https://github.com/meefik/humanless-podcast"
+  description: "A project demonstrating the creation of a fully AI-generated video podcast using open-source tools and self-hosted models."
+  poster: "/assets/images/podcast-title.png"
+
+
+- title: "P2P WebRTC conferencing library"
+  year: 2025
+  stack: ["JavaScript", "WebRTC"]
+  homepage: "https://github.com/meefik/p2p"
+  description: "A lightweight library for creating peer-to-peer WebRTC conferencing with custom signaling drivers."
+  poster: "/assets/images/p2p-demo.png"
+
+- title: "MongoDB human-readable queries"
+  year: 2024
+  stack: ["Node.js"]
+  homepage: "https://github.com/meefik/humanquery-mongo"
+  description: "A MongoDB query parser that converts a human-readable search string into MongoDB query syntax."
+  poster: "/assets/images/humanquery-mongo.png"
+
+- title: "NEUX library"
+  year: 2023
+  stack: ["JavaScript"]
+  homepage: "https://github.com/meefik/neux"
+  description: "NEUX is a nifty ecosystem for user experience development. It is a JavaScript frontend micro-library with reactivity states and views. The library has features and tools are suitable for building small single-page applications (SPA) or isolated UI components. The library includes a set of functions for creating such entities as states, views, localization, routing, synchronization with storage, remote procedure call. For more details, see [the project page](/neux)."
+  poster: "/assets/images/neux.png"
+
+- title: "Auto parts search engine"
+  year: 2022
+  stack: ["Node.js", "Svelte", "Puppeteer"]
+  homepage: "https://github.com/meefik/fastfinder"
+  description: "A MVP for an auto parts search engine. The system parses the websites of parts stores, caches the results and searches them. Search criteria are cost, car compatibility, availability, delivery time."
+  poster: "/assets/images/fastfinder.png"
+
+- title: "UX library without dependencies"
+  year: 2021
+  stack: ["JavaScript"]
+  homepage: "https://github.com/meefik/libux"
+  description: "A minimalistic UX framework for libraries in pure JavaScript without dependencies."
+  poster: "/assets/images/libux-todo.png"
+
+- title: "Steganographic library"
+  year: 2018
+  stack: ["JavaScript"]
+  homepage: "https://github.com/meefik/aspng"
+  description: "A JS library for encoding data as PNG with compression or injecting data into an existing PNG image."
+  poster: "/assets/images/aspng-encoded.png"
+
+- title: "PICO face detector"
+  year: 2018
+  stack: ["JavaScript"]
+  homepage: "https://github.com/meefik/picoface"
+  description: "A JS library for detecting faces using the PICO algorithm with the face rotation invariant implementation."
+  poster: "/assets/images/pico-js.png"
+
+- title: "DTMF tone generator and receiver"
+  year: 2018
+  stack: ["JavaScript"]
+  homepage: "https://github.com/meefik/dtmf.js"
+  description: "Library for sending and receive DTMF codes."
+  poster: "/assets/images/dtmf-demo.png"
+
+- title: "WebSocket implementation for UNIX shell"
+  year: 2016
+  stack: ["Bash", "JavaScript"]
+  homepage: "https://github.com/meefik/websocket.sh"
+  description: "A cross platform WebSocket implementation for UNIX shell. It works on busybox and ash for embedded systems."
+  poster: "/assets/images/websocket-sh.png"
+
+- title: "System of distant supervision"
+  year: 2015
+  stack: ["Node.js", "JavaScript", "Kurento", "WebRTC"]
+  homepage: "https://github.com/meefik/ITMOproctor"
+  description: "Software to accompany the process of passing exams remotely, confirming the identity of the test taker and confirming the results of his certification (see [the article on Habr](https://habr.com/ru/articles/277147/))."
+  poster: "/assets/images/itmoproctor.png"
+
+- title: "BusyBox for Android"
+  year: 2015
+  stack: ["Android", "Java", "Bash", "C"]
+  homepage: "https://github.com/meefik/busybox"
+  description: "This application is a BusyBox installer for Android. For more details, see [the project page](/busybox)."
+  poster: "/assets/images/busybox.png"
+
+- title: "Timezone Updater for Android"
+  year: 2015
+  stack: ["Android", "Java", "Bash", "C"]
+  homepage: "https://github.com/meefik/tzupdater"
+  description: "Automatic update of time zones on Android. For more details, see [the project page](/tzupdater)."
+  poster: "/assets/images/tzupdater.png"
+
+- title: "Terminal for Android"
+  year: 2014
+  stack: ["Android", "Java", "Bash", "C"]
+  homepage: "https://github.com/meefik/wshell"
+  description: "Web-based terminal emulator for Android."
+  poster: "/assets/images/wshell.png"
+
+- title: "Track changes in a directory"
+  year: 2013
+  stack: ["Java"]
+  homepage: "https://github.com/meefik/jcut"
+  description: "Java console application for tracking changes in the directory."
+  poster: "/assets/images/jcut.png"
+
+- title: "Keyboard handwriting"
+  year: 2013
+  stack: ["Node.js", "JavaScript"]
+  homepage: "https://github.com/meefik/spyjs"
+  description: "Research has been conducted to identify users by keyboard handwriting and mouse movements. Software has been developed to collect statistics on user activity when working with web pages and to study the features of their behavior."
+  poster: "/assets/images/spyjs.png"
+
+- title: "Catalog of online courses"
+  year: 2013
+  stack: ["Node.js", "Angular"]
+  homepage: "https://github.com/meefik/semanticNT"
+  description: "Providing access to online courses that may contain video lectures, presentations for them, text materials, questions for self-control, examination tasks. The project was closed after the introduction of the Open edX platform."
+  poster: "/assets/images/semantic-nt.png"
+
+- title: "Linux Deploy for Android"
+  year: 2012
+  stack: ["Android", "Linux", "Java", "Bash", "C"]
+  homepage: "https://github.com/meefik/linuxdeploy"
+  description: "This application is open source software for quick and easy installation of the operating system GNU/Linux on your Android device. Later, the utility gained distribution on desktops (see [the article on Habr](https://habr.com/ru/articles/276013/)). For more details, see [the project page](/linuxdeploy) and [the journal Information and Control Systems](/assets/files/linuxdeploy_i-us-5-66-2013.pdf)."
+  poster: "/assets/images/linuxdeploy-2.png"
+
+- title: "Password guessing to Java keystore"
+  year: 2012
+  stack: ["Java"]
+  homepage: "https://github.com/meefik/keystorebreaker"
+  description: "Applications for recovering forgotten passwords for Java keystore. The application allows you to split the task into N parts and execute each part independently in different threads on the same computer, or on different computers (distributed computing)."
+  poster: "/assets/images/keystorebreaker.png"
+
+- title: "Workplace of a call center operator"
+  year: 2012
+  stack: ["Asterisk", "SIP", "WebRTC", "Node.js", "JavaScript"]
+  homepage: "https://github.com/meefik/medinfo"
+  description: "Call center system for medical consultations (multiline number, call queue processing, web browser softphone). The project was implemented as part of [ENPI cross border cooperation programme Estonia-Latvia-Russia](http://www.estlatrus.eu/eng/projects/1632)."
+  poster: "/assets/images/medinfo.png"
+
+- title: "Heart rate variability"
+  year: 2011
+  stack: ["Scilab", "Python", "JavaScript"]
+  homepage: "https://github.com/meefik/varikard"
+  description: "The study of heart rate variability in order to build adaptive e-learning, taking into account the functional state of the student. The research uses a hardware-software complex Varikard 2.51 (and [heart rate monitors with Bluetooth](https://github.com/meefik/blehr)) and specially designed software. ECG personality identification studies have also been conducted, studied the possibility of using cardiac signals with [optical sensors](https://github.com/meefik/PulseSensor_Amped_Arduino/tree/master/PulseSensor_Capture) for personal identification."
+  poster: "/assets/images/varikard.png"
+
+- title: "Microscope for Android"
+  year: 2011
+  stack: ["Android", "Java", "C"]
+  homepage: "https://github.com/meefik/microscope"
+  description: "Driver and Android application development project for LOMO Expert microscope. Implemented support for the microscope on Nexus 7 (2013) and enTourage eDGe."
+  poster: "/assets/images/microscope.png"
+
+- title: "San Ray terminal management software"
+  year: 2010
+  stack: ["Sun Ray Software", "Java", "Bash"]
+  homepage: "https://github.com/meefik/classman"
+  description: "Development and implementation of a centralized system for managing the work of a computer class, built on the basis of the Sun Ray terminal system. The system allows you to automatically start and end terminal sessions according to a schedule or through remote control, send notifications to computers. Each session is created from a template that includes a kiosk desktop (Xfce), a timer for the current session, a notification system (sent via the management interface), a web browser, and other necessary software. See [the article in the journal Information and Control Systems](/assets/files/classman_i-us-3-53-2011.pdf)."
+  poster: "/assets/images/classman.png"
+
+- title: "Computer virus research"
+  year: 2002
+  stack: ["ASM", "OllyDbg", "SoftICE", "Windows", "PalmOS"]
+  homepage: "https://github.com/meefik/nop-virus"
+  description: "Researching viruses and anti-virus technologies, writing patches and loaders, participating in CrackMe competitions."
+
+- title: "Rocket Messenger"
+  year: 2000
+  stack: ["Delphi"]
+  homepage: "http://project-soft.narod.ru/rocket.htm"
+  description: "A client-server application that allows you to establish a connection between two computers on a local network, exchange text messages and files. Themes and resume files are supported."
+  poster: "/assets/images/rocket-messenger.png"
+
+- title: "Desktop application for tests"
+  year: 2000
+  stack: ["Delphi"]
+  homepage: "http://project-soft.narod.ru/mcheck.htm"
+  description: "MultiCheck - an application for making and passing tests on a computer."
+  poster: "/assets/images/multi-check.png"
+
+- title: "Mario game"
+  year: 2000
+  stack: ["Delphi"]
+  homepage: "http://project-soft.narod.ru/mario.htm"
+  description: "Game clone (only 1 level) Super Mario Bros."
+  poster: "/assets/images/mario-game.png"

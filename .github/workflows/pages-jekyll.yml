@@ -1,49 +1,19 @@
-name: Deploy Pages (Jekyll blog)
+- name: Setup Ruby
+  uses: ruby/setup-ruby@v1
+  with:
+    ruby-version: '3.1'
+    bundler-cache: true
+    working-directory: blog
 
-on:
-  push:
-    branches: ["main"]
-  workflow_dispatch:
+- name: Build with Jekyll (trace)
+  working-directory: blog
+  run: |
+    set -euo pipefail
+    bundle exec jekyll build --trace --verbose --destination ../_site/blog 2>&1 | tee ../jekyll-build.log
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      # Construye el sitio cuyo source está en ./blog
-      # y lo deja publicado bajo /blog (en el artifact final)
-      - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./blog
-          destination: ./_site/blog
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./_site
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+- name: Upload build log (always)
+  if: always()
+  uses: actions/upload-artifact@v4
+  with:
+    name: jekyll-build-log
+    path: jekyll-build.log

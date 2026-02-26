@@ -1,0 +1,46 @@
+a:hover{
+  color: black;
+  cursor: pointer;
+  text-decoration: none;
+}
+.articles{
+  display: flex;
+  text-align: justify;
+}
+.row{
+  position: relative;
+  z-index: 10;
+  padding: 0;
+  margin: 0;
+  top: 120px;
+}
+.headlines{
+  font-size: 14px;
+  color: black;
+  float: right;
+  padding:8px;
+  text-decoration: none;
+  line-height:16px;
+}
+.sideImg {
+  margin :auto;
+  width :60px;
+  height :40px;
+} 
+.btn{
+  width: fit-content;
+  border-radius: 20px;
+  margin: auto;
+  position: relative;
+  padding: auto;
+  top: -20px;
+  background-color: #3390b0;
+  color: white;
+  box-shadow: 2px 2px 7px grey;
+}
+.card{
+  padding: 12px;
+}
+.contentCard{
+  box-shadow: 4px 2px 7px grey;
+}

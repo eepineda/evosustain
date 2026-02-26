@@ -1,0 +1,28 @@
+body{
+  background-color: #fafafa;
+}
+.header{
+  height: 120px;
+  position:fixed; 
+  z-index:20; 
+  width:100%; 
+  background-color: #3390b0;
+}
+
+.headerContainer{
+  display: flex; 
+  justify-content: center;
+  align-items: center; 
+  padding-top: 20px; 
+  position: relative;
+}
+
+.siteIcon{
+  width:80px; 
+  height:80px ; 
+  border-radius: 50%; 
+  background-color: black;
+  background-color: rgb(72 152 176);
+  box-shadow: 5px 8px 9px rgb(19 44 55); 
+  margin-right: 6px;
+}

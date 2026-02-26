@@ -1,83 +1,54 @@
-<!--
-@license
-Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
+<!DOCTYPE html>
+<html >
+	<head>
+		<title></title>
+		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.2.1/angular-material.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+		<link rel="stylesheet" href="css/style.css">
+		<script src="js/angular.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.29/angular-ui-router.min.js"></script> 
+		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+		<!-- controllers -->
+		<script src="app.js"></script>
+		<script src="content/contentCtrl.js"></script>
+		<script src="description/descriptionCtrl.js"></script>
 
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <base href="/">
-  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+		<!-- services -->
+		<script src="services/news_service.js"></script>
 
-  <title>NEWS</title>
-  <meta name="description" content="Polymer News Demo">
+		 <!-- Angular Material Dependencies -->
+		 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-animate.min.js"></script>
+		 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-aria.min.js"></script>
+		 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-messages.min.js"></script>
+		 
+		 <!-- Angular Material Javascript now available via Google CDN; version 1.2.1 used here -->
+		 <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.2.1/angular-material.min.js"></script>
+		 
+	</head>
+	<body ng-app="MyApp">
+		<div class="text-center text-white header">
+			<img src="images/1.png" style="position: absolute; height:140px; right:0;"alt="">
+			<div class="headerContainer">
+				<div class="siteIcon">
+					<span><h1 style="margin:-5px;font-size: 48px;">10</h1></span>Top</div>
+				<h1 style=" margin-left:6px; font-size: 60px; border-bottom: 6px double;">STUFFs</h1>
+			</div>
+		</div>
+			
+		<div>
+				<ui-view>
 
-  <link rel="shortcut icon" sizes="32x32" href="images/news-icon-32.png">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="@Polymer">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="NEWS">
-  <meta name="theme-color" content="#000">
-  <link rel="manifest" href="manifest.json">
+				</ui-view>			
+		</div>
 
-  <style>
-
-    body {
-      margin: 0;
-      background-color: #FAFAFA;
-      color: #383838;
-      font-family: Georgia;
-      min-height: 100vh;
-      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    }
-
-    /* styling for render while resources are loading */
-    news-app[unresolved] {
-      display: block;
-      height: 45px;
-      padding-top: 40px;
-      padding-left: 10px;
-      font-size: 39px;
-      font-weight: 600;
-      letter-spacing: 10px;
-      text-align: center;
-    }
-
-    /* mobile */
-    @media (max-width: 767px) {
-      body {
-        background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.25) 15%, rgba(0,0,0,0.25) 30%, rgba(0,0,0,0.7) 48%, rgba(0,0,0,1) 60%);
-        background-repeat: no-repeat;
-        background-size: 100% 100vh;
-      }
-
-      body.fixed-viewport-height {
-        background-size: 100% 600px;
-      }
-
-      news-app[unresolved] {
-        height: 22px;
-        padding-top: 21px;
-        font-size: 20px;
-        color: #FFF; /* --app-cover-text-color */
-      }
-    }
-
-  </style>
-
-</head>
-<body>
-
-  <news-app unresolved app-title="NEWS">NEWS</news-app>
-
-  <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-  <script type="module" src="src/news-app.js"></script>
-
-</body>
-</html>
+		<div class="row" style="padding: 0; margin: 0;width: 100%; ">
+			<div class="text-white text-center" style="height:40px; background-color: #3390b0;width: 100%;">
+			All Rights reserverd to Top10 Stuffs &copy;
+			</div>
+		</div>
+		
+	</body>
+</html>				

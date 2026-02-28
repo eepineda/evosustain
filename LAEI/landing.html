@@ -1,0 +1,363 @@
+<!DOCTYPE HTML>
+<!--
+	Forty by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>London Air Quality Visualization Platform</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+
+		<script>
+			function updateContent() {
+				var select = document.getElementById("demo-category");
+				var selectedValue = select.options[select.selectedIndex].value;
+				var region = "";
+			
+				// List of all borough names -- in the same order as the dropdown
+				var boroughs = [
+					"Barking and Dagenham", "Barnet", "Bexley", "Brent", "Bromley", "Camden", "City of London",
+					"Croydon", "Ealing", "Enfield", "Greenwich", "Hackney", "Hammersmith and Fulham", "Haringey",
+					"Harrow", "Havering", "Hillingdon", "Hounslow", "Islington", "Kensington and Chelsea",
+					"Kingston upon Thames", "Lambeth", "Lewisham", "Merton", "Newham", "Redbridge", "Richmond upon Thames",
+					"Southwark", "Sutton", "Tower Hamlets", "Waltham Forest", "Wandsworth", "Westminster"
+				];
+			
+				// Set the selected region
+				region = boroughs[parseInt(selectedValue) - 1];
+			
+				// Function to update href or src attribute
+				function updateAttribute(element, attributeName) {
+					var value = element.getAttribute(attributeName);
+					
+					// Replace any borough name in the entire string
+					boroughs.forEach(function(borough) {
+						var regex = new RegExp(borough, 'g');
+						value = value.replace(regex, region);
+					});
+					
+					element.setAttribute(attributeName, value);
+				}
+			
+				// Update all relevant href attributes
+				var links = document.querySelectorAll('a[href*="borough/"]');
+				links.forEach(function(link) {
+					updateAttribute(link, 'href');
+				});
+			
+				// Update image sources
+				var images = document.querySelectorAll('img[src*="borough/"]');
+				images.forEach(function(img) {
+					updateAttribute(img, 'src');
+				});
+
+				// Update dashboard introduction text
+				var dashboardIntro = document.getElementById('dashboard-intro');
+				if (dashboardIntro) {
+					dashboardIntro.innerHTML = `
+						<h3>Welcome to ${region}!</h3>
+						<p>This dashboard is based on the London Atmospheric Emissions Inventory 2019. It provides an overview of the emission data in ${region}.</p>
+						<p>Explore the dashboard to gain insights into the emission patterns and trends in ${region}.</p>
+					`;
+				}
+
+				// Update 2019 data introduction
+				var intro2019 = document.getElementById('intro-2019');
+				if (intro2019) {
+					intro2019.innerHTML = `
+						<p>This section presents the baseline emission data for 2019, offering snapshots of the current air quality landscape in ${region}. You can explore emissions by source for four key pollutants: CO2, NOX, PM10, and PM2.5. Each interactive visualization allows you to delve into the specific contributors to these emissions, providing a comprehensive understanding of air pollution sources in your area.</p>
+					`;
+				}
+			
+				// Update 2025 data introduction
+				var intro2025 = document.getElementById('intro-2025');
+				if (intro2025) {
+					intro2025.innerHTML = `
+						<p>Looking ahead to 2025, this section showcases projected emission data for ${region} based on current trends and planned interventions. Explore the forecasts for CO2, NOX, PM10, and PM2.5 emissions separately to gain insights into expected short-term changes in air quality.</p>
+					`;
+				}
+			
+				// Update 2030 data introduction
+				var intro2030 = document.getElementById('intro-2030');
+				if (intro2030) {
+					intro2030.innerHTML = `
+						<p>The 2030 projections offer a longer-term view of potential air quality scenarios in ${region}. Examine the anticipated emissions for CO2, NOX, PM10, and PM2.5 individually to understand the borough's air quality future.</p>
+					`;
+				}
+			
+				console.log("Updated region:", region);
+			}
+		</script>
+
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+				<!-- Note: The "styleN" class below should match that of the banner element. -->
+					<header id="header" class="alt style2">
+						<a href="index.html" class="logo"><strong>London Air Quality Visualization Platform</strong> </a>
+						<nav>
+							<a href="#menu">Menu</a>
+						</nav>
+					</header>
+
+				<!-- Menu -->
+					<nav id="menu">
+						<ul class="links">
+							<li><a href="index.html">London Overview</a></li>
+							<li><a href="landing.html">Borough Explorer</a></li>
+							<!-- <li><a href="generic.html">Generic</a></li>
+							<li><a href="elements.html">Elements</a></li> -->
+						</ul>
+						<!--ul class="actions stacked">
+							<li><a href="#" class="button primary fit">Get Started</a></li>
+							<li><a href="#" class="button fit">Log In</a></li>
+						</ul-->
+					</nav>
+
+				<!-- Banner -->
+				<!-- Note: The "styleN" class below should match that of the header element. -->
+					<section id="banner" class="style2">
+						<div class="inner">
+							<span class="image">
+								<img src="images/pic07.jpg" alt="" />
+							</span>
+							<header class="major">
+								<h1>Welcome to the London Air Quality Interactive Visualization Platform</h1>
+							</header>
+							<div class="content">
+								<p> Exploring the air quality data in London<br />
+									and interacting with visualizations.</p>
+							</div>
+						</div>
+					</section>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- One -->
+							<section id="one">
+								<div class="inner">
+									<header class="major">
+										<h2>London Atmospheric Emissions Inventory (LAEI)</h2>
+									</header>
+									<p>Interactive dashboards can accelerate your data analysis process, please select one borough you are interested in to start the exploration journey.</p>
+									<div class="col-12">
+										<select name="demo-category" id="demo-category" onchange="updateContent()">
+											<option value="">- Selet a Borough to Explore -</option>
+											<option value="1">Barking and Dagenham</option>
+											<option value="2">Barrnet</option>
+											<option value="3">Bexley</option>
+											<option value="4">Brent</option>
+											<option value="5">Bromley</option>
+											<option value="6">Camden</option>
+											<option value="7">City of London</option>
+											<option value="8">Croydon</option>
+											<option value="9">Ealing</option>
+											<option value="10">Enfield</option>
+											<option value="11">Greenwich</option>
+											<option value="12">Hackney</option>
+											<option value="13">Hammersmith and Fulham</option>	
+											<option value="14">Haringey</option>
+											<option value="15">Harrow</option>
+											<option value="16">Havering</option>
+											<option value="17">Hillingdon</option>
+											<option value="18">Hounslow</option>
+											<option value="19">Islington</option>
+											<option value="20">Kensington and Chelsea</option>
+											<option value="21">Kingston upon Thames</option>
+											<option value="22">Lambeth</option>
+											<option value="23">Lewisham</option>
+											<option value="24">Merton</option>
+											<option value="25">Newham</option>
+											<option value="26">Redbridge</option>
+											<option value="27">Richmond upon Thames</option>
+											<option value="28">Southwark</option>
+											<option value="29">Sutton</option>
+											<option value="30">Tower Hamlets</option>
+											<option value="31">Waltham Forest</option>
+											<option value="32">Wandsworth</option>
+											<option value="33">Westminster</option>
+										</select>
+									</div>
+								</div>
+							</section>
+
+						<!-- Two -->
+							<section id="two" class="spotlights">
+								<section id="emissionDashBoard">
+									<a href="#" class="image" style="justify-content: center; align-items: center; ">
+										<img src="./images/dashboard.png" alt="" data-position="top center" style="width: 70%; margin:auto "/>
+									</a>
+									<div class="content">
+										<div class="inner">
+											<header class="major">
+												<h3>Dashboard</h3>
+											</header>
+											<p id="dashboard-intro">Welcome to Barking and Dagenham. Start your exploration about the emission data in this borough via dashboard.</p>
+											<ul class="actions">
+												<li><a href="./static/borough/Barking and Dagenham/Emissions/Dashboard/Barking and Dagenham-laei2019-emissions-dashboard.html" target="_blank" class="button">Explore</a></li>
+											</ul>
+										</div>
+									</div>
+								</section>
+								<section id="emissionInteractive2019">
+									<div class="image" style="width: 100%; display: flex; overflow-x: auto; white-space: nowrap; margin-right: 15px">
+										<img src="./static/borough/Barking and Dagenham/Emissions/Charts/Static/2019/LAEI2019-summary-emissions-co2-2019-Barking and Dagenham-horizontal-bar-chart.png" alt="CO2" data-position="top center" style="width: 100%; margin: 5px;" />
+										<img src="./static/borough/Barking and Dagenham/Emissions/Charts/Static/2019/LAEI2019-summary-emissions-nox-2019-Barking and Dagenham-horizontal-bar-chart.png" alt="NOX" data-position="top center" style="width: 100%; margin: 5px;" />
+										<img src="./static/borough/Barking and Dagenham/Emissions/Charts/Static/2019/LAEI2019-summary-emissions-pm10-2019-Barking and Dagenham-horizontal-bar-chart.png" alt="PM10" data-position="top center" style="width: 100%; margin: 5px;" />
+										<img src="./static/borough/Barking and Dagenham/Emissions/Charts/Static/2019/LAEI2019-summary-emissions-pm2.5-2019-Barking and Dagenham-horizontal-bar-chart.png" alt="PM2.5" data-position="top center" style="width: 100%; margin: 5px;" />
+									</div>
+									<div class="content">
+										<div class="inner">
+											<header class="major">
+												<h3>2019</h3>
+											</header>
+											<p id="intro-2019">This section presents the baseline emission data for 2019, offering snapshots of the current air quality landscape. You can explore emissions by source for four key pollutants: CO2, NOX, PM10, and PM2.5. Each interactive visualization allows you to delve into the specific contributors to these emissions, providing a comprehensive understanding of air pollution sources in your area.</p>
+											<ul class="actions">
+												<li><a href="./static/borough/Barking and Dagenham/Emissions/Charts/Interactive/2019/LAEI2019-summary-emissions-co2-2019-Barking and Dagenham-donut-inter.html" target="_blank" class="button">CO2</a></li>
+												<li><a href="./static/borough/Barking and Dagenham/Emissions/Charts/Interactive/2019/LAEI2019-summary-emissions-nox-2019-Barking and Dagenham-donut-inter.html" target="_blank" class="button">NOX</a></li>
+												<li><a href="./static/borough/Barking and Dagenham/Emissions/Charts/Interactive/2019/LAEI2019-summary-emissions-pm10-2019-Barking and Dagenham-donut-inter.html" target="_blank" class="button">PM10</a></li>
+												<li><a href="./static/borough/Barking and Dagenham/Emissions/Charts/Interactive/2019/LAEI2019-summary-emissions-pm2.5-2019-Barking and Dagenham-donut-inter.html" target="_blank" class="button">PM2.5</a></li>
+											</ul>
+										</div>
+									</div>
+								</section>
+								<section id="emissionInteractive2025">
+									<div class="image" style="width: 100%; display: flex; overflow-x: auto; white-space: nowrap; margin-left: 15px">
+										<img src="./static/borough/Barking and Dagenham/Emissions/Charts/Static/2025/LAEI2019-summary-emissions-co2-2025-Barking and Dagenham-horizontal-bar-chart.png" alt="CO2" data-position="top center" style="width: 100%; margin: 5px;" />
+										<img src="./static/borough/Barking and Dagenham/Emissions/Charts/Static/2025/LAEI2019-summary-emissions-nox-2025-Barking and Dagenham-horizontal-bar-chart.png" alt="NOX" data-position="top center" style="width: 100%; margin: 5px;" />
+										<img src="./static/borough/Barking and Dagenham/Emissions/Charts/Static/2025/LAEI2019-summary-emissions-pm10-2025-Barking and Dagenham-horizontal-bar-chart.png" alt="PM10" data-position="top center" style="width: 100%; margin: 5px;" />
+										<img src="./static/borough/Barking and Dagenham/Emissions/Charts/Static/2025/LAEI2019-summary-emissions-pm2.5-2025-Barking and Dagenham-horizontal-bar-chart.png" alt="PM2.5" data-position="top center" style="width: 100%; margin: 5px;" />
+									</div>
+									<div class="content">
+										<div class="inner">
+											<header class="major">
+												<h3>2025</h3>
+											</header>
+											<p id="intro-2025">Looking ahead to 2025, this section showcases projected emission data for this borough based on current trends and planned interventions. Explore the forecasts for CO2, NOX, PM10, and PM2.5 emissions separately to gain insights into expected short-term changes in air quality.</p>
+											<ul class="actions">
+												<li><a href="./static/borough/Barking and Dagenham/Emissions/Charts/Interactive/2025/LAEI2019-summary-emissions-co2-2025-Barking and Dagenham-donut-inter.html" target="_blank" class="button">CO2</a></li>
+												<li><a href="./static/borough/Barking and Dagenham/Emissions/Charts/Interactive/2025/LAEI2019-summary-emissions-nox-2025-Barking and Dagenham-donut-inter.html" target="_blank" class="button">NOX</a></li>
+												<li><a href="./static/borough/Barking and Dagenham/Emissions/Charts/Interactive/2025/LAEI2019-summary-emissions-pm10-2025-Barking and Dagenham-donut-inter.html" target="_blank" class="button">PM10</a></li>
+												<li><a href="./static/borough/Barking and Dagenham/Emissions/Charts/Interactive/2025/LAEI2019-summary-emissions-pm2.5-2025-Barking and Dagenham-donut-inter.html" target="_blank" class="button">PM2.5</a></li>
+											</ul>
+										</div>
+									</div>
+								</section>
+								<section id="emissionInteractive2030">
+									<div class="image" style="width: 100%; display: flex; overflow-x: auto; white-space: nowrap; margin-right: 15px">
+										<img src="./static/borough/Barking and Dagenham/Emissions/Charts/Static/2030/LAEI2019-summary-emissions-co2-2030-Barking and Dagenham-horizontal-bar-chart.png" alt="CO2" data-position="top center" style="width: 100%; margin: 5px;" />
+										<img src="./static/borough/Barking and Dagenham/Emissions/Charts/Static/2030/LAEI2019-summary-emissions-nox-2030-Barking and Dagenham-horizontal-bar-chart.png" alt="NOX" data-position="top center" style="width: 100%; margin: 5px;" />
+										<img src="./static/borough/Barking and Dagenham/Emissions/Charts/Static/2030/LAEI2019-summary-emissions-pm10-2030-Barking and Dagenham-horizontal-bar-chart.png" alt="PM10" data-position="top center" style="width: 100%; margin: 5px;" />
+										<img src="./static/borough/Barking and Dagenham/Emissions/Charts/Static/2030/LAEI2019-summary-emissions-pm2.5-2030-Barking and Dagenham-horizontal-bar-chart.png" alt="PM2.5" data-position="top center" style="width: 100%; margin: 5px;" />
+									</div>
+									<div class="content">
+										<div class="inner">
+											<header class="major">
+												<h3>2030</h3>
+											</header>
+											<p id="intro-2030">The 2030 projections offer a longer-term view of potential air quality scenarios in this borough. Examine the anticipated emissions for CO2, NOX, PM10, and PM2.5 individually to understand the borough's air quality future.</p>
+											<ul class="actions">
+												<li><a href="./static/borough/Barking and Dagenham/Emissions/Charts/Interactive/2030/LAEI2019-summary-emissions-co2-2030-Barking and Dagenham-donut-inter.html" target="_blank" class="button">CO2</a></li>
+												<li><a href="./static/borough/Barking and Dagenham/Emissions/Charts/Interactive/2030/LAEI2019-summary-emissions-nox-2030-Barking and Dagenham-donut-inter.html" target="_blank" class="button">NOX</a></li>
+												<li><a href="./static/borough/Barking and Dagenham/Emissions/Charts/Interactive/2030/LAEI2019-summary-emissions-pm10-2030-Barking and Dagenham-donut-inter.html" target="_blank" class="button">PM10</a></li>
+												<li><a href="./static/borough/Barking and Dagenham/Emissions/Charts/Interactive/2030/LAEI2019-summary-emissions-pm2.5-2030-Barking and Dagenham-donut-inter.html" target="_blank" class="button">PM2.5</a></li>
+											</ul>
+										</div>
+									</div>
+								</section>
+							</section>
+
+
+					</div>
+
+				<!-- Contact -->
+					<!--section id="contact">
+						<div class="inner">
+							<section>
+								<form method="post" action="#">
+									<div class="fields">
+										<div class="field half">
+											<label for="name">Name</label>
+											<input type="text" name="name" id="name" />
+										</div>
+										<div class="field half">
+											<label for="email">Email</label>
+											<input type="text" name="email" id="email" />
+										</div>
+										<div class="field">
+											<label for="message">Message</label>
+											<textarea name="message" id="message" rows="6"></textarea>
+										</div>
+									</div>
+									<ul class="actions">
+										<li><input type="submit" value="Send Message" class="primary" /></li>
+										<li><input type="reset" value="Clear" /></li>
+									</ul>
+								</form>
+							</section>
+							<section class="split">
+								<section>
+									<div class="contact-method">
+										<span class="icon solid alt fa-envelope"></span>
+										<h3>Email</h3>
+										<a href="#">information@untitled.tld</a>
+									</div>
+								</section>
+								<section>
+									<div class="contact-method">
+										<span class="icon solid alt fa-phone"></span>
+										<h3>Phone</h3>
+										<span>(000) 000-0000 x12387</span>
+									</div>
+								</section>
+								<section>
+									<div class="contact-method">
+										<span class="icon solid alt fa-home"></span>
+										<h3>Address</h3>
+										<span>1234 Somewhere Road #5432<br />
+										Nashville, TN 00000<br />
+										United States of America</span>
+									</div>
+								</section>
+							</section>
+						</div>
+					</section-->
+
+				<!-- Footer -->
+					<footer id="footer">
+						<div class="inner">
+							<ul class="icons">
+								<li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li>
+								<li><a href="#" class="icon brands alt fa-facebook-f"><span class="label">Facebook</span></a></li>
+								<li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a></li>
+								<li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+								<li><a href="#" class="icon brands alt fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
+							</ul>
+							<!--ul class="copyright">
+								<li>&copy; Untitled</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
+							</ul-->
+						</div>
+					</footer>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

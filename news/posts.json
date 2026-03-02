@@ -1,0 +1,44 @@
+[
+  {
+    "slug": "platform-update",
+    "title": "Platform development update: smarter planning and dispatch",
+    "date": "2026-03-02",
+    "category": "Product",
+    "summary": "We refined request intake and improved planning & dispatch to reduce manual work, mileage, and missed pickups.",
+    "tags": [
+      "Platform",
+      "Planning",
+      "Operations"
+    ],
+    "link": "platform-update.html",
+    "featured": true
+  },
+  {
+    "slug": "embassy-event",
+    "title": "EvoSustain at the Dominican Embassy in London",
+    "date": "2026-03-01",
+    "category": "Community",
+    "summary": "We shared our sustainability vision with founders and explored collaboration across the UK and the Dominican Republic.",
+    "tags": [
+      "London",
+      "Entrepreneurship",
+      "Sustainability"
+    ],
+    "link": "embassy-event.html",
+    "featured": false
+  },
+  {
+    "slug": "pilot-learnings",
+    "title": "Pilot learnings: fewer miles, lower CO\u2082",
+    "date": "2026-02-20",
+    "category": "Impact",
+    "summary": "Early learnings show how optimisation and workload balancing translate into measurable emissions reduction.",
+    "tags": [
+      "CO2",
+      "Routes",
+      "KPIs"
+    ],
+    "link": "pilot-learnings.html",
+    "featured": false
+  }
+]

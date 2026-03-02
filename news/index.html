@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EvoSustain Journal | News & Updates</title>
+  <meta name="description" content="EvoSustain Journal: product updates, pilots, partnerships, and sustainability impact." />
+  <link rel="stylesheet" href="assets/css/newsroom.css" />
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="nav">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <div class="brandText">
+            <b>EvoSustain</b>
+            <span>Journal · News & Updates</span>
+          </div>
+        </div>
+        <nav class="links" aria-label="Primary">
+          <a href="../index.html">Home</a>
+          <a href="index.html" style="color:var(--ink);border-color:rgba(16,20,24,.10);background:rgba(255,255,255,.65)">Journal</a>
+        </nav>
+        <a class="cta" href="../index.html#contact">Request a demo</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="masthead">
+      <div class="panel left">
+        <div class="kicker"><span class="dot" aria-hidden="true"></span> EvoSustain Journal</div>
+        <div class="h1">News, product notes, and sustainability impact.</div>
+        <p class="lead">
+          Editorial-style updates about what we’re building, what we’re learning, and where we’re heading.
+        </p>
+        <p class="breadcrumb"><a href="../index.html">Home</a> / Journal</p>
+      </div>
+      <div class="panel right">
+        <div class="quick">
+          <div class="pill"><b><span id="total">0</span> posts</b><span>Total published</span></div>
+          <div class="pill"><b><span id="showing">0</span> showing</b><span>After filters</span></div>
+          <div class="pill"><b><span id="lastUpdated">—</span></b><span>Last update</span></div>
+          <div class="pill"><b><span id="now">—</span></b><span>Local time</span></div>
+        </div>
+      </div>
+    </div>
+
+    <section class="panel toolbar" aria-label="Filters">
+      <div class="toolbarTop">
+        <div>
+          <h2>Browse the Journal</h2>
+          <p>Search, filter, and sort. Designed for quick scanning.</p>
+        </div>
+        <div class="small">
+          Automated publishing: add Markdown in <span class="kbd">posts/</span> and run <span class="kbd">build.py</span>.
+        </div>
+      </div>
+
+      <div class="searchBar" role="search">
+        <input id="q" type="search" placeholder="Search by title, summary, tags…" autocomplete="off" />
+        <select id="category"><option value="">All categories</option></select>
+        <select id="sort">
+          <option value="date_desc">Date (newest)</option>
+          <option value="date_asc">Date (oldest)</option>
+          <option value="title_asc">Title (A–Z)</option>
+          <option value="title_desc">Title (Z–A)</option>
+        </select>
+        <button id="reset" type="button">Reset</button>
+      </div>
+
+      <div class="small" style="margin-top:10px">Showing <span id="count">0</span> results</div>
+    </section>
+
+    <div class="layout">
+      <section aria-label="Posts">
+        <div id="grid" class="grid"></div>
+      </section>
+
+      <aside class="sidebar" aria-label="Sidebar">
+        <div class="panel box">
+          <h3>Publishing workflow</h3>
+          <div class="small">
+            1) Add a Markdown file in <span class="kbd">posts/</span><br/>
+            2) Run <span class="kbd">python build.py</span><br/>
+            3) Upload the folder or push to GitHub
+          </div>
+          <hr class="sep"/>
+          <div class="small">
+            If you want, we can connect a CMS (Decap/Netlify) so you publish from a web admin panel.
+          </div>
+        </div>
+
+        <div class="panel box">
+          <h3>Suggested sections</h3>
+          <div class="small">Product · Impact · Partnerships · Community</div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="footer">
+      <div class="small">© <span id="year"></span> EvoSustain · Journal</div>
+    </div>
+  </main>
+
+  <script src="assets/js/newsroom.js"></script>
+</body>
+</html>

@@ -125,6 +125,18 @@ ARTICLE_TEMPLATE = """<!doctype html>
         <h1>{title}</h1>
         <p class="meta">{date_human} · {category}</p>
         {body}
+        <hr class="sep"/>
+        <h2>Follow EvoSustain</h2>
+        <p>
+          <a class="under" href="https://www.linkedin.com/company/evosustain/" target="_blank" rel="noopener">LinkedIn</a> ·
+          <a class="under" href="https://x.com/evosustain" target="_blank" rel="noopener">X</a> ·
+          <a class="under" href="https://www.instagram.com/evosustain/" target="_blank" rel="noopener">Instagram</a> ·
+          <a class="under" href="https://www.facebook.com/evosustain/" target="_blank" rel="noopener">Facebook</a> ·
+          <a class="under" href="https://www.tiktok.com/@evosustain" target="_blank" rel="noopener">TikTok</a> ·
+          <a class="under" href="https://www.youtube.com/@evosustain" target="_blank" rel="noopener">YouTube</a>
+          <span class="kbd" style="margin-left:6px">@evosustain</span>
+        </p>
+
         <p class="meta"><a class="under" href="index.html">← Back to the Journal</a></p>
       </div>
     </div>

@@ -12,24 +12,562 @@
   <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16.png">
   <link rel="apple-touch-icon" href="img/favicon-512.png">
+
+<style>
+  .social-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+  .social-icon{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;border:1px solid rgba(0,0,0,.12);background:#fff}
+  .social-icon svg{width:18px;height:18px;fill:currentColor}
+  .social-handle{font-weight:700;opacity:.85}
+</style>
+
 </head>
 <body>
   <!-- HEADER / CABECERA -->
   <header>
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <span>EvoSustain Ltd</span>
+      </div>
+
+          
+<button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="siteNav">
+  <span class="menu-icon" aria-hidden="true"></span>
+  <span class="menu-label" data-lang="en">Menu</span>
+  <span class="menu-label hidden" data-lang="es">Menú</span>
+</button>
+
+
+          <nav id="siteNav">
+            <a href="index.html#overview" data-lang="en">Overview</a>
+            <a href="index.html#overview" data-lang="es" class="hidden">Visión</a>
+
+            <div class="has-sub">
+              <button class="nav-btn" type="button" aria-expanded="false">
+                <span data-lang="en">Services</span>
+                <span data-lang="es" class="hidden">Servicios</span>
+                <span class="chev" aria-hidden="true">▾</span>
+              </button>
+              <div class="sub" role="menu">
+                <a role="menuitem" href="index.html#platform" data-lang="en">Platform</a>
+                <a role="menuitem" href="index.html#platform" data-lang="es" class="hidden">Plataforma</a>
+
+                <a role="menuitem" href="index.html#it" data-lang="en">IT Services</a>
+                <a role="menuitem" href="index.html#it" data-lang="es" class="hidden">Servicios IT</a>
+
+                <a role="menuitem" href="index.html#poc" data-lang="en">PoC</a>
+                <a role="menuitem" href="index.html#poc" data-lang="es" class="hidden">PoC</a>
+              </div>
+            </div>
+            
+
+            <a href="news/index.html" data-lang="en">News</a>
+            <a href="news/index.html" data-lang="es" class="hidden">Noticias</a>
+
+<div class="has-sub">
+              <button class="nav-btn" type="button" aria-expanded="false">
+                <span data-lang="en">More</span>
+                <span data-lang="es" class="hidden">Más</span>
+                <span class="chev" aria-hidden="true">▾</span>
+              </button>
+              <div class="sub" role="menu">
+                <a role="menuitem" href="index.html#donate" data-lang="en">Donate</a>
+                <a role="menuitem" href="index.html#donate" data-lang="es" class="hidden">Donar</a>
+
+                <a role="menuitem" href="index.html#contact" data-lang="en">Contact</a>
+                <a role="menuitem" href="index.html#contact" data-lang="es" class="hidden">Contacto</a>
+
+                <a role="menuitem" href="private-advisory.html" data-lang="en">Private Advisory</a>
+                <a role="menuitem" href="private-advisory.html" data-lang="es" class="hidden">Asesoría privada</a>
+              </div>
+                          <a href="index.html#demo" data-lang="en" class="nav-cta">Open Demo</a>
+            <a href="index.html#demo" data-lang="es" class="hidden nav-cta">Abrir Demo</a>
+            </div>
     
-<div style="display:flex;gap:12px;align-items:center;margin-top:10px">
-  <a href="https://www.linkedin.com/company/evosustain/" target="_blank"><img src="assets/icons/linkedin.svg" width="28"></a>
-  <a href="https://x.com/evosustain" target="_blank"><img src="assets/icons/x.svg" width="28"></a>
-  <a href="https://www.instagram.com/evosustain/" target="_blank"><img src="assets/icons/instagram.svg" width="28"></a>
-  <a href="https://www.facebook.com/evosustain/" target="_blank"><img src="assets/icons/facebook.svg" width="28"></a>
-  <a href="https://www.tiktok.com/@evosustain" target="_blank"><img src="assets/icons/tiktok.svg" width="28"></a>
-  <span style="font-weight:600">@evosustain</span>
+          </nav>
+
+      <div class="header-actions">
+        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="icon sun" aria-hidden="true">☀️</span>
+          <span class="icon moon" aria-hidden="true">🌙</span>
+        </button>
+
+      <div class="lang-switch">
+        <button id="lang-en" class="active">EN</button>
+        <button id="lang-es">ES</button>
+      </div>
+    
+      </div>
+</div>
+  </header>
+
+  <main>
+    <!-- HERO / SECCIÓN PRINCIPAL -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <!-- HERO ENGLISH -->
+        <div class="hero-lead" data-lang="en">
+          <div class="hero-eyebrow">Cleantech · Digital waste · Software & IT</div>
+          <h1>Digital waste management, software engineering and IT services.</h1>
+          <p>
+            EvoSustain is a UK-based cleantech startup that provides a fully digitalized 
+            ecosystem for waste operations, complemented by software development, IT support, and technology consulting.
+          </p>
+          <p>
+            We connect stores, planners, operators and drivers to reduce manual
+            work, improve traceability and unlock data-driven decisions.
+          </p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" onclick="location.href='#contact'">Request a PoC</button>
+            <button class="btn btn-outline" onclick="location.href='#it'">Explore IT & Software</button>
+          </div>
+        </div>
+
+        <!-- HERO SPANISH -->
+        <div class="hero-lead hidden" data-lang="es">
+          <div class="hero-eyebrow">Cleantech · Residuos digitales · Software & IT</div>
+          <h1>Gestión digital de residuos, desarrollo software y servicios IT.</h1>
+          <p>
+            EvoSustain es una startup cleantech con sede en el Reino Unido que ofrece un ecosistema 
+            totalmente digitalizado para las operaciones de gestión de residuos, complementado con 
+            desarrollo de software, soporte IT y consultoría tecnológica.
+          </p>
+          <p>
+            Conectamos tiendas, planificación, operadores y conductores para reducir
+            trabajo manual, mejorar la trazabilidad y habilitar decisiones basadas en datos.
+          </p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" onclick="location.href='#contact'">Solicitar PoC</button>
+            <button class="btn btn-outline" onclick="location.href='#it'">Ver IT & Software</button>
+          </div>
+        </div>
+
+        <!-- HERO CARD -->
+        <div class="hero-card">
+          <h3 data-lang="en">Operational dashboard · Live</h3>
+          <h3 data-lang="es" class="hidden">Panel operativo · En vivo</h3>
+          <p data-lang="en">124 active sites · 18 routes · Real-time KPIs</p>
+          <p data-lang="es" class="hidden">124 puntos activos · 18 rutas · KPIs en tiempo real</p>
+          <div class="hero-metrics">
+            <span>📍 124 sites</span>
+            <span>🚚 18 routes</span>
+            <span>♻ 96% tracked digitally</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OVERVIEW / VISIÓN GENERAL -->
+    <section id="overview" class="section">
+      <div class="container">
+        <div class="section-header" data-lang="en">
+          <div class="section-kicker">Company overview</div>
+          <h2>Smart, data-driven waste and IT for modern cities.</h2>
+          <p>
+            Founded in 2024, EvoSustain specialises in digital solutions for smart
+            and sustainable waste management. We develop software, provide IT
+            support and deliver an integrated platform that connects stores,
+            operators and drivers.
+          </p>
+        </div>
+        <div class="section-header hidden" data-lang="es">
+          <div class="section-kicker">Visión general</div>
+          <h2>Residuos e IT orientados a datos para ciudades modernas.</h2>
+          <p>
+            Fundada en 2024, EvoSustain está especializada en soluciones digitales
+            para una gestión inteligente y sostenible de residuos. Desarrollamos
+            software, damos soporte IT y ofrecemos una plataforma integrada que
+            conecta tiendas, operadores y conductores.
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <div class="card">
+            <h3 data-lang="en">What we provide</h3>
+            <h3 data-lang="es" class="hidden">Qué ofrecemos</h3>
+            <ul class="clean-list">
+              <li data-lang="en">Digital waste management platform (cloud)</li>
+              <li data-lang="es" class="hidden">Plataforma digital de residuos (cloud)</li>
+
+              <li data-lang="en">Custom software development & integrations</li>
+              <li data-lang="es" class="hidden">Desarrollo de software e integraciones</li>
+
+              <li data-lang="en">IT support & service continuity</li>
+              <li data-lang="es" class="hidden">Soporte IT y continuidad de servicio</li>
+
+              <li data-lang="en">Technology & data consulting</li>
+              <li data-lang="es" class="hidden">Consultoría tecnológica y de datos</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3 data-lang="en">Who we work with</h3>
+            <h3 data-lang="es" class="hidden">Con quién trabajamos</h3>
+            <ul class="clean-list">
+              <li data-lang="en">Local authorities</li>
+              <li data-lang="es" class="hidden">Autoridades locales</li>
+
+              <li data-lang="en">Waste collection contractors</li>
+              <li data-lang="es" class="hidden">Contratistas de recogida de residuos</li>
+
+              <li data-lang="en">Retail, logistics & distribution chains</li>
+              <li data-lang="es" class="hidden">Cadenas retail, logística y distribución</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3 data-lang="en">Our mission</h3>
+            <h3 data-lang="es" class="hidden">Nuestra misión</h3>
+            <p data-lang="en">
+              To accelerate the transition towards smarter, data-driven urban
+              waste solutions, bringing technological innovation to the
+              environmental services sector.
+            </p>
+            <p data-lang="es" class="hidden">
+              Acelerar la transición hacia soluciones de residuos urbanos
+              inteligentes y basadas en datos, aportando innovación tecnológica
+              al sector de los servicios medioambientales.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLATFORM / PLATAFORMA -->
+    <section id="platform" class="section">
+      <div class="container">
+        <div class="section-header" data-lang="en">
+          <div class="section-kicker">Platform</div>
+          <h2>Integrated platform for smart, traceable waste operations.</h2>
+          <p>
+            A cloud-based platform connecting stores, operators and drivers with
+            real-time visibility, route optimisation and lifecycle traceability.
+          </p>
+        </div>
+        <div class="section-header hidden" data-lang="es">
+          <div class="section-kicker">Plataforma</div>
+          <h2>Plataforma integrada para operaciones de residuos trazables.</h2>
+          <p>
+            Una plataforma cloud que conecta tiendas, operadores y conductores con
+            visibilidad en tiempo real, optimización de rutas y trazabilidad del ciclo.
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <div class="card">
+            <h3 data-lang="en">Real-time collection requests</h3>
+            <h3 data-lang="es" class="hidden">Solicitudes en tiempo real</h3>
+            <ul class="clean-list">
+              <li data-lang="en">On-demand and scheduled pickups</li>
+              <li data-lang="es" class="hidden">Recogidas on-demand y programadas</li>
+
+              <li data-lang="en">Status tracking & notifications</li>
+              <li data-lang="es" class="hidden">Seguimiento de estado y notificaciones</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3 data-lang="en">Route optimisation & KPIs</h3>
+            <h3 data-lang="es" class="hidden">Optimización de rutas & KPIs</h3>
+            <ul class="clean-list">
+              <li data-lang="en">Reduce mileage, time and emissions</li>
+              <li data-lang="es" class="hidden">Reducir kilómetros, tiempo y emisiones</li>
+
+              <li data-lang="en">Monitor SLAs & service performance</li>
+              <li data-lang="es" class="hidden">Monitorizar SLAs y niveles de servicio</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3 data-lang="en">End-to-end traceability</h3>
+            <h3 data-lang="es" class="hidden">Trazabilidad extremo a extremo</h3>
+            <ul class="clean-list">
+              <li data-lang="en">Digital records for every collection</li>
+              <li data-lang="es" class="hidden">Registro digital de cada recogida</li>
+
+              <li data-lang="en">Materials, volumes & destinations</li>
+              <li data-lang="es" class="hidden">Materiales, volúmenes y destinos</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- IT SERVICES / SERVICIOS IT -->
+    <section id="it" class="section">
+      <div class="container">
+        <div class="section-header" data-lang="en">
+          <div class="section-kicker">IT & Software</div>
+          <h2>Software development, IT support and technology consulting.</h2>
+          <p>
+            We complement the platform with professional IT services so that your
+            organisation can modernise its digital stack in a secure and scalable way.
+          </p>
+        </div>
+        <div class="section-header hidden" data-lang="es">
+          <div class="section-kicker">IT & Software</div>
+          <h2>Desarrollo de software, soporte IT y consultoría tecnológica.</h2>
+          <p>
+            Complementamos la plataforma con servicios IT profesionales para que
+            tu organización pueda modernizar su stack digital de forma segura y escalable.
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <div class="card">
+            <h3 data-lang="en">Software development</h3>
+            <h3 data-lang="es" class="hidden">Desarrollo de software</h3>
+            <ul class="clean-list">
+              <li data-lang="en">Custom apps, APIs & integrations</li>
+              <li data-lang="es" class="hidden">Aplicaciones, APIs e integraciones a medida</li>
+
+              <li data-lang="en">Dashboards & workflow automation</li>
+              <li data-lang="es" class="hidden">Dashboards y automatización de flujos</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3 data-lang="en">IT support</h3>
+            <h3 data-lang="es" class="hidden">Soporte IT</h3>
+            <ul class="clean-list">
+              <li data-lang="en">1st & 2nd line support</li>
+              <li data-lang="es" class="hidden">Soporte de 1ª y 2ª línea</li>
+
+              <li data-lang="en">Incident management & monitoring</li>
+              <li data-lang="es" class="hidden">Gestión de incidencias y monitorización</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3 data-lang="en">Technology consulting</h3>
+            <h3 data-lang="es" class="hidden">Consultoría tecnológica</h3>
+            <ul class="clean-list">
+              <li data-lang="en">Digital roadmaps for waste services</li>
+              <li data-lang="es" class="hidden">Roadmaps digitales para servicios de residuos</li>
+
+              <li data-lang="en">IT architecture & data governance</li>
+              <li data-lang="es" class="hidden">Arquitectura IT y gobierno del dato</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- POC / PROOF OF CONCEPT -->
+    <section id="poc" class="section">
+      <div class="container">
+        <div class="section-header" data-lang="en">
+          <div class="section-kicker">PoC partnerships</div>
+          <h2>Proof of Concept pilots in London and across the UK.</h2>
+          <p>
+            We offer PoC partnerships to validate the platform and IT services in
+            real environments, with clear objectives and KPIs from day one.
+          </p>
+        </div>
+        <div class="section-header hidden" data-lang="es">
+          <div class="section-kicker">Colaboraciones PoC</div>
+          <h2>Proyectos piloto (PoC) en Londres y Reino Unido.</h2>
+          <p>
+            Ofrecemos acuerdos de PoC para validar la plataforma y los servicios
+            IT en entornos reales, con objetivos y KPIs claros desde el inicio.
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <div class="card">
+            <h3 data-lang="en">Who we partner with</h3>
+            <h3 data-lang="es" class="hidden">Con quién colaboramos</h3>
+            <ul class="clean-list">
+              <li data-lang="en">Local authorities</li>
+              <li data-lang="es" class="hidden">Autoridades locales</li>
+
+              <li data-lang="en">Waste collection contractors</li>
+              <li data-lang="es" class="hidden">Contratistas de recogida</li>
+
+              <li data-lang="en">Retail, logistics & distribution chains</li>
+              <li data-lang="es" class="hidden">Cadenas retail, logística y distribución</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3 data-lang="en">Typical PoC scope</h3>
+            <h3 data-lang="es" class="hidden">Alcance típico de un PoC</h3>
+            <ul class="clean-list">
+              <li data-lang="en">Goal and KPI definition</li>
+              <li data-lang="es" class="hidden">Definición de objetivos y KPIs</li>
+              <li data-lang="en">Configuration of areas, routes & roles</li>
+              <li data-lang="es" class="hidden">Configuración de áreas, rutas y roles</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3 data-lang="en">From pilot to rollout</h3>
+            <h3 data-lang="es" class="hidden">Del piloto al despliegue</h3>
+            <ul class="clean-list">
+              <li data-lang="en">Baseline vs pilot performance analysis</li>
+              <li data-lang="es" class="hidden">Análisis entre situación inicial y piloto</li>
+              <li data-lang="en">Clear roadmap to scale to production</li>
+              <li data-lang="es" class="hidden">Plan claro para escalar a producción</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- DEMO + DONATE -->
+    <section id="demo-donate" class="section">
+      <div class="container">
+
+        <div class="section-header" data-lang="en">
+          <div class="section-kicker">Demo & Support</div>
+          <h2>Explore the platform or support our mission.</h2>
+          <p>
+            Access the live digital waste hub or contribute to the development of new tools
+            and sustainability innovations.
+          </p>
+        </div>
+
+        <div class="section-header hidden" data-lang="es">
+          <div class="section-kicker">Demo & Apoyo</div>
+          <h2>Explora la plataforma o apoya nuestra misión.</h2>
+          <p>
+            Accede al hub digital en vivo o contribuye al desarrollo de nuevas herramientas
+            e innovaciones para la sostenibilidad.
+          </p>
+        </div>
+
+        <div class="grid-2">
+
+          <!-- CARD: PRODUCT DEMO -->
+          <div class="card" id="demo">
+            <div data-lang="en">
+              <div class="section-kicker">App Demo</div>
+              <h3>Access the EvoSustain operational and analytics hub.</h3>
+              <p>
+                The EvoSustain Hub provides access to the digital waste platform, live dashboards,
+                route data, operational KPIs and integration tools.
+              </p>
+              <button class="btn btn-primary" onclick="location.href='app/evosustainhub.html'">
+                Open Demo
+              </button>
+              <button class="btn btn-outline" style="margin-left:8px" onclick="location.href='news/index.html'">
+                View News
+              </button>
+            </div>
+
+            <div data-lang="es" class="hidden">
+              <div class="section-kicker">Demo App</div>
+              <h3>Accede al hub operativo y de analítica de EvoSustain.</h3>
+              <p>
+                El EvoSustain Hub permite acceder a la plataforma digital de residuos, dashboards en vivo,
+                datos de rutas, KPIs operativos y herramientas de integración.
+              </p>
+              <button class="btn btn-primary" onclick="location.href='app/evosustainhub.html'">
+                Abrir demo
+              </button>
+              <button class="btn btn-outline" style="margin-left:8px" onclick="location.href='news/index.html'">
+                Ver Noticias
+              </button>
+            </div>
+          </div>
+
+          <!-- CARD: DONATE -->
+          <div class="card" id="donate">
+            <div data-lang="en">
+              <div class="section-kicker">Support Us</div>
+              <h3>Donate to support EvoSustain’s mission.</h3>
+              <p>
+                Your contribution helps us continue developing digital tools for waste management,
+                sustainability and environmental innovation.
+              </p>
+              <button class="btn btn-primary" onclick="location.href='https://www.paypal.com/donate/?hosted_button_id=VPPKADAE4RAXQ'">
+                Donate via PayPal
+              </button>
+            </div>
+
+            <div data-lang="es" class="hidden">
+              <div class="section-kicker">Apóyanos</div>
+              <h3>Dona para apoyar la misión de EvoSustain.</h3>
+              <p>
+                Tu contribución nos ayuda a seguir desarrollando herramientas digitales para la gestión
+                de residuos, la sostenibilidad y la innovación medioambiental.
+              </p>
+              <button class="btn btn-primary" onclick="location.href='https://www.paypal.com/donate/?hosted_button_id=VPPKADAE4RAXQ'">
+                Donar con PayPal
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT / CONTACTO -->
+    <section id="contact" class="section">
+      <div class="container contact-inner">
+        <div data-lang="en">
+          <div class="section-kicker">Contact</div>
+          <h2>Let’s talk about your PoC or IT Services.</h2>
+          <p>
+            Share a short description of your context and challenges. We will
+            respond with a tailored proposal.
+          </p>
+        </div>
+        <div class="hidden" data-lang="es">
+          <div class="section-kicker">Contacto</div>
+          <h2>Hablemos sobre tu PoC o Servicios IT.</h2>
+          <p>
+            Cuéntanos brevemente tu contexto y retos principales. Te responderemos
+            con una propuesta adaptada.
+          </p>
+        </div>
+
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="location.href='mailto:info@evoford.com'">
+            info@evoford.com
+          </button>
+
+          <button class="btn btn-primary" onclick="location.href='tel:+447871710697'">
+            +44 7871 710697
+          </button>
+        </div>
+
+        
+<div class="social-row" aria-label="EvoSustain social links">
+  <a class="social-icon" href="https://www.linkedin.com/company/evosustain/" target="_blank" rel="noopener" aria-label="LinkedIn @evosustain">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.329-.024-3.039-1.852-3.039-1.854 0-2.137 1.446-2.137 2.941v5.667H9.351V9h3.414v1.561h.049c.476-.9 1.637-1.852 3.368-1.852 3.599 0 4.265 2.368 4.265 5.455v6.288zM5.337 7.433a2.062 2.062 0 11.004-4.124 2.062 2.062 0 01-.004 4.124zM6.979 20.452H3.695V9h3.284v11.452z"/></svg>
+  </a>
+  <a class="social-icon" href="https://x.com/evosustain" target="_blank" rel="noopener" aria-label="X @evosustain">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2H21l-6.51 7.44L22 22h-5.828l-4.56-5.966L6.21 22H3.454l6.962-7.96L2 2h5.914l4.12 5.432L18.244 2z"/></svg>
+  </a>
+  <a class="social-icon" href="https://www.instagram.com/evosustain/" target="_blank" rel="noopener" aria-label="Instagram @evosustain">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.75 2C4.574 2 2 4.574 2 7.75v8.5C2 19.426 4.574 22 7.75 22h8.5C19.426 22 22 19.426 22 16.25v-8.5C22 4.574 19.426 2 16.25 2h-8.5zm0 2h8.5C18.56 4 20 5.44 20 7.75v8.5C20 18.56 18.56 20 16.25 20h-8.5C5.44 20 4 18.56 4 16.25v-8.5C4 5.44 5.44 4 7.75 4zm8.25 1a1.25 1.25 0 100 2.5 1.25 1.25 0 000-2.5zM12 7a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6z"/></svg>
+  </a>
+  <a class="social-icon" href="https://www.facebook.com/evosustain/" target="_blank" rel="noopener" aria-label="Facebook @evosustain">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12a10 10 0 10-11.563 9.875v-6.987H7.897V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.242 0-1.63.771-1.63 1.562V12h2.773l-.443 2.888h-2.33v6.987A10 10 0 0022 12z"/></svg>
+  </a>
+  <a class="social-icon" href="https://www.tiktok.com/@evosustain" target="_blank" rel="noopener" aria-label="TikTok @evosustain">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.75 2h2.5a5 5 0 004.5 4.5v2.5a7.5 7.5 0 01-4.5-1.5v7.25a5.75 5.75 0 11-5.75-5.75 5.6 5.6 0 011.5.2v2.6a3 3 0 102.25 2.9V2z"/></svg>
+  </a>
+  <span class="social-handle">@evosustain</span>
 </div>
 
-</div>
+      </div>
+    </section>
+  </main>
 
+  <!-- FOOTER / PIE -->
+  <footer>
+    © <span id="year"></span> EvoSustain Ltd · Cleantech · Software · IT Services
+  </footer>
+
+  <script src="https://cdn.counter.dev/script.js"
+          data-id="414f256d-2ec4-442d-b623-97a520cee54e"
+          data-utcoffset="0">
+  </script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
-
-
-

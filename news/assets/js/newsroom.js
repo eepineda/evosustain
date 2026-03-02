@@ -1,7 +1,14 @@
 async function loadPosts(){
-  const res = await fetch("posts.json", { cache: "no-store" });
-  if (!res.ok) throw new Error("Could not load posts.json");
-  return await res.json();
+  // Offline-friendly: if posts are embedded, use them.
+  if (Array.isArray(window.__POSTS__) && window.__POSTS__.length) return window.__POSTS__;
+
+  // If hosted, try to fetch posts.json.
+  try{
+    const res = await fetch("posts.json", { cache: "no-store" });
+    if (res.ok) return await res.json();
+  }catch(e){}
+
+  return [];
 }
 
 const $ = (id) => document.getElementById(id);
@@ -112,7 +119,7 @@ function renderFeatured(p){
     <span>Editorial-style posts designed for quick scanning.</span>
     <hr class="sep"/>
     <b>Topics</b>
-    <span>Product · Impact · Partnerships · Community</span>
+    <span>Product · Impact · Partnerships · Community · Press</span>
     <hr class="sep"/>
     <b>Publishing</b>
     <span>Add a Markdown file in <span class="kbd">posts/</span> and run the build.</span>
@@ -126,7 +133,6 @@ function renderFeatured(p){
 function renderCard(p){
   const card = document.createElement("article");
   card.className = "card";
-
   card.innerHTML = `
     <h3><a href="${p.link}">${escapeHtml(p.title)}</a></h3>
     <p class="meta">${formatDate(p.date)} · ${escapeHtml(p.category || "Update")}</p>
@@ -139,7 +145,7 @@ function renderCard(p){
 function escapeHtml(str) {
   return (str || "").replace(/[&<>"']/g, (m) => ({
     "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"
-  }[m]));
+  }[m] || m));
 }
 
 async function init(){

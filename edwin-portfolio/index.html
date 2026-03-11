@@ -787,14 +787,39 @@
           text: 'Una trayectoria académica construida entre República Dominicana, España y Reino Unido, reforzada por formación continua en tecnología, datos, cloud y ciberseguridad.',
           items: ['Estudios iniciales en República Dominicana.','Convalidación académica en España y finalización de un grado universitario.','Formación continua orientada a tecnología, datos y sistemas.','Actualmente cursando estudios de ciberseguridad en The Open University, Reino Unido.']
         },
-        blog: {
-          title: 'Blog',
-          items: [
-            { date: 'Artículo 01', title: 'De Arroyo Dulce a Europa', desc: 'Una historia de migración, disciplina y crecimiento profesional en tecnología.' },
-            { date: 'Artículo 02', title: 'Cómo la educación transformó mi carrera', desc: 'La formación como motor de movilidad social, confianza y proyección internacional.' },
-            { date: 'Artículo 03', title: 'Del sector público a la salud digital', desc: 'Lecciones aprendidas entre administración pública, banca y diagnóstico clínico.' }
-          ]
-        },
+      blog: {
+        title: 'Blog',
+        items: [
+          {
+            date: 'Artículo 01',
+            title: 'De Arroyo Dulce a Europa',
+            desc: 'Una historia de migración, disciplina y crecimiento profesional en tecnología.',
+            link: 'blog/article-1-es.html',
+            cta: 'Leer artículo'
+          },
+          {
+            date: 'Artículo 02',
+            title: 'Cómo la educación transformó mi carrera',
+            desc: 'La formación como motor de movilidad social, confianza y proyección internacional.',
+            link: 'blog/article-2-es.html',
+            cta: 'Leer artículo'
+          },
+          {
+            date: 'Artículo 03',
+            title: 'Del sector público a la transformación digital',
+            desc: 'Experiencia en administración pública, energía, telecomunicaciones y grandes proyectos tecnológicos.',
+            link: 'blog/article-3-es.html',
+            cta: 'Leer artículo'
+          },
+          {
+            date: 'Artículo 04',
+            title: 'Una carrera internacional: Reino Unido',
+            desc: 'La evolución profesional en seguros, banca, salud y diagnóstico clínico en el Reino Unido.',
+            link: 'blog/article-4-es.html',
+            cta: 'Leer artículo'
+          }
+        ]
+      },
         contact: {
           title: 'Conversemos',
           text: 'Disponible para colaboraciones, networking, charlas, mentoría y oportunidades profesionales internacionales.',
@@ -858,14 +883,39 @@
           text: 'An academic path built across the Dominican Republic, Spain and the United Kingdom, reinforced by continuous learning in technology, data, cloud and cybersecurity.',
           items: ['Early education in the Dominican Republic.','Academic validation in Spain and completion of a university degree.','Continuous learning focused on technology, data and systems.','Currently studying cybersecurity at The Open University, United Kingdom.']
         },
-        blog: {
-          title: 'Blog',
-          items: [
-            { date: 'Article 01', title: 'From Arroyo Dulce to Europe', desc: 'A story of migration, discipline and professional growth in technology.' },
-            { date: 'Article 02', title: 'How education transformed my career', desc: 'Education as a driver of mobility, confidence and international progression.' },
-            { date: 'Article 03', title: 'From public sector to digital health', desc: 'Lessons learned across public administration, banking and clinical diagnostics.' }
-          ]
-        },
+      blog: {
+        title: 'Blog',
+        items: [
+          {
+            date: 'Article 01',
+            title: 'From Arroyo Dulce to Europe',
+            desc: 'A story of migration, discipline and professional growth in technology.',
+            link: 'blog/article-1-en.html',
+            cta: 'Read article'
+          },
+          {
+            date: 'Article 02',
+            title: 'How education transformed my career',
+            desc: 'Education as a driver of mobility, confidence and international progression.',
+            link: 'blog/article-2-en.html',
+            cta: 'Read article'
+          },
+          {
+            date: 'Article 03',
+            title: 'From public administration to digital transformation',
+            desc: 'Experience across public administration, energy, telecommunications and major technology projects.',
+            link: 'blog/article-3-en.html',
+            cta: 'Read article'
+          },
+          {
+            date: 'Article 04',
+            title: 'An international career: the United Kingdom',
+            desc: 'Professional growth across insurance, banking, healthcare and clinical diagnostics in the UK.',
+            link: 'blog/article-4-en.html',
+            cta: 'Read article'
+          }
+        ]
+      },
         contact: {
           title: 'Let’s connect',
           text: 'Available for collaboration, networking, speaking, mentoring and international professional opportunities.',
@@ -994,13 +1044,21 @@
       });
     }
 
-    function renderBlog() {
+function renderBlog() {
       const box = document.getElementById('blogBox');
       box.innerHTML = '';
+
       content[lang].blog.items.forEach(item => {
         const el = document.createElement('article');
         el.className = 'blog-card';
-        el.innerHTML = `<div class="blog-date">${item.date}</div><h3>${item.title}</h3><p>${item.desc}</p><div class="blog-link">Read more <span>→</span></div>`;
+        el.innerHTML = `
+          <div class="blog-date">${item.date}</div>
+          <h3>${item.title}</h3>
+          <p>${item.desc}</p>
+          <a class="blog-link" href="${item.link}">
+            ${item.cta} <span>→</span>
+          </a>
+        `;
         box.appendChild(el);
       });
     }

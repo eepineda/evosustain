@@ -1,0 +1,1041 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edwin Pineda | Executive Portfolio</title>
+  <meta name="description" content="Portfolio ejecutivo y bilingüe de Edwin Pineda. Trayectoria internacional en cloud, data, tecnología, banca, salud y transformación digital." />
+  <meta name="theme-color" content="#0b1220" />
+  <meta property="og:title" content="Edwin Pineda | Executive Portfolio" />
+  <meta property="og:description" content="Portfolio internacional de Edwin Pineda con experiencia en cloud, data, salud, banca y transformación digital." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="edwin-profile.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --bg-soft: #edf2f8;
+      --panel: rgba(255,255,255,0.78);
+      --panel-solid: #ffffff;
+      --text: #0f172a;
+      --muted: #526075;
+      --soft: #74839a;
+      --line: rgba(15,23,42,0.08);
+      --primary: #0f172a;
+      --accent: #2563eb;
+      --accent-soft: rgba(37,99,235,0.1);
+      --shadow: 0 10px 30px rgba(15,23,42,0.08);
+      --shadow-lg: 0 24px 60px rgba(15,23,42,0.14);
+      --radius: 28px;
+      --radius-md: 22px;
+      --radius-sm: 16px;
+      --max: 1200px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #08111f;
+        --bg-soft: #0d1729;
+        --panel: rgba(15,23,42,0.72);
+        --panel-solid: #0f172a;
+        --text: #e8eef8;
+        --muted: #b8c3d4;
+        --soft: #8ea0b8;
+        --line: rgba(148,163,184,0.16);
+        --primary: #e8eef8;
+        --accent: #60a5fa;
+        --accent-soft: rgba(96,165,250,0.12);
+        --shadow: 0 10px 30px rgba(2,6,23,0.32);
+        --shadow-lg: 0 24px 60px rgba(2,6,23,0.48);
+      }
+    }
+
+    [data-theme="light"] {
+      --bg: #f4f7fb;
+      --bg-soft: #edf2f8;
+      --panel: rgba(255,255,255,0.78);
+      --panel-solid: #ffffff;
+      --text: #0f172a;
+      --muted: #526075;
+      --soft: #74839a;
+      --line: rgba(15,23,42,0.08);
+      --primary: #0f172a;
+      --accent: #2563eb;
+      --accent-soft: rgba(37,99,235,0.1);
+      --shadow: 0 10px 30px rgba(15,23,42,0.08);
+      --shadow-lg: 0 24px 60px rgba(15,23,42,0.14);
+    }
+
+    [data-theme="dark"] {
+      --bg: #08111f;
+      --bg-soft: #0d1729;
+      --panel: rgba(15,23,42,0.72);
+      --panel-solid: #0f172a;
+      --text: #e8eef8;
+      --muted: #b8c3d4;
+      --soft: #8ea0b8;
+      --line: rgba(148,163,184,0.16);
+      --primary: #e8eef8;
+      --accent: #60a5fa;
+      --accent-soft: rgba(96,165,250,0.12);
+      --shadow: 0 10px 30px rgba(2,6,23,0.32);
+      --shadow-lg: 0 24px 60px rgba(2,6,23,0.48);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(37,99,235,0.10), transparent 26%),
+        radial-gradient(circle at left top, rgba(37,99,235,0.08), transparent 22%),
+        var(--bg);
+      transition: background .3s ease, color .3s ease;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+    button { font: inherit; cursor: pointer; }
+
+    .container {
+      width: min(var(--max), calc(100% - 28px));
+      margin: 0 auto;
+    }
+
+    .glass {
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: color-mix(in srgb, var(--bg) 78%, transparent);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 0;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand strong {
+      letter-spacing: -0.03em;
+      font-size: 1.06rem;
+    }
+
+    .brand span {
+      color: var(--soft);
+      font-size: .92rem;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn, .btn-primary {
+      border-radius: 999px;
+      padding: 12px 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: transform .2s ease, background .2s ease, border-color .2s ease, opacity .2s ease;
+      white-space: nowrap;
+    }
+
+    .btn {
+      background: var(--panel-solid);
+      border: 1px solid var(--line);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .btn-primary {
+      border: none;
+      color: white;
+      background: linear-gradient(135deg, #0f172a 0%, #2563eb 100%);
+      box-shadow: var(--shadow-lg);
+    }
+
+    [data-theme="dark"] .btn-primary,
+    @media (prefers-color-scheme: dark) {
+      .btn-primary {
+        background: linear-gradient(135deg, #e8eef8 0%, #60a5fa 100%);
+        color: #08111f;
+      }
+    }
+
+    .btn:hover, .btn-primary:hover { transform: translateY(-1px); }
+
+    .hero {
+      padding: 76px 0 28px;
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+      gap: 34px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
+      color: var(--accent);
+      font-weight: 700;
+      font-size: .88rem;
+      box-shadow: var(--shadow);
+    }
+
+    h1 {
+      margin: 18px 0 0;
+      font-size: clamp(3rem, 6vw, 5.8rem);
+      line-height: .96;
+      letter-spacing: -0.06em;
+    }
+
+    .hero-role {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.14rem, 2vw, 1.54rem);
+      font-weight: 500;
+    }
+
+    .hero-copy {
+      margin-top: 20px;
+      color: var(--muted);
+      line-height: 1.9;
+      max-width: 46rem;
+      font-size: 1.03rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .stat {
+      padding: 18px;
+      border-radius: 22px;
+      background: var(--panel-solid);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .hero-card {
+      border-radius: 32px;
+      padding: 20px;
+    }
+
+    .portrait {
+      min-height: 660px;
+      background:
+        radial-gradient(circle at center, rgba(37,99,235,.14), transparent 48%),
+        linear-gradient(180deg, color-mix(in srgb, var(--panel-solid) 96%, transparent), var(--bg-soft));
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .portrait-meta {
+      position: absolute;
+      inset: 16px 16px auto 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      z-index: 2;
+    }
+
+    .meta-pill {
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: color-mix(in srgb, var(--panel-solid) 86%, transparent);
+      box-shadow: var(--shadow);
+      color: var(--muted);
+      font-size: .86rem;
+      font-weight: 600;
+    }
+
+    .portrait img {
+      width: min(100%, 600px);
+      object-fit: contain;
+      animation: float 5.5s ease-in-out infinite;
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .section {
+      padding: 24px 0;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .section-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      background: var(--accent-soft);
+      border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--line));
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+      box-shadow: var(--shadow);
+      flex: 0 0 auto;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.9rem, 3vw, 2.5rem);
+      letter-spacing: -0.05em;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 18px;
+    }
+
+    .panel {
+      background: var(--panel-solid);
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      padding: 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    .panel p + p { margin-top: 16px; }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 12px; }
+    .chip {
+      padding: 11px 15px;
+      border-radius: 999px;
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      font-size: .92rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 22px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 7px;
+      top: 12px;
+      bottom: 12px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--accent), transparent);
+      opacity: .6;
+    }
+
+    .timeline-item {
+      position: relative;
+      background: var(--panel-solid);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 22px 22px 22px 26px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+      transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+      cursor: pointer;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -21px;
+      top: 30px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 18%, transparent);
+    }
+
+    .timeline-item:hover,
+    .timeline-item.active {
+      transform: translateX(4px);
+      border-color: color-mix(in srgb, var(--accent) 30%, var(--line));
+      box-shadow: var(--shadow-lg);
+    }
+
+    .timeline-period {
+      display: inline-flex;
+      align-items: center;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid color-mix(in srgb, var(--accent) 20%, var(--line));
+      font-size: .86rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .timeline-item h3 { margin: 0; font-size: 1.16rem; }
+    .timeline-item p {
+      margin: 12px 0 0;
+      color: var(--muted);
+      line-height: 1.85;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s ease;
+    }
+    .timeline-item.active p { max-height: 240px; }
+
+    .logo-grid,
+    .card-grid,
+    .blog-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .logo-grid { grid-template-columns: repeat(6,1fr); }
+    .card-grid { grid-template-columns: repeat(3,1fr); }
+    .blog-grid { grid-template-columns: repeat(3,1fr); }
+
+    .logo, .card, .blog-card {
+      background: var(--panel-solid);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      transition: transform .22s ease, box-shadow .22s ease;
+    }
+
+    .logo:hover, .card:hover, .blog-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .logo {
+      min-height: 100px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .logo small {
+      display: block;
+      margin-top: 6px;
+      color: var(--soft);
+      font-weight: 500;
+    }
+
+    .card, .blog-card { padding: 22px; }
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 10px;
+    }
+    .card h3, .blog-card h3 { margin: 0; font-size: 1.08rem; }
+    .kicker, .blog-date {
+      color: var(--soft);
+      font-size: .9rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .card p, .blog-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .blog-link {
+      margin-top: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .edu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    .list li + li { margin-top: 10px; }
+
+    .cta {
+      background: linear-gradient(135deg, color-mix(in srgb, var(--panel-solid) 92%, transparent), var(--bg-soft));
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .cta h3 {
+      margin: 0;
+      font-size: 1.8rem;
+      letter-spacing: -0.04em;
+    }
+
+    .cta p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    .contact-meta {
+      display: grid;
+      gap: 12px;
+    }
+
+    .contact-row {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: color-mix(in srgb, var(--panel-solid) 88%, transparent);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      color: var(--muted);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid var(--line);
+      padding: 24px 0 36px;
+      color: var(--soft);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .footer-pill {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--panel-solid);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1080px) {
+      .card-grid, .blog-grid { grid-template-columns: 1fr 1fr; }
+      .logo-grid { grid-template-columns: repeat(3,1fr); }
+    }
+
+    @media (max-width: 920px) {
+      .hero, .grid-2, .edu-grid, .cta { grid-template-columns: 1fr; }
+      .hero-stats { grid-template-columns: 1fr; }
+      .portrait { min-height: 520px; }
+    }
+
+    @media (max-width: 680px) {
+      .nav { flex-direction: column; align-items: flex-start; }
+      .nav-actions { width: 100%; }
+      .btn, .btn-primary { width: 100%; }
+      .hero-actions { flex-direction: column; }
+      .card-grid, .blog-grid, .logo-grid { grid-template-columns: 1fr; }
+      .timeline { padding-left: 18px; }
+      .timeline-item::before { left: -16px; }
+      h1 { font-size: clamp(2.5rem, 12vw, 4rem); }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <div class="brand">
+        <strong>Edwin Pineda</strong>
+        <span data-i18n="brandSub">Executive Portfolio</span>
+      </div>
+      <div class="nav-actions">
+        <button class="btn" id="themeBtn" type="button"><span id="themeIcon">🌙</span><span data-i18n="theme">Modo automático</span></button>
+        <button class="btn" id="langBtn" type="button"><span id="langFlag">🇬🇧</span><span id="langLabel">English</span></button>
+        <a class="btn-primary" href="UK_Edwin_Pineda_cv.pdf" download><span>↓</span><span data-i18n="downloadCv">Descargar CV</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="container hero">
+      <div class="reveal">
+        <div class="eyebrow">✦ <span data-i18n="hero.badge">Portfolio ejecutivo internacional</span></div>
+        <h1 data-i18n="hero.name">Edwin Pineda</h1>
+        <div class="hero-role" data-i18n="hero.role">Cloud, Data & Technology Professional</div>
+        <p class="hero-copy" data-i18n="hero.copy">Una trayectoria internacional construida entre República Dominicana, España y Reino Unido, uniendo tecnología, migración, educación y transformación profesional.</p>
+        <div class="hero-actions">
+          <a href="#timeline" class="btn-primary">→ <span data-i18n="hero.cta1">Explorar trayectoria</span></a>
+          <a href="#blog" class="btn">✦ <span data-i18n="hero.cta2">Leer artículos</span></a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat" data-i18n="hero.stat1">+15 años de experiencia</div>
+          <div class="stat" data-i18n="hero.stat2">España y Reino Unido</div>
+          <div class="stat" data-i18n="hero.stat3">Cloud, banca, salud y seguros</div>
+        </div>
+      </div>
+      <div class="hero-card glass reveal">
+        <div class="portrait">
+          <div class="portrait-meta">
+            <div class="meta-pill" data-i18n="hero.meta1">Disponible para oportunidades internacionales</div>
+            <div class="meta-pill" data-i18n="hero.meta2">Bilingüe · ES / EN</div>
+          </div>
+          <img src="edwin-profile.png" alt="Edwin Pineda" />
+        </div>
+      </div>
+    </section>
+
+    <section class="container section reveal" id="about">
+      <div class="section-head"><div class="section-icon">❤</div><h2 data-i18n="about.title">Sobre mí</h2></div>
+      <div class="grid-2">
+        <div class="panel">
+          <p data-i18n="about.p1">Soy un profesional de origen dominicano con una carrera desarrollada entre España y Reino Unido. Mi historia comienza en Arroyo Dulce, en la provincia de Barahona, y continúa a través de la educación, la migración y el esfuerzo constante hasta participar en proyectos para grandes organizaciones internacionales.</p>
+          <p data-i18n="about.p2">Mi perfil combina experiencia en plataformas de datos, bases de datos, cloud, sector público, banca, salud, educación y seguros. También mantengo un fuerte interés por la formación continua, el impacto social y la transmisión de conocimiento.</p>
+        </div>
+        <div class="panel"><div class="chips" id="chips"></div></div>
+      </div>
+    </section>
+
+    <section class="container section reveal" id="timeline">
+      <div class="section-head"><div class="section-icon">◎</div><h2 data-i18n="timeline.title">Timeline visual</h2></div>
+      <div class="timeline" id="timelineBox"></div>
+    </section>
+
+    <section class="container section reveal" id="logos">
+      <div class="section-head"><div class="section-icon">◈</div><h2 data-i18n="logos.title">Empresas y organizaciones</h2></div>
+      <div class="logo-grid" id="logosBox"></div>
+    </section>
+
+    <section class="container section reveal" id="experience">
+      <div class="section-head"><div class="section-icon">▣</div><h2 data-i18n="experience.title">Experiencia destacada</h2></div>
+      <div class="card-grid" id="experienceBox"></div>
+    </section>
+
+    <section class="container section reveal" id="education">
+      <div class="section-head"><div class="section-icon">◉</div><h2 data-i18n="education.title">Formación y enfoque</h2></div>
+      <div class="edu-grid">
+        <div class="panel"><ul class="list" id="educationBox"></ul></div>
+        <div class="panel"><p data-i18n="education.text">Una trayectoria académica construida entre República Dominicana, España y Reino Unido, reforzada por formación continua en tecnología, datos, cloud y ciberseguridad.</p></div>
+      </div>
+    </section>
+
+    <section class="container section reveal" id="blog">
+      <div class="section-head"><div class="section-icon">✎</div><h2 data-i18n="blog.title">Blog</h2></div>
+      <div class="blog-grid" id="blogBox"></div>
+    </section>
+
+    <section class="container section reveal" id="contact">
+      <div class="cta">
+        <div>
+          <h3 data-i18n="contact.title">Conversemos</h3>
+          <p data-i18n="contact.text">Disponible para colaboraciones, networking, charlas, mentoría y oportunidades profesionales internacionales.</p>
+        </div>
+        <div class="contact-meta">
+          <div class="contact-row">✉ <span data-i18n="contact.email">contacto@evoford.com</span></div>
+          <div class="contact-row">📍 <span data-i18n="contact.location">Reino Unido / España</span></div>
+          <div class="contact-row">☁ <span data-i18n="contact.focus">Cloud · Data · Transformation · Cybersecurity</span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div data-i18n="footer.text">Portfolio bilingüe de Edwin Pineda · Tecnología, trayectoria y visión internacional</div>
+      <div class="footer-pill" data-i18n="footer.badge">Responsive · Dark mode · SEO ready</div>
+    </div>
+  </footer>
+
+  <script>
+    const content = {
+      es: {
+        brandSub: 'Executive Portfolio',
+        theme: 'Modo automático',
+        downloadCv: 'Descargar CV',
+        hero: {
+          badge: 'Portfolio ejecutivo internacional',
+          name: 'Edwin Pineda',
+          role: 'Cloud, Data & Technology Professional',
+          copy: 'Una trayectoria internacional construida entre República Dominicana, España y Reino Unido, uniendo tecnología, migración, educación y transformación profesional.',
+          cta1: 'Explorar trayectoria',
+          cta2: 'Leer artículos',
+          stat1: '+15 años de experiencia',
+          stat2: 'España y Reino Unido',
+          stat3: 'Cloud, banca, salud y seguros',
+          meta1: 'Disponible para oportunidades internacionales',
+          meta2: 'Bilingüe · ES / EN'
+        },
+        about: {
+          title: 'Sobre mí',
+          p1: 'Soy un profesional de origen dominicano con una carrera desarrollada entre España y Reino Unido. Mi historia comienza en Arroyo Dulce, en la provincia de Barahona, y continúa a través de la educación, la migración y el esfuerzo constante hasta participar en proyectos para grandes organizaciones internacionales.',
+          p2: 'Mi perfil combina experiencia en plataformas de datos, bases de datos, cloud, sector público, banca, salud, educación y seguros. También mantengo un fuerte interés por la formación continua, el impacto social y la transmisión de conocimiento.',
+          chips: ['República Dominicana','España','Reino Unido','Cloud','Data','Sector público','Salud','Seguros']
+        },
+        timeline: {
+          title: 'Timeline visual',
+          items: [
+            { period: '1987 – 2007', title: 'Raíces y formación inicial', desc: 'Infancia y juventud en Arroyo Dulce y Enriquillo. Estudios primarios y secundarios. Inicio de estudios universitarios en Barahona y primera experiencia profesional en gestión de datos.' },
+            { period: '2007', title: 'Migración a España', desc: 'Llegada a España por reagrupación familiar, convalidación de estudios y continuidad académica hasta completar un grado universitario en el sistema educativo español.' },
+            { period: 'España', title: 'Integración y consolidación profesional', desc: 'Etapa inicial en formación digital e integración social, seguida por crecimiento en educación, administración pública, energía, telecomunicaciones, seguros y salud privada.' },
+            { period: 'Grandes proyectos', title: 'HP, IBM, Telefónica e Indra', desc: 'Participación en sistemas para embajadas y consulados, datos energéticos, plataformas corporativas y migraciones críticas para organizaciones de referencia.' },
+            { period: 'Reino Unido', title: 'Proyección internacional', desc: 'Experiencia en Websure, TSB Bank, NHS y Synnovis, contribuyendo a banca, seguros, salud y diagnóstico clínico mientras continúo estudios de ciberseguridad.' }
+          ]
+        },
+        logos: {
+          title: 'Empresas y organizaciones',
+          items: [['HP','Tecnología'],['IBM','Consultoría y datos'],['Telefónica','Telecomunicaciones'],['Indra','Tecnología'],['TSB Bank','Banca'],['NHS / Synnovis','Salud y diagnóstico']]
+        },
+        experience: {
+          title: 'Experiencia destacada',
+          items: [
+            { company: 'Centro Hispano-Dominicano', type: 'Integración y formación', desc: 'Impartición de cursos de alfabetización digital y apoyo tecnológico a la comunidad migrante en España.' },
+            { company: 'HP + Ministerio de Asuntos Exteriores', type: 'Administración pública', desc: 'Trabajo en sistemas para embajadas y consulados, incluyendo iniciativas pioneras de centralización de visados y gestión de información internacional.' },
+            { company: 'IBM + CEPSA', type: 'Energía', desc: 'Participación en proyectos de digitalización, datos y geolocalización en el sector energético.' },
+            { company: 'Telefónica', type: 'Infraestructuras críticas', desc: 'Proyectos para grandes organizaciones como Repsol, Ferrovial, Talgo y Quirónsalud, incluyendo migraciones de gran escala.' },
+            { company: 'Indra + AXA', type: 'Tecnología y seguros', desc: 'Entornos corporativos ligados a plataformas de datos, transformación y sector asegurador.' },
+            { company: 'Reino Unido', type: 'Websure · TSB · NHS · Synnovis', desc: 'Experiencia en seguros, banca, salud y diagnóstico clínico dentro de organizaciones clave del Reino Unido.' }
+          ]
+        },
+        education: {
+          title: 'Formación y enfoque',
+          text: 'Una trayectoria académica construida entre República Dominicana, España y Reino Unido, reforzada por formación continua en tecnología, datos, cloud y ciberseguridad.',
+          items: ['Estudios iniciales en República Dominicana.','Convalidación académica en España y finalización de un grado universitario.','Formación continua orientada a tecnología, datos y sistemas.','Actualmente cursando estudios de ciberseguridad en The Open University, Reino Unido.']
+        },
+        blog: {
+          title: 'Blog',
+          items: [
+            { date: 'Artículo 01', title: 'De Arroyo Dulce a Europa', desc: 'Una historia de migración, disciplina y crecimiento profesional en tecnología.' },
+            { date: 'Artículo 02', title: 'Cómo la educación transformó mi carrera', desc: 'La formación como motor de movilidad social, confianza y proyección internacional.' },
+            { date: 'Artículo 03', title: 'Del sector público a la salud digital', desc: 'Lecciones aprendidas entre administración pública, banca y diagnóstico clínico.' }
+          ]
+        },
+        contact: {
+          title: 'Conversemos',
+          text: 'Disponible para colaboraciones, networking, charlas, mentoría y oportunidades profesionales internacionales.',
+          email: 'contacto@evoford.com',
+          location: 'Reino Unido / España',
+          focus: 'Cloud · Data · Transformation · Cybersecurity'
+        },
+        footer: { text: 'Portfolio bilingüe de Edwin Pineda · Tecnología, trayectoria y visión internacional', badge: 'Responsive · Dark mode · SEO ready' },
+        langLabel: 'English'
+      },
+      en: {
+        brandSub: 'Executive Portfolio',
+        theme: 'Auto mode',
+        downloadCv: 'Download CV',
+        hero: {
+          badge: 'International executive portfolio',
+          name: 'Edwin Pineda',
+          role: 'Cloud, Data & Technology Professional',
+          copy: 'An international career built across the Dominican Republic, Spain and the United Kingdom, connecting technology, migration, education and professional transformation.',
+          cta1: 'Explore journey',
+          cta2: 'Read articles',
+          stat1: '15+ years of experience',
+          stat2: 'Spain and the United Kingdom',
+          stat3: 'Cloud, banking, healthcare and insurance',
+          meta1: 'Open to international opportunities',
+          meta2: 'Bilingual · ES / EN'
+        },
+        about: {
+          title: 'About me',
+          p1: 'I am a Dominican professional with a career developed across Spain and the United Kingdom. My story begins in Arroyo Dulce, in the province of Barahona, and continues through education, migration and sustained effort into projects for major international organizations.',
+          p2: 'My profile combines experience in data platforms, databases, cloud, public sector, banking, healthcare, education and insurance. I also maintain a strong commitment to lifelong learning, social impact and knowledge sharing.',
+          chips: ['Dominican Republic','Spain','United Kingdom','Cloud','Data','Public sector','Healthcare','Insurance']
+        },
+        timeline: {
+          title: 'Visual timeline',
+          items: [
+            { period: '1987 – 2007', title: 'Roots and early education', desc: 'Childhood and youth in Arroyo Dulce and Enriquillo. Primary and secondary education, university beginnings in Barahona, and early experience in data-related work.' },
+            { period: '2007', title: 'Migration to Spain', desc: 'Arrival in Spain through family reunification, validation of prior studies, and academic progression leading to a university degree in Spain.' },
+            { period: 'Spain', title: 'Integration and professional consolidation', desc: 'An initial phase in digital training and social integration followed by growth across education, public administration, energy, telecommunications, insurance and private healthcare.' },
+            { period: 'Major projects', title: 'HP, IBM, Telefónica and Indra', desc: 'Participation in embassy and consulate systems, energy data initiatives, enterprise platforms and critical migrations for major organizations.' },
+            { period: 'United Kingdom', title: 'International projection', desc: 'Experience across Websure, TSB Bank, NHS and Synnovis in insurance, banking, healthcare and clinical diagnostics while continuing cybersecurity studies.' }
+          ]
+        },
+        logos: {
+          title: 'Companies and organizations',
+          items: [['HP','Technology'],['IBM','Consulting & data'],['Telefónica','Telecommunications'],['Indra','Technology'],['TSB Bank','Banking'],['NHS / Synnovis','Healthcare & diagnostics']]
+        },
+        experience: {
+          title: 'Selected experience',
+          items: [
+            { company: 'Centro Hispano-Dominicano', type: 'Integration and training', desc: 'Delivered digital literacy and basic technology support for the migrant community in Spain.' },
+            { company: 'HP + Ministry of Foreign Affairs', type: 'Public administration', desc: 'Worked on systems for embassies and consulates, including pioneering visa centralization and international information management.' },
+            { company: 'IBM + CEPSA', type: 'Energy', desc: 'Contributed to digitalization, data and geolocation initiatives in the energy sector.' },
+            { company: 'Telefónica', type: 'Critical infrastructure', desc: 'Projects for leading organizations such as Repsol, Ferrovial, Talgo and Quirónsalud, including large-scale migrations.' },
+            { company: 'Indra + AXA', type: 'Technology and insurance', desc: 'Corporate environments linked to data platforms, transformation and insurance operations.' },
+            { company: 'United Kingdom', type: 'Websure · TSB · NHS · Synnovis', desc: 'Experience across insurance, banking, healthcare and clinical diagnostics in key UK organizations.' }
+          ]
+        },
+        education: {
+          title: 'Education and focus',
+          text: 'An academic path built across the Dominican Republic, Spain and the United Kingdom, reinforced by continuous learning in technology, data, cloud and cybersecurity.',
+          items: ['Early education in the Dominican Republic.','Academic validation in Spain and completion of a university degree.','Continuous learning focused on technology, data and systems.','Currently studying cybersecurity at The Open University, United Kingdom.']
+        },
+        blog: {
+          title: 'Blog',
+          items: [
+            { date: 'Article 01', title: 'From Arroyo Dulce to Europe', desc: 'A story of migration, discipline and professional growth in technology.' },
+            { date: 'Article 02', title: 'How education transformed my career', desc: 'Education as a driver of mobility, confidence and international progression.' },
+            { date: 'Article 03', title: 'From public sector to digital health', desc: 'Lessons learned across public administration, banking and clinical diagnostics.' }
+          ]
+        },
+        contact: {
+          title: 'Let’s connect',
+          text: 'Available for collaboration, networking, speaking, mentoring and international professional opportunities.',
+          email: 'contact@evoford.com',
+          location: 'United Kingdom / Spain',
+          focus: 'Cloud · Data · Transformation · Cybersecurity'
+        },
+        footer: { text: 'Edwin Pineda bilingual portfolio · Technology, journey and international vision', badge: 'Responsive · Dark mode · SEO ready' },
+        langLabel: 'Español'
+      }
+    };
+
+    let lang = 'es';
+    let theme = localStorage.getItem('theme') || 'auto';
+
+    const setI18n = (path, value) => {
+      const el = document.querySelector(`[data-i18n="${path}"]`);
+      if (el) el.textContent = value;
+    };
+
+    function applyTheme() {
+      const root = document.documentElement;
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (theme === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', theme);
+      document.getElementById('themeIcon').textContent = theme === 'dark' ? '☀️' : theme === 'light' ? '🌙' : (prefersDark ? '🌗' : '🌤');
+      setI18n('theme', content[lang].theme + (theme === 'auto' ? '' : theme === 'dark' ? ' · Dark' : ' · Light'));
+      localStorage.setItem('theme', theme);
+    }
+
+    function toggleTheme() {
+      theme = theme === 'auto' ? 'light' : theme === 'light' ? 'dark' : 'auto';
+      applyTheme();
+    }
+
+    function renderText() {
+      const d = content[lang];
+      setI18n('brandSub', d.brandSub);
+      setI18n('theme', d.theme);
+      setI18n('downloadCv', d.downloadCv);
+      setI18n('hero.badge', d.hero.badge);
+      setI18n('hero.name', d.hero.name);
+      setI18n('hero.role', d.hero.role);
+      setI18n('hero.copy', d.hero.copy);
+      setI18n('hero.cta1', d.hero.cta1);
+      setI18n('hero.cta2', d.hero.cta2);
+      setI18n('hero.stat1', d.hero.stat1);
+      setI18n('hero.stat2', d.hero.stat2);
+      setI18n('hero.stat3', d.hero.stat3);
+      setI18n('hero.meta1', d.hero.meta1);
+      setI18n('hero.meta2', d.hero.meta2);
+      setI18n('about.title', d.about.title);
+      setI18n('about.p1', d.about.p1);
+      setI18n('about.p2', d.about.p2);
+      setI18n('timeline.title', d.timeline.title);
+      setI18n('logos.title', d.logos.title);
+      setI18n('experience.title', d.experience.title);
+      setI18n('education.title', d.education.title);
+      setI18n('education.text', d.education.text);
+      setI18n('blog.title', d.blog.title);
+      setI18n('contact.title', d.contact.title);
+      setI18n('contact.text', d.contact.text);
+      setI18n('contact.email', d.contact.email);
+      setI18n('contact.location', d.contact.location);
+      setI18n('contact.focus', d.contact.focus);
+      setI18n('footer.text', d.footer.text);
+      setI18n('footer.badge', d.footer.badge);
+      document.getElementById('langFlag').textContent = lang === 'es' ? '🇬🇧' : '🇪🇸';
+      document.getElementById('langLabel').textContent = d.langLabel;
+    }
+
+    function renderChips() {
+      const box = document.getElementById('chips');
+      box.innerHTML = '';
+      content[lang].about.chips.forEach(item => {
+        const span = document.createElement('span');
+        span.className = 'chip';
+        span.textContent = item;
+        box.appendChild(span);
+      });
+    }
+
+    function renderTimeline() {
+      const box = document.getElementById('timelineBox');
+      box.innerHTML = '';
+      content[lang].timeline.items.forEach((item, idx) => {
+        const el = document.createElement('article');
+        el.className = 'timeline-item' + (idx === 0 ? ' active' : '');
+        el.innerHTML = `<div class="timeline-period">${item.period}</div><h3>${item.title}</h3><p>${item.desc}</p>`;
+        el.addEventListener('click', () => {
+          document.querySelectorAll('.timeline-item').forEach(x => x.classList.remove('active'));
+          el.classList.add('active');
+        });
+        box.appendChild(el);
+      });
+    }
+
+    function renderLogos() {
+      const box = document.getElementById('logosBox');
+      box.innerHTML = '';
+      content[lang].logos.items.forEach(([name, sub]) => {
+        const el = document.createElement('div');
+        el.className = 'logo';
+        el.innerHTML = `${name}<small>${sub}</small>`;
+        box.appendChild(el);
+      });
+    }
+
+    function renderExperience() {
+      const box = document.getElementById('experienceBox');
+      box.innerHTML = '';
+      content[lang].experience.items.forEach(item => {
+        const el = document.createElement('article');
+        el.className = 'card';
+        el.innerHTML = `<div class="card-top"><h3>${item.company}</h3><span>↗</span></div><div class="kicker">${item.type}</div><p>${item.desc}</p>`;
+        box.appendChild(el);
+      });
+    }
+
+    function renderEducation() {
+      const box = document.getElementById('educationBox');
+      box.innerHTML = '';
+      content[lang].education.items.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        box.appendChild(li);
+      });
+    }
+
+    function renderBlog() {
+      const box = document.getElementById('blogBox');
+      box.innerHTML = '';
+      content[lang].blog.items.forEach(item => {
+        const el = document.createElement('article');
+        el.className = 'blog-card';
+        el.innerHTML = `<div class="blog-date">${item.date}</div><h3>${item.title}</h3><p>${item.desc}</p><div class="blog-link">Read more <span>→</span></div>`;
+        box.appendChild(el);
+      });
+    }
+
+    function renderAll() {
+      renderText();
+      renderChips();
+      renderTimeline();
+      renderLogos();
+      renderExperience();
+      renderEducation();
+      renderBlog();
+      applyTheme();
+    }
+
+    function toggleLang() {
+      lang = lang === 'es' ? 'en' : 'es';
+      renderAll();
+    }
+
+    function setupReveal() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    }
+
+    document.getElementById('langBtn').addEventListener('click', toggleLang);
+    document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (theme === 'auto') applyTheme(); });
+
+    renderAll();
+    setupReveal();
+  </script>
+</body>
+</html>

@@ -24,78 +24,62 @@
 <body>
   <!-- HEADER / CABECERA -->
   <header>
-    <div class="container header-inner">
-      <div class="brand">
-        <div class="brand-mark"></div>
-        <span>EvoSustain Ltd</span>
+  <div class="container header-inner">
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <span>EvoSustain Ltd</span>
+    </div>
+
+    <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="siteNav">
+      <span class="menu-icon" aria-hidden="true"></span>
+      <span class="menu-label" data-lang="en">Menu</span>
+      <span class="menu-label hidden" data-lang="es">Menú</span>
+    </button>
+
+    <nav id="siteNav">
+      <a href="index.html#overview" data-lang="en">Overview</a>
+      <a href="index.html#overview" data-lang="es" class="hidden">Visión</a>
+
+      <div class="has-sub">
+        <button class="nav-btn" type="button" aria-expanded="false">
+          <span data-lang="en">Services</span>
+          <span data-lang="es" class="hidden">Servicios</span>
+          <span class="chev" aria-hidden="true">▾</span>
+        </button>
+
+        <div class="sub" role="menu">
+          <a role="menuitem" href="index.html#platform" data-lang="en">Platform</a>
+          <a role="menuitem" href="index.html#platform" data-lang="es" class="hidden">Plataforma</a>
+
+          <a role="menuitem" href="index.html#it" data-lang="en">IT Services</a>
+          <a role="menuitem" href="index.html#it" data-lang="es" class="hidden">Servicios IT</a>
+
+          <a role="menuitem" href="index.html#poc" data-lang="en">PoC</a>
+          <a role="menuitem" href="index.html#poc" data-lang="es" class="hidden">PoC</a>
+        </div>
       </div>
 
-          
-<button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="siteNav">
-  <span class="menu-icon" aria-hidden="true"></span>
-  <span class="menu-label" data-lang="en">Menu</span>
-  <span class="menu-label hidden" data-lang="es">Menú</span>
-</button>
+      <a href="news/index.html" data-lang="en">News</a>
+      <a href="news/index.html" data-lang="es" class="hidden">Noticias</a>
 
+      <a href="index.html#demo" data-lang="en" class="nav-cta">Open Demo</a>
+      <a href="index.html#demo" data-lang="es" class="hidden nav-cta">Abrir Demo</a>
+    </nav>
 
-          <nav id="siteNav">
-            <a href="index.html#overview" data-lang="en">Overview</a>
-            <a href="index.html#overview" data-lang="es" class="hidden">Visión</a>
-
-            <div class="has-sub">
-              <button class="nav-btn" type="button" aria-expanded="false">
-                <span data-lang="en">Services</span>
-                <span data-lang="es" class="hidden">Servicios</span>
-                <span class="chev" aria-hidden="true">▾</span>
-              </button>
-              <div class="sub" role="menu">
-                <a role="menuitem" href="index.html#platform" data-lang="en">Platform</a>
-                <a role="menuitem" href="index.html#platform" data-lang="es" class="hidden">Plataforma</a>
-
-                <a role="menuitem" href="index.html#it" data-lang="en">IT Services</a>
-                <a role="menuitem" href="index.html#it" data-lang="es" class="hidden">Servicios IT</a>
-
-                <a role="menuitem" href="index.html#poc" data-lang="en">PoC</a>
-                <a role="menuitem" href="index.html#poc" data-lang="es" class="hidden">PoC</a>
-              </div>
-            </div>
-            <div class="has-sub">
-              <button class="nav-btn" type="button" aria-expanded="false">
-                <span data-lang="en">More</span>
-                <span data-lang="es" class="hidden">Más</span>
-                <span class="chev" aria-hidden="true">▾</span>
-             </button>
-             <div class="sub" role="menu">
-             <a role="menuitem" href="index.html#donate" data-lang="en">Donate</a>
-             <a role="menuitem" href="index.html#donate" data-lang="es" class="hidden">Donar</a>
-
-             <a role="menuitem" href="index.html#contact" data-lang="en">Contact</a>
-             <a role="menuitem" href="index.html#contact" data-lang="es" class="hidden">Contacto</a>
-             <!--  <a role="menuitem" href="advisory.html" data-lang="en">Advisory</a> -->
-             <!--  <a role="menuitem" href="advisory.html" data-lang="es" class="hidden">Asesoría</a> -->
-            </div>
-            <a href="news/index.html" data-lang="en">News</a>
-            <a href="news/index.html" data-lang="es" class="hidden">Noticias</a>
-            <a href="index.html#demo" data-lang="en" class="nav-cta">Open Demo</a>
-            <a href="index.html#demo" data-lang="es" class="hidden nav-cta">Abrir Demo</a>
-            </div>
-    
-          </nav>
-
-      <div class="header-actions">
-        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme">
-          <span class="icon sun" aria-hidden="true">☀️</span>
-          <span class="icon moon" aria-hidden="true">🌙</span>
-        </button>
+    <div class="header-actions">
+      <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme">
+        <span class="icon sun" aria-hidden="true">☀️</span>
+        <span class="icon moon" aria-hidden="true">🌙</span>
+      </button>
 
       <div class="lang-switch">
         <button id="lang-en" class="active">EN</button>
         <button id="lang-es">ES</button>
       </div>
-    
-      </div>
-</div>
-  </header>
+    </div>
+  </div>
+</header>
+
 
   <main>
     <!-- HERO / SECCIÓN PRINCIPAL -->

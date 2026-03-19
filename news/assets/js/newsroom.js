@@ -110,7 +110,7 @@ function renderFeatured(p){
     <p class="desc">${escapeHtml(p.summary || "")}</p>
     <div class="tags">${(p.tags||[]).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>
     <div style="margin-top:12px">
-      <a class="under" href="${p.link}">Read the full update →</a>
+      <a class="under" href="${p.link}">Read→</a>
     </div>
   `;
 

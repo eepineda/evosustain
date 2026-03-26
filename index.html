@@ -547,5 +547,515 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
+<!-- EVOSUSTAIN CHATBOX START -->
+<style>
+  .evs-chat-widget,
+  .evs-chat-widget * {
+    box-sizing: border-box;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .evs-chat-widget {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 9999;
+  }
+
+  .evs-chat-launcher {
+    width: 66px;
+    height: 66px;
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 999px;
+    cursor: pointer;
+    color: #0b2e25;
+    background: linear-gradient(135deg, #8cf0cb, #35c78f);
+    box-shadow: 0 20px 40px rgba(16, 66, 52, .22);
+    display: grid;
+    place-items: center;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+
+  .evs-chat-launcher:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 24px 46px rgba(16, 66, 52, .28);
+  }
+
+  .evs-chat-launcher svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .evs-chat-panel {
+    width: min(410px, calc(100vw - 24px));
+    height: 680px;
+    max-height: calc(100vh - 98px);
+    margin-bottom: 14px;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 26px;
+    border: 1px solid rgba(21, 121, 93, .12);
+    background: rgba(255,255,255,.97);
+    color: #16352d;
+    box-shadow: 0 26px 65px rgba(0,0,0,.18);
+    backdrop-filter: blur(14px);
+  }
+
+  .evs-chat-widget.open .evs-chat-panel {
+    display: flex;
+  }
+
+  .evs-chat-header {
+    padding: 18px 18px 16px;
+    border-bottom: 1px solid rgba(21, 121, 93, .10);
+    background:
+      radial-gradient(circle at top right, rgba(140,240,203,.6), transparent 40%),
+      linear-gradient(180deg, rgba(126,231,193,.28), rgba(126,231,193,.08));
+  }
+
+  .evs-chat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    color: #15795d;
+  }
+
+  .evs-chat-badge::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #2cc88d;
+    box-shadow: 0 0 0 4px rgba(44,200,141,.14);
+  }
+
+  .evs-chat-header h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    line-height: 1.2;
+    color: #123129;
+  }
+
+  .evs-chat-header p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #537068;
+    max-width: 95%;
+  }
+
+  .evs-chat-body {
+    flex: 1;
+    overflow: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background:
+      radial-gradient(circle at top right, rgba(56,201,147,.08), transparent 26%),
+      linear-gradient(180deg, rgba(255,255,255,.94), rgba(246,251,249,.98));
+    scroll-behavior: smooth;
+  }
+
+  .evs-chat-body::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .evs-chat-body::-webkit-scrollbar-thumb {
+    background: rgba(21, 121, 93, .18);
+    border-radius: 999px;
+  }
+
+  .evs-msg {
+    max-width: 89%;
+    padding: 12px 14px;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.55;
+    white-space: pre-line;
+  }
+
+  .evs-msg.bot {
+    align-self: flex-start;
+    background: #f4fbf8;
+    border: 1px solid rgba(21, 121, 93, .08);
+    color: #24433b;
+  }
+
+  .evs-msg.user {
+    align-self: flex-end;
+    background: linear-gradient(135deg, #38c993, #1e9a71);
+    color: #062118;
+    font-weight: 700;
+  }
+
+  .evs-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .evs-btn {
+    appearance: none;
+    border: 1px solid rgba(21, 121, 93, .12);
+    border-radius: 999px;
+    padding: 10px 14px;
+    background: #ffffff;
+    color: #16352d;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1.2;
+    transition: .18s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+  }
+
+  .evs-btn:hover {
+    transform: translateY(-1px);
+    background: #eefaf5;
+    border-color: rgba(56,201,147,.35);
+  }
+
+  .evs-btn.primary {
+    background: linear-gradient(135deg, #38c993, #1b7b5e);
+    color: #ffffff;
+    border: 0;
+    font-weight: 700;
+  }
+
+  .evs-btn.dark {
+    background: #123129;
+    color: #ffffff;
+    border-color: #123129;
+  }
+
+  .evs-chat-footer {
+    padding: 12px 14px;
+    border-top: 1px solid rgba(21, 121, 93, .10);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: #f7fcfa;
+  }
+
+  .evs-chat-footer small {
+    color: #5a746d;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .evs-chat-footer a {
+    color: #15795d;
+    text-decoration: none;
+    font-weight: 700;
+  }
+
+  .evs-reset {
+    border: 1px solid rgba(21, 121, 93, .12);
+    background: #ffffff;
+    color: #16352d;
+    border-radius: 999px;
+    padding: 9px 12px;
+    cursor: pointer;
+    transition: .18s ease;
+    font-size: 13px;
+  }
+
+  .evs-reset:hover {
+    background: #eefaf5;
+  }
+
+  @media (max-width: 640px) {
+    .evs-chat-widget {
+      right: 12px;
+      left: 12px;
+      bottom: 12px;
+    }
+
+    .evs-chat-panel {
+      width: 100%;
+      height: 74vh;
+      max-height: calc(100vh - 84px);
+      border-radius: 22px;
+    }
+
+    .evs-chat-launcher {
+      margin-left: auto;
+      width: 62px;
+      height: 62px;
+    }
+  }
+</style>
+
+<div class="evs-chat-widget" id="evsChatWidget">
+  <div class="evs-chat-panel" id="evsChatPanel" aria-live="polite">
+    <div class="evs-chat-header">
+      <div class="evs-chat-badge" id="evsChatBadge">EvoSustain</div>
+      <h3 id="evsChatTitle">Choose language</h3>
+      <p id="evsChatSubtitle">Select English or Español to continue.</p>
+    </div>
+
+    <div class="evs-chat-body" id="evsChatBody"></div>
+
+    <div class="evs-chat-footer">
+      <small id="evsFooterText">
+        Contact:
+        <a href="mailto:info@evoford.com">info@evoford.com</a><br>
+        <a href="tel:+447871710697">+44 7871 710697</a>
+      </small>
+      <button type="button" class="evs-reset" id="evsResetBtn">Restart</button>
+    </div>
+  </div>
+
+  <button class="evs-chat-launcher" id="evsChatLauncher" type="button" aria-label="Open EvoSustain assistant">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M7 10h10M7 14h6m-8 7 2.3-3.3A9 9 0 1 1 21 10a9 9 0 0 1-9 9H5Z" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+</div>
+
+<script>
+(function () {
+  const widget = document.getElementById("evsChatWidget");
+  const launcher = document.getElementById("evsChatLauncher");
+  const body = document.getElementById("evsChatBody");
+  const resetBtn = document.getElementById("evsResetBtn");
+  const title = document.getElementById("evsChatTitle");
+  const subtitle = document.getElementById("evsChatSubtitle");
+  const footer = document.getElementById("evsFooterText");
+  const badge = document.getElementById("evsChatBadge");
+
+  let lang = "en";
+
+  const copy = {
+    en: {
+      badge: "EvoSustain",
+      title: "How can we help?",
+      subtitle: "Explore the platform, PoC stage, impact and contact options.",
+      restart: "Restart",
+      footer: 'Contact: <a href="mailto:info@evoford.com">info@evoford.com</a><br><a href="tel:+447871710697">+44 7871 710697</a>',
+      chooseLang: "Please choose your language.",
+      menu: "What would you like to know first?",
+      msgIntro: "EvoSustain is building digital infrastructure for waste and residue logistics.\n\nWe help improve traceability, reduce contamination, cut CO₂ emissions, optimise routes and lower service costs.",
+      msgAbout: "EvoSustain is a cleantech initiative born in London with an international vision.\n\nWe are developing a digital platform to improve waste collection and waste logistics through better coordination, better data and cleaner operations.",
+      msgBenefits: "EvoSustain is designed to help organisations:\n\n• reduce manual work and operational friction\n• improve service visibility and traceability\n• reduce unnecessary mileage and route inefficiencies\n• lower CO₂ emissions and environmental impact\n• reduce service costs while improving performance",
+      msgPoc: "EvoSustain is currently in PoC phase.\n\nOur focus is to validate the platform in real environments and demonstrate practical value in service efficiency, emissions reduction and cost savings.",
+      msgVision: "Our ambition is to start from London and scale internationally.\n\nWe believe waste logistics needs better digital infrastructure, with measurable operational and environmental results.",
+      msgContact: "If you want to discuss a PoC, partnership or digital waste operations conversation, the best next step is to contact our team directly.",
+      final: "Choose your preferred next step.",
+      buttons: {
+        english: "English",
+        spanish: "Español",
+        intro: "What does EvoSustain do?",
+        about: "About the company",
+        benefits: "Benefits and impact",
+        poc: "PoC phase",
+        vision: "Vision and growth",
+        contact: "Talk to the team",
+        demo: "Open demo",
+        email: "Send email",
+        phone: "Call now",
+        website: "Visit website"
+      }
+    },
+    es: {
+      badge: "EvoSustain",
+      title: "¿Cómo podemos ayudarte?",
+      subtitle: "Explora la plataforma, la fase PoC, el impacto y las opciones de contacto.",
+      restart: "Reiniciar",
+      footer: 'Contacto: <a href="mailto:info@evoford.com">info@evoford.com</a><br><a href="tel:+447871710697">+44 7871 710697</a>',
+      chooseLang: "Por favor, elige tu idioma.",
+      menu: "¿Qué te gustaría conocer primero?",
+      msgIntro: "EvoSustain está construyendo infraestructura digital para la logística de basura y residuos.\n\nAyudamos a mejorar la trazabilidad, reducir contaminación, bajar emisiones de CO₂, optimizar rutas y reducir costes de servicio.",
+      msgAbout: "EvoSustain es una iniciativa cleantech nacida en Londres con visión internacional.\n\nEstamos desarrollando una plataforma digital para mejorar la recogida y la logística de residuos mediante mejor coordinación, mejor dato y operaciones más limpias.",
+      msgBenefits: "EvoSustain está diseñada para ayudar a las organizaciones a:\n\n• reducir trabajo manual y fricción operativa\n• mejorar visibilidad del servicio y trazabilidad\n• reducir kilómetros innecesarios e ineficiencias de ruta\n• bajar emisiones de CO₂ e impacto ambiental\n• reducir costes de servicio mejorando el rendimiento",
+      msgPoc: "EvoSustain se encuentra actualmente en fase PoC.\n\nNuestro foco es validar la plataforma en entornos reales y demostrar valor práctico en eficiencia del servicio, reducción de emisiones y ahorro de costes.",
+      msgVision: "Nuestra ambición es empezar en Londres y escalar internacionalmente.\n\nCreemos que la logística de residuos necesita una mejor infraestructura digital, con resultados operativos y ambientales medibles.",
+      msgContact: "Si quieres hablar sobre un PoC, una colaboración o una conversación sobre operaciones digitales de residuos, el mejor siguiente paso es contactar directamente con nuestro equipo.",
+      final: "Elige el siguiente paso que prefieras.",
+      buttons: {
+        english: "English",
+        spanish: "Español",
+        intro: "¿Qué hace EvoSustain?",
+        about: "Sobre la empresa",
+        benefits: "Beneficios e impacto",
+        poc: "Fase PoC",
+        vision: "Visión y crecimiento",
+        contact: "Hablar con el equipo",
+        demo: "Abrir demo",
+        email: "Enviar email",
+        phone: "Llamar ahora",
+        website: "Ver web"
+      }
+    }
+  };
+
+  function setLang(nextLang) {
+    lang = nextLang;
+    badge.textContent = copy[lang].badge;
+    title.textContent = copy[lang].title;
+    subtitle.textContent = copy[lang].subtitle;
+    resetBtn.textContent = copy[lang].restart;
+    footer.innerHTML = copy[lang].footer;
+  }
+
+  function addMessage(text, type) {
+    const el = document.createElement("div");
+    el.className = "evs-msg " + type;
+    el.textContent = text;
+    body.appendChild(el);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  function addOptions(options) {
+    const wrap = document.createElement("div");
+    wrap.className = "evs-options";
+
+    options.forEach(function (option) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "evs-btn" + (option.primary ? " primary" : "") + (option.dark ? " dark" : "");
+      btn.textContent = option.label;
+      btn.addEventListener("click", function () {
+        addMessage(option.label, "user");
+        wrap.remove();
+        option.onClick();
+      });
+      wrap.appendChild(btn);
+    });
+
+    body.appendChild(wrap);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  function addFinalActions() {
+    addMessage(copy[lang].final, "bot");
+    addOptions([
+      {
+        label: copy[lang].buttons.demo,
+        primary: true,
+        onClick: function () {
+          window.location.href = "app/evosustainhub.html";
+        }
+      },
+      {
+        label: copy[lang].buttons.email,
+        onClick: function () {
+          window.location.href = "mailto:info@evoford.com?subject=" + encodeURIComponent("EvoSustain enquiry");
+        }
+      },
+      {
+        label: copy[lang].buttons.phone,
+        dark: true,
+        onClick: function () {
+          window.location.href = "tel:+447871710697";
+        }
+      },
+      {
+        label: copy[lang].buttons.website,
+        onClick: function () {
+          window.location.href = "https://evoford.com/";
+        }
+      }
+    ]);
+  }
+
+  function showMenu() {
+    addMessage(copy[lang].menu, "bot");
+    addOptions([
+      {
+        label: copy[lang].buttons.intro,
+        onClick: function () {
+          addMessage(copy[lang].msgIntro, "bot");
+          addFinalActions();
+        }
+      },
+      {
+        label: copy[lang].buttons.about,
+        onClick: function () {
+          addMessage(copy[lang].msgAbout, "bot");
+          addFinalActions();
+        }
+      },
+      {
+        label: copy[lang].buttons.benefits,
+        onClick: function () {
+          addMessage(copy[lang].msgBenefits, "bot");
+          addFinalActions();
+        }
+      },
+      {
+        label: copy[lang].buttons.poc,
+        onClick: function () {
+          addMessage(copy[lang].msgPoc, "bot");
+          addFinalActions();
+        }
+      },
+      {
+        label: copy[lang].buttons.vision,
+        onClick: function () {
+          addMessage(copy[lang].msgVision, "bot");
+          addFinalActions();
+        }
+      },
+      {
+        label: copy[lang].buttons.contact,
+        onClick: function () {
+          addMessage(copy[lang].msgContact, "bot");
+          addFinalActions();
+        }
+      }
+    ]);
+  }
+
+  function startChat() {
+    body.innerHTML = "";
+    badge.textContent = "EvoSustain";
+    title.textContent = "Choose language";
+    subtitle.textContent = "Select English or Español to continue.";
+    resetBtn.textContent = "Restart";
+    footer.innerHTML = 'Contact: <a href="mailto:info@evoford.com">info@evoford.com</a><br><a href="tel:+447871710697">+44 7871 710697</a>';
+
+    addMessage("Please choose your language.", "bot");
+    addOptions([
+      {
+        label: "English",
+        primary: true,
+        onClick: function () {
+          setLang("en");
+          showMenu();
+        }
+      },
+      {
+        label: "Español",
+        onClick: function () {
+          setLang("es");
+          showMenu();
+        }
+      }
+    ]);
+  }
+
+  launcher.addEventListener("click", function () {
+    widget.classList.toggle("open");
+    if (!body.children.length) {
+      startChat();
+    }
+  });
+
+  resetBtn.addEventListener("click", startChat);
+})();
+</script>
+<!-- EVOSUSTAIN CHATBOX END -->
+
 </body>
 </html>

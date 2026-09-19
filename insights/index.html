@@ -1,83 +1,16 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>EvoSustain Journal — Insights</title>
-<meta name="description" content="EvoSustain Journal — news, ideas and intelligence on sustainability, digital waste management and technology.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
-</head>
-<body>
-<div class="topline"><div class="container topinner"><span>EVOFORD / EVOSUSTAIN</span><span>JOURNAL • INSIGHTS • INTELLIGENCE</span></div></div>
-
-<header class="header">
-  <div class="container headerinner">
-    <button class="menuBtn" id="menuBtn" aria-label="Open menu">☰</button>
-    <a class="brand" href="./"><span class="brandmark">E</span><span><strong>EVO<span>FORD</span></strong><small>JOURNAL / INSIGHTS</small></span></a>
-    <nav class="desktopNav">
-      <a href="#latest">Latest</a><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a><a href="#cities">Smart Cities</a><a href="#operations">Operations</a><a href="#perspective">Perspective</a>
-    </nav>
-    <button class="searchBtn" id="searchOpen" aria-label="Search">⌕</button>
-  </div>
-</header>
-
-<div class="mobilePanel" id="mobilePanel">
-  <div class="panelTop"><b>JOURNAL</b><button id="menuClose">×</button></div>
-  <a href="#latest">Latest</a><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a><a href="#cities">Smart Cities</a><a href="#operations">Waste Operations</a><a href="#perspective">EvoSustain Perspective</a><a href="#newsletter">Newsletter</a>
-</div>
-<div class="overlay" id="overlay"></div>
-
-<section class="searchPanel" id="searchPanel">
- <div class="container searchbox"><input id="search" placeholder="Search the Journal…"><button id="searchBtn">Search</button></div>
-</section>
-
-<section class="mast">
- <div class="container">
-  <div class="eyebrow">EVOSUSTAIN JOURNAL</div>
-  <h1>Insights for a <em>cleaner, smarter</em> future.</h1>
-  <p>Independent news, practical intelligence and ideas across sustainability, digital waste management, technology and smart cities.</p>
-  <div class="mastMeta"><span>Curated by EvoSustain</span><span>London • Europe</span><span id="today"></span></div>
- </div>
-</section>
-
-<div class="ticker"><div class="container tickerinner"><b>JOURNAL UPDATE</b><span id="ticker">Loading latest stories…</span></div></div>
-
-<main>
-<section class="container leadSection" id="latest">
- <div class="sectionHead"><div><span class="eyebrow">01 / LATEST</span><h2>What’s happening now</h2></div><a href="#all" id="viewAll">View all →</a></div>
- <div class="leadGrid">
-  <article class="heroStory" id="heroStory"></article>
-  <div class="sideStories" id="sideStories"></div>
- </div>
-</section>
-
-<section class="band" id="sustainability">
- <div class="container"><div class="sectionHead"><div><span class="eyebrow">02 / SUSTAINABILITY</span><h2>Systems that matter</h2></div></div><div class="cards three" id="sustainGrid"></div></div>
-</section>
-
-<section class="container editorial" id="technology">
- <div class="sectionHead"><div><span class="eyebrow">03 / TECHNOLOGY</span><h2>Technology in practice</h2></div></div><div class="cards three" id="techGrid"></div>
-</section>
-
-<section class="container editorial" id="cities">
- <div class="sectionHead"><div><span class="eyebrow">04 / SMART CITIES</span><h2>The connected city</h2></div></div><div class="cards three" id="cityGrid"></div>
-</section>
-
-<section class="darkBand" id="operations">
- <div class="container darkGrid"><div><span class="eyebrow">05 / WASTE OPERATIONS</span><h2>From collection to intelligence.</h2><p>Operational thinking for cleaner streets, better data and more efficient resource management.</p></div><div class="featureList" id="opsList"></div></div>
-</section>
-
-<section class="container editorial" id="perspective">
- <div class="sectionHead"><div><span class="eyebrow">06 / EVOSUSTAIN PERSPECTIVE</span><h2>Ideas worth discussing</h2></div></div><div class="perspectiveGrid" id="perspectiveGrid"></div>
-</section>
-
-<section class="newsletter" id="newsletter"><div class="container newsletterInner"><div><span class="eyebrow">JOURNAL LETTER</span><h2>Useful ideas. No noise.</h2><p>Get the latest EvoSustain insights and selected industry stories.</p></div><form id="newsletterForm"><input type="email" placeholder="Your email address" required><button>Subscribe</button></form></div></section>
-</main>
-
-<footer><div class="container footerGrid"><div><a class="brand footerBrand" href="./"><span class="brandmark">E</span><span><strong>EVO<span>FORD</span></strong><small>JOURNAL / INSIGHTS</small></span></a><p>Digital intelligence for a more sustainable world.</p></div><div><b>Journal</b><a href="#latest">Latest</a><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a></div><div><b>Explore</b><a href="#cities">Smart Cities</a><a href="#operations">Operations</a><a href="#perspective">Perspective</a></div></div><div class="container copyright">© <span id="year"></span> EvoFord / EvoSustain. All rights reserved.</div></footer>
-<script src="app.js"></script>
-</body>
-</html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EvoSustain Insights</title><link rel="stylesheet" href="styles.css"></head><body>
+<div class="utility"><div class="wrap">Saturday, 19 September 2026 <span>London / Europe</span><nav>LinkedIn · X · YouTube</nav></div></div>
+<header><div class="wrap mast"><button id="menuBtn" class="menuBtn" aria-label="Open menu" aria-expanded="false">☰</button><a class="logo" href="./">EVO<span>FORD</span><small>INSIGHTS</small></a><div class="search"><input id="search" placeholder="Search insights…"><button id="searchBtn">⌕</button></div><a class="subscribe" href="#newsletter">Subscribe</a></div></header>
+<nav class="nav"><div class="wrap navlinks"><a class="active" href="./">Home</a><a href="#latest">Latest</a><a href="#news">News</a><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a><a href="#smartcities">Smart Cities</a><a href="#operations">Waste Operations</a><a href="#opinion">EvoSustain Perspective</a></div></nav><div id="menuOverlay" class="menuOverlay"></div><aside id="mobileMenu" class="mobileMenu" aria-hidden="true"><div class="mobileHead"><b>MENU</b><button id="closeMenu">✕</button></div><a href="./">Home</a><a href="#latest">Latest</a><a href="#news">News</a><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a><a href="#smartcities">Smart Cities</a><a href="#operations">Waste Operations</a><a href="#opinion">EvoSustain Perspective</a><a href="#newsletter">Newsletter</a></aside>
+<div class="ticker"><div class="wrap"><b>BREAKING INSIGHTS</b><span id="ticker"></span></div></div>
+<div class="indicators"><div class="wrap"><span><b>CO₂e</b> 2.8M saved</span><span><b>Sites</b> 124 active</span><span><b>Routes</b> 18 active</span><span><b>Tracking</b> 96% digital</span><span><b>AI Watch</b> 27 discoveries</span></div></div>
+<main class="wrap">
+<section class="lead"><article><div class="heroimg"></div><label>FEATURED · TECHNOLOGY</label><h1>The Future of Digital Waste Management</h1><p>How data, automation and AI are changing waste operations — and what the transition means for cleaner, smarter cities.</p><small>EvoSustain Editorial · 5 min read</small></article><aside><h2>Latest</h2><div id="side"></div></aside></section>
+<section id="latest"><div class="title"><h2>Latest</h2><a>View all →</a></div><div id="latestGrid" class="grid"></div></section>
+<section id="news" class="split"><div><div class="title"><h2>News</h2></div><div id="newsGrid" class="grid two"></div></div><aside class="most"><h2>Most read</h2><ol id="most"></ol></aside></section>
+<section id="sustainability"><div class="title"><h2>Sustainability</h2></div><div id="sustainGrid" class="grid three"></div></section>
+<section id="technology"><div class="title"><h2>Technology</h2></div><div id="techGrid" class="grid three"></div></section>
+<section id="smartcities"><div class="title"><h2>Smart Cities</h2></div><div id="cityGrid" class="grid three"></div></section>
+<section id="newsletter" class="newsletter"><div><label>BOLETÍN EVOSUSTAIN</label><h2>Las noticias que importan, directo a tu correo.</h2><p>Una selección editorial de tecnología, sostenibilidad y operaciones.</p></div><a class="button" href="mailto:YOUR_EMAIL@example.com?subject=EvoSustain%20Insights">Suscribirme →</a></section>
+</main><footer><div class="wrap"><div class="logo white">EVO<span>FORD</span><small>INSIGHTS</small></div><p>Data · Technology · Sustainability.</p></div></footer>
+<script src="app.js"></script></body></html>

@@ -1,20 +1,14 @@
-# EvoSustain Journal / Insights
+# EvoSustain Insights — AlMomento-inspired layout
+Inspired by the public news-portal information architecture of AlMomento.do: utility strip, masthead/search, category navigation, breaking ticker, indicators, featured story, latest feed, most-read module, sectioned content and newsletter. It keeps EvoFord/EvoSustain branding and does not copy AlMomento assets or text.
 
-A clean, responsive, no-backend editorial portal for EvoFord / EvoSustain.
+Automation remains backend-free: RSS → GitHub Actions → data/articles.json → GitHub Pages. Configure your feeds in scripts/update_feed.py from the previous free package.
 
-## Features
-- Editorial-style homepage
-- Functional mobile navigation
-- Search
-- Responsive layouts for desktop, tablet and mobile
-- Journal sections: Latest, Sustainability, Technology, Smart Cities, Waste Operations, Perspective
-- Newsletter UI
-- Static JSON content
-- Optional RSS automation via GitHub Actions
-- No database, server or API key required
+## Responsive update
 
-## Deploy
-Upload the folder to GitHub and enable GitHub Pages.
-
-## RSS automation
-Edit `scripts/update_feed.py` and add RSS URLs to `FEEDS`. GitHub Actions can then refresh `data/articles.json` every 6 hours.
+The navigation is now functional:
+- Desktop: full horizontal navigation.
+- Tablet/mobile: hamburger menu with slide-in panel.
+- Overlay and Escape-to-close.
+- Menu closes after selecting a section.
+- Responsive search/header.
+- Responsive cards, hero, indicators, newsletter and footer.

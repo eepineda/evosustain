@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>EvoSustain Journal | Insights</title>
+<meta name="description" content="EvoSustain Journal — sustainability, technology, smart cities and waste intelligence.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="top"><div class="container topin"><span>EVOFORD GROUP</span><span>EVOSUSTAIN JOURNAL</span><span>London · Europe</span></div></div>
+
+<header class="header">
+  <div class="container headerin">
+    <button class="hamb" id="menuBtn" aria-label="Open menu">☰</button>
+    <a class="logo" href="./" aria-label="EvoFord Journal">EVOFORD <span>JOURNAL</span></a>
+    <div class="headerTools"><span class="edition">EVOSUSTAIN</span><button class="search" id="searchOpen" aria-label="Search">⌕</button></div>
+  </div>
+</header>
+
+<nav class="nav"><div class="container">
+  <a href="#latest">Latest</a><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a><a href="#cities">Smart Cities</a><a href="#operations">Waste & Operations</a><a href="#perspective">Perspective</a>
+</div></nav>
+
+<div class="mobileMenu" id="mobileMenu" aria-hidden="true">
+ <div class="mobileHead"><strong>EVOSUSTAIN JOURNAL</strong><button id="closeMenu">×</button></div>
+ <a href="#latest">Latest</a><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a><a href="#cities">Smart Cities</a><a href="#operations">Waste & Operations</a><a href="#perspective">Perspective</a><a href="#about">About</a>
+</div>
+<div class="overlay" id="overlay"></div>
+
+<div class="searchbar" id="searchbar"><div class="container"><input id="searchInput" placeholder="Search the Journal"><button id="searchBtn">Search</button></div></div>
+
+<div class="breaking"><div class="container breakingIn"><b>JOURNAL</b><span id="ticker">Latest sustainability intelligence</span></div></div>
+
+<main>
+<section class="container front" id="latest">
+ <div class="frontLabel">THE FRONT PAGE</div>
+ <div class="frontGrid">
+  <article class="lead" id="lead"></article>
+  <div class="rail" id="rail"></div>
+ </div>
+</section>
+
+<section class="container section" id="sustainability">
+ <div class="sectionHead"><span>01</span><h2>Sustainability</h2><i></i><a href="#latest">Latest →</a></div>
+ <div class="cards" id="sustainGrid"></div>
+</section>
+
+<section class="container section" id="technology">
+ <div class="sectionHead"><span>02</span><h2>Technology</h2><i></i><a href="#latest">Latest →</a></div>
+ <div class="cards" id="techGrid"></div>
+</section>
+
+<section class="container section" id="cities">
+ <div class="sectionHead"><span>03</span><h2>Smart Cities</h2><i></i><a href="#latest">Latest →</a></div>
+ <div class="cards" id="cityGrid"></div>
+</section>
+
+<section class="operations" id="operations">
+ <div class="container operationsIn">
+  <div class="operationsIntro"><div class="frontLabel light">04 / WASTE & OPERATIONS</div><h2>The city is an operating system.</h2><p>Digital information is becoming part of the physical infrastructure of modern cities.</p></div>
+  <div class="opList" id="ops"></div>
+ </div>
+</section>
+
+<section class="container section" id="perspective">
+ <div class="sectionHead"><span>05</span><h2>Perspective</h2><i></i><a href="#latest">Latest →</a></div>
+ <div class="perspective" id="perspectiveGrid"></div>
+</section>
+
+<section class="container about" id="about">
+ <div><div class="frontLabel">ABOUT THE JOURNAL</div><h2>A clearer view of the systems shaping a cleaner economy.</h2></div>
+ <p>EvoSustain Journal brings together news, analysis and practical intelligence around sustainability, digital waste management, software and the future of cities.</p>
+</section>
+
+<section class="newsletter"><div class="container newsletterIn"><div><div class="frontLabel">THE JOURNAL LETTER</div><h2>Essential reading. Occasionally.</h2></div><form id="newsletter"><input type="email" placeholder="Email address" required><button>Subscribe</button></form></div></section>
+</main>
+
+<footer><div class="container footerIn"><div><div class="footerLogo">EVO<span>FORD</span></div><small>EVOSUSTAIN JOURNAL</small></div><div><b>Journal</b><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a><a href="#cities">Smart Cities</a></div><div><b>Explore</b><a href="#operations">Waste & Operations</a><a href="#perspective">Perspective</a><a href="#about">About</a></div></div><div class="container copy">© <span id="year"></span> EvoFord / EvoSustain</div></footer>
+
+<script src="app.js"></script>
+</body>
+</html>

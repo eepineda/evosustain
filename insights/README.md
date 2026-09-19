@@ -1,4 +1,23 @@
-# EvoSustain Insights — AlMomento-inspired layout
-Inspired by the public news-portal information architecture of AlMomento.do: utility strip, masthead/search, category navigation, breaking ticker, indicators, featured story, latest feed, most-read module, sectioned content and newsletter. It keeps EvoFord/EvoSustain branding and does not copy AlMomento assets or text.
+# EvoSustain Journal — Premium Editorial
 
-Automation remains backend-free: RSS → GitHub Actions → data/articles.json → GitHub Pages. Configure your feeds in scripts/update_feed.py from the previous free package.
+A high-end newspaper-inspired editorial interface for EvoSustain, built as a static site.
+
+## Design direction
+Inspired by the discipline of premium European newspaper design: strong serif typography, strict grids, editorial hierarchy, restrained color, section numbering and a front-page structure. It does not copy another publication's branding or assets.
+
+## Included
+- Responsive front page
+- Editorial lead story + news rail
+- Sustainability / Technology / Smart Cities
+- Waste & Operations feature section
+- EvoSustain Perspective
+- Search
+- Mobile drawer navigation
+- Newsletter
+- Static JSON content
+- GitHub Pages compatible
+- Optional RSS automation with GitHub Actions
+- No backend / database / API key required
+
+## RSS
+Add RSS feed URLs to `scripts/update_feed.py` under `FEEDS`.

@@ -1,16 +1,76 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EvoSustain Insights</title><link rel="stylesheet" href="styles.css"></head><body>
-<div class="utility"><div class="wrap">Saturday, 19 September 2026 <span>London / Europe</span><nav>LinkedIn · X · YouTube</nav></div></div>
-<header><div class="wrap mast"><button id="menuBtn" class="menuBtn" aria-label="Open menu" aria-expanded="false">☰</button><a class="logo" href="./">EVO<span>FORD</span><small>INSIGHTS</small></a><div class="search"><input id="search" placeholder="Search insights…"><button id="searchBtn">⌕</button></div><a class="subscribe" href="#newsletter">Subscribe</a></div></header>
-<nav class="nav"><div class="wrap navlinks"><a class="active" href="./">Home</a><a href="#latest">Latest</a><a href="#news">News</a><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a><a href="#smartcities">Smart Cities</a><a href="#operations">Waste Operations</a><a href="#opinion">EvoSustain Perspective</a></div></nav><div id="menuOverlay" class="menuOverlay"></div><aside id="mobileMenu" class="mobileMenu" aria-hidden="true"><div class="mobileHead"><b>MENU</b><button id="closeMenu">✕</button></div><a href="./">Home</a><a href="#latest">Latest</a><a href="#news">News</a><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a><a href="#smartcities">Smart Cities</a><a href="#operations">Waste Operations</a><a href="#opinion">EvoSustain Perspective</a><a href="#newsletter">Newsletter</a></aside>
-<div class="ticker"><div class="wrap"><b>BREAKING INSIGHTS</b><span id="ticker"></span></div></div>
-<div class="indicators"><div class="wrap"><span><b>CO₂e</b> 2.8M saved</span><span><b>Sites</b> 124 active</span><span><b>Routes</b> 18 active</span><span><b>Tracking</b> 96% digital</span><span><b>AI Watch</b> 27 discoveries</span></div></div>
-<main class="wrap">
-<section class="lead"><article><div class="heroimg"></div><label>FEATURED · TECHNOLOGY</label><h1>The Future of Digital Waste Management</h1><p>How data, automation and AI are changing waste operations — and what the transition means for cleaner, smarter cities.</p><small>EvoSustain Editorial · 5 min read</small></article><aside><h2>Latest</h2><div id="side"></div></aside></section>
-<section id="latest"><div class="title"><h2>Latest</h2><a>View all →</a></div><div id="latestGrid" class="grid"></div></section>
-<section id="news" class="split"><div><div class="title"><h2>News</h2></div><div id="newsGrid" class="grid two"></div></div><aside class="most"><h2>Most read</h2><ol id="most"></ol></aside></section>
-<section id="sustainability"><div class="title"><h2>Sustainability</h2></div><div id="sustainGrid" class="grid three"></div></section>
-<section id="technology"><div class="title"><h2>Technology</h2></div><div id="techGrid" class="grid three"></div></section>
-<section id="smartcities"><div class="title"><h2>Smart Cities</h2></div><div id="cityGrid" class="grid three"></div></section>
-<section id="newsletter" class="newsletter"><div><label>BOLETÍN EVOSUSTAIN</label><h2>Las noticias que importan, directo a tu correo.</h2><p>Una selección editorial de tecnología, sostenibilidad y operaciones.</p></div><a class="button" href="mailto:YOUR_EMAIL@example.com?subject=EvoSustain%20Insights">Suscribirme →</a></section>
-</main><footer><div class="wrap"><div class="logo white">EVO<span>FORD</span><small>INSIGHTS</small></div><p>Data · Technology · Sustainability.</p></div></footer>
-<script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EvoSustain Journal — The sustainability intelligence desk</title>
+<meta name="description" content="EvoSustain Journal: sustainability, technology, smart cities and digital waste intelligence.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="utility"><div class="wrap"><span>EVOFORD GROUP</span><span>EVOSUSTAIN JOURNAL</span><span>London · Europe</span></div></div>
+
+<header class="masthead">
+ <div class="wrap mast">
+  <button class="hamb" id="menuBtn" aria-label="Open navigation">☰</button>
+  <a class="wordmark" href="./">EVO<span>FORD</span><small>EVOSUSTAIN JOURNAL</small></a>
+  <div class="date" id="date"></div>
+  <button class="searchIcon" id="searchOpen" aria-label="Search">⌕</button>
+ </div>
+</header>
+
+<nav class="mainnav"><div class="wrap"><a href="#latest">Latest</a><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a><a href="#cities">Smart Cities</a><a href="#operations">Waste & Operations</a><a href="#perspective">Perspective</a><a href="#about">About</a></div></nav>
+
+<div class="drawer" id="drawer"><div class="drawerHead"><b>EVOSUSTAIN JOURNAL</b><button id="closeMenu">×</button></div>
+<a href="#latest">Latest</a><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a><a href="#cities">Smart Cities</a><a href="#operations">Waste & Operations</a><a href="#perspective">Perspective</a><a href="#about">About EvoSustain</a></div>
+<div class="shade" id="shade"></div>
+
+<div class="searchbar" id="searchbar"><div class="wrap"><input id="search" placeholder="Search the Journal"><button id="searchBtn">Search</button></div></div>
+
+<div class="breaking"><div class="wrap"><b>JOURNAL</b><span id="ticker">The latest sustainability intelligence from EvoSustain</span></div></div>
+
+<main>
+<section class="wrap front" id="latest">
+ <div class="kicker">THE FRONT PAGE</div>
+ <div class="frontGrid">
+  <article class="lead" id="lead"></article>
+  <aside class="rail" id="rail"></aside>
+ </div>
+</section>
+
+<section class="wrap section" id="sustainability">
+ <div class="sectionTitle"><span>01</span><h2>Sustainability</h2><i></i><a href="#">More stories →</a></div>
+ <div class="storyGrid" id="sustainGrid"></div>
+</section>
+
+<section class="wrap section" id="technology">
+ <div class="sectionTitle"><span>02</span><h2>Technology</h2><i></i><a href="#">More stories →</a></div>
+ <div class="storyGrid" id="techGrid"></div>
+</section>
+
+<section class="wrap section" id="cities">
+ <div class="sectionTitle"><span>03</span><h2>Smart Cities</h2><i></i><a href="#">More stories →</a></div>
+ <div class="storyGrid" id="cityGrid"></div>
+</section>
+
+<section class="operations" id="operations">
+ <div class="wrap operationsGrid"><div><div class="kicker light">04 / WASTE & OPERATIONS</div><h2>The city is an operating system.</h2><p>Better collection, cleaner streets and more efficient resources start with information that reaches the people making decisions.</p></div><div class="opStories" id="ops"></div></div>
+</section>
+
+<section class="wrap section" id="perspective">
+ <div class="sectionTitle"><span>05</span><h2>EvoSustain Perspective</h2><i></i><a href="#">More stories →</a></div>
+ <div class="perspectiveGrid" id="perspectiveGrid"></div>
+</section>
+
+<section class="wrap about" id="about">
+ <div><div class="kicker">ABOUT THE JOURNAL</div><h2>A point of view on the systems shaping a cleaner economy.</h2></div>
+ <p>EvoSustain Journal brings together news, analysis and practical intelligence around sustainability, digital waste management, software and the future of cities. It is published by EvoFord / EvoSustain.</p>
+</section>
+
+<section class="newsletter"><div class="wrap newsletterGrid"><div><div class="kicker">THE JOURNAL LETTER</div><h2>Essential reading, occasionally.</h2></div><form id="newsletter"><input type="email" required placeholder="Email address"><button>Subscribe</button></form></div></section>
+</main>
+
+<footer><div class="wrap foot"><div><div class="footerLogo">EVO<span>FORD</span></div><p>EvoSustain Journal</p></div><div><b>Sections</b><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a><a href="#cities">Smart Cities</a></div><div><b>Company</b><a href="#about">About EvoSustain</a><a href="#operations">Waste & Operations</a></div></div><div class="wrap copy">© <span id="year"></span> EvoFord / EvoSustain</div></footer>
+<script src="app.js"></script>
+</body></html>

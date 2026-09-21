@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Evoford Journal</title>
+<meta name="description" content="News, ideas and intelligence across sustainability, technology, smart cities and waste operations.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="siteHeader">
+  <div class="container masthead">
+    <button class="iconBtn menuBtn" id="menuBtn" aria-label="Open menu">☰</button>
+    <a class="mastLogo" href="./" aria-label="Evoford Journal">Evoford <span>Journal</span></a>
+    <button class="iconBtn searchBtn" id="searchOpen" aria-label="Search">⌕</button>
+  </div>
+  <nav class="navbar">
+    <div class="container navInner">
+      <a href="#latest">Latest</a><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a>
+      <a href="#cities">Smart Cities</a><a href="#waste">Waste &amp; Operations</a><a href="#perspective">Perspective</a>
+    </div>
+  </nav>
+</header>
+
+<div class="ticker"><div class="container tickerInner"><span class="tickerLabel">Evoford Journal</span><span>Independent intelligence for the transition to smarter, cleaner systems.</span></div></div>
+
+<main>
+<section class="hero container">
+  <div class="heroGrid">
+    <div id="hero"></div>
+    <div class="sideRail" id="rail"></div>
+  </div>
+</section>
+
+<section class="section container" id="latest">
+  <div class="sectionHead"><h2>Latest</h2><a href="#latest">View all</a></div>
+  <div class="storyGrid" id="latestGrid"></div>
+</section>
+
+<section class="section container" id="sustainability">
+  <div class="sectionHead"><h2>Sustainability</h2><a href="#sustainability">Section</a></div>
+  <div class="storyGrid" data-category="Sustainability"></div>
+</section>
+
+<section class="section container" id="technology">
+  <div class="sectionHead"><h2>Technology</h2><a href="#technology">Section</a></div>
+  <div class="storyGrid" data-category="Technology"></div>
+</section>
+
+<section class="section container" id="cities">
+  <div class="sectionHead"><h2>Smart Cities</h2><a href="#cities">Section</a></div>
+  <div class="storyGrid" data-category="Smart Cities"></div>
+</section>
+
+<section class="section darkSection" id="waste">
+  <div class="container">
+    <div class="sectionHead"><h2>Waste &amp; Operations</h2><a href="#waste">Section</a></div>
+    <div class="storyGrid" data-category="Waste &amp; Operations"></div>
+  </div>
+</section>
+
+<section class="section perspective" id="perspective">
+  <div class="container">
+    <div class="sectionHead"><h2>Perspective</h2><a href="#perspective">Section</a></div>
+    <div class="split">
+      <div><div class="quoteMark">“</div><p class="quote">Better systems begin with better information.</p></div>
+      <div><div class="kicker">Editorial</div><p class="featureTitle">Ideas, evidence and practical intelligence for the people building what comes next.</p><p class="meta">Evoford Journal brings together sustainability, software, cities and operations in one editorial platform.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="newsletter">
+  <div class="container newsletterGrid">
+    <div><h2>Stay ahead of the transition.</h2><p>Receive selected stories and insights from Evoford Journal.</p></div>
+    <form class="newsForm" onsubmit="event.preventDefault(); alert('Newsletter subscription can be connected to your preferred provider.');">
+      <input type="email" required placeholder="Your email address" aria-label="Email address">
+      <button type="submit">Subscribe →</button>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="container footerGrid">
+    <div><div class="footerLogo">Evoford Journal</div><small>News, ideas and intelligence for a cleaner, smarter future.</small></div>
+    <small>© Evoford Journal</small>
+  </div>
+</footer>
+
+<div class="mobileMenu" id="mobileMenu">
+  <a href="#latest">Latest</a><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a>
+  <a href="#cities">Smart Cities</a><a href="#waste">Waste &amp; Operations</a><a href="#perspective">Perspective</a>
+</div>
+
+<div class="searchPanel" id="searchPanel">
+  <button class="iconBtn searchClose" id="searchClose" aria-label="Close search">×</button>
+  <div class="searchBox">
+    <input id="searchInput" type="search" placeholder="Search Evoford Journal…" autocomplete="off">
+    <div class="searchResults" id="searchResults"></div>
+  </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

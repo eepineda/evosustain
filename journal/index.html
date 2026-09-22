@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Evoford Journal</title>
+<meta name="description" content="Independent reporting, analysis and intelligence across sustainability, technology, smart cities and waste operations.">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="assets/hero.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="masthead-wrap">
+  <div class="utility container"><span>Independent editorial intelligence</span><span id="today"></span><span>News · Ideas · Systems</span></div>
+  <div class="masthead container">
+    <button class="iconBtn" id="menuBtn" aria-label="Open menu">☰</button>
+    <a class="brand" href="./">Evoford Journal</a>
+    <button class="iconBtn" id="searchOpen" aria-label="Search">⌕</button>
+  </div>
+  <nav class="navline"><div class="container navInner">
+    <a href="#latest">Latest</a><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a><a href="#cities">Smart Cities</a><a href="#waste">Waste &amp; Operations</a><a href="#perspective">Perspective</a><a class="navPremium" href="#membership">Journal+</a>
+  </div></nav>
+</header>
+<div class="edition"><div class="container editionInner"><span>THE DAILY EDITION</span><span>Reporting on the transition to cleaner, smarter systems</span><span>Digital publication</span></div></div>
+<main>
+<section class="front container">
+  <div class="frontRule"></div>
+  <div class="frontGrid"><div id="hero"></div><aside id="rail" class="rail"></aside></div>
+  <div class="frontBottom" id="frontBottom"></div>
+</section>
+<section class="ticker"><div class="container tickerInner"><strong>Briefing</strong><div id="tickerItems"></div></div></section>
+<section class="section container" id="latest"><div class="sectionHead"><h2>Latest</h2><span>News desk</span></div><div class="storyGrid storyGridLatest" id="latestGrid"></div></section>
+<section class="section container" id="sustainability"><div class="sectionHead"><h2>Sustainability</h2><span>Climate · circularity · transition</span></div><div class="storyGrid" data-category="Sustainability"></div></section>
+<section class="section container" id="technology"><div class="sectionHead"><h2>Technology</h2><span>Software · data · automation</span></div><div class="storyGrid" data-category="Technology"></div></section>
+<section class="section container" id="cities"><div class="sectionHead"><h2>Smart Cities</h2><span>Urban systems · infrastructure</span></div><div class="storyGrid" data-category="Smart Cities"></div></section>
+<section class="section darkSection" id="waste"><div class="container"><div class="sectionHead"><h2>Waste &amp; Operations</h2><span>Field intelligence</span></div><div class="storyGrid" data-category="Waste &amp; Operations"></div></div></section>
+<section class="perspective" id="perspective"><div class="container perspectiveGrid"><div><div class="eyebrow">Perspective</div><h2>Ideas for people building better systems.</h2></div><div><p>Reporting, analysis and practical intelligence across sustainability, software, cities and operations.</p><div class="signature">Evoford Journal</div></div></div></section>
+<section class="membership" id="membership"><div class="container membershipGrid"><div><div class="eyebrow">Journal+</div><h2>More context. Less noise.</h2><p>Premium analysis, briefings and research for readers who need to understand what changes next.</p></div><div class="membershipList"><div><b>Premium analysis</b><span>Deep reads and explainers</span></div><div><b>Weekly briefing</b><span>One concise intelligence note</span></div><div><b>Research archive</b><span>Reports and sector dossiers</span></div><a class="membershipBtn" href="mailto:journal@evoford.com?subject=Evoford%20Journal%2B">Join the waitlist →</a></div></div></section>
+<section class="newsletter"><div class="container newsletterGrid"><div><div class="eyebrow">The briefing</div><h2>A concise read for the people shaping what comes next.</h2></div><form class="newsForm" onsubmit="event.preventDefault();alert('Connect this form to your preferred newsletter provider.');"><input type="email" required placeholder="Email address" aria-label="Email address"><button>Subscribe</button></form></div></section>
+</main>
+<footer class="footer"><div class="container"><div class="footerMast">Evoford Journal</div><div class="footerRule"></div><div class="footerMeta"><span>News · Ideas · Systems</span><span>Editorial independence · Contact</span><span>© Evoford Journal</span></div></div></footer>
+<div class="mobileMenu" id="mobileMenu"><div class="mobileMenuHead"><span>Sections</span><button id="menuClose">×</button></div><a href="#latest">Latest</a><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a><a href="#cities">Smart Cities</a><a href="#waste">Waste &amp; Operations</a><a href="#perspective">Perspective</a><a href="#membership">Journal+</a></div>
+<div class="searchPanel" id="searchPanel"><button class="searchClose" id="searchClose">×</button><div class="searchBox"><div class="eyebrow">Search the Journal</div><input id="searchInput" type="search" placeholder="Search stories…" autocomplete="off"><div id="searchResults"></div></div></div>
+<script src="app.js"></script>
+</body></html>

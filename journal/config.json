@@ -1,0 +1,103 @@
+{
+  "site_name": "Evoford Journal",
+  "site_url": "https://evoford.com/journal/",
+  "language": "en",
+  "description": "News, ideas and intelligence across sustainability, technology, smart cities and waste operations.",
+  "max_articles": 120,
+  "rss_per_source": 12,
+  "auto_publish_rss": true,
+  "categories": [
+    "News",
+    "Sustainability",
+    "Technology",
+    "Smart Cities",
+    "Waste & Operations",
+    "Perspective"
+  ],
+  "author_archive": {
+    "name": "Edwin Pineda Carrasco",
+    "enabled": true,
+    "queries": [
+      "\"Edwin Pineda Carrasco\"",
+      "\"Edwin Pineda Carrasco\" opinión",
+      "\"Edwin Pineda Carrasco\" periodista",
+      "\"Por Edwin Pineda Carrasco\"",
+      "\"Edwin Pineda Carrasco\" Barahona",
+      "\"Edwin Pineda Carrasco\" Londres",
+      "\"Ing. Edwin Pineda Carrasco\"",
+      "\"Edwin Pineda Carrasco\" site:almomento.net",
+      "\"Edwin Pineda Carrasco\" site:almomento.do",
+      "\"Edwin Pineda Carrasco\" site:loultimodigital.com",
+      "\"Edwin Pineda Carrasco\" site:elmundoenmarcha.net",
+      "\"Edwin Pineda Carrasco\" site:noticiariobarahona.com",
+      "\"Edwin Pineda Carrasco\" site:opiniondigitalpp.com",
+      "\"Edwin Pineda Carrasco\" site:independiente.com.do",
+      "\"Edwin Pineda Carrasco\" site:diariodigitalrd.com",
+      "\"Edwin Pineda Carrasco\" site:elnuevodiario.com.do",
+      "\"Edwin Pineda Carrasco\" site:elcaribe.com.do",
+      "\"Edwin Pineda Carrasco\" site:listindiario.com",
+      "\"Edwin Pineda Carrasco\" site:diariolibre.com",
+      "\"Edwin Pineda Carrasco\" site:acento.com.do",
+      "\"Edwin Pineda Carrasco\" site:elnacional.com.do",
+      "\"Edwin Pineda Carrasco\" site:periodicoelcaribe.com",
+      "\"Edwin Pineda Carrasco\" site:elnuevodiario.com",
+      "\"Edwin Pineda Carrasco\" site:youtube.com",
+      "\"Edwin Pineda Carrasco\" site:facebook.com"
+    ],
+    "rss_per_query": 20,
+    "max_items": 300,
+    "verify_author_pages": true,
+    "search_days": 3650
+  },
+  "briefing": {
+    "enabled": true,
+    "title": "FAO · República Dominicana",
+    "subtitle": "Actualizaciones verificables de organismos públicos y fuentes periodísticas establecidas.",
+    "max_items": 10,
+    "mobile_items": 5,
+    "sources": [
+      {
+        "name": "FAO · República Dominicana",
+        "url": "https://news.google.com/rss/search?q=site%3Afao.org%2Frepublica-dominicana&hl=es-419&gl=DO&ceid=DO:es-419",
+        "query": "site:fao.org/republica-dominicana",
+        "category": "Organismo internacional",
+        "type": "official"
+      },
+      {
+        "name": "Presidencia de la República Dominicana",
+        "url": "https://news.google.com/rss/search?q=site%3Apresidencia.gob.do%2Fnoticias&hl=es-419&gl=DO&ceid=DO:es-419",
+        "query": "site:presidencia.gob.do/noticias",
+        "category": "Fuente oficial RD",
+        "type": "official"
+      },
+      {
+        "name": "Banco Central de la República Dominicana",
+        "url": "https://news.google.com/rss/search?q=site%3Abancentral.gov.do%2Fnoticias+OR+site%3Abancentral.gov.do%2Fpublicaciones&hl=es-419&gl=DO&ceid=DO:es-419",
+        "query": "site:bancentral.gov.do/noticias OR site:bancentral.gov.do/publicaciones",
+        "category": "Organismo económico",
+        "type": "official"
+      },
+      {
+        "name": "Oficina Nacional de Estadística",
+        "url": "https://news.google.com/rss/search?q=site%3Aone.gob.do%2Fnoticias+OR+site%3Aone.gob.do%2Fpublicaciones&hl=es-419&gl=DO&ceid=DO:es-419",
+        "query": "site:one.gob.do/noticias OR site:one.gob.do/publicaciones",
+        "category": "Estadística oficial",
+        "type": "official"
+      },
+      {
+        "name": "Diario Libre",
+        "url": "https://news.google.com/rss/search?q=site%3Adiariolibre.com+Rep%C3%BAblica+Dominicana&hl=es-419&gl=DO&ceid=DO:es-419",
+        "query": "site:diariolibre.com República Dominicana",
+        "category": "Prensa",
+        "type": "press"
+      },
+      {
+        "name": "Listín Diario",
+        "url": "https://news.google.com/rss/search?q=site%3Alistindiario.com+Rep%C3%BAblica+Dominicana&hl=es-419&gl=DO&ceid=DO:es-419",
+        "query": "site:listindiario.com República Dominicana",
+        "category": "Prensa",
+        "type": "press"
+      }
+    ]
+  }
+}

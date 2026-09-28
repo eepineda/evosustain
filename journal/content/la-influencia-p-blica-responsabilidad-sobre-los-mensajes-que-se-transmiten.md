@@ -1,0 +1,48 @@
+---
+title: "La influencia pública: responsabilidad sobre los mensajes que se transmiten"
+category: "Technology"
+date: "2026-09-28"
+author: "Evoford Journal"
+read_time: "4 min read"
+source: "Evoford Journal"
+excerpt: ""
+image: "https://evoford.com/edwin-portfolio/edwin-profile.png"
+image_alt: ""
+image_caption: ""
+image_credit: "Edwin Pineda"
+slug: "la-influencia-p-blica-responsabilidad-sobre-los-mensajes-que-se-transmiten"
+---
+
+POR EDWIN PINEDA CARRASCO
+
+En República Dominicana se ha vuelto preocupantemente común escuchar a personas con un micrófono, una cámara y miles de seguidores presentar la educación como si fuera una pérdida de tiempo. Desde podcasts y redes sociales se repite que para tener éxito no es necesario estudiar, utilizando casos particulares como si fueran una fórmula aplicable a toda nuestra juventud.
+
+Que alguien haya alcanzado éxito económico sin terminar una carrera universitaria es perfectamente posible. El problema comienza cuando esa experiencia personal se transforma en consejo colectivo. Especialmente cuando el mensaje llega a adolescentes y jóvenes que todavía están tomando decisiones que pueden determinar buena parte de su futuro.
+
+Los dominicanos conocemos las contradicciones de nuestra sociedad. Sabemos que no siempre consigue el mejor puesto quien está mejor preparado. Existen el amiguismo, las conexiones familiares, las influencias políticas y la famosa “cuña”. En ocasiones, una relación puede abrir puertas que años de preparación no consiguieron abrir.
+
+Pero esa realidad no demuestra que estudiar sea innecesario. Demuestra que todavía tenemos que construir una sociedad donde el mérito, la capacidad y la preparación tengan mayor peso. La respuesta ante esas injusticias no puede ser educar menos a nuestros jóvenes, sino ofrecerles una educación mejor y mayores oportunidades.
+
+También debemos dejar de confundir educación exclusivamente con universidad. La educación comienza en el hogar, donde aprendemos respeto, disciplina, responsabilidad, convivencia y valores. Luego continúa de manera organizada en las escuelas, institutos, universidades y centros de formación técnica.
+
+
+Ofrecerles una educación mejor
+No todos los jóvenes tienen que cursar una licenciatura. Algunos encontrarán su futuro en una carrera técnica, un oficio especializado, el emprendimiento, las artes o la tecnología. Todos esos caminos son válidos. Lo que no podemos hacer es convertir la falta de preparación en una supuesta fórmula para alcanzar el éxito.
+
+Precisamente en la Era de las redes sociales necesitamos ciudadanos con mayor capacidad para analizar lo que escuchan. Nunca habíamos tenido tanta información disponible, pero tampoco había sido tan fácil colocar una opinión frente a miles de personas y presentarla como una verdad absoluta.
+
+Tener seguidores no convierte automáticamente a nadie en educador. Tener dinero tampoco convierte a una persona en referente intelectual, y tener un micrófono no transforma una experiencia individual en una verdad universal. La influencia pública también implica responsabilidad sobre los mensajes que se transmiten.
+
+Una persona puede cuestionar legítimamente el sistema educativo dominicano. Tenemos problemas de calidad, desigualdad, programas que necesitan actualizarse y jóvenes que terminan sus estudios sin encontrar las oportunidades esperadas. Pero señalar esas deficiencias es muy diferente a decir que educarse no sirve.
+
+Existe una enorme diferencia entre afirmar que la universidad no es el único camino y afirmar que la educación no es necesaria. La primera idea reconoce diferentes formas de preparación. La segunda puede llevar a un joven a cerrar oportunidades que posteriormente serán muy difíciles de recuperar.
+
+Hay además una pregunta que deberían hacerse quienes aconsejan abandonar los estudios: ¿asumirán las consecuencias si ese consejo fracasa? El influencer continuará con su plataforma, sus negocios y sus ingresos, pero será el joven quien tendrá que enfrentarse mañana a un mercado laboral que exige conocimientos y competencias.
+
+Las historias excepcionales de personas que abandonaron los estudios y alcanzaron grandes fortunas existen, pero una excepción no debe presentarse como regla. También existen miles de historias que no se hacen virales: las de quienes dejaron de prepararse demasiado temprano y posteriormente descubrieron cuánto necesitaban aquellas herramientas.
+
+República Dominicana no necesita una generación que desprecie el conocimiento.
+
+Necesita jóvenes que estudien, aprendan oficios, desarrollen habilidades digitales, dominen idiomas, emprendan, lean, cuestionen y se preparen para competir dentro y fuera del país. Un diploma no garantiza el éxito, pero la formación amplía las posibilidades.
+
+Quienes tienen un micrófono pueden opinar libremente, pero deberían comprender el peso de hablar ante miles de jóvenes. Incentivar el abandono de la educación no es rebeldía ni modernidad. Nuestro país necesita mejorar profundamente su sistema educativo, no convencer a la próxima generación de que aprender dejó de ser necesario.

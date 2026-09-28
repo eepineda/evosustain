@@ -13,6 +13,30 @@ function render(list){
  const author=state.articles.filter(a=>(a.author||a.source||"").toLowerCase().includes("edwin pineda carrasco") || /edwin pineda carrasco/i.test(a.title||""));
  $("#authorArchive").innerHTML=author.slice(0,10).map(a=>`<a href="${esc(href(a))}"><span>${esc(a.date||"")}</span>${esc(a.title)}</a>`).join("")||`<p style="color:#68706c">The author index will populate automatically as publications are discovered.</p>`;
 }
+
+async function loadBriefing(){
+  const grid = document.getElementById("briefingGrid");
+  const updated = document.getElementById("briefingUpdated");
+  if(!grid) return;
+  try{
+    const r=await fetch("data/briefing.json",{cache:"no-store"});
+    if(!r.ok) throw Error("briefing unavailable");
+    const items=await r.json();
+    grid.innerHTML = items.slice(0,12).map((x,i)=>`
+      <article class="briefingCard ${i===0?'briefingLead':''}">
+        <div class="briefingMeta"><span>${esc(x.category||"Official update")}</span><span>${esc(x.date||"")}</span></div>
+        <h3><a href="${esc(x.url||"#")}" target="_blank" rel="noopener">${esc(x.title)}</a></h3>
+        <p>${esc(x.excerpt||"Actualización publicada por la fuente oficial.")}</p>
+        <div class="briefingSource">Fuente: ${esc(x.briefing_source||x.source||"Fuente oficial")}</div>
+      </article>`).join("") || `<p class="briefingEmpty">No hay actualizaciones nuevas en este momento.</p>`;
+    const now=new Date();
+    if(updated) updated.textContent="Actualizado "+new Intl.DateTimeFormat(undefined,{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}).format(now);
+  }catch(e){
+    grid.innerHTML=`<p class="briefingEmpty">El resumen se actualizará automáticamente en la próxima compilación.</p>`;
+    console.error(e);
+  }
+}
+
 async function load(){try{const r=await fetch("data/articles.json",{cache:"no-store"});if(!r.ok)throw Error();render(await r.json())}catch(e){console.error(e)}}
 function setup(){
  $("#today").textContent=new Intl.DateTimeFormat(undefined,{year:"numeric",month:"long",day:"numeric"}).format(new Date());
@@ -21,4 +45,4 @@ function setup(){
  document.addEventListener("keydown",e=>{if(e.key==="Escape")panel.classList.remove("open")}); input.oninput=()=>{const q=input.value.toLowerCase().trim();results.innerHTML=q?state.articles.filter(a=>(a.title+" "+a.excerpt+" "+a.category+" "+a.source).toLowerCase().includes(q)).slice(0,15).map(a=>`<a href="${esc(href(a))}">${esc(a.title)}<small>${esc(a.category||"")} · ${esc(a.date||"")}</small></a>`).join(""):""};
 }
 const issue=document.getElementById("issueDate"); if(issue){issue.textContent=new Intl.DateTimeFormat(undefined,{year:"numeric"}).format(new Date())}
-setup();load();
+setup();load();loadBriefing();

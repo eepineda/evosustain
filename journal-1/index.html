@@ -16,7 +16,7 @@
    <div class="tools"><button class="tool" id="searchOpen" aria-label="Search">⌕</button></div>
  </div>
  <nav class="nav"><div class="container">
-   <a href="#latest">Latest</a><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a>
+   <a href="#latest">Latest</a><a href="#fao-rd">FAO · RD</a><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a>
    <a href="#cities">Smart Cities</a><a href="#operations">Operations</a><a href="#perspective">Perspective</a>
    <a href="#author">Edwin Pineda Carrasco</a>
  </div></nav>
@@ -46,6 +46,25 @@
 <section class="section container" id="latest">
  <div class="sectionhead"><div><span class="kicker">Newsroom</span><h2>Latest</h2></div><a href="#latest">View all →</a></div>
  <div class="storygrid" id="latestGrid"></div>
+</section>
+
+
+<section class="briefingSection" id="fao-rd">
+ <div class="container">
+  <div class="briefingHeader">
+   <div>
+    <span class="kicker">Official-source briefing</span>
+    <h2>FAO · República Dominicana</h2>
+    <p>Un resumen automático de las principales actualizaciones publicadas por FAO y fuentes oficiales dominicanas.</p>
+   </div>
+   <div class="briefingStatus"><span class="liveDot"></span><span id="briefingUpdated">Actualización automática</span></div>
+  </div>
+  <div class="briefingGrid" id="briefingGrid"></div>
+  <div class="briefingFooter">
+   <span>Fuentes oficiales · enlaces al original</span>
+   <a href="#fao-rd">Ver últimas actualizaciones ↑</a>
+  </div>
+ </div>
 </section>
 
 <section class="section container" id="sustainability">
@@ -93,7 +112,7 @@
 
 <footer class="footer"><div class="container footergrid"><div><div class="footerbrand">Evoford Journal</div><small>News, ideas and intelligence for a cleaner, smarter future.</small></div><small>© Evoford Journal</small></div></footer>
 
-<div class="mobilemenu" id="mobileMenu"><button class="tool" id="menuClose">×</button><a href="#latest">Latest</a><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a><a href="#cities">Smart Cities</a><a href="#operations">Operations</a><a href="#author">Edwin Pineda Carrasco</a></div>
+<div class="mobilemenu" id="mobileMenu"><button class="tool" id="menuClose">×</button><a href="#latest">Latest</a><a href="#fao-rd">FAO · RD</a><a href="#sustainability">Sustainability</a><a href="#technology">Technology</a><a href="#cities">Smart Cities</a><a href="#operations">Operations</a><a href="#author">Edwin Pineda Carrasco</a></div>
 <div class="mobilebar"><button onclick="location.href='./'">Home</button><button onclick="document.getElementById('latest').scrollIntoView()">News</button><button onclick="document.getElementById('searchOpen').click()">Search</button><button onclick="document.getElementById('author').scrollIntoView()">Archive</button></div>
 
 <div class="search" id="searchPanel"><button class="tool close" id="searchClose">×</button><div class="searchbox"><span class="kicker">Search the Journal</span><input id="searchInput" type="search" placeholder="Search stories, topics, authors…"><div class="results" id="searchResults"></div></div></div>

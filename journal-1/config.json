@@ -48,5 +48,31 @@
     "max_items": 300,
     "verify_author_pages": true,
     "search_days": 3650
+  },
+  "briefing": {
+    "enabled": true,
+    "title": "FAO · República Dominicana",
+    "subtitle": "Resumen automático de las principales actualizaciones publicadas por fuentes oficiales.",
+    "max_items": 12,
+    "sources": [
+      {
+        "name": "FAO — Noticias en español",
+        "url": "https://www.fao.org/feeds/fao-newsroom-rss-es",
+        "query": "",
+        "category": "FAO"
+      },
+      {
+        "name": "FAO — República Dominicana",
+        "url": "https://news.google.com/rss/search?q=site%3Afao.org%2Frepublica-dominicana%2Fes&hl=es-419&gl=DO&ceid=DO%3Aes-419",
+        "query": "site:fao.org/republica-dominicana/es",
+        "category": "República Dominicana"
+      },
+      {
+        "name": "Presidencia de la República Dominicana",
+        "url": "https://news.google.com/rss/search?q=site%3Apresidencia.gob.do%2Fnoticias&hl=es-419&gl=DO&ceid=DO%3Aes-419",
+        "query": "site:presidencia.gob.do/noticias",
+        "category": "República Dominicana"
+      }
+    ]
   }
 }

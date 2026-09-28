@@ -107,6 +107,48 @@ def author_items():
     out.sort(key=lambda x:x.get('date',''),reverse=True)
     return out[:int(cfg.get('max_items',300))]
 
+
+def briefing_items():
+    """Collect official-source updates for the FAO/RD briefing.
+    This is deliberately separate from the main newsroom feed so official
+    updates do not overwhelm the editorial homepage.
+    """
+    cfg = CONFIG.get('briefing') or {}
+    if not cfg.get('enabled'):
+        return []
+    out = []
+    seen = set()
+    for src in cfg.get('sources', []):
+        try:
+            rows = rss_source({
+                'url': src.get('url',''),
+                'name': src.get('name','Official source'),
+                'category': src.get('category','Briefing'),
+                'image': DEFAULT_IMAGE
+            })
+            for a in rows:
+                url = a.get('url','')
+                title = a.get('title','').strip()
+                if not url or not title or url in seen:
+                    continue
+                # Keep the briefing tightly relevant to FAO / Dominican Republic.
+                blob = (title + ' ' + a.get('excerpt','')).lower()
+                if src.get('category') == 'FAO' or any(x in blob for x in (
+                    'república dominicana','dominican republic','santo domingo',
+                    'fao','alimentación','agricultura','seguridad alimentaria',
+                    'sistemas agroalimentarios'
+                )):
+                    a['briefing'] = True
+                    a['briefing_source'] = src.get('name','Official source')
+                    a['source_type'] = 'official'
+                    a['category'] = src.get('category','Briefing')
+                    out.append(a)
+                    seen.add(url)
+        except Exception as e:
+            print('Briefing source failed:', src.get('name'), e)
+    out.sort(key=lambda x: x.get('date',''), reverse=True)
+    return out[:int(cfg.get('max_items',12))]
+
 def manual():
     out=[]
     for p in CONTENT.glob('*.md'):
@@ -146,6 +188,8 @@ def page(a, related):
     return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title} — Evoford Journal</title><meta name="description" content="{desc}"><link rel="canonical" href="{site}/articles/{html.escape(a['slug'])}.html"><link rel="stylesheet" href="../styles.css"><meta property="og:title" content="{title}"><meta property="og:description" content="{desc}"><meta property="og:type" content="article"><meta property="og:image" content="{img}"></head><body><header class="masthead-wrap"><div class="masthead container"><a class="brand" href="../">Evoford Journal</a></div><nav class="navline"><div class="container navInner"><a href="../#latest">Latest</a><a href="../#sustainability">Sustainability</a><a href="../#technology">Technology</a><a href="../#cities">Smart Cities</a><a href="../#waste">Waste &amp; Operations</a><a href="../#perspective">Perspective</a><a class="navPremium" href="../#membership">Journal+</a></div></nav></header><main class="container articlePage"><a class="back" href="../">← Back to Journal</a><div class="eyebrow" style="margin-top:24px">{html.escape(a['category'])}</div><h1>{title}</h1><p class="articleDeck">{desc}</p><div class="meta">By {html.escape(a.get('author','Evoford Journal'))} · {html.escape(a['date'])} · {html.escape(a.get('read_time',''))}</div><figure><img class="articleHero" src="{img}" alt="{html.escape(a.get('image_alt',''))}">{fig}</figure><article class="articleBody">{body}</article><section class="related"><h2>More from the Journal</h2><ul>{rel}</ul></section></main><footer class="footer"><div class="container"><div class="footerMast">Evoford Journal</div><div class="footerRule"></div><div class="footerMeta"><span>News · Ideas · Systems</span><span>© Evoford Journal</span></div></div></footer></body></html>'''
 
 def main():
+    briefing = briefing_items()
+    (DATA/'briefing.json').write_text(json.dumps(briefing, ensure_ascii=False, indent=2), encoding='utf-8')
     items=manual()
     author=author_items()
     if author:

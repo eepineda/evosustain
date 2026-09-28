@@ -1,1 +1,0 @@
-const CACHE="evoford-journal-v1";self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(["/journal/","/journal/styles.css","/journal/app.js","/journal/manifest.webmanifest","/journal/icon.svg"]))));self.addEventListener("fetch",e=>e.respondWith(caches.match(e.request).then(x=>x||fetch(e.request))));

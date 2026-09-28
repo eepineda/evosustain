@@ -1,0 +1,55 @@
+[
+  {
+    "id": "1",
+    "slug": "republica-dominicana-en-contexto",
+    "title": "República Dominicana en contexto",
+    "dek": "Las noticias que importan, explicadas con contexto, fuentes y una mirada latinoamericana.",
+    "section": "República Dominicana",
+    "date": "28 SEPTIEMBRE 2026",
+    "author": "Evoford Journal",
+    "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=85",
+    "source": "Evoford Journal",
+    "source_url": "https://evoford.com/",
+    "type": "EDITORIAL",
+    "featured": true
+  },
+  {
+    "id": "2",
+    "slug": "londres-caribe-nuevas-conexiones",
+    "title": "Londres y el Caribe: nuevas conexiones",
+    "dek": "Comunidades, empresas y cultura están construyendo nuevos puentes entre Europa y el Caribe.",
+    "section": "Comunidad",
+    "date": "27 SEPTIEMBRE 2026",
+    "author": "Evoford Journal",
+    "image": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1400&q=85",
+    "source": "Evoford Journal",
+    "source_url": "https://evoford.com/",
+    "type": "EDITORIAL"
+  },
+  {
+    "id": "3",
+    "slug": "economia-dominicana",
+    "title": "La economía dominicana, explicada",
+    "dek": "Datos, actividad productiva y señales que ayudan a entender el momento económico.",
+    "section": "Economía",
+    "date": "26 SEPTIEMBRE 2026",
+    "author": "Evoford Journal",
+    "image": "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=1400&q=85",
+    "source": "Banco Central de la República Dominicana",
+    "source_url": "https://www.bancentral.gov.do/",
+    "type": "OFICIAL"
+  },
+  {
+    "id": "4",
+    "slug": "fao-republica-dominicana",
+    "title": "FAO y República Dominicana",
+    "dek": "Un espacio para seguir las actualizaciones públicas sobre alimentación, agricultura, clima y desarrollo.",
+    "section": "Briefing",
+    "date": "25 SEPTIEMBRE 2026",
+    "author": "Evoford Journal",
+    "image": "https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&fit=crop&w=1400&q=85",
+    "source": "FAO",
+    "source_url": "https://www.fao.org/republica-dominicana/es/",
+    "type": "OFICIAL"
+  }
+]

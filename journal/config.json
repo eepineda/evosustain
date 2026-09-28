@@ -1,0 +1,52 @@
+{
+  "site_name": "Evoford Journal",
+  "site_url": "https://evoford.com/journal/",
+  "language": "en",
+  "description": "News, ideas and intelligence across sustainability, technology, smart cities and waste operations.",
+  "max_articles": 120,
+  "rss_per_source": 12,
+  "auto_publish_rss": true,
+  "categories": [
+    "News",
+    "Sustainability",
+    "Technology",
+    "Smart Cities",
+    "Waste & Operations",
+    "Perspective"
+  ],
+  "author_archive": {
+    "name": "Edwin Pineda Carrasco",
+    "enabled": true,
+    "queries": [
+      "\"Edwin Pineda Carrasco\"",
+      "\"Edwin Pineda Carrasco\" opinión",
+      "\"Edwin Pineda Carrasco\" periodista",
+      "\"Por Edwin Pineda Carrasco\"",
+      "\"Edwin Pineda Carrasco\" Barahona",
+      "\"Edwin Pineda Carrasco\" Londres",
+      "\"Ing. Edwin Pineda Carrasco\"",
+      "\"Edwin Pineda Carrasco\" site:almomento.net",
+      "\"Edwin Pineda Carrasco\" site:almomento.do",
+      "\"Edwin Pineda Carrasco\" site:loultimodigital.com",
+      "\"Edwin Pineda Carrasco\" site:elmundoenmarcha.net",
+      "\"Edwin Pineda Carrasco\" site:noticiariobarahona.com",
+      "\"Edwin Pineda Carrasco\" site:opiniondigitalpp.com",
+      "\"Edwin Pineda Carrasco\" site:independiente.com.do",
+      "\"Edwin Pineda Carrasco\" site:diariodigitalrd.com",
+      "\"Edwin Pineda Carrasco\" site:elnuevodiario.com.do",
+      "\"Edwin Pineda Carrasco\" site:elcaribe.com.do",
+      "\"Edwin Pineda Carrasco\" site:listindiario.com",
+      "\"Edwin Pineda Carrasco\" site:diariolibre.com",
+      "\"Edwin Pineda Carrasco\" site:acento.com.do",
+      "\"Edwin Pineda Carrasco\" site:elnacional.com.do",
+      "\"Edwin Pineda Carrasco\" site:periodicoelcaribe.com",
+      "\"Edwin Pineda Carrasco\" site:elnuevodiario.com",
+      "\"Edwin Pineda Carrasco\" site:youtube.com",
+      "\"Edwin Pineda Carrasco\" site:facebook.com"
+    ],
+    "rss_per_query": 20,
+    "max_items": 300,
+    "verify_author_pages": true,
+    "search_days": 3650
+  }
+}

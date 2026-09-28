@@ -1,0 +1,30 @@
+{
+  "official": [
+    {
+      "name": "FAO · República Dominicana",
+      "url": "https://www.fao.org/republica-dominicana/es/"
+    },
+    {
+      "name": "Presidencia de la República Dominicana",
+      "url": "https://presidencia.gob.do/noticias"
+    },
+    {
+      "name": "Banco Central de la República Dominicana",
+      "url": "https://www.bancentral.gov.do/"
+    },
+    {
+      "name": "Oficina Nacional de Estadística",
+      "url": "https://www.one.gob.do/"
+    }
+  ],
+  "press": [
+    {
+      "name": "Diario Libre",
+      "url": "https://www.diariolibre.com/"
+    },
+    {
+      "name": "Listín Diario",
+      "url": "https://listindiario.com/"
+    }
+  ]
+}

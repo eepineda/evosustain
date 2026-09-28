@@ -1,0 +1,63 @@
+[
+  {
+    "slug": "republica-dominicana-y-la-nueva-agenda-alimentaria",
+    "title": "República Dominicana y la nueva agenda alimentaria",
+    "dek": "Un briefing sobre agricultura, seguridad alimentaria, clima y cooperación internacional.",
+    "section": "República Dominicana",
+    "date": "2026-09-28",
+    "author": "Evoford Journal",
+    "image": "https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&fit=crop&w=1600&q=85",
+    "source": "FAO",
+    "source_url": "https://www.fao.org/republica-dominicana/es/",
+    "type": "official",
+    "featured": true
+  },
+  {
+    "slug": "londres-y-la-nueva-generacion-latina",
+    "title": "Londres y la nueva generación latina",
+    "dek": "Una mirada a las conexiones entre comunidad, empresa, cultura y oportunidades.",
+    "section": "Perspectiva",
+    "date": "2026-09-27",
+    "author": "Evoford Journal",
+    "image": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1200&q=85",
+    "source": "Evoford Journal",
+    "source_url": "https://evoford.com/journal/",
+    "type": "editorial"
+  },
+  {
+    "slug": "ciudades-inteligentes-y-datos",
+    "title": "Ciudades inteligentes: el valor está en los datos",
+    "dek": "Infraestructura, movilidad y servicios públicos necesitan información que pueda convertirse en decisiones.",
+    "section": "Technology",
+    "date": "2026-09-26",
+    "author": "Evoford Journal",
+    "image": "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1200&q=85",
+    "source": "Evoford Journal",
+    "source_url": "https://evoford.com/journal/",
+    "type": "editorial"
+  },
+  {
+    "slug": "economia-dominicana-en-contexto",
+    "title": "La economía dominicana en contexto",
+    "dek": "Indicadores, comercio y actividad productiva explicados con contexto y fuentes institucionales.",
+    "section": "Economía",
+    "date": "2026-09-25",
+    "author": "Evoford Journal",
+    "image": "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=1200&q=85",
+    "source": "Banco Central de la República Dominicana",
+    "source_url": "https://www.bancentral.gov.do/",
+    "type": "official"
+  },
+  {
+    "slug": "diaspora-dominicana-en-europa",
+    "title": "La diáspora dominicana mira hacia Europa",
+    "dek": "Personas, negocios y nuevas redes están creando conexiones entre el Caribe y las ciudades europeas.",
+    "section": "Comunidad",
+    "date": "2026-09-24",
+    "author": "Evoford Journal",
+    "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=85",
+    "source": "Evoford Journal",
+    "source_url": "https://evoford.com/journal/",
+    "type": "editorial"
+  }
+]

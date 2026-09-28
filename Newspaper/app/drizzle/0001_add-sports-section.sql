@@ -1,0 +1,1 @@
+ALTER TYPE "public"."section" ADD VALUE 'sports' BEFORE 'fragrance';

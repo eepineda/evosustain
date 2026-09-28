@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: var(--font-newsreader);
+  --font-body: var(--font-source-serif);
+  --font-mono: var(--font-plex-mono);
+}
+
+:root {
+  --paper: #f7f4ec;
+  --ink: #171714;
+  --muted: #66645d;
+  --rule: #cfcac0;
+  --accent: #7b2018;
+  --green: #1d5d4a;
+}
+
+html { background: var(--paper); }
+body { font-family: var(--font-body), Georgia, serif; }
+button, a, input, select { -webkit-tap-highlight-color: transparent; }
+::selection { background: #ded8cc; color: var(--ink); }
+
+.ej-masthead { letter-spacing: -0.055em; }
+.ej-kicker { font-family: var(--font-mono), monospace; letter-spacing: .16em; font-size: 10px; text-transform: uppercase; }
+.ej-rule { border-color: var(--ink); }
+.ej-soft-rule { border-color: var(--rule); }
+
+@media (max-width: 639px) {
+  .ej-masthead { font-size: 42px; }
+}

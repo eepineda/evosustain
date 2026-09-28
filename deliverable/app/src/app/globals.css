@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: var(--font-newsreader);
+  --font-body: var(--font-source-serif);
+  --font-mono: var(--font-plex-mono);
+}
+
+body {
+  font-family: var(--font-body), Georgia, serif;
+}

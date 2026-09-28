@@ -1,0 +1,78 @@
+{
+  "events": [
+    {
+      "id": "760500",
+      "date": "2026-07-08T19:00Z",
+      "name": "Spain vs Brazil",
+      "status": {
+        "type": {
+          "id": "3",
+          "name": "STATUS_FINAL",
+          "state": "post",
+          "completed": true,
+          "description": "Final",
+          "detail": "Final",
+          "shortDetail": "FT"
+        }
+      },
+      "competitions": [
+        {
+          "id": "760500",
+          "date": "2026-07-08T19:00Z",
+          "status": {
+            "type": {
+              "id": "3",
+              "name": "STATUS_FINAL",
+              "state": "post",
+              "completed": true,
+              "description": "Final",
+              "detail": "Final",
+              "shortDetail": "FT"
+            }
+          },
+          "competitors": [
+            { "homeAway": "home", "score": "2", "team": { "abbreviation": "ESP" } },
+            { "homeAway": "away", "score": "1", "team": { "abbreviation": "BRA" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "760511",
+      "date": "2026-07-10T19:00Z",
+      "name": "Belgium at Spain",
+      "status": {
+        "type": {
+          "id": "1",
+          "name": "STATUS_SCHEDULED",
+          "state": "pre",
+          "completed": false,
+          "description": "Scheduled",
+          "detail": "Fri, July 10th at 3:00 PM EDT",
+          "shortDetail": "Scheduled"
+        }
+      },
+      "competitions": [
+        {
+          "id": "760511",
+          "date": "2026-07-10T19:00Z",
+          "status": {
+            "type": {
+              "id": "1",
+              "name": "STATUS_SCHEDULED",
+              "state": "pre",
+              "completed": false,
+              "description": "Scheduled",
+              "detail": "Fri, July 10th at 3:00 PM EDT",
+              "shortDetail": "Scheduled"
+            }
+          },
+          "competitors": [
+            { "homeAway": "home", "score": "0", "team": { "abbreviation": "ESP" } },
+            { "homeAway": "away", "score": "0", "team": { "abbreviation": "BEL" } }
+          ]
+        }
+      ]
+    }
+  ]
+}

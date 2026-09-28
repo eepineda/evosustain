@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Test Feed</title>
+    <description>A minimal RSS feed fixture for tests</description>
+    <item>
+      <title>First Article</title>
+      <link>https://example.com/articles/first-article</link>
+      <description>Summary of the first article.</description>
+      <pubDate>Mon, 06 Jul 2026 09:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Second Article</title>
+      <link>https://example.com/articles/second-article</link>
+      <description>Summary of the second article.</description>
+      <pubDate>Tue, 07 Jul 2026 10:30:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

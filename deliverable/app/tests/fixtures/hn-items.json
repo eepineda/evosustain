@@ -1,0 +1,33 @@
+[
+  {
+    "id": 41234567,
+    "title": "New AI model beats benchmarks",
+    "url": "https://example.com/articles/new-ai-model-beats-benchmarks",
+    "time": 1720400000,
+    "score": 312,
+    "type": "story"
+  },
+  {
+    "id": 41234568,
+    "title": "Show HN: SQL formatter in Python",
+    "url": "https://github.com/example/sql-formatter-python",
+    "time": 1720410000,
+    "score": 98,
+    "type": "story"
+  },
+  {
+    "id": 41234569,
+    "title": "My blog about gardening",
+    "url": "https://example.com/blog/gardening",
+    "time": 1720420000,
+    "score": 12,
+    "type": "story"
+  },
+  {
+    "id": 41234570,
+    "title": "Ask HN: What are you working on this month?",
+    "time": 1720430000,
+    "score": 45,
+    "type": "story"
+  }
+]

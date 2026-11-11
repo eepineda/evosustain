@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Acceso editorial | Evoford News</title>
+  <link rel="stylesheet" href="./admin.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="./admin.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../"><span>EVOFORD</span> <b>NEWS</b></a>
+    <span class="topnote">PANEL EDITORIAL PRIVADO</span>
+  </header>
+  <main class="wrap">
+    <section id="loginView" class="panel login-panel">
+      <p class="eyebrow">ACCESO RESTRINGIDO</p>
+      <h1>Redacción</h1>
+      <p>Introduce el correo autorizado. Recibirás un enlace seguro para iniciar sesión.</p>
+      <form id="loginForm">
+        <label for="email">Correo electrónico</label>
+        <input id="email" type="email" value="eepinedacarrasco@gmail.com" required autocomplete="email">
+        <button type="submit">Enviar enlace de acceso</button>
+      </form>
+      <p id="loginMessage" class="message" role="status"></p>
+    </section>
+
+    <section id="appView" hidden>
+      <div class="welcome">
+        <div><p class="eyebrow">EVOFORD NEWS</p><h1>Panel editorial</h1><p id="signedInAs" class="muted"></p></div>
+        <button id="logoutBtn" class="secondary">Cerrar sesión</button>
+      </div>
+      <nav class="tabs" aria-label="Secciones del panel">
+        <button class="tab active" data-tab="articles">Artículos</button>
+        <button class="tab" data-tab="inbox">Noticias RSS</button>
+        <button class="tab" data-tab="sources">Fuentes RSS</button>
+      </nav>
+
+      <section id="articlesTab" class="tabview">
+        <div class="section-head"><div><p class="eyebrow">REDACCIÓN PROPIA</p><h2>Artículos y borradores</h2></div><button id="newArticleBtn">Nuevo artículo</button></div>
+        <div id="articleList" class="list"><p class="muted">Cargando artículos…</p></div>
+        <form id="articleForm" class="panel editor" hidden>
+          <div class="section-head"><h2 id="formHeading">Nuevo artículo</h2><button type="button" id="cancelEdit" class="secondary">Cerrar</button></div>
+          <input id="articleId" type="hidden">
+          <div class="form-grid">
+            <div class="field full"><label for="title">Titular</label><input id="title" required maxlength="180"></div>
+            <div class="field"><label for="category">Sección</label><select id="category"><option>Internacional</option><option>Política</option><option>Economía</option><option>Seguridad</option><option>Tecnología</option><option>Opinión</option></select></div>
+            <div class="field"><label for="author">Autor</label><input id="author" value="EDWIN PINEDA CARRASCO"></div>
+            <div class="field full"><label for="summary">Resumen</label><textarea id="summary" rows="2"></textarea></div>
+            <div class="field full"><label for="content">Texto del artículo</label><textarea id="content" rows="12" required></textarea></div>
+            <div class="field full"><label for="imageUrl">URL de imagen (opcional)</label><input id="imageUrl" type="url" placeholder="https://…"></div>
+          </div>
+          <div class="actions"><button type="submit" id="saveDraftBtn" class="secondary">Guardar borrador</button><button type="button" id="submitReviewBtn">Enviar a revisión</button></div>
+          <p id="editorMessage" class="message" role="status"></p>
+        </form>
+      </section>
+
+      <section id="inboxTab" class="tabview" hidden>
+        <div class="section-head"><div><p class="eyebrow">FUENTES EXTERNAS</p><h2>Bandeja de noticias RSS</h2></div><button id="refreshInboxBtn" class="secondary">Actualizar lista</button></div>
+        <p class="muted">Aquí aparecerán los elementos importados por el proceso RSS. Revisa la fuente original antes de convertirlos en contenido editorial.</p>
+        <div id="inboxList" class="list"><p class="muted">Cargando…</p></div>
+      </section>
+
+      <section id="sourcesTab" class="tabview" hidden>
+        <div class="section-head"><div><p class="eyebrow">AGREGADORES</p><h2>Fuentes RSS</h2></div></div>
+        <form id="sourceForm" class="panel source-form">
+          <div class="form-grid">
+            <div class="field"><label for="sourceName">Nombre del medio</label><input id="sourceName" required></div>
+            <div class="field"><label for="sourceCategory">Sección</label><select id="sourceCategory"><option>Internacional</option><option>Política</option><option>Economía</option><option>Seguridad</option><option>Tecnología</option><option>General</option></select></div>
+            <div class="field full"><label for="feedUrl">URL del feed RSS</label><input id="feedUrl" type="url" required placeholder="https://medio.example/rss.xml"></div>
+          </div>
+          <button type="submit">Añadir fuente</button><p id="sourceMessage" class="message" role="status"></p>
+        </form>
+        <div id="sourceList" class="list"><p class="muted">Cargando fuentes…</p></div>
+      </section>
+      <p id="globalMessage" class="message" role="status"></p>
+    </section>
+  </main>
+  <footer>© Evoford News · Londres, Reino Unido</footer>
+</body>
+</html>

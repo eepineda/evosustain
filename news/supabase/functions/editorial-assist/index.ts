@@ -40,15 +40,23 @@ Deno.serve(async (req) => {
   const { data: item, error: itemError } = await admin.from("imported_items").select("*").eq("id", itemId).single();
   if (itemError || !item) return respond({ error: "No se encontró la noticia RSS." }, 404);
 
+  let sourceName = "";
+  let sourceCategory = "";
+  if (item.source_id) {
+    const { data: source } = await admin.from("rss_sources").select("name,category").eq("id", item.source_id).maybeSingle();
+    sourceName = clip(source?.name, 160);
+    sourceCategory = clip(source?.category, 80);
+  }
+
   const prompt = `Eres editor de una publicación internacional. Trabaja SOLO con el titular, resumen RSS y URL aportados. No afirmes haber leído la página enlazada. No inventes hechos, cifras, citas, fechas, cargos ni contexto. Si los datos no bastan para una noticia completa, dilo claramente y entrega un borrador breve con preguntas de verificación entre corchetes. No copies frases extensas del resumen. Crea una redacción original y atribuye la información al medio fuente. Devuelve SOLO JSON válido con estas claves:
 {"country":"país principal o null","region":"Europe|Americas|Middle East|Africa|Asia-Pacific|Global","category":"Internacional|Política|Economía|Seguridad|Tecnología|Opinión|Clima|Sociedad","confidence":0.0,"source_language":"es|en|other","title_es":"titular en español","summary_es":"resumen en español","article_es":"borrador original en español, con contexto solo si está en el material, y notas de verificación si faltan datos","title_en":"headline in English","summary_en":"English summary","article_en":"original English draft, faithful to Spanish version and source material"}.
 Reglas: clasificación basada en el contenido, no en suposiciones sobre el medio. country debe ser país del hecho principal; si no se puede determinar, null. region debe reflejar la geografía del hecho. No atribuyas opiniones ni declares culpabilidad. No incluyas imágenes.
 
 Titular RSS: ${clip(item.title, 500)}
 Resumen RSS: ${clip(item.summary, 3500)}
-Medio: ${clip(item.source_name, 160)}
+Medio: ${sourceName}
 URL fuente: ${clip(item.article_url, 1800)}
-Categoría de la fuente: ${clip(item.category, 80)}`;
+Categoría de la fuente: ${sourceCategory}`;
 
   const aiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",

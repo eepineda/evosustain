@@ -65,7 +65,16 @@ async function saveArticle(status){
   const id=$("articleId").value;
   const payload={title,slug:slugify(title),category:$("category").value,author:$("author").value.trim()||"EDWIN PINEDA CARRASCO",summary:$("summary").value.trim(),content,image_url:$("imageUrl").value.trim()||null,country:$("country").value.trim()||null,region:$("region").value.trim()||null,language:$("language").value,summary_en:$("summaryEn").value.trim(),content_en:$("contentEn").value.trim(),status,updated_at:new Date().toISOString()};
   if(status==="published"){say("editorMessage","La publicación directa está deshabilitada hasta conectar el servicio seguro de despliegue. Guarda como borrador o envía a revisión.");return;}
-  const query=id?client.from("articles").update(payload).eq("id",id):client.from("articles").insert(payload);
+  let query;
+  if(id){
+    query=client.from("articles").update(payload).eq("id",id);
+  }else{
+    const {data:existing,error:lookupError}=await client.from("articles").select("id").eq("slug",payload.slug).maybeSingle();
+    if(lookupError){say("editorMessage",lookupError.message);return;}
+    query=existing
+      ?client.from("articles").update(payload).eq("id",existing.id)
+      :client.from("articles").insert(payload);
+  }
   const {error}=await query;
   say("editorMessage",error?error.message:(status==="pending"?"Artículo enviado a revisión.":"Borrador guardado."));
   if(!error){$("articleForm").hidden=true;await loadArticles();}

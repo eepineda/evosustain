@@ -7,7 +7,7 @@
   <title>Acceso editorial | Evoford News</title>
   <link rel="stylesheet" href="./admin.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="./admin.js?v=20261112-12"></script>
+  <script defer src="./admin.js?v=20261112-13"></script>
 </head>
 <body>
   <header class="topbar">
@@ -57,7 +57,7 @@
             <div class="field full"><label for="contentEn">Article text (English)</label><textarea id="contentEn" rows="10"></textarea></div>
             <div class="field full"><label for="imageUrl">URL de imagen (opcional)</label><input id="imageUrl" type="url" placeholder="https://…"></div>
           </div>
-          <div class="actions"><button type="submit" id="saveDraftBtn" class="secondary">Guardar borrador</button><button type="button" id="submitReviewBtn">Enviar a revisión</button></div>
+          <div class="actions"><button type="submit" id="saveDraftBtn" class="secondary">Guardar borrador</button><button type="button" id="submitReviewBtn">Enviar a revisión</button><button type="button" id="approveArticleBtn" class="secondary">Aprobar artículo</button></div>
           <p id="editorMessage" class="message" role="status"></p>
         </form>
       </section>

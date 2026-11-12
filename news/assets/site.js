@@ -72,4 +72,7 @@ async function loadPublishedArticles() {
     }).join("");
   }
 }
+const printEditionButton=document.getElementById("printEditionBtn");
+if(printEditionButton) printEditionButton.addEventListener("click",()=>window.print());
+
 loadPublishedArticles();

@@ -1,217 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>EvoSustain Platform</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102b3a">
+  <meta name="description" content="Explore the EvoSustain waste collection and logistics management app concept.">
+  <title>EvoSustain Hub | Waste Collection & Logistics</title>
+  <link rel="stylesheet" href="app-theme.css?v=20261112-1">
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f9ff;
-      color: #0d47a1;
-      margin: 0;
-      padding: 2rem;
-      line-height: 1.6;
-    }
-    header {
-      text-align: center;
-      padding-bottom: 1rem;
-      position: relative;
-    }
-    h1 {
-      font-size: 2rem;
-      color: #1565c0;
-    }
-    .lang-switch {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-    }
-    .lang-switch button {
-      background: none;
-      border: none;
-      font-size: 1.2rem;
-      cursor: pointer;
-      margin-left: 0.5rem;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-    .card {
-      background: #e3f2fd;
-      padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease;
-      text-align: center;
-      text-decoration: none;
-      color: inherit;
-    }
-    .card:hover {
-      transform: translateY(-4px);
-    }
-    .cta-section {
-      background: #bbdefb;
-      padding: 2rem;
-      margin-top: 3rem;
-      border-radius: 16px;
-      text-align: center;
-    }
-    .cta-button {
-      margin-top: 1rem;
-      display: inline-block;
-      background: #1976d2;
-      color: white;
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      border-radius: 10px;
-      text-decoration: none;
-    }
-    .cta-button:hover {
-      background: #0d47a1;
-    }
-    footer {
-      text-align: center;
-      margin-top: 3rem;
-      font-size: 0.9rem;
-      color: #789;
-    }
-    .lang-es { display: none; }
-    #logout-btn {
-      position: absolute;
-      top: 1rem;
-      left: 1rem;
-      padding: 0.5rem 1rem;
-      border: none;
-      background: #d32f2f;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    #logout-btn:hover {
-      background: #b71c1c;
-    }
-    #login-section, #register-section {
-      max-width: 400px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    input[type="text"], input[type="password"], input[type="email"] {
-      width: 100%;
-      padding: 0.5rem;
-      margin: 0.5rem 0;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    .toggle-link {
-      text-align: center;
-      margin-top: 1rem;
-      cursor: pointer;
-      color: #1976d2;
-    }
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;padding:28px 20px 40px;background:radial-gradient(circle at 80% 0%,#dceee9 0,transparent 34%),#f3f7f6!important}
+    .shell{max-width:1120px;margin:0 auto}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:48px}
+    .brand{display:flex;align-items:center;gap:12px;color:#102b3a;text-decoration:none;font-weight:750;letter-spacing:-.02em}
+    .brand img{width:46px;height:46px;border-radius:13px;object-fit:cover}
+    .language{display:flex;gap:8px}
+    .language button{padding:9px 12px!important;background:#fff!important;color:#102b3a!important;border:1px solid #dce7e8!important}
+    .language button[aria-pressed="true"]{background:#102b3a!important;color:#fff!important;border-color:#102b3a!important}
+    .eyebrow{font-size:.76rem;letter-spacing:.15em;text-transform:uppercase;font-weight:800;color:#087f70}
+    .intro{max-width:760px;margin:0 auto 34px;text-align:center}
+    h1{font-size:clamp(2.2rem,5vw,4.1rem);line-height:1.04;letter-spacing:-.055em;margin:14px 0;color:#102b3a}
+    .intro p{font-size:1.08rem;line-height:1.7;color:#617582;margin:16px auto 0;max-width:680px}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .module{display:flex;gap:18px;align-items:flex-start;padding:24px;background:#fff;border:1px solid #dce7e8;border-radius:18px;text-decoration:none;color:#102b3a;box-shadow:0 10px 30px rgba(16,43,58,.055);transition:transform .2s,border-color .2s}
+    .module:hover{transform:translateY(-3px);border-color:#83b9ae}
+    .module-icon{width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;border-radius:14px;background:#e7f3ef;font-size:1.45rem}
+    .module h2{font-size:1.1rem;margin:2px 0 7px;letter-spacing:-.02em}
+    .module p{margin:0;color:#617582;line-height:1.55;font-size:.94rem}
+    .module .arrow{margin-left:auto;color:#087f70;font-size:1.3rem}
+    .stage{margin-top:26px;padding:22px 24px;border-radius:18px;background:#102b3a;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:22px}
+    .stage h2{margin:0 0 6px;color:#fff;font-size:1.1rem}
+    .stage p{margin:0;color:#c4d5d8;line-height:1.55}
+    .stage a{white-space:nowrap;text-decoration:none;background:#fff;color:#102b3a;padding:12px 17px;border-radius:10px;font-weight:750}
+    footer{text-align:center;color:#71838c;font-size:.85rem;margin-top:34px}
+    footer a{color:#087f70;text-decoration:none;margin:0 8px}
+    .lang-es{display:none}
+    @media(max-width:680px){body{padding:18px 14px 30px}.topbar{margin-bottom:34px}.grid{grid-template-columns:1fr}.module{padding:19px}.stage{align-items:flex-start;flex-direction:column}.stage a{width:100%;text-align:center}.intro p{font-size:1rem}}
   </style>
-  <script>
-  function toggleLanguage(lang) {
-    const enElements = document.querySelectorAll('.lang-en');
-    const esElements = document.querySelectorAll('.lang-es');
-    if (lang === 'es') {
-      enElements.forEach(el => el.style.display = 'none');
-      esElements.forEach(el => el.style.display = 'block');
-    } else {
-      enElements.forEach(el => el.style.display = 'block');
-      esElements.forEach(el => el.style.display = 'none');
-    }
-  }
-
-  // 🔵 No existe login: solo mostramos el frontal directamente
-  function showMainContent() {
-    document.body.innerHTML = `
-      <header>
-        <a href="https://www.evoford.com" target="_blank">
-          <img src="https://www.evoford.com/app/pic.png" 
-               alt="EvoSustain Logo" 
-               style="width:100px;height:100px;border-radius:50%;object-fit:cover;margin-bottom:0.5rem;">
-        </a>
-
-        <h1 class="lang-en">EvoSustain Hub</h1>
-        <h1 class="lang-es">EvoSustain Hub</h1>
-
-        <p class="lang-en">Explore each module of our sustainability platform:</p>
-        <p class="lang-es">Explora cada módulo de nuestra plataforma de sostenibilidad:</p>
-
-        <div class="lang-switch">
-          <button onclick="toggleLanguage('en')">🇬🇧</button>
-          <button onclick="toggleLanguage('es')">🇪🇸</button>
-        </div>
-      </header>
-
-      <div class="grid">
-        <a href="storesapp.html" class="card">
-          <div class="icon">🏪</div>
-          <h2>Store App</h2>
-          <p class="lang-en">For stores to request and track waste collections, view history, and manage schedules.</p>
-          <p class="lang-es">Para tiendas que solicitan y rastrean recolecciones, historial y horarios.</p>
-        </a>
-
-        <a href="businessapp.html" class="card">
-          <div class="icon">📊</div>
-          <h2>Business App</h2>
-          <p class="lang-en">Mobile app for monitoring pickups, routes, and performance metrics.</p>
-          <p class="lang-es">App móvil para supervisar recolecciones, rutas y métricas.</p>
-        </a>
-
-        <a href="businessportal.html" class="card">
-          <div class="icon">🧭</div>
-          <h2>Business Admin Portal</h2>
-          <p class="lang-en">Advanced dashboard for analytics, scheduling, and full network control.</p>
-          <p class="lang-es">Panel avanzado para análisis, programación y control de red.</p>
-        </a>
-
-        <a href="driversapp.html" class="card">
-          <div class="icon">🚛</div>
-          <h2>Driver App</h2>
-          <p class="lang-en">Driver interface for executing routes and reporting collection results.</p>
-          <p class="lang-es">Interfaz para conductores para ejecutar rutas y reportar resultados.</p>
-        </a>
-      </div>
-
-      <div class="cta-section">
-        <h2 class="lang-en">Partner with EvoSustain</h2>
-        <h2 class="lang-es">Colabora con EvoSustain</h2>
-
-        <p class="lang-en">Join the future of smart waste management. Request a free demo.</p>
-        <p class="lang-es">Únete al futuro de la gestión inteligente de residuos. Solicita una demo.</p>
-
-        <a href="https://forms.gle/tLet5H1CT4LA1nGf6" target="_blank" class="cta-button lang-en">Request Demo</a>
-        <a href="https://forms.gle/tLet5H1CT4LA1nGf6" target="_blank" class="cta-button lang-es">Solicitar Demo</a>
-      </div>
-
-      <footer>
-        <p class="lang-en">EvoSustain Demo Platform &copy; 2025</p>
-        <p class="lang-es">Plataforma Demo EvoSustain &copy; 2025</p>
-
-        <div style="margin-top: 1rem;">
-          <a href="https://twitter.com/evosustain" target="_blank">𝕏</a>
-          <a href="https://www.facebook.com/evosustain" target="_blank">📘 Facebook</a>
-          <a href="https://www.instagram.com/evosustain" target="_blank">📸 Instagram</a>
-        </div>
-      </footer>
-    `;
-
-    toggleLanguage('en');
-  }
-
-  // ▶️ Cargar directamente la vista principal
-  window.onload = showMainContent;
-</script>
-
 </head>
 <body>
+<div class="shell">
+  <div class="topbar">
+    <a class="brand" href="https://www.evoford.com/"><img src="pic.png" alt="EvoSustain"><span>EvoSustain</span></a>
+    <div class="language" aria-label="Language">
+      <button type="button" onclick="toggleLanguage('en')" aria-pressed="true" id="lang-en">EN</button>
+      <button type="button" onclick="toggleLanguage('es')" aria-pressed="false" id="lang-es">ES</button>
+    </div>
+  </div>
+  <main>
+    <section class="intro">
+      <div class="eyebrow lang-en">Waste collection & logistics platform</div>
+      <div class="eyebrow lang-es">Plataforma de recogida y logística de residuos</div>
+      <h1 class="lang-en">One connected view of waste operations.</h1>
+      <h1 class="lang-es">Una visión conectada de las operaciones de residuos.</h1>
+      <p class="lang-en">Explore the EvoSustain app concept: a set of tools designed around collection requests, operational planning, route execution and service oversight.</p>
+      <p class="lang-es">Explora el concepto de la aplicación EvoSustain: herramientas diseñadas para gestionar solicitudes de recogida, planificación operativa, ejecución de rutas y supervisión del servicio.</p>
+    </section>
+    <section class="grid" aria-label="Platform modules">
+      <a href="storesapp.html" class="module">
+        <span class="module-icon">🏪</span><span><h2>Store App</h2><p class="lang-en">Request waste collections, choose time windows and review collection history.</p><p class="lang-es">Solicita recogidas, elige franjas horarias y consulta el historial del servicio.</p></span><span class="arrow">↗</span>
+      </a>
+      <a href="businessapp.html" class="module">
+        <span class="module-icon">📊</span><span><h2>Business App</h2><p class="lang-en">Monitor collection activity, requests, planning and operational performance.</p><p class="lang-es">Supervisa la actividad de recogida, las solicitudes, la planificación y el rendimiento operativo.</p></span><span class="arrow">↗</span>
+      </a>
+      <a href="businessportal.html" class="module">
+        <span class="module-icon">🧭</span><span><h2>Business Admin Portal</h2><p class="lang-en">Coordinate schedules, assignments, service data and logistics oversight.</p><p class="lang-es">Coordina horarios, asignaciones, datos del servicio y control logístico.</p></span><span class="arrow">↗</span>
+      </a>
+      <a href="driversapp.html" class="module">
+        <span class="module-icon">🚛</span><span><h2>Driver App</h2><p class="lang-en">View route stops, record collection progress and submit operational reports.</p><p class="lang-es">Consulta paradas, registra el progreso de recogida y envía informes operativos.</p></span><span class="arrow">↗</span>
+      </a>
+    </section>
+    <section class="stage">
+      <div><h2 class="lang-en">Explore the concept with us</h2><h2 class="lang-es">Explora el concepto con nosotros</h2><p class="lang-en">EvoSustain is in the proof-of-concept stage. Get in touch to discuss a demonstration or pilot.</p><p class="lang-es">EvoSustain está en fase de prueba de concepto. Contacta con el equipo para hablar de una demostración o piloto.</p></div>
+      <a class="lang-en" href="https://forms.gle/tLet5H1CT4LA1nGf6" target="_blank" rel="noopener noreferrer">Request a demo ↗</a>
+      <a class="lang-es" href="https://forms.gle/tLet5H1CT4LA1nGf6" target="_blank" rel="noopener noreferrer">Solicitar una demo ↗</a>
+    </section>
+  </main>
+  <footer><span class="lang-en">EvoSustain · Waste collection and logistics management · PoC concept</span><span class="lang-es">EvoSustain · Gestión logística y recogida de residuos · Concepto PoC</span><br><a href="mailto:info@evoford.com">Contact</a> · <a href="https://evoford.com/">Evoford</a></footer>
+</div>
+<script>
+function toggleLanguage(lang){
+  const spanish=lang==='es';
+  document.querySelectorAll('.lang-en').forEach(el=>el.style.display=spanish?'none':'');
+  document.querySelectorAll('.lang-es').forEach(el=>el.style.display=spanish?'':'none');
+  document.getElementById('lang-en').setAttribute('aria-pressed',String(!spanish));
+  document.getElementById('lang-es').setAttribute('aria-pressed',String(spanish));
+  document.documentElement.lang=lang;
+}
+</script>
 </body>
 </html>

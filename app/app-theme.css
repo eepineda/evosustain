@@ -1,0 +1,18 @@
+/* EvoSustain app suite — shared visual system */
+:root{--ev-ink:#102b3a;--ev-muted:#617582;--ev-navy:#102b3a;--ev-teal:#087f70;--ev-teal-dark:#06695e;--ev-line:#dce7e8;--ev-soft:#edf5f3;--ev-bg:#f3f7f6;--ev-card:#fff}
+html{color-scheme:light}
+body{background:var(--ev-bg)!important;color:var(--ev-ink)!important;font-family:Inter,"Segoe UI",Arial,sans-serif!important}
+header,.header{background:var(--ev-navy)!important;color:#fff!important}
+.card{background:var(--ev-card)!important;border:1px solid var(--ev-line);border-radius:16px!important;box-shadow:0 8px 24px rgba(16,43,58,.07)!important}
+h1,h2,h3{color:var(--ev-ink)}
+button,.button,.cta-button{background:var(--ev-teal)!important;color:#fff!important;border:1px solid var(--ev-teal)!important;border-radius:10px!important;box-shadow:none!important;transition:background .18s ease,transform .18s ease}
+button:hover,.button:hover,.cta-button:hover{background:var(--ev-teal-dark)!important;transform:translateY(-1px)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #e5a93b!important;outline-offset:2px}
+input,select,textarea{max-width:100%;box-sizing:border-box;border:1px solid #cbd9dc!important;border-radius:9px!important;padding:.7rem!important;font:inherit}
+nav{background:#eaf1f0!important;border-color:var(--ev-line)!important}
+nav button{background:transparent!important;color:var(--ev-navy)!important;border-color:transparent!important}
+nav button:hover,nav button.active{background:#d9e9e5!important;color:var(--ev-teal-dark)!important}
+.status-bar{background:#eaf1f0!important;color:var(--ev-ink)!important}
+table th{background:#eaf1f0!important;color:var(--ev-ink)!important}
+@media(max-width:700px){body{min-height:100vh}.main-content{padding:1rem!important}.device-frame,.app-frame{max-width:100vw!important;box-sizing:border-box}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}

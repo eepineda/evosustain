@@ -34,7 +34,7 @@ async function loadPublishedArticles() {
   if (!data?.length) {
     container.innerHTML='<p class="muted">Todavía no hay artículos publicados.</p>'; return;
   }
-  const normalize=value=>String(value||"").normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").toLowerCase().trim();
+  const normalize=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
   const featured=data.find(a=>!normalize(a.category).includes("opinion"))||data[0];
   const remaining=data.filter(a=>a.slug!==featured.slug);
   const briefItems=remaining.slice(0,3);

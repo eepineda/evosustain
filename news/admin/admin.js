@@ -15,6 +15,16 @@ const slugify = (s) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]
 function say(id, message){ $(id).textContent = message || ""; }
 function safe(value=""){ return String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 
+function editorialGate(payload){
+  const author=String(payload.author||"").trim();
+  const body=String(payload.content||"").replace(/\\n/g," ").replace(/<[^>]*>/g," ").trim();
+  if(!author) return "Falta identificar al autor. No atribuyas una noticia importada a una persona que no la haya redactado.";
+  if(body.length<500) return "El artículo necesita al menos 500 caracteres de texto propio para poder aprobarse.";
+  if(/borrador editorial|redacta aquí|no copies literalmente|fuente consultada:|fuente original:/i.test(body)) return "El texto todavía contiene instrucciones o una referencia de fuente. Sustitúyelas por una redacción propia.";
+  if(payload.source_url&&!payload.source_title) return "Indica el nombre del medio original para mostrar correctamente su enlace.";
+  return "";
+}
+
 async function init(){
   if(!window.supabase || SUPABASE_PUBLISHABLE_KEY.startsWith("PASTE_")){
     say("loginMessage","Falta configurar la clave publishable de Supabase en admin.js.");
@@ -55,7 +65,7 @@ async function loadArticles(){
 function editArticle(a){
   $("articleForm").hidden=false;$("formHeading").textContent=a?"Editar artículo":"Nuevo artículo";
   $("articleId").value=a?.id||"";$("publishArticleBtn").hidden=!(a?.status==="approved");$("saveChangesBtn").hidden=!a;$("title").value=a?.title||"";$("category").value=a?.category||"Internacional";
-  $("author").value=a?.author||"EDWIN PINEDA CARRASCO";$("summary").value=a?.summary||"";
+  $("author").value=a?.author||"";$("summary").value=a?.summary||"";
   $("content").value=a?.content||"";$("imageUrl").value=a?.image_url||"";$("country").value=a?.country||"";$("region").value=a?.region||"";$("language").value=a?.language||"es";$("summaryEn").value=a?.summary_en||"";$("contentEn").value=a?.content_en||"";$("sourceTitle").value=a?.source_title||"";$("sourceUrl").value=a?.source_url||"";
   $("articleForm").scrollIntoView({behavior:"smooth",block:"start"});
 }
@@ -63,8 +73,8 @@ async function saveArticle(status,preserveStatus=false){
   const title=$("title").value.trim(),content=$("content").value.trim();
   if(!title||!content){say("editorMessage","El titular y el texto son obligatorios.");return;}
   const id=$("articleId").value;
-  const sourceUrl=$("sourceUrl").value.trim();if(sourceUrl&&!/^https:\/\//i.test(sourceUrl)){say("editorMessage","El enlace de la fuente debe comenzar por https://.");return;}const payload={title,slug:slugify(title),category:$("category").value,author:$("author").value.trim()||"EDWIN PINEDA CARRASCO",summary:$("summary").value.trim(),content,image_url:$("imageUrl").value.trim()||null,country:$("country").value.trim()||null,region:$("region").value.trim()||null,language:$("language").value,summary_en:$("summaryEn").value.trim(),content_en:$("contentEn").value.trim(),source_title:$("sourceTitle").value.trim()||null,source_url:sourceUrl?sourceUrl.replace(/[?&]utm_[^&]+/g,"").replace(/[?&]$/,""):null,status,updated_at:new Date().toISOString()};if(preserveStatus){if(!id){say("editorMessage","No hay un artículo existente que actualizar.");return;}const {data:current,error:statusError}=await client.from("articles").select("status,slug").eq("id",id).single();if(statusError){say("editorMessage","No se pudo conservar el estado: "+statusError.message);return;}payload.status=current.status;payload.slug=current.slug;}
-  if(status==="published"&&!preserveStatus){
+  const sourceUrl=$("sourceUrl").value.trim();if(sourceUrl&&!/^https:\/\//i.test(sourceUrl)){say("editorMessage","El enlace de la fuente debe comenzar por https://.");return;}const payload={title,slug:slugify(title),category:$("category").value,author:$("author").value.trim()||null,summary:$("summary").value.trim(),content,image_url:$("imageUrl").value.trim()||null,country:$("country").value.trim()||null,region:$("region").value.trim()||null,language:$("language").value,summary_en:$("summaryEn").value.trim(),content_en:$("contentEn").value.trim(),source_title:$("sourceTitle").value.trim()||null,source_url:sourceUrl?sourceUrl.replace(/[?&]utm_[^&]+/g,"").replace(/[?&]$/,""):null,status,updated_at:new Date().toISOString()};if(preserveStatus){if(!id){say("editorMessage","No hay un artículo existente que actualizar.");return;}const {data:current,error:statusError}=await client.from("articles").select("status,slug").eq("id",id).single();if(statusError){say("editorMessage","No se pudo conservar el estado: "+statusError.message);return;}payload.status=current.status;payload.slug=current.slug;}
+  if((status==="approved"||status==="published")&&!preserveStatus){const gateMessage=editorialGate(payload);if(gateMessage){say("editorMessage",gateMessage);return;}}\n  if(status==="published"&&!preserveStatus){
     if(!id){say("editorMessage","Guarda y aprueba el artículo antes de publicarlo.");return;}
     const {data:current,error:statusError}=await client.from("articles").select("status").eq("id",id).single();
     if(statusError){say("editorMessage","No se pudo comprobar el estado del artículo: "+statusError.message);return;}
@@ -202,7 +212,11 @@ function wire(){
       $("language").value="es";
       $("summaryEn").value="";
       $("contentEn").value="";
-      $("content").value="\n\nFuente original: "+(item.article_url||"")+"\n\nRedacta aquí una versión propia y verificada. No copies literalmente el artículo de origen.";
+      const {data:source}=await client.from("rss_sources").select("name").eq("id",item.source_id).maybeSingle();
+      $("sourceTitle").value=source?.name||"";
+      $("sourceUrl").value=item.article_url||"";
+      $("author").value="";
+      $("content").value="[BORRADOR EDITORIAL: verifica la información y redacta una noticia original. No reproduzcas el artículo original.]\\n\\nFuente consultada: "+(item.article_url||"");
       say("editorMessage","Borrador manual iniciado. Verifica la noticia, clasifícala y redacta las versiones en español e inglés.");
       document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab==="articles"));
       ["articles","inbox","sources"].forEach(k=>$(k+"Tab").hidden=k!=="articles");

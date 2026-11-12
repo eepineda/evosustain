@@ -43,7 +43,7 @@ async function login(e){
   e.preventDefault(); say("loginMessage","Enviando enlace seguro…");
   const email=$("email").value.trim().toLowerCase();
   if(email!==ADMIN_EMAIL){say("loginMessage","Correo no autorizado.");return;}
-  const {error}=await client.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+location.pathname}});
+  const {error}=await client.auth.signInWithOtp({email,options:{emailRedirectTo:"https://evoford.com/news/admin/"}});
   say("loginMessage",error?error.message:"Revisa tu correo y abre el enlace de acceso en este mismo navegador.");
 }
 async function loadArticles(){
@@ -70,6 +70,26 @@ async function saveArticle(status){
   say("editorMessage",error?error.message:(status==="pending"?"Artículo enviado a revisión.":"Borrador guardado."));
   if(!error){$("articleForm").hidden=true;await loadArticles();}
 }
+
+async function runRssImport(){
+  const button=$("runRssBtn");
+  button.disabled=true;
+  say("rssRunMessage","Consultando fuentes RSS activas…");
+  try{
+    const {data,error}=await client.functions.invoke("rss-ingest",{body:{}});
+    if(error) throw error;
+    const imported=Number(data?.imported||0);
+    const checked=Number(data?.checked_sources||0);
+    const failed=(data?.results||[]).filter(x=>x.error);
+    say("rssRunMessage",`Proceso terminado: ${imported} noticias nuevas de ${checked} fuentes. ${failed.length?failed.length+" fuentes con errores; revisa el detalle de Supabase.":"Sin errores de fuente."}`);
+    await loadInbox();
+  }catch(error){
+    say("rssRunMessage","No se pudo importar: "+(error.message||"Error desconocido")+". Comprueba que la migración SQL y la función rss-ingest estén desplegadas.");
+  }finally{
+    button.disabled=false;
+  }
+}
+
 async function loadInbox(){
   const {data,error}=await client.from("imported_items").select("*").order("created_at",{ascending:false});
   if(error){$("inboxList").innerHTML=`<p class="muted">${safe(error.message)}</p>`;return;}
@@ -96,6 +116,7 @@ function wire(){
   $("submitReviewBtn").addEventListener("click",()=>saveArticle("pending"));
   $("sourceForm").addEventListener("submit",addSource);
   $("refreshInboxBtn").addEventListener("click",loadInbox);
+  $("runRssBtn").addEventListener("click",runRssImport);
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
     ["articles","inbox","sources"].forEach(k=>$(k+"Tab").hidden=k!==b.dataset.tab);

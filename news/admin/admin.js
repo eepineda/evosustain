@@ -80,16 +80,19 @@ async function runRssImport(){
     if(error) throw error;
     const imported=Number(data?.imported||0);
     const checked=Number(data?.checked_sources||0);
-    const failed=(data?.results||[]).filter(x=>x.error);
-    say("rssRunMessage",`Proceso terminado: ${imported} noticias nuevas de ${checked} fuentes. ${failed.length?failed.length+" fuentes con errores; revisa el detalle de Supabase.":"Sin errores de fuente."}`);
+    const results=Array.isArray(data?.results)?data.results:[];
+    const failed=results.filter(x=>x.error);
+    const details=failed.map(x=>`• ${x.source}: ${x.error}`).join("\\n");
+    const skipped=results.reduce((n,x)=>n+Number(x.skipped||0),0);
+    const summary=`Proceso terminado: ${imported} noticias nuevas de ${checked} fuentes; ${skipped} elementos omitidos.`;
+    say("rssRunMessage",failed.length?summary+"\\nErrores por fuente:\\n"+details:summary+"\\nSin errores de fuente.");
     await loadInbox();
   }catch(error){
-    say("rssRunMessage","No se pudo importar: "+(error.message||"Error desconocido")+". Comprueba que la migración SQL y la función rss-ingest estén desplegadas.");
+    say("rssRunMessage","No se pudo importar: "+(error.message||"Error desconocido")+". Comprueba el despliegue de rss-ingest.");
   }finally{
     button.disabled=false;
   }
 }
-
 async function loadInbox(){
   const {data,error}=await client.from("imported_items").select("*").order("created_at",{ascending:false});
   if(error){$("inboxList").innerHTML=`<p class="muted">${safe(error.message)}</p>`;return;}

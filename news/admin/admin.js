@@ -54,17 +54,17 @@ async function loadArticles(){
 }
 function editArticle(a){
   $("articleForm").hidden=false;$("formHeading").textContent=a?"Editar artículo":"Nuevo artículo";
-  $("articleId").value=a?.id||"";$("publishArticleBtn").hidden=!(a?.status==="approved");$("title").value=a?.title||"";$("category").value=a?.category||"Internacional";
+  $("articleId").value=a?.id||"";$("publishArticleBtn").hidden=!(a?.status==="approved");$("saveChangesBtn").hidden=!a;$("title").value=a?.title||"";$("category").value=a?.category||"Internacional";
   $("author").value=a?.author||"EDWIN PINEDA CARRASCO";$("summary").value=a?.summary||"";
-  $("content").value=a?.content||"";$("imageUrl").value=a?.image_url||"";$("country").value=a?.country||"";$("region").value=a?.region||"";$("language").value=a?.language||"es";$("summaryEn").value=a?.summary_en||"";$("contentEn").value=a?.content_en||"";
+  $("content").value=a?.content||"";$("imageUrl").value=a?.image_url||"";$("country").value=a?.country||"";$("region").value=a?.region||"";$("language").value=a?.language||"es";$("summaryEn").value=a?.summary_en||"";$("contentEn").value=a?.content_en||"";$("sourceTitle").value=a?.source_title||"";$("sourceUrl").value=a?.source_url||"";
   $("articleForm").scrollIntoView({behavior:"smooth",block:"start"});
 }
-async function saveArticle(status){
+async function saveArticle(status,preserveStatus=false){
   const title=$("title").value.trim(),content=$("content").value.trim();
   if(!title||!content){say("editorMessage","El titular y el texto son obligatorios.");return;}
   const id=$("articleId").value;
-  const payload={title,slug:slugify(title),category:$("category").value,author:$("author").value.trim()||"EDWIN PINEDA CARRASCO",summary:$("summary").value.trim(),content,image_url:$("imageUrl").value.trim()||null,country:$("country").value.trim()||null,region:$("region").value.trim()||null,language:$("language").value,summary_en:$("summaryEn").value.trim(),content_en:$("contentEn").value.trim(),status,updated_at:new Date().toISOString()};
-  if(status==="published"){
+  const sourceUrl=$("sourceUrl").value.trim();if(sourceUrl&&!/^https:\/\//i.test(sourceUrl)){say("editorMessage","El enlace de la fuente debe comenzar por https://.");return;}const payload={title,slug:slugify(title),category:$("category").value,author:$("author").value.trim()||"EDWIN PINEDA CARRASCO",summary:$("summary").value.trim(),content,image_url:$("imageUrl").value.trim()||null,country:$("country").value.trim()||null,region:$("region").value.trim()||null,language:$("language").value,summary_en:$("summaryEn").value.trim(),content_en:$("contentEn").value.trim(),source_title:$("sourceTitle").value.trim()||null,source_url:sourceUrl?sourceUrl.replace(/[?&]utm_[^&]+/g,"").replace(/[?&]$/,""):null,status,updated_at:new Date().toISOString()};if(preserveStatus){if(!id){say("editorMessage","No hay un artículo existente que actualizar.");return;}const {data:current,error:statusError}=await client.from("articles").select("status,slug").eq("id",id).single();if(statusError){say("editorMessage","No se pudo conservar el estado: "+statusError.message);return;}payload.status=current.status;payload.slug=current.slug;}
+  if(status==="published"&&!preserveStatus){
     if(!id){say("editorMessage","Guarda y aprueba el artículo antes de publicarlo.");return;}
     const {data:current,error:statusError}=await client.from("articles").select("status").eq("id",id).single();
     if(statusError){say("editorMessage","No se pudo comprobar el estado del artículo: "+statusError.message);return;}
@@ -82,7 +82,7 @@ async function saveArticle(status){
       :client.from("articles").insert(payload);
   }
   const {error}=await query;
-  say("editorMessage",error?error.message:({draft:"Borrador guardado.",pending:"Artículo enviado a revisión.",approved:"Artículo aprobado. Sigue sin publicarse.",published:"Artículo publicado y visible en la web."}[status]||"Artículo actualizado."));
+  say("editorMessage",error?error.message:(preserveStatus?"Cambios guardados sin modificar el estado de publicación.":({draft:"Borrador guardado.",pending:"Artículo enviado a revisión.",approved:"Artículo aprobado. Sigue sin publicarse.",published:"Artículo publicado y visible en la web."}[status]||"Artículo actualizado.")));
   if(!error){$("articleForm").hidden=true;await loadArticles();}
 }
 
@@ -181,7 +181,7 @@ function wire(){
   $("articleForm").addEventListener("submit",e=>{e.preventDefault();saveArticle("draft");});
   $("submitReviewBtn").addEventListener("click",()=>saveArticle("pending"));
   $("approveArticleBtn").addEventListener("click",()=>saveArticle("approved"));
-  $("publishArticleBtn").addEventListener("click",()=>saveArticle("published"));
+  $("publishArticleBtn").addEventListener("click",()=>saveArticle("published"));$("saveChangesBtn").addEventListener("click",()=>saveArticle(null,true));
   $("sourceForm").addEventListener("submit",addSource);
   $("refreshInboxBtn").addEventListener("click",loadInbox);
   $("inboxList").addEventListener("click",async e=>{

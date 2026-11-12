@@ -59,7 +59,13 @@ async function loadPublishedArticles() {
     ];
     countryRoot.innerHTML=editions.map(country=>{
       const matches=data.filter(a=>country.terms.includes(normalize(a.country))).slice(0,3);
-      const stories=matches.length?matches.map(a=>'<a class="country-story" href="'+articleUrl(a.slug||"")+'"><span class="kicker">'+escapeHtml(a.category||"ACTUALIDAD")+'</span><b>'+escapeHtml(a.title)+'</b><span class="country-read">Leer noticia ↗</span></a>').join(""):'<p class="country-empty">Aún no hay artículos publicados con esta etiqueta. La cobertura aparecerá aquí cuando la redacción publique noticias de este país.</p>';
+      const fallback={
+        uk:{title:"La economía británica crece un 0,7 % en el tercer trimestre, con impulso de la tecnología",category:"ECONOMÍA",url:"articles/reino-unido-crecimiento-tercer-trimestre-2026.html"},
+        do:{title:"Fitch eleva la calificación de República Dominicana a BB y mantiene perspectiva estable",category:"ECONOMÍA",url:"articles/republica-dominicana-calificacion-fitch-bb-2026.html"}
+      }[country.id];
+      const liveStories=matches.map(a=>'<a class="country-story" href="'+articleUrl(a.slug||"")+'"><span class="kicker">'+escapeHtml(a.category||"ACTUALIDAD")+'</span><b>'+escapeHtml(a.title)+'</b><span class="country-read">Leer noticia ↗</span></a>').join("");
+      const fallbackStory=fallback?'<a class="country-story" href="'+fallback.url+'"><span class="kicker">'+fallback.category+'</span><b>'+fallback.title+'</b><span class="country-read">Leer noticia ↗</span></a>':"";
+      const stories=liveStories+fallbackStory||'<p class="country-empty">Aún no hay artículos publicados con esta etiqueta. La cobertura aparecerá aquí cuando la redacción publique noticias de este país.</p>';
       return '<section class="country-card" id="country-'+country.id+'"><div class="country-title"><span class="country-flag" aria-hidden="true">'+country.flag+'</span><h3>'+country.name+'</h3></div>'+stories+'</section>';
     }).join("");
   }

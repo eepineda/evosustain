@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#102b4e">
   <meta name="description" content="Evoford News: noticias internacionales, análisis y opinión.">
   <title>Evoford News</title>
-  <link rel="stylesheet" href="assets/style.css?v=20261112-22">
+  <link rel="stylesheet" href="assets/style.css?v=20261112-24">
 </head>
 <body>
 <header class="masthead">
@@ -20,7 +20,23 @@
 </header>
 <main class="wrap">
   <div class="edition"><span>EDICIÓN DIGITAL</span><span id="today"></span><button class="print-edition-btn" id="printEditionBtn" type="button">Imprimir edición <span aria-hidden="true">↗</span></button></div>
-  <section class="frontpage" aria-label="En portada">
+  <section class="market-strip" aria-label="Indicadores de los mercados">
+  <div class="market-heading"><span class="kicker">MERCADOS</span><span>INDICADORES FINANCIEROS · DATOS DE TRADINGVIEW</span></div>
+  <div class="tradingview-widget-container market-widget"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+  {"symbols":[{"proName":"TVC:UKX","title":"FTSE 100"},{"proName":"BME:IBC","title":"IBEX 35"},{"proName":"FOREXCOM:SPXUSD","title":"S&P 500"},{"proName":"NASDAQ:NDX","title":"Nasdaq 100"},{"proName":"FX:EURGBP","title":"EUR / GBP"}],"showSymbolLogo":true,"colorTheme":"light","isTransparent":true,"displayMode":"adaptive","locale":"es"}
+  </script></div>
+  <p class="market-note">Los datos pueden tener retraso según el mercado y el proveedor. No constituyen asesoramiento financiero.</p>
+</section>
+<section class="country-desk" aria-label="Cobertura por países">
+  <div class="section-head"><h2>Enfoque internacional</h2><span>COBERTURA POR PAÍSES</span></div>
+  <nav class="country-links" aria-label="Ediciones por país">
+    <a href="#country-uk"><span aria-hidden="true">🇬🇧</span> Reino Unido</a>
+    <a href="#country-do"><span aria-hidden="true">🇩🇴</span> República Dominicana</a>
+    <a href="#country-es"><span aria-hidden="true">🇪🇸</span> España</a>
+  </nav>
+  <div id="countryCoverage" class="country-grid"><p class="muted">Cargando cobertura…</p></div>
+</section>
+<section class="frontpage" aria-label="En portada">
     <div class="frontpage-top"><span class="kicker">EN PORTADA</span><span class="live-mark"><i></i> ACTUALIDAD</span></div>
     <div class="frontpage-grid">
       <article id="featuredStory" class="featured-story">
@@ -53,5 +69,5 @@
 </main>
 <footer><a class="footer-brand" href="./">EVOFORD NEWS</a><span>Noticias · Opinión · Análisis</span><a href="https://evoford.com/news/admin/#" target="_blank" rel="noopener noreferrer">Acceso editorial</a><span>© <span id="year"></span> Evoford</span></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/site.js?v=20261112-23"></script>
+<script src="assets/site.js?v=20261112-24"></script>
 </body></html>

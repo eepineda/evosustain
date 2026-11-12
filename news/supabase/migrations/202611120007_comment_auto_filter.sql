@@ -18,7 +18,7 @@ begin
 
   new.status := 'approved';
   new.author_name := left(trim(coalesce(new.author_name, 'Lector')), 60);
-  clean_body := lower(unaccent(coalesce(new.body, '')));
+  clean_body := lower(coalesce(new.body, ''));
 
   if char_length(trim(coalesce(new.body, ''))) < 3
      or char_length(new.body) > 2000 then

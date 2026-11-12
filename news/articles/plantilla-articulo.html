@@ -1,15 +1,35 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Artículo | Evoford News</title><link rel="stylesheet" href="../assets/style.css"></head>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Artículo publicado en Evoford News.">
+<title>Artículo | Evoford News</title><link rel="stylesheet" href="../assets/style.css">
+</head>
 <body>
 <header class="masthead"><div class="topline"><span>Londres · Reino Unido</span><span>INFORMACIÓN · OPINIÓN · ANÁLISIS</span></div><a class="brand" href="../">EVOFORD <em>NEWS</em></a><nav class="nav"><a href="../">Portada</a><a href="../#internacional">Internacional</a><a href="../#opinion">Opinión</a></nav></header>
-<main class="wrap" style="max-width:850px;padding-top:40px;padding-bottom:70px">
-<div class="kicker">OPINIÓN · PLANTILLA EDITORIAL</div>
-<h1 style="font:800 clamp(38px,6vw,64px)/1.05 'Playfair Display',Georgia,serif;letter-spacing:-.04em">Título del artículo</h1>
-<p class="dek">Entradilla: resume en dos o tres frases el asunto central del artículo y explica por qué importa.</p>
-<div class="lead-meta">POR EDWIN PINEDA CARRASCO · LONDRES · FECHA DE PUBLICACIÓN</div>
-<hr style="border:0;border-top:1px solid #d9dee5;margin:28px 0">
-<p style="font:18px/1.85 Georgia,serif">Este espacio contiene el texto del artículo. Los hechos deben distinguirse claramente de las interpretaciones y las afirmaciones deben acompañarse de fuentes verificables.</p>
-<p style="font:18px/1.85 Georgia,serif">Añade aquí el desarrollo, los argumentos y el contexto. Utiliza párrafos breves y subtítulos cuando ayuden a la lectura.</p>
-<p style="font:18px/1.85 Georgia,serif">Cierra con una conclusión propia. Comprueba fechas, nombres, citas y enlaces antes de aprobar la publicación.</p>
-<p><a class="read-link" href="../">← Volver a Evoford News</a></p>
-</main><footer><a class="footer-brand" href="../">EVOFORD NEWS</a><span>© Evoford</span></footer></body></html>
+<main id="articleView" class="wrap" style="max-width:850px;padding-top:40px;padding-bottom:70px"><p class="muted">Cargando artículo…</p></main>
+<footer><a class="footer-brand" href="../">EVOFORD NEWS</a><span>Noticias · Opinión · Análisis</span><span>© <span id="year"></span> Evoford</span></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://poywsdigujbarvnzbfnz.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_1t7gv1Y9-6HHwMqW5E343A_51GH_L7f";
+const root=document.getElementById("articleView");
+document.getElementById("year").textContent=new Date().getFullYear();
+function esc(v=""){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+async function loadArticle(){
+ const slug=new URLSearchParams(location.search).get("slug");
+ if(!slug){root.innerHTML="<h1>Artículo no disponible</h1><p>Falta identificar la publicación.</p><a class='read-link' href='../'>Volver a portada →</a>";return;}
+ const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+ const {data:a,error}=await client.from("articles").select("title,slug,category,author,summary,content,image_url,country,region,language,summary_en,content_en,updated_at").eq("slug",slug).eq("status","published").maybeSingle();
+ if(error||!a){root.innerHTML="<h1>Artículo no disponible</h1><p>La publicación no existe o no está disponible.</p><a class='read-link' href='../'>Volver a portada →</a>";return;}
+ const english=a.language==="en";
+ const title=english&&a.title? a.title:a.title;
+ const summary=english&&a.summary_en?a.summary_en:a.summary;
+ const body=english&&a.content_en?a.content_en:a.content;
+ const paragraphs=String(body||"").split(/\\n\\s*\\n|\\r?\\n/).filter(Boolean).map(p=>"<p style='font:18px/1.85 Georgia,serif;white-space:pre-wrap'>"+esc(p)+"</p>").join("");
+ root.innerHTML="<div class='kicker'>"+esc(a.category||"INTERNACIONAL")+"</div><h1 style='font:800 clamp(38px,6vw,64px)/1.05 Playfair Display,Georgia,serif;letter-spacing:-.04em'>"+esc(title)+"</h1><p class='dek'>"+esc(summary||"")+"</p><div class='lead-meta'>POR "+esc(a.author||"EVOFORD NEWS")+" · "+esc([a.country,a.region].filter(Boolean).join(" · "))+"</div>"+(a.image_url&&/^https:\/\//i.test(a.image_url)?"<img src='"+esc(a.image_url)+"' alt='' style='width:100%;height:auto;margin:28px 0'>":"")+"<hr style='border:0;border-top:1px solid #d9dee5;margin:28px 0'>"+paragraphs+"<p><a class='read-link' href='../'>← Volver a Evoford News</a></p>";
+ document.title=a.title+" | Evoford News";
+}
+loadArticle();
+</script>
+</body></html>

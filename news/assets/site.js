@@ -13,7 +13,12 @@ function articleUrl(slug) {
   return "articles/plantilla-articulo.html?slug=" + encodeURIComponent(slug);
 }
 function articleImage(a,cls="") {
-  if (a.image_url && /^https:\/\//i.test(a.image_url)) return '<img class="'+cls+'" src="' + escapeHtml(a.image_url) + '" alt="" loading="lazy">';
+  const slug=String(a.slug||"");
+  const editorialPhoto=slug.includes("fresh-concerns-raised-over-gaza-doctor")
+    ? "https://www.amnesty.ie/wp-content/uploads/2025/01/Photo-5-Dr-Hussam-Abu-Safiya.jpeg"
+    : "";
+  const src=(a.image_url && /^https:\/\//i.test(a.image_url)) ? a.image_url : editorialPhoto;
+  if (src) return '<img class="'+cls+'" src="' + escapeHtml(src) + '" alt="' + escapeHtml(a.title||"") + '" loading="lazy">';
   return '<div class="story-art '+(cls?cls+" ":"")+'art-blue"><span>'+escapeHtml((a.category||"EV").slice(0,2).toUpperCase())+'</span></div>';
 }
 async function loadPublishedArticles() {

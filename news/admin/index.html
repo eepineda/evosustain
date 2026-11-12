@@ -7,7 +7,7 @@
   <title>Acceso editorial | Evoford News</title>
   <link rel="stylesheet" href="./admin.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="./admin.js?v=20261112-7"></script>
+  <script defer src="./admin.js?v=20261112-8"></script>
 </head>
 <body>
   <header class="topbar">
@@ -65,7 +65,7 @@
       <section id="inboxTab" class="tabview" hidden>
         <div class="section-head"><div><p class="eyebrow">FUENTES EXTERNAS</p><h2>Bandeja de noticias RSS</h2></div><div class="item-actions"><button id="runRssBtn">Importar ahora</button><button id="refreshInboxBtn" class="secondary">Actualizar lista</button></div></div>
         <p id="rssRunMessage" class="message" role="status">La importación solo consulta fuentes activas y guarda elementos para revisión; nunca publica automáticamente.</p>
-        <p class="muted">Aquí aparecerán los elementos importados por el proceso RSS. Revisa la fuente original antes de convertirlos en contenido editorial.</p>
+        <p class="muted">Aquí aparecerán los elementos importados por el proceso RSS. Abre cada noticia para preparar un borrador manual. No se utiliza OpenAI API; verifica la fuente y redacta el contenido antes de guardar.</p>
         <div id="inboxList" class="list"><p class="muted">Cargando…</p></div>
       </section>
 

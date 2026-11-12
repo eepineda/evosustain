@@ -231,3 +231,39 @@ footer a:not(.footer-brand){color:#e6c98b;border-bottom-color:rgba(230,201,139,.
  body:has(#articleView) #articleView .source-credit{font:8pt/1.4 Arial,sans-serif!important;margin-top:18pt!important;padding-top:8pt!important}
  body:has(#articleView) #articleView a{color:#111!important;text-decoration:none!important}
 }
+
+/* Nueva jerarquía editorial propia de Evoford News */
+.masthead{border-top:5px solid #171717;padding-top:12px}
+.brand{font-size:clamp(44px,6.2vw,74px);font-weight:700;letter-spacing:-.055em;text-transform:none}
+.brand em{font-size:.78em;letter-spacing:-.035em}
+.nav{border-bottom:3px double #171717;border-top:1px solid #171717}
+.frontpage{border-top:0;margin-top:4px}
+.frontpage-top{padding:9px 0 11px;border-bottom:1px solid #bfc2c5}
+.frontpage-grid{grid-template-columns:minmax(0,1.9fr) minmax(245px,.78fr);gap:30px}
+.featured-story{grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:24px}
+.feature-copy h1{font-size:clamp(34px,3.6vw,49px);line-height:1.04}
+.feature-copy .dek{font-size:18px;line-height:1.52}
+.frontpage-aside{padding-left:22px}
+.aside-heading{border-bottom:3px double #222}
+.brief-link{padding-top:15px;padding-bottom:15px}
+.brief-link b{font-size:18px;line-height:1.2}
+#latest-publications .cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:0 24px}
+#latest-publications .story{padding:0 18px 20px 0;border-right:1px solid #d1d1d1}
+#latest-publications .story:nth-child(3n){border-right:0;padding-right:0}
+#latest-publications .story:nth-child(n+4){border-top:1px solid #c8c8c8;padding-top:20px}
+.category-section .cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+.category-section .story{padding-right:18px}
+.section-head{border-bottom:3px double #222}
+.section-head h2{font-size:28px}
+.opinion{border-top:3px double #222;border-bottom:1px solid #c8c8c8}
+@media(max-width:900px){
+ .frontpage-grid{grid-template-columns:1fr}
+ .frontpage-aside{padding-left:0}
+}
+@media(max-width:620px){
+ .masthead{padding-left:16px;padding-right:16px}
+ .brand{font-size:43px}
+ .featured-story{grid-template-columns:1fr}
+ #latest-publications .cards,.category-section .cards{grid-template-columns:1fr}
+ #latest-publications .story,#latest-publications .story:nth-child(3n),#latest-publications .story:nth-child(n+4){padding:0 0 20px;border-right:0;border-top:0;border-bottom:1px solid #ccc}
+}

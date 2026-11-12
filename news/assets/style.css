@@ -136,3 +136,37 @@ footer{background:#091a30;border-top:4px solid var(--red);padding-top:29px;paddi
  .feature-image-link>.feature-image:not(.story-art){height:250px;min-height:250px}
 }
 footer a:not(.footer-brand){color:#f2c96d;font-weight:700;text-decoration:none;border-bottom:1px solid rgba(242,201,109,.55);padding-bottom:3px}footer a:not(.footer-brand):hover{color:#fff;border-bottom-color:#fff}
+
+/* Línea editorial de periódico clásico: tipografía sobria, tinta y papel */
+:root{--navy:#202020;--blue:#444;--red:#9f1d20;--ink:#171717;--muted:#666;--line:#cfcfcf;--paper:#fff;--soft:#f4f2ee}
+body{font-family:Georgia,'Times New Roman',serif;background:#fff;color:#171717}
+.masthead{max-width:1320px;padding-top:13px}
+.topline{font-family:Arial,sans-serif;font-size:9px;letter-spacing:.09em;border-bottom:1px solid #222}
+.brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;letter-spacing:-.045em;color:#171717;font-size:clamp(42px,6vw,72px);padding:13px 0 17px}
+.brand em{color:#9f1d20}
+.nav{border-top:1px solid #222;border-bottom:1px solid #222;padding:10px 0;gap:clamp(12px,2.4vw,29px)}
+.nav a{font-family:Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:.015em}
+.wrap{max-width:1240px}
+.edition{font-family:Arial,sans-serif;border-bottom:1px solid var(--line);font-size:9px}
+.frontpage{border-top:2px solid #222}
+.frontpage-top,.kicker,.live-mark,.aside-heading,.brief-category,.section-head span,.feature-meta,.lead-meta,.read-link,footer{font-family:Arial,sans-serif}
+.frontpage-top{margin-bottom:13px}
+.feature-copy h1{font-family:Georgia,'Times New Roman',serif;font-weight:700;letter-spacing:-.035em;line-height:1.02}
+.feature-copy .dek{font-family:Georgia,'Times New Roman',serif;color:#444;font-size:19px}
+.feature-cta{background:#222;font-family:Arial,sans-serif}
+.feature-cta:hover{background:#9f1d20}
+.frontpage-aside{border-left:1px solid #bbb}
+.aside-heading,.section-head{border-color:#222}
+.brief-link b,.story-copy h3,.section-head h2,.topics a,.opinion h2{font-family:Georgia,'Times New Roman',serif}
+.brief-link:hover{background:#f5f3ef}
+.number,.brief-category,.kicker,.brief-arrow{color:#9f1d20}
+.section-head{border-bottom:1px solid #222}
+.story{border-color:#d0d0d0}
+.story-copy h3{font-weight:700;letter-spacing:-.015em}
+.opinion{background:#f4f2ee;border-top:2px solid #222}
+.avatar{background:#222}
+.topics a{font-weight:700}
+footer{background:#202020;border-top:2px solid #9f1d20;color:#eee}
+.footer-brand{font-family:Georgia,'Times New Roman',serif}
+footer a:not(.footer-brand){color:#e6c98b;border-bottom-color:rgba(230,201,139,.6)}
+@media(max-width:620px){.brand{font-size:43px}.nav{gap:11px 17px}.nav a{font-size:10px}}

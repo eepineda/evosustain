@@ -52,7 +52,8 @@ async function loadPublishedArticles() {
       {name:"Política",id:"politica",terms:["politica"]},
       {name:"Economía",id:"economia",terms:["economia"]},
       {name:"Seguridad y defensa",id:"seguridad",terms:["seguridad","defensa"]},
-      {name:"Tecnología",id:"tecnologia",terms:["tecnologia"]}
+      {name:"Tecnología",id:"tecnologia",terms:["tecnologia"]},
+      {name:"Opinión y análisis",id:"opinion-analisis",terms:["opinion","opinion y analisis","analisis"]}
     ];
     const normalize=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
     sectionRoot.innerHTML=sections.map(section=>{

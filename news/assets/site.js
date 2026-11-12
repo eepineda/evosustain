@@ -54,7 +54,7 @@ async function loadPublishedArticles() {
       {name:"Seguridad y defensa",id:"seguridad",terms:["seguridad","defensa"]},
       {name:"Tecnología",id:"tecnologia",terms:["tecnologia"]}
     ];
-    const normalize=value=>String(value||"").normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").toLowerCase().trim();
+    const normalize=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
     sectionRoot.innerHTML=sections.map(section=>{
       const matches=data.filter(a=>section.terms.includes(normalize(a.category))).slice(0,3);
       if(!matches.length)return "";
@@ -62,7 +62,7 @@ async function loadPublishedArticles() {
         const dateText=a.created_at?new Date(a.created_at).toLocaleDateString("es-ES",{day:"numeric",month:"short",year:"numeric"}):"";
         return '<article class="story reveal" style="--delay:'+i*60+'ms"><a class="story-link" href="'+articleUrl(a.slug||"")+'">'+articleImage(a,"story-image")+'<div class="story-copy"><div class="kicker">'+escapeHtml(section.name)+'</div><h3>'+escapeHtml(a.title)+'</h3><p>'+escapeHtml(a.summary||"")+'</p></div></a><div class="lead-meta">'+escapeHtml(a.author||"EVOFORD NEWS")+(dateText?" · "+escapeHtml(dateText):"")+'</div><a href="'+articleUrl(a.slug||"")+'" class="read-link">Leer artículo <span>↗</span></a></article>';
       }).join("");
-      return '<section class="section category-section" id="'+section.id+'"><div class="section-head"><h2>'+section.name+'</h2><span>ÚLTIMAS PUBLICACIONES</span></div><div class="cards">'+cards+'</div></section>';
+      return '<section class="section category-section" id="section-'+section.id+'"><div class="section-head"><h2>'+section.name+'</h2><span>ÚLTIMAS PUBLICACIONES</span></div><div class="cards">'+cards+'</div></section>';
     }).join("");
   }
 }

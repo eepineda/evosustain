@@ -20,14 +20,19 @@ async function loadArticle(){
  const slug=new URLSearchParams(location.search).get("slug");
  if(!slug){root.innerHTML="<h1>Artículo no disponible</h1><p>Falta identificar la publicación.</p><a class='read-link' href='../'>Volver a portada →</a>";return;}
  const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
- const {data:a,error}=await client.from("articles").select("title,slug,category,author,summary,content,image_url,country,region,language,summary_en,content_en,updated_at").eq("slug",slug).eq("status","published").maybeSingle();
+ const {data:a,error}=await client.from("articles").select("title,slug,category,author,summary,content,image_url,country,region,language,summary_en,content_en,source_title,source_url,updated_at").eq("slug",slug).eq("status","published").maybeSingle();
  if(error||!a){root.innerHTML="<h1>Artículo no disponible</h1><p>La publicación no existe o no está disponible.</p><a class='read-link' href='../'>Volver a portada →</a>";return;}
  const english=a.language==="en";
  const title=english&&a.title? a.title:a.title;
  const summary=english&&a.summary_en?a.summary_en:a.summary;
- const body=english&&a.content_en?a.content_en:a.content;
+ let body=english&&a.content_en?a.content_en:a.content;
+ let sourceUrl=a.source_url||"";
+ let sourceTitle=a.source_title||"";
+ body=String(body||"").replace(/^\s*Fuente original:\s*(https?:\/\/\S+)\s*$/gmi,(_m,url)=>{if(!sourceUrl)sourceUrl=url;return "";}).replace(/^\s*Redacta aquí una versión propia y verificada\. No copies literalmente el artículo de origen\.\s*$/gmi,"");
+ if(sourceUrl){try{const parsed=new URL(sourceUrl);if(!sourceTitle){const host=parsed.hostname.replace(/^www\./,"");sourceTitle=host==="elpais.com"?"El País":host.replace(/\.com$|\.co\.uk$|\.org$/i,"").replace(/^./,ch=>ch.toUpperCase());}for(const key of [...parsed.searchParams.keys()])if(key.startsWith("utm_"))parsed.searchParams.delete(key);sourceUrl=parsed.toString();}catch(_e){sourceUrl="";}}
  const paragraphs=String(body||"").split(/\n\s*\n|\r?\n/).filter(Boolean).map(p=>"<p style='font:18px/1.85 Georgia,serif;white-space:pre-wrap'>"+esc(p)+"</p>").join("");
- root.innerHTML="<div class='kicker'>"+esc(a.category||"INTERNACIONAL")+"</div><h1 style='font:800 clamp(38px,6vw,64px)/1.05 Playfair Display,Georgia,serif;letter-spacing:-.04em'>"+esc(title)+"</h1><p class='dek'>"+esc(summary||"")+"</p><div class='lead-meta'>POR "+esc(a.author||"EVOFORD NEWS")+" · "+esc([a.country,a.region].filter(Boolean).join(" · "))+"</div>"+(a.image_url&&/^https:\/\//i.test(a.image_url)?"<img src='"+esc(a.image_url)+"' alt='' style='width:100%;height:auto;margin:28px 0'>":"")+"<hr style='border:0;border-top:1px solid #d9dee5;margin:28px 0'>"+paragraphs+"<p><a class='read-link' href='../'>← Volver a Evoford News</a></p>";
+ const sourceCredit=sourceUrl&&/^https:\/\//i.test(sourceUrl)?"<p class='source-credit'>Fuente original: <a href='"+esc(sourceUrl)+"' target='_blank' rel='noopener noreferrer'>"+esc(sourceTitle||"Consultar medio original")+" ↗</a></p>":"";
+ root.innerHTML="<div class='kicker'>"+esc(a.category||"INTERNACIONAL")+"</div><h1 style='font:800 clamp(38px,6vw,64px)/1.05 Playfair Display,Georgia,serif;letter-spacing:-.04em'>"+esc(title)+"</h1><p class='dek'>"+esc(summary||"")+"</p><div class='lead-meta'>POR "+esc(a.author||"EVOFORD NEWS")+" · "+esc([a.country,a.region].filter(Boolean).join(" · "))+"</div>"+(a.image_url&&/^https:\/\//i.test(a.image_url)?"<img src='"+esc(a.image_url)+"' alt='' style='width:100%;height:auto;margin:28px 0'>":"")+"<hr style='border:0;border-top:1px solid #d9dee5;margin:28px 0'>"+paragraphs+sourceCredit+"<p><a class='read-link' href='../'>← Volver a Evoford News</a></p>";
  document.title=a.title+" | Evoford News";
 }
 loadArticle();

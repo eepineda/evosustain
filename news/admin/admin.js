@@ -106,9 +106,7 @@ async function loadInbox(){
       category:"Internacional",
       author:"EVOFORD NEWS",
       summary:item.summary||"",
-      content:"[BORRADOR EDITORIAL: redactar una noticia original tras verificar los datos y consultar la fuente. No reproducir el artículo original. Añadir contexto y atribución.]
-
-Fuente consultada: "+source,
+      content:"[BORRADOR EDITORIAL: redactar una noticia original tras verificar los datos y consultar la fuente. No reproducir el artículo original. Añadir contexto y atribución.]\n\nFuente consultada: "+source,
       image_url:""
     });
     $("formHeading").textContent="Borrador desde noticia RSS";

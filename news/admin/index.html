@@ -58,7 +58,8 @@
       </section>
 
       <section id="inboxTab" class="tabview" hidden>
-        <div class="section-head"><div><p class="eyebrow">FUENTES EXTERNAS</p><h2>Bandeja de noticias RSS</h2></div><button id="refreshInboxBtn" class="secondary">Actualizar lista</button></div>
+        <div class="section-head"><div><p class="eyebrow">FUENTES EXTERNAS</p><h2>Bandeja de noticias RSS</h2></div><div class="item-actions"><button id="runRssBtn">Importar ahora</button><button id="refreshInboxBtn" class="secondary">Actualizar lista</button></div></div>
+        <p id="rssRunMessage" class="message" role="status">La importación solo consulta fuentes activas y guarda elementos para revisión; nunca publica automáticamente.</p>
         <p class="muted">Aquí aparecerán los elementos importados por el proceso RSS. Revisa la fuente original antes de convertirlos en contenido editorial.</p>
         <div id="inboxList" class="list"><p class="muted">Cargando…</p></div>
       </section>

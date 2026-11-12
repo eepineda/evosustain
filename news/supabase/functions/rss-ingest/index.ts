@@ -178,7 +178,7 @@ Deno.serve(async (req) => {
           summary: item.summary,
           published_at: item.published_at,
           raw_payload: item.raw_payload,
-          status: "new",
+          status: "pending",
           imported_at: new Date().toISOString(),
         });
 

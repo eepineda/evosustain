@@ -191,7 +191,14 @@ Deno.serve(async (req) => {
         }
       }
     } catch (error) {
-      result.error = error instanceof Error ? error.message : "Unknown feed error";
+      if (error instanceof Error) {
+        result.error = error.message;
+      } else if (error && typeof error === "object") {
+        const e = error as Record<string, unknown>;
+        result.error = [e.message, e.details, e.hint, e.code].filter(Boolean).map(String).join(" | ") || JSON.stringify(e);
+      } else {
+        result.error = String(error);
+      }
     }
     results.push(result);
   }

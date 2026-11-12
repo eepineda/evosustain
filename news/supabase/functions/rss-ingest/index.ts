@@ -63,7 +63,7 @@ function normalizeItem(item: Record<string, unknown>) {
 
   const title = text(item.title);
   const guid = text(item.guid ?? item.id) || link || title;
-  const description = text(item.description ?? item.summary ?? item["content:encoded"] ?? item.content);
+  const description = text(item["content:encoded"] ?? item.content ?? item.description ?? item.summary);
   const date = normalizeDate(item.pubDate ?? item.published ?? item.updated ?? item["dc:date"]);
   return {
     title: title.slice(0, 500),

@@ -213,7 +213,16 @@ async function loadInbox(){
 async function loadSources(){
   const {data,error}=await client.from("rss_sources").select("*").order("created_at",{ascending:false});
   if(error){$("sourceList").innerHTML=`<p class="muted">${safe(error.message)}</p>`;return;}
-  $("sourceList").innerHTML=data.length?data.map(s=>`<article class="item"><div><h3>${safe(s.name)}</h3><p>${safe(s.feed_url)} · ${safe(s.category||"General")} · ${s.active?"Activa":"Pausada"}</p></div></article>`).join(""):'<p class="muted">Aún no hay fuentes RSS configuradas.</p>';
+  $("sourceList").innerHTML=data.length?data.map(s=>`<article class="item"><div><h3>${safe(s.name)}</h3><p>${safe(s.feed_url)} · ${safe(s.category||"General")} · ${s.active?"Activa":"Pausada"}</p></div><div class="item-actions"><button type="button" class="secondary" data-delete-source="${safe(s.id)}">Eliminar fuente</button></div></article>`).join(""):'<p class="muted">Aún no hay fuentes RSS configuradas.</p>';
+  $("sourceList").querySelectorAll("[data-delete-source]").forEach(button=>button.addEventListener("click",async()=>{
+    const source=data.find(s=>String(s.id)===button.dataset.deleteSource);
+    if(!source||!window.confirm(`¿Eliminar la fuente RSS «${source.name}»? Dejará de importarse en futuras consultas. Las noticias que ya se importaron se conservarán en la bandeja.`))return;
+    button.disabled=true;
+    const {error}=await client.from("rss_sources").delete().eq("id",source.id);
+    if(error){say("sourceMessage","No se pudo eliminar la fuente: "+error.message);button.disabled=false;return;}
+    say("sourceMessage","Fuente eliminada. Las noticias importadas anteriormente se han conservado.");
+    await Promise.all([loadSources(),loadInbox()]);
+  }));
 }
 async function addSource(e){
   e.preventDefault();const payload={name:$("sourceName").value.trim(),feed_url:$("feedUrl").value.trim(),category:$("sourceCategory").value};

@@ -1,0 +1,4 @@
+project_id = "evoford-news"
+
+[functions.rss-ingest]
+verify_jwt = true

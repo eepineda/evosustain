@@ -103,10 +103,17 @@ async function runRssImport(){
   }
 }
 async function loadInbox(){
-  const {data,error}=await client.from("imported_items").select("*").order("created_at",{ascending:false});
+  const [{data,error},{data:sources}] = await Promise.all([
+    client.from("imported_items").select("*").order("created_at",{ascending:false}),
+    client.from("rss_sources").select("id,name,category")
+  ]);
   if(error){$("inboxList").innerHTML=`<p class="muted">${safe(error.message)}</p>`;return;}
-  $("inboxList").innerHTML=data.length?data.map(n=>`<article class="item"><div><h3>${safe(n.title)}</h3><p><a href="${safe(n.article_url)}" target="_blank" rel="noopener noreferrer">Consultar fuente original</a> · <span class="pill">${safe(n.status)}</span></p>${n.summary?`<p>${safe(n.summary)}</p>`:""}</div><div class="item-actions"><button type="button" class="secondary" data-draft="${n.id}">Preparar borrador manual</button><button class="secondary" data-reject="${n.id}">Descartar</button></div></article>`).join(""):'<p class="muted">No hay noticias importadas. Añade fuentes RSS activas e inicia una importación.</p>';
-
+  const sourceMap=new Map((sources||[]).map(source=>[String(source.id),source]));
+  $("inboxList").innerHTML=data.length?data.map(n=>{
+    const source=sourceMap.get(String(n.source_id));
+    const suggested=n.suggested_category||source?.category||"Internacional";
+    return `<article class="item"><div><h3>${safe(n.title)}</h3><p>${safe(source?.name||"Fuente RSS")} · Sección sugerida: ${safe(suggested)} · <a href="${safe(n.article_url)}" target="_blank" rel="noopener noreferrer">Consultar fuente original</a> · <span class="pill">${safe(n.status)}</span></p>${n.summary?`<p>${safe(n.summary)}</p>`:""}${n.country||n.region?`<p>Clasificación: ${safe(n.country||"País por verificar")} · ${safe(n.region||"Región por verificar")}</p>`:""}</div><div class="item-actions"><button type="button" class="secondary" data-draft="${n.id}">Preparar borrador manual</button><button class="secondary" data-reject="${n.id}">Descartar</button></div></article>`;
+  }).join(""):'<p class="muted">No hay noticias importadas. Añade fuentes RSS activas e inicia una importación.</p>';
 }
 async function loadSources(){
   const {data,error}=await client.from("rss_sources").select("*").order("created_at",{ascending:false});
@@ -137,9 +144,12 @@ function wire(){
       editArticle(null);
       $("title").value=item.title||"";
       $("summary").value=item.summary||"";
-      $("category").value="Internacional";
-      $("country").value="";
-      $("region").value="";
+      const {data:source}=await client.from("rss_sources").select("category").eq("id",item.source_id).maybeSingle();
+      const suggested=item.suggested_category||source?.category||"Internacional";
+      const allowedCategories=["Internacional","Política","Economía","Seguridad","Tecnología","Opinión","Clima","Sociedad"];
+      $("category").value=allowedCategories.includes(suggested)?suggested:"Internacional";
+      $("country").value=item.country||"";
+      $("region").value=item.region||"";
       $("language").value="es";
       $("summaryEn").value="";
       $("contentEn").value="";

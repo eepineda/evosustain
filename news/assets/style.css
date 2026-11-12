@@ -292,3 +292,15 @@ footer a:not(.footer-brand){color:#e6c98b;border-bottom-color:rgba(230,201,139,.
 .comment-item p{font:16px/1.7 Georgia,serif;white-space:normal;margin:7px 0;color:#303840}
 .comment-item time{font-size:10px;color:var(--muted);letter-spacing:.04em}
 @media(max-width:760px){.share-panel,.comments-panel{margin-left:0;margin-right:0}.share-button{width:37px;height:37px}}
+
+.comment-login{padding:22px 0;border-bottom:1px solid var(--line)}
+.comment-login>p:first-child{font:16px/1.5 Georgia,serif;margin:0 0 15px;color:#3e4852}
+.login-providers{display:flex;gap:10px;flex-wrap:wrap}
+.provider-button{border:1px solid #c8cdd2;background:#fff;color:#1b2632;padding:12px 17px;font:700 12px 'DM Sans',Arial,sans-serif;cursor:pointer;min-width:180px}
+.provider-button:hover{border-color:#102b4e;background:#f5f6f7}
+.google-login:before{content:"G";font:bold 16px Arial,sans-serif;color:#4285f4;margin-right:10px}
+.twitter-login:before{content:"𝕏";font-size:16px;margin-right:10px}
+.comment-signed-in{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:14px 0;border-bottom:1px solid var(--line);font-size:12px;color:#53606c}
+.signout-button{border:0;background:none;color:#8f2029;text-decoration:underline;cursor:pointer;font:600 11px 'DM Sans',Arial,sans-serif}
+.comment-form[hidden],.comment-login[hidden],.comment-signed-in[hidden]{display:none}
+@media(max-width:520px){.login-providers{display:grid}.provider-button{width:100%}}

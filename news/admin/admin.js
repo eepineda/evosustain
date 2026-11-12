@@ -63,7 +63,7 @@ async function saveArticle(status){
   const title=$("title").value.trim(),content=$("content").value.trim();
   if(!title||!content){say("editorMessage","El titular y el texto son obligatorios.");return;}
   const id=$("articleId").value;
-  const payload={title,slug:slugify(title),category:$("category").value,author:$("author").value.trim()||"EDWIN PINEDA CARRASCO",summary:$("summary").value.trim(),content,image_url:$("imageUrl").value.trim()||null,country:$("country").value.trim()||null,region:$("region").value.trim()||null,language:$("language").value,summary_en:$("summaryEn").value.trim(),content_en:$("contentEn").value.trim(),status,updated_at:new Date().toISOString()};
+  const payload={title,slug:slugify(title),category:$("category").value,author:$("author").value.trim()||"EDWIN PINEDA CARRASCO",summary:$("summary").value.trim(),content,image_url:$("imageUrl").value.trim()||null,status,updated_at:new Date().toISOString()};
   if(status==="published"){say("editorMessage","La publicación directa está deshabilitada hasta conectar el servicio seguro de despliegue. Guarda como borrador o envía a revisión.");return;}
   const query=id?client.from("articles").update(payload).eq("id",id):client.from("articles").insert(payload);
   const {error}=await query;
@@ -96,7 +96,7 @@ async function runRssImport(){
 async function loadInbox(){
   const {data,error}=await client.from("imported_items").select("*").order("created_at",{ascending:false});
   if(error){$("inboxList").innerHTML=`<p class="muted">${safe(error.message)}</p>`;return;}
-  $("inboxList").innerHTML=data.length?data.map(n=>`<article class="item"><div><h3>${safe(n.title)}</h3><p><a href="${safe(n.article_url)}" target="_blank" rel="noopener noreferrer">Consultar fuente original</a> · <span class="pill">${safe(n.status)}</span></p>${n.summary?`<p>${safe(n.summary)}</p>`:""}</div><div class="item-actions"><button type="button" class="secondary" data-draft="${n.id}">Borrador bilingüe con IA</button><button class="secondary" data-reject="${n.id}">Descartar</button></div></article>`).join(""):'<p class="muted">No hay noticias importadas. Añade fuentes RSS activas e inicia una importación.</p>';
+  $("inboxList").innerHTML=data.length?data.map(n=>`<article class="item"><div><h3>${safe(n.title)}</h3><p><a href="${safe(n.article_url)}" target="_blank" rel="noopener noreferrer">Consultar fuente original</a> · <span class="pill">${safe(n.status)}</span></p>${n.summary?`<p>${safe(n.summary)}</p>`:""}</div><div class="item-actions"><button type="button" class="secondary" data-draft="${n.id}">Preparar borrador manual</button><button class="secondary" data-reject="${n.id}">Descartar</button></div></article>`).join(""):'<p class="muted">No hay noticias importadas. Añade fuentes RSS activas e inicia una importación.</p>';
 
 }
 async function loadSources(){
@@ -123,21 +123,22 @@ function wire(){
     const draftButton=e.target.closest("[data-draft]");
     const rejectButton=e.target.closest("[data-reject]");
     if(draftButton){
-      draftButton.disabled=true;
-      draftButton.textContent="Preparando…";
-      try{
-        const {data,error}=await client.functions.invoke("editorial-assist",{body:{item_id:draftButton.dataset.draft}});
-        if(error) throw error;
-        if(data?.error) throw new Error(data.error);
-        say("globalMessage","Borrador bilingüe guardado. País: "+(data.classification?.country||"por verificar")+" · Región: "+(data.classification?.region||"Global")+" · Sección: "+(data.classification?.category||"Internacional")+". Revisa ambos idiomas antes de enviar a revisión.");
-        await Promise.all([loadArticles(),loadInbox()]);
-        document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab==="articles"));
-        ["articles","inbox","sources"].forEach(k=>$(k+"Tab").hidden=k!=="articles");
-      }catch(error){
-        say("globalMessage","No se pudo crear el borrador bilingüe: "+(error.message||"Error desconocido"));
-        draftButton.disabled=false;
-        draftButton.textContent="Borrador bilingüe con IA";
-      }
+      const {data:item,error}=await client.from("imported_items").select("*").eq("id",draftButton.dataset.draft).single();
+      if(error){say("globalMessage","No se pudo abrir la noticia: "+error.message);return;}
+      editArticle(null);
+      $("title").value=item.title||"";
+      $("summary").value=item.summary||"";
+      $("category").value="Internacional";
+      $("country").value="";
+      $("region").value="";
+      $("language").value="es";
+      $("summaryEn").value="";
+      $("contentEn").value="";
+      $("content").value="\n\nFuente original: "+(item.article_url||"")+"\n\nRedacta aquí una versión propia y verificada. No copies literalmente el artículo de origen.";
+      say("editorMessage","Borrador manual iniciado. Verifica la noticia, clasifícala y redacta las versiones en español e inglés.");
+      document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab==="articles"));
+      ["articles","inbox","sources"].forEach(k=>$(k+"Tab").hidden=k!=="articles");
+      $("articleForm").scrollIntoView({behavior:"smooth",block:"start"});
       return;
     }
     if(rejectButton){

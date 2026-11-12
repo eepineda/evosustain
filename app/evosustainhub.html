@@ -35,6 +35,8 @@
     footer{text-align:center;color:#71838c;font-size:.85rem;margin-top:34px}
     footer a{color:#087f70;text-decoration:none;margin:0 8px}
     .lang-es{display:none}
+    body.spanish .lang-en{display:none}
+    body.spanish .lang-es{display:revert}
     @media(max-width:680px){body{padding:18px 14px 30px}.topbar{margin-bottom:34px}.grid{grid-template-columns:1fr}.module{padding:19px}.stage{align-items:flex-start;flex-direction:column}.stage a{width:100%;text-align:center}.intro p{font-size:1rem}}
   </style>
 </head>
@@ -58,16 +60,16 @@
     </section>
     <section class="grid" aria-label="Platform modules">
       <a href="storesapp.html" class="module">
-        <span class="module-icon">🏪</span><span><h2>Store App</h2><p class="lang-en">Request waste collections, choose time windows and review collection history.</p><p class="lang-es">Solicita recogidas, elige franjas horarias y consulta el historial del servicio.</p></span><span class="arrow">↗</span>
+        <span class="module-icon">🏪</span><span><h2><span class="lang-en">Store App</span><span class="lang-es">App para tiendas</span></h2><p class="lang-en">Request waste collections, choose time windows and review collection history.</p><p class="lang-es">Solicita recogidas, elige franjas horarias y consulta el historial del servicio.</p></span><span class="arrow">↗</span>
       </a>
       <a href="businessapp.html" class="module">
-        <span class="module-icon">📊</span><span><h2>Business App</h2><p class="lang-en">Monitor collection activity, requests, planning and operational performance.</p><p class="lang-es">Supervisa la actividad de recogida, las solicitudes, la planificación y el rendimiento operativo.</p></span><span class="arrow">↗</span>
+        <span class="module-icon">📊</span><span><h2><span class="lang-en">Business App</span><span class="lang-es">App para empresas</span></h2><p class="lang-en">Monitor collection activity, requests, planning and operational performance.</p><p class="lang-es">Supervisa la actividad de recogida, las solicitudes, la planificación y el rendimiento operativo.</p></span><span class="arrow">↗</span>
       </a>
       <a href="businessportal.html" class="module">
-        <span class="module-icon">🧭</span><span><h2>Business Admin Portal</h2><p class="lang-en">Coordinate schedules, assignments, service data and logistics oversight.</p><p class="lang-es">Coordina horarios, asignaciones, datos del servicio y control logístico.</p></span><span class="arrow">↗</span>
+        <span class="module-icon">🧭</span><span><h2><span class="lang-en">Business Admin Portal</span><span class="lang-es">Portal de administración</span></h2><p class="lang-en">Coordinate schedules, assignments, service data and logistics oversight.</p><p class="lang-es">Coordina horarios, asignaciones, datos del servicio y control logístico.</p></span><span class="arrow">↗</span>
       </a>
       <a href="driversapp.html" class="module">
-        <span class="module-icon">🚛</span><span><h2>Driver App</h2><p class="lang-en">View route stops, record collection progress and submit operational reports.</p><p class="lang-es">Consulta paradas, registra el progreso de recogida y envía informes operativos.</p></span><span class="arrow">↗</span>
+        <span class="module-icon">🚛</span><span><h2><span class="lang-en">Driver App</span><span class="lang-es">App para conductores</span></h2><p class="lang-en">View route stops, record collection progress and submit operational reports.</p><p class="lang-es">Consulta paradas, registra el progreso de recogida y envía informes operativos.</p></span><span class="arrow">↗</span>
       </a>
     </section>
     <section class="stage">
@@ -76,13 +78,12 @@
       <a class="lang-es" href="https://forms.gle/tLet5H1CT4LA1nGf6" target="_blank" rel="noopener noreferrer">Solicitar una demo ↗</a>
     </section>
   </main>
-  <footer><span class="lang-en">EvoSustain · Waste collection and logistics management · PoC concept</span><span class="lang-es">EvoSustain · Gestión logística y recogida de residuos · Concepto PoC</span><br><a href="mailto:info@evoford.com">Contact</a> · <a href="https://evoford.com/">Evoford</a></footer>
+  <footer><span class="lang-en">EvoSustain · Waste collection and logistics management · PoC concept</span><span class="lang-es">EvoSustain · Gestión logística y recogida de residuos · Concepto PoC</span><br><a href="mailto:info@evoford.com"><span class="lang-en">Contact</span><span class="lang-es">Contacto</span></a> · <a href="https://evoford.com/">Evoford</a></footer>
 </div>
 <script>
 function toggleLanguage(lang){
   const spanish=lang==='es';
-  document.querySelectorAll('.lang-en').forEach(el=>el.style.display=spanish?'none':'');
-  document.querySelectorAll('.lang-es').forEach(el=>el.style.display=spanish?'':'none');
+  document.body.classList.toggle('spanish',spanish);
   document.getElementById('lang-en').setAttribute('aria-pressed',String(!spanish));
   document.getElementById('lang-es').setAttribute('aria-pressed',String(spanish));
   document.documentElement.lang=lang;

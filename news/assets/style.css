@@ -328,3 +328,10 @@ footer a:not(.footer-brand){color:#e6c98b;border-bottom-color:rgba(230,201,139,.
 .country-read{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700}
 .country-empty{font-size:12px;line-height:1.6;color:var(--muted);min-height:70px}
 @media(max-width:760px){.market-heading{align-items:flex-start;gap:8px;flex-direction:column}.country-grid{grid-template-columns:1fr}.country-links a{flex:1 1 145px;justify-content:center}.market-strip{margin-top:0}}
+
+/* Evoford ecosystem cross-navigation */
+.ecosystem-nav{background:#071725;color:#e6eef0;border-bottom:1px solid #263d4b}
+.ecosystem-nav-inner{max-width:1240px;margin:auto;padding:0 30px;min-height:40px;display:flex;align-items:center;justify-content:space-between;gap:18px;font:700 10px/1.4 'DM Sans',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase}
+.ecosystem-mark{color:#fff;text-decoration:none;white-space:nowrap}.ecosystem-mark span{color:#83cbb8;margin-left:5px}
+.ecosystem-nav nav{display:flex;gap:20px;flex-wrap:wrap}.ecosystem-nav nav a{color:#d0dce0;text-decoration:none}.ecosystem-nav nav a:hover,.ecosystem-nav nav a[aria-current=page]{color:#8bd5c2}
+@media(max-width:620px){.ecosystem-nav-inner{align-items:flex-start;flex-direction:column;justify-content:center;padding:9px 18px;gap:7px}.ecosystem-nav nav{gap:14px}.masthead{padding-left:18px;padding-right:18px}}

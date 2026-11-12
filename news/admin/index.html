@@ -7,7 +7,7 @@
   <title>Acceso editorial | Evoford News</title>
   <link rel="stylesheet" href="./admin.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="./admin.js?v=20261112-14"></script>
+  <script defer src="./admin.js?v=20261112-15"></script>
 </head>
 <body>
   <header class="topbar">
@@ -56,8 +56,10 @@
             <div class="field full"><label for="summaryEn">Resumen en inglés</label><textarea id="summaryEn" rows="2"></textarea></div>
             <div class="field full"><label for="contentEn">Article text (English)</label><textarea id="contentEn" rows="10"></textarea></div>
             <div class="field full"><label for="imageUrl">URL de imagen (opcional)</label><input id="imageUrl" type="url" placeholder="https://…"></div>
+            <div class="field"><label for="sourceTitle">Medio original</label><input id="sourceTitle" placeholder="El País, BBC, Reuters…"></div>
+            <div class="field full"><label for="sourceUrl">Enlace a la noticia original</label><input id="sourceUrl" type="url" placeholder="https://…"></div>
           </div>
-          <div class="actions"><button type="submit" id="saveDraftBtn" class="secondary">Guardar borrador</button><button type="button" id="submitReviewBtn">Enviar a revisión</button><button type="button" id="approveArticleBtn" class="secondary">Aprobar artículo</button><button type="button" id="publishArticleBtn" hidden>Publicar</button></div>
+          <div class="actions"><button type="submit" id="saveDraftBtn" class="secondary">Guardar borrador</button><button type="button" id="submitReviewBtn">Enviar a revisión</button><button type="button" id="approveArticleBtn" class="secondary">Aprobar artículo</button><button type="button" id="publishArticleBtn" hidden>Publicar</button><button type="button" id="saveChangesBtn" class="secondary" hidden>Guardar cambios</button></div>
           <p id="editorMessage" class="message" role="status"></p>
         </form>
       </section>

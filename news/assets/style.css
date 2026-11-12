@@ -304,3 +304,27 @@ footer a:not(.footer-brand){color:#e6c98b;border-bottom-color:rgba(230,201,139,.
 .signout-button{border:0;background:none;color:#8f2029;text-decoration:underline;cursor:pointer;font:600 11px 'DM Sans',Arial,sans-serif}
 .comment-form[hidden],.comment-login[hidden],.comment-signed-in[hidden]{display:none}
 @media(max-width:520px){.login-providers{display:grid}.provider-button{width:100%}}
+
+/* International desk and market indicators */
+.market-strip{margin:5px 0 26px;padding:14px 0 11px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.market-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.market-heading>span:last-child{font-size:9px;letter-spacing:.12em;color:var(--muted);font-weight:700}
+.market-widget{width:100%;min-height:48px}
+.market-note{margin:4px 0 0;color:var(--muted);font-size:10px}
+.country-desk{padding:26px 0 8px}
+.country-links{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px}
+.country-links a{display:inline-flex;align-items:center;gap:9px;padding:10px 15px;border:1px solid var(--line);background:#fff;color:var(--ink);text-decoration:none;font-size:12px;font-weight:700;transition:border-color .2s,transform .2s}
+.country-links a:hover{border-color:var(--navy);transform:translateY(-2px)}
+.country-links a span{font-size:21px}
+.country-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.country-card{border-top:3px solid var(--navy);background:#fff;padding:16px 17px 13px;min-width:0}
+.country-title{display:flex;align-items:center;gap:11px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:3px}
+.country-flag{font-size:27px;line-height:1}
+.country-title h3{font:700 20px 'Playfair Display',Georgia,serif;margin:0}
+.country-story{display:flex;flex-direction:column;gap:7px;padding:13px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.country-story:last-child{border-bottom:0}
+.country-story b{font:700 16px/1.25 'Playfair Display',Georgia,serif}
+.country-story:hover b{color:var(--navy)}
+.country-read{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700}
+.country-empty{font-size:12px;line-height:1.6;color:var(--muted);min-height:70px}
+@media(max-width:760px){.market-heading{align-items:flex-start;gap:8px;flex-direction:column}.country-grid{grid-template-columns:1fr}.country-links a{flex:1 1 145px;justify-content:center}.market-strip{margin-top:0}}

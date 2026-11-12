@@ -115,3 +115,23 @@ footer{background:#091a30;border-top:4px solid var(--red);padding-top:29px;paddi
 @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:900px){.frontpage-grid{grid-template-columns:1fr}.featured-story{grid-template-columns:1fr 1fr}.frontpage-aside{border-left:0;border-top:1px solid var(--line);padding:18px 0 0}.frontpage-aside #latestBriefs{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.brief-link{border-bottom:0;padding-right:10px}.brief-link:hover{padding-left:5px}}
 @media(max-width:620px){.featured-story{grid-template-columns:1fr;gap:18px}.feature-image-link,.feature-image,.feature-image-link .story-art{min-height:250px;height:250px}.feature-copy{padding:0}.feature-copy h1{font-size:38px}.frontpage-aside #latestBriefs{grid-template-columns:1fr}.brief-link{border-bottom:1px solid var(--line)}}
+
+
+/* Hero fallback and responsive layout correction */
+.frontpage-grid{align-items:stretch}
+.featured-story{min-width:0;align-items:stretch}
+.feature-image-link{display:block!important;width:100%;height:100%;min-height:350px;position:relative;isolation:isolate}
+.feature-image-link>.story-art{display:grid!important;width:100%;height:100%!important;min-height:350px!important;max-height:none!important;place-items:center;position:relative}
+.feature-image-link>.story-art span{display:block!important;position:relative;z-index:1;font:800 clamp(42px,5vw,68px)/.9 'Playfair Display',Georgia,serif!important;color:#fff!important;letter-spacing:-.06em}
+.feature-image-link>.feature-image:not(.story-art){width:100%;height:100%;min-height:350px;object-fit:cover}
+.image-stamp{z-index:2}
+@media(max-width:900px){
+ .frontpage-grid{grid-template-columns:1fr}
+ .featured-story{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+ .feature-image-link,.feature-image-link>.story-art{min-height:320px!important}
+}
+@media(max-width:620px){
+ .featured-story{grid-template-columns:1fr}
+ .feature-image-link,.feature-image-link>.story-art{height:250px!important;min-height:250px!important}
+ .feature-image-link>.feature-image:not(.story-art){height:250px;min-height:250px}
+}

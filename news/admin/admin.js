@@ -26,17 +26,25 @@ function editorialGate(payload){
 }
 
 async function init(){
-  if(!window.supabase || SUPABASE_PUBLISHABLE_KEY.startsWith("PASTE_")){
-    say("loginMessage","Falta configurar la clave publishable de Supabase en admin.js.");
-    return;
+  try{
+    say("loginMessage","Conectando con el servicio de acceso…");
+    if(!window.supabase){
+      say("loginMessage","No se ha cargado la biblioteca de acceso de Supabase. Recarga la página.");
+      return;
+    }
+    client = window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+    const {data,error}=await client.auth.getSession();
+    if(error) throw error;
+    if(data?.session) await showApp(data.session.user);
+    client.auth.onAuthStateChange(async (_event,session)=> {
+      if(session) await showApp(session.user);
+      else showLogin();
+    });
+    if(!data?.session) say("loginMessage","");
+  }catch(error){
+    console.error("Evoford News init:",error);
+    say("loginMessage","Error al iniciar el panel: "+(error?.message||"comprueba la conexión y recarga."));
   }
-  client = window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-  const {data:{session}} = await client.auth.getSession();
-  if(session) await showApp(session.user);
-  client.auth.onAuthStateChange(async (_event,session)=> {
-    if(session) await showApp(session.user);
-    else showLogin();
-  });
 }
 function showLogin(){ $("loginView").hidden=false; $("appView").hidden=true; }
 async function showApp(user){
@@ -248,4 +256,16 @@ function wire(){
     ["articles","inbox","sources"].forEach(k=>$(k+"Tab").hidden=k!==b.dataset.tab);
   }));
 }
-document.addEventListener("DOMContentLoaded",()=>{wire();init();});
+window.addEventListener("error",event=>{
+  const target=$("loginMessage");
+  if(target) target.textContent="Error al cargar el panel: "+(event.message||"error de JavaScript");
+});
+document.addEventListener("DOMContentLoaded",()=>{
+  try{
+    wire();
+    init();
+  }catch(error){
+    console.error("Evoford News startup:",error);
+    say("loginMessage","No se pudo iniciar el panel: "+(error?.message||"error inesperado"));
+  }
+});

@@ -135,3 +135,4 @@ footer{background:#091a30;border-top:4px solid var(--red);padding-top:29px;paddi
  .feature-image-link,.feature-image-link>.story-art{height:250px!important;min-height:250px!important}
  .feature-image-link>.feature-image:not(.story-art){height:250px;min-height:250px}
 }
+footer a:not(.footer-brand){color:#f2c96d;font-weight:700;text-decoration:none;border-bottom:1px solid rgba(242,201,109,.55);padding-bottom:3px}footer a:not(.footer-brand):hover{color:#fff;border-bottom-color:#fff}

@@ -49,7 +49,7 @@ async function login(e){
 async function loadArticles(){
   const {data,error}=await client.from("articles").select("*").order("created_at",{ascending:false});
   if(error){$("articleList").innerHTML=`<p class="muted">${safe(error.message)}</p>`;return;}
-  $("articleList").innerHTML=data.length?data.map(a=>`<article class="item"><div><h3>${safe(a.title)}</h3><p>${safe(a.category)} · ${safe(a.author)} · <span class="pill">${safe(a.status)}</span></p></div><div class="item-actions"><button class="secondary" data-edit="${a.id}">Editar</button></div></article>`).join(""):'<p class="muted">Todavía no hay artículos.</p>';
+  $("articleList").innerHTML=data.length?data.map(a=>`<article class="item"><div><h3>${safe(a.title)}</h3><p>${safe(a.category)} · ${safe(a.author)} · <span class="pill">${safe(({draft:"Borrador",pending:"En revisión",approved:"Aprobado",published:"Publicado",rejected:"Rechazado"})[a.status]||a.status)}</span></p></div><div class="item-actions"><button class="secondary" data-edit="${a.id}">Editar</button></div></article>`).join(""):'<p class="muted">Todavía no hay artículos.</p>';
   $("articleList").querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>editArticle(data.find(a=>a.id===b.dataset.edit))));
 }
 function editArticle(a){
@@ -64,7 +64,7 @@ async function saveArticle(status){
   if(!title||!content){say("editorMessage","El titular y el texto son obligatorios.");return;}
   const id=$("articleId").value;
   const payload={title,slug:slugify(title),category:$("category").value,author:$("author").value.trim()||"EDWIN PINEDA CARRASCO",summary:$("summary").value.trim(),content,image_url:$("imageUrl").value.trim()||null,country:$("country").value.trim()||null,region:$("region").value.trim()||null,language:$("language").value,summary_en:$("summaryEn").value.trim(),content_en:$("contentEn").value.trim(),status,updated_at:new Date().toISOString()};
-  if(status==="published"){say("editorMessage","La publicación directa está deshabilitada hasta conectar el servicio seguro de despliegue. Guarda como borrador o envía a revisión.");return;}
+  if(status==="published"){say("editorMessage","La publicación pública aún no está conectada. El artículo se mantiene sin publicar.");return;}
   let query;
   if(id){
     query=client.from("articles").update(payload).eq("id",id);
@@ -76,7 +76,7 @@ async function saveArticle(status){
       :client.from("articles").insert(payload);
   }
   const {error}=await query;
-  say("editorMessage",error?error.message:(status==="pending"?"Artículo enviado a revisión.":"Borrador guardado."));
+  say("editorMessage",error?error.message:({draft:"Borrador guardado.",pending:"Artículo enviado a revisión.",approved:"Artículo aprobado. Sigue sin publicarse."}[status]||"Artículo actualizado."));
   if(!error){$("articleForm").hidden=true;await loadArticles();}
 }
 
@@ -174,6 +174,7 @@ function wire(){
   $("cancelEdit").addEventListener("click",()=>$("articleForm").hidden=true);
   $("articleForm").addEventListener("submit",e=>{e.preventDefault();saveArticle("draft");});
   $("submitReviewBtn").addEventListener("click",()=>saveArticle("pending"));
+  $("approveArticleBtn").addEventListener("click",()=>saveArticle("approved"));
   $("sourceForm").addEventListener("submit",addSource);
   $("refreshInboxBtn").addEventListener("click",loadInbox);
   $("inboxList").addEventListener("click",async e=>{

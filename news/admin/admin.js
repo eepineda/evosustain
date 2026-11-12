@@ -50,11 +50,24 @@ async function showApp(user){
   await Promise.all([loadArticles(),loadInbox(),loadSources()]);
 }
 async function login(e){
-  e.preventDefault(); say("loginMessage","Enviando enlace seguro…");
+  e.preventDefault();
+  const button=$("loginForm").querySelector("button[type=submit]");
   const email=$("email").value.trim().toLowerCase();
+  say("loginMessage","");
+  if(!client){say("loginMessage","El servicio de acceso todavía está iniciándose. Recarga la página e inténtalo de nuevo.");return;}
   if(email!==ADMIN_EMAIL){say("loginMessage","Correo no autorizado.");return;}
-  const {error}=await client.auth.signInWithOtp({email,options:{emailRedirectTo:"https://evoford.com/news/admin/"}});
-  say("loginMessage",error?error.message:"Revisa tu correo y abre el enlace de acceso en este mismo navegador.");
+  if(button)button.disabled=true;
+  say("loginMessage","Enviando enlace seguro…");
+  try{
+    const {error}=await client.auth.signInWithOtp({email,options:{emailRedirectTo:"https://evoford.com/news/admin/"}});
+    if(error)throw error;
+    say("loginMessage","Solicitud enviada. Revisa la bandeja de entrada y el correo no deseado.");
+  }catch(error){
+    console.error("Evoford News login:",error);
+    say("loginMessage","No se pudo enviar el enlace: "+(error?.message||"error de conexión"));
+  }finally{
+    if(button)button.disabled=false;
+  }
 }
 async function loadArticles(){
   const {data,error}=await client.from("articles").select("*").order("created_at",{ascending:false});

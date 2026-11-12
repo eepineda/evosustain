@@ -99,11 +99,30 @@ async function loadArticles(){
     await loadArticles();
   }));
 }
+async function uploadArticleImage(){
+  const file=$("imageFile").files?.[0];
+  if(!file)return;
+  const allowed=["image/jpeg","image/png","image/webp"];
+  if(!allowed.includes(file.type)){say("imageMessage","Formato no admitido. Usa JPG, PNG o WebP.");return;}
+  if(file.size>8*1024*1024){say("imageMessage","La imagen supera el límite de 8 MB.");return;}
+  const button=$("uploadImageBtn");button.disabled=true;say("imageMessage","Subiendo imagen…");
+  try{
+    const extension=({"image/jpeg":"jpg","image/png":"png","image/webp":"webp"})[file.type];
+    const folder=$("articleId").value||"drafts";
+    const path=folder+"/"+Date.now()+"-"+crypto.randomUUID()+"."+extension;
+    const result=await client.storage.from("news-images").upload(path,file,{cacheControl:"3600",upsert:false,contentType:file.type});
+    if(result.error)throw result.error;
+    const publicData=client.storage.from("news-images").getPublicUrl(path).data;
+    $("imageUrl").value=publicData.publicUrl;$("imagePreview").src=publicData.publicUrl;$("imagePreview").hidden=false;
+    say("imageMessage","Imagen subida y asociada al artículo. Guarda los cambios para conservarla.");
+  }catch(error){say("imageMessage","No se pudo subir: "+(error.message||"error desconocido")+". Comprueba la configuración de almacenamiento.");}
+  finally{button.disabled=false;}
+}
 function editArticle(a){
   $("articleForm").hidden=false;$("formHeading").textContent=a?"Editar artículo":"Nuevo artículo";
   $("articleId").value=a?.id||"";$("publishArticleBtn").hidden=!(a?.status==="approved");$("saveChangesBtn").hidden=!a;$("title").value=a?.title||"";$("category").value=a?.category||"Internacional";
   $("author").value=a?.author||"";$("summary").value=a?.summary||"";
-  $("content").value=a?.content||"";$("imageUrl").value=a?.image_url||"";$("country").value=a?.country||"";$("region").value=a?.region||"";$("language").value=a?.language||"es";$("summaryEn").value=a?.summary_en||"";$("contentEn").value=a?.content_en||"";$("sourceTitle").value=a?.source_title||"";$("sourceUrl").value=a?.source_url||"";
+  $("content").value=a?.content||"";$("imageUrl").value=a?.image_url||"";$("imageFile").value="";$("imagePreview").src=a?.image_url||"";$("imagePreview").hidden=!a?.image_url;say("imageMessage","");$("country").value=a?.country||"";$("region").value=a?.region||"";$("language").value=a?.language||"es";$("summaryEn").value=a?.summary_en||"";$("contentEn").value=a?.content_en||"";$("sourceTitle").value=a?.source_title||"";$("sourceUrl").value=a?.source_url||"";
   $("articleForm").scrollIntoView({behavior:"smooth",block:"start"});
 }
 async function saveArticle(status,preserveStatus=false){
@@ -269,6 +288,7 @@ function wire(){
   $("approveArticleBtn").addEventListener("click",()=>saveArticle("approved"));
   $("publishArticleBtn").addEventListener("click",()=>saveArticle("published"));$("saveChangesBtn").addEventListener("click",()=>saveArticle(null,true));
   $("sourceForm").addEventListener("submit",addSource);
+  $("uploadImageBtn").addEventListener("click",uploadArticleImage);
   $("refreshInboxBtn").addEventListener("click",loadInbox);
   $("inboxList").addEventListener("click",async e=>{
     const draftButton=e.target.closest("[data-draft]");

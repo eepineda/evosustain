@@ -28,7 +28,11 @@ async function loadArticle(){
  let body=english&&a.content_en?a.content_en:a.content;
  let sourceUrl=a.source_url||"";
  let sourceTitle=a.source_title||"";
- body=String(body||"").replace(/^\s*Fuente original:\s*(https?:\/\/\S+)\s*$/gmi,(_m,url)=>{if(!sourceUrl)sourceUrl=url;return "";}).replace(/^\s*Redacta aquí una versión propia y verificada\. No copies literalmente el artículo de origen\.\s*$/gmi,"");
+ body=String(body||"").replace(/\\n/g,"\n");
+ body=body.replace(/^\s*\[?BORRADOR EDITORIAL:[^\]]*\]?\s*$/gmi,"");
+ body=body.replace(/^\s*Fuente (?:original|consultada):\s*\[?([^\]\n]+)\]?\s*(?:\((https?:\/\/[^)]+)\))?\s*$/gmi,(_m,label,url)=>{const found=url||(/^https?:\/\//i.test(label)?label:"");if(found&&!sourceUrl)sourceUrl=found;if(!sourceTitle&&label&&!/^https?:\/\//i.test(label))sourceTitle=label;return "";});
+ body=body.replace(/^\s*Redacta aquí una versión propia y verificada\. No copies literalmente el artículo de origen\.\s*$/gmi,"");
+ if(sourceUrl){try{const parsed=new URL(sourceUrl);if(!sourceTitle){const host=parsed.hostname.replace(/^www\./,"");sourceTitle=host==="elpais.com"?"El País":host.replace(/\.com$|\.co\.uk$|\.org$/i,"").replace(/^./,ch=>ch.toUpperCase());}for(const key of [...parsed.searchParams.keys()])if(key.startsWith("utm_"))parsed.searchParams.delete(key);sourceUrl=parsed.toString();}catch(_e){sourceUrl="";}}
  if(sourceUrl){try{const parsed=new URL(sourceUrl);if(!sourceTitle){const host=parsed.hostname.replace(/^www\./,"");sourceTitle=host==="elpais.com"?"El País":host.replace(/\.com$|\.co\.uk$|\.org$/i,"").replace(/^./,ch=>ch.toUpperCase());}for(const key of [...parsed.searchParams.keys()])if(key.startsWith("utm_"))parsed.searchParams.delete(key);sourceUrl=parsed.toString();}catch(_e){sourceUrl="";}}
  const paragraphs=String(body||"").split(/\n\s*\n|\r?\n/).filter(Boolean).map(p=>"<p style='font:18px/1.85 Georgia,serif;white-space:pre-wrap'>"+esc(p)+"</p>").join("");
  const sourceCredit=sourceUrl&&/^https:\/\//i.test(sourceUrl)?"<p class='source-credit'>Fuente original: <a href='"+esc(sourceUrl)+"' target='_blank' rel='noopener noreferrer'>"+esc(sourceTitle||"Consultar medio original")+" ↗</a></p>":"";

@@ -38,7 +38,7 @@ async function loadPublishedArticles() {
     const image = a.image_url && /^https:\/\//i.test(a.image_url)
       ? '<img src="' + escapeHtml(a.image_url) + '" alt="" loading="lazy" style="width:100%;height:155px;object-fit:cover;margin-bottom:17px">'
       : '<div class="story-art ' + (i%3===0?'art-blue':i%3===1?'art-red':'art-grey') + '"><span>' + escapeHtml((a.category||"EV").slice(0,2).toUpperCase()) + '</span></div>';
-    return '<article class="story"><a href="' + articleUrl(encodeURIComponent(a.slug||"")) + '" style="color:inherit;text-decoration:none">' + image +
+    return '<article class="story"><a href="' + articleUrl(a.slug||"") + '" style="color:inherit;text-decoration:none">' + image +
       '<div class="story-copy"><div class="kicker">' + escapeHtml(a.category||"INTERNACIONAL") + '</div><h3>' + escapeHtml(a.title) + '</h3><p>' + escapeHtml(a.summary||"") + '</p></div></a>' +
       '<div class="lead-meta">' + escapeHtml(a.author||"EVOFORD NEWS") + '</div><a href="' + articleUrl(a.slug||"") + '" class="read-link">Leer artículo →</a></article>';
   }).join("");

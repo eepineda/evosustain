@@ -7,7 +7,7 @@
   <title>Acceso editorial | Evoford News</title>
   <link rel="stylesheet" href="./admin.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="./admin.js?v=20261112-15"></script>
+  <script defer src="./admin.js?v=20261112-16"></script>
 </head>
 <body>
   <header class="topbar">
@@ -49,7 +49,7 @@
             <div class="field"><label for="category">Sección</label><select id="category"><option>Internacional</option><option>Política</option><option>Economía</option><option>Seguridad</option><option>Tecnología</option><option>Opinión</option><option>Clima</option><option>Sociedad</option></select></div>
             <div class="field"><label for="author">Autor</label><input id="author" value="EDWIN PINEDA CARRASCO"></div>
             <div class="field full"><label for="summary">Resumen</label><textarea id="summary" rows="2"></textarea></div>
-            <div class="field full"><label for="content">Texto del artículo</label><textarea id="content" rows="12" required></textarea></div>
+            <div class="field full"><label for="content">Texto del artículo</label><textarea id="content" rows="12" required></textarea><small class="muted">Para aprobar y publicar: redacta al menos 500 caracteres propios, elimina las instrucciones del borrador e identifica al autor.</small></div>
             <div class="field"><label for="country">País principal</label><input id="country" placeholder="Por verificar"></div>
             <div class="field"><label for="region">Región</label><input id="region" placeholder="Europe, Americas…"></div>
             <div class="field"><label for="language">Idioma principal</label><select id="language"><option value="es">Español</option><option value="en">English</option></select></div>
@@ -67,7 +67,7 @@
       <section id="inboxTab" class="tabview" hidden>
         <div class="section-head"><div><p class="eyebrow">FUENTES EXTERNAS</p><h2>Bandeja de noticias RSS</h2></div><div class="item-actions"><button id="runRssBtn">Importar ahora</button><button id="refreshInboxBtn" class="secondary">Actualizar lista</button></div></div>
         <p id="rssRunMessage" class="message" role="status">La importación solo consulta fuentes activas y guarda elementos para revisión; nunca publica automáticamente.</p>
-        <p class="muted">Aquí aparecerán los elementos importados por el proceso RSS. Abre cada noticia para preparar un borrador manual. No se utiliza OpenAI API; verifica la fuente y redacta el contenido antes de guardar.</p>
+        <p class="muted">Aquí aparecerán los elementos importados por el proceso RSS. Abre cada noticia para preparar un borrador manual. No se utiliza OpenAI API. La aprobación exige un texto propio de al menos 500 caracteres y un autor identificado.</p>
         <div id="inboxList" class="list"><p class="muted">Cargando…</p></div>
       </section>
 

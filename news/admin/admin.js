@@ -96,23 +96,23 @@ async function runRssImport(){
 async function loadInbox(){
   const {data,error}=await client.from("imported_items").select("*").order("created_at",{ascending:false});
   if(error){$("inboxList").innerHTML=`<p class="muted">${safe(error.message)}</p>`;return;}
-  $("inboxList").innerHTML=data.length?data.map(n=>`<article class="item"><div><h3>${safe(n.title)}</h3><p><a href="${safe(n.article_url)}" target="_blank" rel="noopener noreferrer">Consultar fuente original</a> · <span class="pill">${safe(n.status)}</span></p>${n.summary?`<p>${safe(n.summary)}</p>`:""}</div><div class="item-actions"><button class="secondary" data-draft="${n.id}">Crear borrador</button><button class="secondary" data-reject="${n.id}">Descartar</button></div></article>`).join(""):'<p class="muted">No hay noticias importadas. Añade fuentes RSS activas e inicia una importación.</p>';
+  $("inboxList").innerHTML=data.length?data.map(n=>`<article class="item"><div><h3>${safe(n.title)}</h3><p><a href="${safe(n.article_url)}" target="_blank" rel="noopener noreferrer">Consultar fuente original</a> · <span class="pill">${safe(n.status)}</span></p>${n.summary?`<p>${safe(n.summary)}</p>`:""}</div><div class="item-actions"><button type="button" class="secondary" data-draft="${n.id}">Crear borrador</button><button class="secondary" data-reject="${n.id}">Descartar</button></div></article>`).join(""):'<p class="muted">No hay noticias importadas. Añade fuentes RSS activas e inicia una importación.</p>';
   $("inboxList").querySelectorAll("[data-draft]").forEach(b=>b.addEventListener("click",()=>{
     const item=data.find(n=>String(n.id)===b.dataset.draft);
-    if(!item)return;
-    const source=item.article_url||"";
+    if(!item){say("globalMessage","No se encontró la noticia seleccionada. Actualiza la lista e inténtalo de nuevo.");return;}
+    document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab==="articles"));
+    ["articles","inbox","sources"].forEach(k=>$(k+"Tab").hidden=k!=="articles");
     editArticle({
       title:item.title||"",
       category:"Internacional",
       author:"EVOFORD NEWS",
       summary:item.summary||"",
-      content:"[BORRADOR EDITORIAL: redactar una noticia original tras verificar los datos y consultar la fuente. No reproducir el artículo original. Añadir contexto y atribución.]\n\nFuente consultada: "+source,
+      content:"[BORRADOR EDITORIAL: redactar una noticia original tras verificar los datos y consultar la fuente. No reproducir el artículo original. Añadir contexto y atribución.]\\n\\nFuente consultada: "+(item.article_url||""),
       image_url:""
     });
     $("formHeading").textContent="Borrador desde noticia RSS";
-    $("editorMessage").textContent="Se ha preparado un borrador. Verifica la información y redacta contenido original antes de guardarlo.";
-    document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab==="articles"));
-    ["articles","inbox","sources"].forEach(k=>$(k+"Tab").hidden=k!=="articles");
+    $("editorMessage").textContent="Borrador preparado. Verifica la fuente y redacta contenido original antes de guardarlo.";
+    $("articleForm").scrollIntoView({behavior:"smooth",block:"start"});
   }));
   $("inboxList").querySelectorAll("[data-reject]").forEach(b=>b.addEventListener("click",async()=>{
     const {error}=await client.from("imported_items").update({status:"rejected"}).eq("id",b.dataset.reject);

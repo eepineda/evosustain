@@ -65,7 +65,7 @@ async function loadPublishedArticles() {
       }[country.id];
       const liveStories=matches.map(a=>'<a class="country-story" href="'+articleUrl(a.slug||"")+'"><span class="kicker">'+escapeHtml(a.category||"ACTUALIDAD")+'</span><b>'+escapeHtml(a.title)+'</b><span class="country-read">Leer noticia ↗</span></a>').join("");
       const fallbackStory=fallback?'<a class="country-story" href="'+fallback.url+'"><span class="kicker">'+fallback.category+'</span><b>'+fallback.title+'</b><span class="country-read">Leer noticia ↗</span></a>':"";
-      const stories=liveStories+fallbackStory||'<p class="country-empty">Aún no hay artículos publicados con esta etiqueta. La cobertura aparecerá aquí cuando la redacción publique noticias de este país.</p>';
+      const stories=liveStories||(fallbackStory||'<p class="country-empty">Aún no hay artículos publicados con esta etiqueta. La cobertura aparecerá aquí cuando la redacción publique noticias de este país.</p>');
       return '<section class="country-card" id="country-'+country.id+'"><div class="country-title"><span class="country-flag" aria-hidden="true">'+country.flag+'</span><h3>'+country.name+'</h3></div>'+stories+'</section>';
     }).join("");
   }

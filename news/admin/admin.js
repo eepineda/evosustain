@@ -54,7 +54,7 @@ async function loadArticles(){
 }
 function editArticle(a){
   $("articleForm").hidden=false;$("formHeading").textContent=a?"Editar artículo":"Nuevo artículo";
-  $("articleId").value=a?.id||"";$("title").value=a?.title||"";$("category").value=a?.category||"Internacional";
+  $("articleId").value=a?.id||"";$("publishArticleBtn").hidden=!(a?.status==="approved");$("title").value=a?.title||"";$("category").value=a?.category||"Internacional";
   $("author").value=a?.author||"EDWIN PINEDA CARRASCO";$("summary").value=a?.summary||"";
   $("content").value=a?.content||"";$("imageUrl").value=a?.image_url||"";$("country").value=a?.country||"";$("region").value=a?.region||"";$("language").value=a?.language||"es";$("summaryEn").value=a?.summary_en||"";$("contentEn").value=a?.content_en||"";
   $("articleForm").scrollIntoView({behavior:"smooth",block:"start"});
@@ -64,7 +64,13 @@ async function saveArticle(status){
   if(!title||!content){say("editorMessage","El titular y el texto son obligatorios.");return;}
   const id=$("articleId").value;
   const payload={title,slug:slugify(title),category:$("category").value,author:$("author").value.trim()||"EDWIN PINEDA CARRASCO",summary:$("summary").value.trim(),content,image_url:$("imageUrl").value.trim()||null,country:$("country").value.trim()||null,region:$("region").value.trim()||null,language:$("language").value,summary_en:$("summaryEn").value.trim(),content_en:$("contentEn").value.trim(),status,updated_at:new Date().toISOString()};
-  if(status==="published"){say("editorMessage","La publicación pública aún no está conectada. El artículo se mantiene sin publicar.");return;}
+  if(status==="published"){
+    if(!id){say("editorMessage","Guarda y aprueba el artículo antes de publicarlo.");return;}
+    const {data:current,error:statusError}=await client.from("articles").select("status").eq("id",id).single();
+    if(statusError){say("editorMessage","No se pudo comprobar el estado del artículo: "+statusError.message);return;}
+    if(current.status!=="approved"){say("editorMessage","Solo se pueden publicar artículos previamente aprobados.");return;}
+    if(!window.confirm("Vas a publicar este artículo en la web pública. ¿Confirmas la publicación?"))return;
+  }
   let query;
   if(id){
     query=client.from("articles").update(payload).eq("id",id);
@@ -76,7 +82,7 @@ async function saveArticle(status){
       :client.from("articles").insert(payload);
   }
   const {error}=await query;
-  say("editorMessage",error?error.message:({draft:"Borrador guardado.",pending:"Artículo enviado a revisión.",approved:"Artículo aprobado. Sigue sin publicarse."}[status]||"Artículo actualizado."));
+  say("editorMessage",error?error.message:({draft:"Borrador guardado.",pending:"Artículo enviado a revisión.",approved:"Artículo aprobado. Sigue sin publicarse.",published:"Artículo publicado y visible en la web."}[status]||"Artículo actualizado."));
   if(!error){$("articleForm").hidden=true;await loadArticles();}
 }
 
@@ -175,6 +181,7 @@ function wire(){
   $("articleForm").addEventListener("submit",e=>{e.preventDefault();saveArticle("draft");});
   $("submitReviewBtn").addEventListener("click",()=>saveArticle("pending"));
   $("approveArticleBtn").addEventListener("click",()=>saveArticle("approved"));
+  $("publishArticleBtn").addEventListener("click",()=>saveArticle("published"));
   $("sourceForm").addEventListener("submit",addSource);
   $("refreshInboxBtn").addEventListener("click",loadInbox);
   $("inboxList").addEventListener("click",async e=>{

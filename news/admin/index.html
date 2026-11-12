@@ -7,7 +7,7 @@
   <title>Acceso editorial | Evoford News</title>
   <link rel="stylesheet" href="./admin.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="./admin.js?v=20261112-5"></script>
+  <script defer src="./admin.js?v=20261112-6"></script>
 </head>
 <body>
   <header class="topbar">
@@ -50,6 +50,11 @@
             <div class="field"><label for="author">Autor</label><input id="author" value="EDWIN PINEDA CARRASCO"></div>
             <div class="field full"><label for="summary">Resumen</label><textarea id="summary" rows="2"></textarea></div>
             <div class="field full"><label for="content">Texto del artículo</label><textarea id="content" rows="12" required></textarea></div>
+            <div class="field"><label for="country">País principal</label><input id="country" placeholder="Por verificar"></div>
+            <div class="field"><label for="region">Región</label><input id="region" placeholder="Europe, Americas…"></div>
+            <div class="field"><label for="language">Idioma principal</label><select id="language"><option value="es">Español</option><option value="en">English</option></select></div>
+            <div class="field full"><label for="summaryEn">Resumen en inglés</label><textarea id="summaryEn" rows="2"></textarea></div>
+            <div class="field full"><label for="contentEn">Article text (English)</label><textarea id="contentEn" rows="10"></textarea></div>
             <div class="field full"><label for="imageUrl">URL de imagen (opcional)</label><input id="imageUrl" type="url" placeholder="https://…"></div>
           </div>
           <div class="actions"><button type="submit" id="saveDraftBtn" class="secondary">Guardar borrador</button><button type="button" id="submitReviewBtn">Enviar a revisión</button></div>

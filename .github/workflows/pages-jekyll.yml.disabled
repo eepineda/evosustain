@@ -1,0 +1,19 @@
+- name: Setup Ruby
+  uses: ruby/setup-ruby@v1
+  with:
+    ruby-version: '3.1'
+    bundler-cache: true
+    working-directory: blog
+
+- name: Build with Jekyll (trace)
+  working-directory: blog
+  run: |
+    set -euo pipefail
+    bundle exec jekyll build --trace --verbose --destination ../_site/blog 2>&1 | tee ../jekyll-build.log
+
+- name: Upload build log (always)
+  if: always()
+  uses: actions/upload-artifact@v4
+  with:
+    name: jekyll-build-log
+    path: jekyll-build.log

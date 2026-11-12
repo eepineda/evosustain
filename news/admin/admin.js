@@ -102,6 +102,44 @@ async function runRssImport(){
     button.disabled=false;
   }
 }
+function editorialSuggestion(item){
+  const text=(item.title+" "+(item.summary||"")).toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g,"");
+  const rules=[
+    ["Economía",["economia","mercado","bolsa","acciones","empresa","empresas","inflacion","banco","inversion","opv","empleo","comercio","pib","financiero"]],
+    ["Política",["gobierno","presidente","senado","senador","parlamento","elecciones","partido","ministro","congreso","vox","pp ","psoe","democrata","republicano"]],
+    ["Seguridad",["policia","policial","detenido","detenidos","ataque","explosion","bomba","terrorismo","heridos","muertos","emergencia","rescate","fugitivo"]],
+    ["Tecnología",["tecnologia","inteligencia artificial","software","chip","nvidia","anthropic","internet","ciberseguridad","digital"]],
+    ["Clima",["clima","climatico","temperatura","olas de calor","viento","inundacion","sequía","sequía","emisiones","energia renovable"]],
+    ["Sociedad",["sociedad","colegios","escuelas","vivienda","sanidad","educacion","huelga","cultura","festival","restaurante","concurso","actor","actriz","fallece","muere"]],
+    ["Opinión",["opinion","columna","editorial","debate |"]]
+  ];
+  let category="Internacional";
+  for(const [name,words] of rules){if(words.some(word=>text.includes(word))){category=name;break;}}
+  const countries=[
+    ["España",["espana","madrid","barcelona","oviedo","el hierro","valladolid","andalucia","cataluna"]],
+    ["Estados Unidos",["estados unidos","ee uu","misisipi","mississippi","brooklyn","nueva york","washington","nasdaq"]],
+    ["Ucrania",["ucrania","kiev","kyiv"]],
+    ["Rusia",["rusia","moscu","kremlin"]],
+    ["Italia",["italia","italiano","italiana","roma"]],
+    ["Reino Unido",["reino unido","britan","londres","irlanda del norte"]],
+    ["Francia",["francia","paris"]],
+    ["Alemania",["alemania","berlin"]],
+    ["México",["mexico","mexicano","mexicana"]],
+    ["Brasil",["brasil","brasileno","brasilena"]],
+    ["Argentina",["argentina","argentino","argentina"]],
+    ["Chile",["chile","chileno","chilena"]],
+    ["Colombia",["colombia","colombiano","colombiana"]]
+  ];
+  const country=countries.find(([name,terms])=>terms.some(term=>text.includes(term)))?.[0]||"";
+  let region="";
+  if(["España","Italia","Reino Unido","Francia","Alemania","Ucrania","Rusia"].includes(country)) region="Europa";
+  else if(country==="Estados Unidos"||country==="México") region="América del Norte";
+  else if(["Brasil","Argentina","Chile","Colombia"].includes(country)) region="América Latina";
+  else if(/africa|africano|africana|sahel/.test(text)) region="África";
+  else if(/asia|china|japon|india|corea/.test(text)) region="Asia";
+  return {category,country,region};
+}
+
 async function loadInbox(){
   const [{data,error},{data:sources}] = await Promise.all([
     client.from("imported_items").select("*").order("created_at",{ascending:false}),
@@ -111,8 +149,11 @@ async function loadInbox(){
   const sourceMap=new Map((sources||[]).map(source=>[String(source.id),source]));
   $("inboxList").innerHTML=data.length?data.map(n=>{
     const source=sourceMap.get(String(n.source_id));
-    const suggested=n.suggested_category||source?.category||"Internacional";
-    return `<article class="item"><div><h3>${safe(n.title)}</h3><p>${safe(source?.name||"Fuente RSS")} · Sección sugerida: ${safe(suggested)} · <a href="${safe(n.article_url)}" target="_blank" rel="noopener noreferrer">Consultar fuente original</a> · <span class="pill">${safe(n.status)}</span></p>${n.summary?`<p>${safe(n.summary)}</p>`:""}${n.country||n.region?`<p>Clasificación: ${safe(n.country||"País por verificar")} · ${safe(n.region||"Región por verificar")}</p>`:""}</div><div class="item-actions"><button type="button" class="secondary" data-draft="${n.id}">Preparar borrador manual</button><button class="secondary" data-reject="${n.id}">Descartar</button></div></article>`;
+    const guess=editorialSuggestion(n);
+    const suggested=n.suggested_category||guess.category;
+    const country=n.country||guess.country;
+    const region=n.region||guess.region;
+    return `<article class="item"><div><h3>${safe(n.title)}</h3><p>${safe(source?.name||"Fuente RSS")} · Sección sugerida: ${safe(suggested)} · <a href="${safe(n.article_url)}" target="_blank" rel="noopener noreferrer">Consultar fuente original</a> · <span class="pill">${safe(n.status)}</span></p>${n.summary?`<p>${safe(n.summary)}</p>`:""}<p>Clasificación orientativa: ${safe(country||"País por verificar")} · ${safe(region||"Región por verificar")}</p></div><div class="item-actions"><button type="button" class="secondary" data-draft="${n.id}">Preparar borrador manual</button><button class="secondary" data-reject="${n.id}">Descartar</button></div></article>`;
   }).join(""):'<p class="muted">No hay noticias importadas. Añade fuentes RSS activas e inicia una importación.</p>';
 }
 async function loadSources(){
@@ -144,12 +185,12 @@ function wire(){
       editArticle(null);
       $("title").value=item.title||"";
       $("summary").value=item.summary||"";
-      const {data:source}=await client.from("rss_sources").select("category").eq("id",item.source_id).maybeSingle();
-      const suggested=item.suggested_category||source?.category||"Internacional";
+      const guess=editorialSuggestion(item);
       const allowedCategories=["Internacional","Política","Economía","Seguridad","Tecnología","Opinión","Clima","Sociedad"];
+      const suggested=item.suggested_category||guess.category;
       $("category").value=allowedCategories.includes(suggested)?suggested:"Internacional";
-      $("country").value=item.country||"";
-      $("region").value=item.region||"";
+      $("country").value=item.country||guess.country;
+      $("region").value=item.region||guess.region;
       $("language").value="es";
       $("summaryEn").value="";
       $("contentEn").value="";

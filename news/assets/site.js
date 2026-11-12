@@ -25,7 +25,7 @@ async function loadPublishedArticles() {
   const container = document.getElementById("publishedArticles");
   if (!container || !window.supabase) return;
   const client = window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-  const {data,error} = await client.from("articles").select("title,slug,category,author,summary,image_url,created_at")
+  const {data,error} = await client.from("articles").select("title,slug,category,author,summary,image_url,created_at,country,region")
     .eq("status","published").order("updated_at",{ascending:false}).limit(30);
   if (error) {
     container.innerHTML='<p class="muted">No se pudieron cargar las publicaciones. Inténtalo más tarde.</p>';
@@ -50,6 +50,19 @@ async function loadPublishedArticles() {
   container.innerHTML=publicationItems.map((a,i)=>'<article class="story reveal" style="--delay:'+i*70+'ms"><a class="story-link" href="'+articleUrl(a.slug||"")+'">'+articleImage(a,"story-image")+
     '<div class="story-copy"><div class="kicker">'+escapeHtml(a.category||"INTERNACIONAL")+'</div><h3>'+escapeHtml(a.title)+'</h3><p>'+escapeHtml(a.summary||"")+'</p></div></a>'+
     '<div class="lead-meta">'+escapeHtml(a.author||"EVOFORD NEWS")+'</div><a href="'+articleUrl(a.slug||"")+'" class="read-link">Leer artículo <span>↗</span></a></article>').join("");
+  const countryRoot=document.getElementById("countryCoverage");
+  if(countryRoot){
+    const editions=[
+      {id:"uk",name:"Reino Unido",flag:"🇬🇧",terms:["reino unido","united kingdom","uk","inglaterra","escocia","gales","irlanda del norte"]},
+      {id:"do",name:"República Dominicana",flag:"🇩🇴",terms:["republica dominicana","dominican republic","rd"]},
+      {id:"es",name:"España",flag:"🇪🇸",terms:["espana","spain"]}
+    ];
+    countryRoot.innerHTML=editions.map(country=>{
+      const matches=data.filter(a=>country.terms.includes(normalize(a.country))).slice(0,3);
+      const stories=matches.length?matches.map(a=>'<a class="country-story" href="'+articleUrl(a.slug||"")+'"><span class="kicker">'+escapeHtml(a.category||"ACTUALIDAD")+'</span><b>'+escapeHtml(a.title)+'</b><span class="country-read">Leer noticia ↗</span></a>').join(""):'<p class="country-empty">Aún no hay artículos publicados con esta etiqueta. La cobertura aparecerá aquí cuando la redacción publique noticias de este país.</p>';
+      return '<section class="country-card" id="country-'+country.id+'"><div class="country-title"><span class="country-flag" aria-hidden="true">'+country.flag+'</span><h3>'+country.name+'</h3></div>'+stories+'</section>';
+    }).join("");
+  }
   const sectionRoot=document.getElementById("sectionFeeds");
   if(sectionRoot){
     const sections=[

@@ -68,7 +68,7 @@ async function showApp(user){
   }
   currentUser=user; $("loginView").hidden=true; $("appView").hidden=false;
   $("signedInAs").textContent=user.email;
-  await Promise.all([loadArticles(),loadInbox(),loadSources()]);
+  await Promise.all([loadArticles(),loadInbox(),loadSources(),loadSubmissions()]);
 }
 async function login(e){
   e.preventDefault();
@@ -250,6 +250,10 @@ async function loadInbox(){
     return `<article class="item"><div><h3>${safe(n.title)}</h3><p>${safe(source?.name||"Fuente RSS")} · Sección sugerida: ${safe(suggested)} · <a href="${safe(n.article_url)}" target="_blank" rel="noopener noreferrer">Consultar fuente original</a> · <span class="pill">${safe(n.status)}</span> · <span class="rss-workflow-pill ${linkedArticle?"linked":"waiting"}">${safe(workflowLabel)}</span></p>${n.summary?`<p class="rss-extract"><strong>Extracto disponible del RSS (${n.summary.length} caracteres):</strong> ${safe(n.summary)}</p><p class="muted">Este texto es material de consulta de la fuente; no cuenta como redacción propia para aprobar.</p>`:"<p class='muted'>El RSS no proporciona un extracto de texto.</p>"}<p>Clasificación orientativa: ${safe(country||"País por verificar")} · ${safe(region||"Región por verificar")}</p></div><div class="item-actions">${action}<button class="secondary" data-reject="${n.id}">Descartar</button></div></article>`;
   }).join(""):'<p class="muted">No hay noticias importadas. Añade fuentes RSS activas e inicia una importación.</p>';
 }
+
+async function loadSubmissions(){const {data,error}=await client.from("article_submissions").select("*").order("created_at",{ascending:false});if(error){$("submissionsList").innerHTML='<p class="muted">No se pudieron cargar: '+safe(error.message)+'</p>';return;}$("submissionsList").innerHTML=data.length?data.map(s=>'<article class="item"><div><h3>'+safe(s.title)+'</h3><p>'+safe(s.sender_name)+' · '+safe(s.sender_email)+' · '+safe(s.submission_type)+' · '+new Date(s.created_at).toLocaleString("es-ES")+' · <span class="pill">'+safe(s.status)+'</span></p><p>'+safe(s.body.slice(0,240))+(s.body.length>240?"…":"")+'</p><p class="muted">'+(s.attachment_paths||[]).length+' adjunto(s)</p></div><div class="item-actions">'+(s.status==="received"?'<button class="secondary" data-convert-sub="'+s.id+'">Convertir en borrador</button><button class="secondary" data-reject-sub="'+s.id+'">Descartar</button>':'')+((s.attachment_paths||[]).length?'<button class="secondary" data-files-sub="'+s.id+'">Ver adjuntos</button>':'')+'</div></article>').join(""):'<p class="muted">No hay envíos recibidos.</p>';}
+async function handleSubmissionAction(e){const c=e.target.closest("[data-convert-sub]"),r=e.target.closest("[data-reject-sub]"),f=e.target.closest("[data-files-sub]");if(c){const {data:s,error}=await client.from("article_submissions").select("*").eq("id",c.dataset.convertSub).single();if(error){say("globalMessage",error.message);return;}const {data:a,error:ie}=await client.from("articles").insert({title:s.title,slug:slugify(s.title)+"-"+s.id.slice(0,8),category:s.submission_type==="opinion"?"Opinión":"Internacional",author:s.sender_name,summary:"Envío recibido de "+s.sender_name+" ("+s.sender_email+"). Pendiente de edición y verificación.",content:s.body,language:"es",source_title:"Envío externo",status:"draft",updated_at:new Date().toISOString()}).select("id").single();if(ie){say("globalMessage","No se pudo crear el borrador: "+ie.message);return;}const {error:ue}=await client.from("article_submissions").update({status:"converted",article_id:a.id}).eq("id",s.id);if(ue){say("globalMessage","Borrador creado, pero no se pudo vincular: "+ue.message);return;}await Promise.all([loadSubmissions(),loadArticles()]);document.querySelector('[data-tab="articles"]').click();const {data:created}=await client.from("articles").select("*").eq("id",a.id).single();if(created)editArticle(created);say("globalMessage","Envío convertido en borrador. Revísalo antes de aprobarlo.");return;}if(r){if(!confirm("¿Descartar este envío?"))return;const {error}=await client.from("article_submissions").update({status:"rejected"}).eq("id",r.dataset.rejectSub);if(error)say("globalMessage",error.message);await loadSubmissions();return;}if(f){const {data:s}=await client.from("article_submissions").select("attachment_paths").eq("id",f.dataset.filesSub).single();let count=0;for(const path of s.attachment_paths||[]){const {data,error}=await client.storage.from("news-submissions").createSignedUrl(path,300);if(!error){window.open(data.signedUrl,"_blank","noopener");count++;}}if(!count)say("globalMessage","No se pudieron abrir los adjuntos.");}}
+
 async function loadSources(){
   const {data,error}=await client.from("rss_sources").select("*").order("created_at",{ascending:false});
   if(error){$("sourceList").innerHTML=`<p class="muted">${safe(error.message)}</p>`;return;}
@@ -309,6 +313,8 @@ function wire(){
   $("approveArticleBtn").addEventListener("click",()=>saveArticle("approved"));
   $("publishArticleBtn").addEventListener("click",()=>saveArticle("published"));$("saveChangesBtn").addEventListener("click",()=>saveArticle(null,true));
   $("sourceForm").addEventListener("submit",addSource);
+  $("refreshSubmissionsBtn").addEventListener("click",loadSubmissions);
+  $("submissionsList").addEventListener("click",handleSubmissionAction);
   $("uploadImageBtn").addEventListener("click",uploadArticleImage);
   $("refreshInboxBtn").addEventListener("click",loadInbox);
   $("inboxList").addEventListener("click",async e=>{
@@ -360,7 +366,7 @@ function wire(){
   $("runRssBtn").addEventListener("click",runRssImport);
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
-    ["articles","inbox","sources"].forEach(k=>$(k+"Tab").hidden=k!==b.dataset.tab);
+    ["articles","inbox","sources","submissions"].forEach(k=>$(k+"Tab").hidden=k!==b.dataset.tab);
   }));
 }
 window.addEventListener("error",event=>{

@@ -21,7 +21,10 @@ async function loadArticle(){
  const slug=new URLSearchParams(location.search).get("slug");
  if(!slug){root.innerHTML="<h1>Artículo no disponible</h1><p>Falta identificar la publicación.</p><a class='read-link' href='../'>Volver a portada →</a>";return;}
  const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
- const {data:a,error}=await client.from("articles").select("id,title,title_en,slug,category,author,summary,content,image_url,country,region,language,summary_en,content_en,source_title,source_url,updated_at").eq("slug",slug).eq("status","published").maybeSingle();
+ let {data:a,error}=await client.from("articles").select("id,title,title_en,slug,category,author,summary,content,image_url,country,region,language,summary_en,content_en,source_title,source_url,updated_at").eq("slug",slug).eq("status","published").maybeSingle();
+ if(error && String(error.message||"").includes("title_en")){
+   ({data:a,error}=await client.from("articles").select("id,title,slug,category,author,summary,content,image_url,country,region,language,summary_en,content_en,source_title,source_url,updated_at").eq("slug",slug).eq("status","published").maybeSingle());
+ }
  if(error||!a){root.innerHTML="<h1>Artículo no disponible</h1><p>La publicación no existe o no está disponible.</p><a class='read-link' href='../'>Volver a portada →</a>";return;}
  const requestedLanguage=new URLSearchParams(location.search).get("lang")==="en"?"en":"es";
  const english=requestedLanguage==="en";

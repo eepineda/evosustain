@@ -13,3 +13,5 @@
 .rss-workflow-pill.waiting{background:#fff4dc;color:#855600}
 .rss-extract{margin:12px 0!important;padding:12px;background:#f7f9fc;border-left:3px solid var(--navy);line-height:1.55;color:var(--ink)!important;overflow-wrap:anywhere}
 @media(max-width:650px){.rss-extract{font-size:12px!important}}
+
+.item>div:first-child{min-width:0;overflow-wrap:anywhere}

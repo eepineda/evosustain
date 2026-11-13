@@ -34,7 +34,7 @@ function render(){
  $("fullArticle").innerHTML=""; $("lead").insertAdjacentHTML("beforeend","<section class=\"full-article embedded-lead-story\"><div class=\"full-article-heading\"><span>"+(language==="en"?"FULL STORY":"ARTÍCULO COMPLETO")+"</span><h2>"+esc(title)+"</h2><div class=\"byline\">"+ui[language].by+" "+esc(lead.author||"Evoford News")+"</div></div><div class=\"full-article-body\">"+bodyHtml+"</div></section>");
  const rest=articles.slice(4,13);
  $("storyGrid").innerHTML=rest.map(a=>'<article class="story">'+(a.image_url&&/^https:\/\//i.test(a.image_url)?'<img loading="lazy" src="'+esc(a.image_url)+'" alt="'+esc(pick(a,"title","title_en"))+'">':'')+'<div class="category">'+category(a)+'</div><h2><a href="'+url(a)+'">'+esc(pick(a,"title","title_en"))+'</a></h2><p>'+esc(pick(a,"summary","summary_en"))+'</p><div class="byline">'+esc(a.author||"Evoford News")+'</div></article>').join("")||'<p class="empty">'+ui[language].noMore+'</p>';
- $("storyCount").textContent=articles.length+" "+ui[language].stories;
+ $("storyCount").textContent=rest.length+" "+ui[language].stories;
 }
 async function load(){
  try{

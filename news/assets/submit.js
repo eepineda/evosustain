@@ -5,6 +5,7 @@ if(submissionParams.get("colaboracion")==="experta"){
  const expertIntro=document.getElementById("expert-intro");
  if(expertIntro){expertIntro.hidden=false;expertIntro.style.display="block";}
  document.getElementById("kind").value="otro";
+ const kindField=document.getElementById("kindField");if(kindField)kindField.hidden=true;
  document.getElementById("title").value="Propuesta de colaboración experta";
 }
 const courseRequest=submissionParams.get("curso")==="interes";

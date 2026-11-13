@@ -7,7 +7,39 @@ const translations={es:{edition:"EDICIÓN DIGITAL",print:"Imprimir edición",mar
 const tr=key=>translations[currentLanguage][key]||key;
 function categoryLabel(value){const map={Internacional:"International",Política:"Politics",Economía:"Economy",Seguridad:"Security",Tecnología:"Technology",Opinión:"Opinion",Clima:"Climate",Sociedad:"Society"};return currentLanguage==="en"?(map[value]||value):value;}
 function setLanguage(lang){currentLanguage=lang==="en"?"en":"es";localStorage.setItem("evoford-news-language",currentLanguage);document.documentElement.lang=currentLanguage;document.querySelectorAll("[data-language]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.language===currentLanguage)));renderStaticLanguage();loadPublishedArticles();}
-function renderStaticLanguage(){const set=(selector,key)=>{const el=document.querySelector(selector);if(el)el.textContent=tr(key);};set("#editionLabel","edition");const print=document.getElementById("printEditionBtn");if(print)print.innerHTML=tr("print")+" <span aria-hidden='true'>↗</span>";set(".market-heading .kicker","markets");const mh=document.querySelector(".market-heading span:last-child");if(mh)mh.textContent=tr("marketData");const mn=document.querySelector(".market-note");if(mn)mn.textContent=tr("marketNote");set(".country-desk .section-head h2","international");set(".country-desk .section-head span","coverage");set(".frontpage-top .kicker","front");const live=document.querySelector(".live-mark");if(live)live.innerHTML="<i></i> "+tr("live");const latest=document.querySelector(".aside-heading");if(latest)latest.innerHTML="<span>"+(currentLanguage==="en"?"IN DEVELOPMENT":"EN DESARROLLO")+"</span><span>"+tr("latest")+"</span>";set("#latest-publications .section-head h2","latestPublications");set("#latest-publications .section-head span","published");set(".opinion .kicker","opinion");set(".opinion h2","ideas");set(".opinion p","opinionText");set(".opinion .read-link","origin");set("#secciones .section-head h2","sections");set("#secciones .section-head span","explore");const keys=["politics","security","economy","technology","world","analysis"];document.querySelectorAll(".topics a").forEach((a,i)=>{const arrow=a.querySelector("span");a.firstChild.textContent=tr(keys[i])+" ";if(arrow)arrow.textContent="→";});const foot=document.querySelector("footer>span");if(foot)foot.textContent=tr("footer");document.querySelectorAll(".country-links a").forEach((a,i)=>{a.lastChild.textContent=" "+tr(["uk","do","spain"][i]);});}
+function renderStaticLanguage(){
+ const set=(selector,text)=>{const el=document.querySelector(selector);if(el)el.textContent=text;};
+ const en=currentLanguage==="en";
+ document.documentElement.lang=currentLanguage;
+ document.querySelectorAll("[data-language]").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.language===currentLanguage)));
+ set(".ecosystem-mark", "EVOFORD  "+(en?"ECOSYSTEM":"ECOSYSTEM"));
+ const ecosystemLinks=document.querySelectorAll(".ecosystem-nav nav a");
+ ["EvoSustain",en?"Platform Hub":"Centro de plataforma",en?"News":"Noticias"].forEach((v,i)=>{if(ecosystemLinks[i])ecosystemLinks[i].textContent=v;});
+ set(".topline span:first-child",en?"LONDON · UNITED KINGDOM":"LONDRES · REINO UNIDO");
+ set(".topline span:last-child",en?"NEWS · OPINION · ANALYSIS":"INFORMACIÓN · OPINIÓN · ANÁLISIS");
+ const navLabels=en?["International","Politics","Economy","Security","Technology","Opinion"]:["Internacional","Política","Economía","Seguridad","Tecnología","Opinión"];
+ document.querySelectorAll(".masthead .nav a").forEach((el,i)=>{if(navLabels[i])el.textContent=navLabels[i];});
+ set("#editionLabel",tr("edition"));
+ const print=document.getElementById("printEditionBtn");if(print)print.innerHTML=tr("print")+" <span aria-hidden='true'>↗</span>";
+ set(".market-heading .kicker",tr("markets"));set(".market-heading span:last-child",tr("marketData"));set(".market-note",tr("marketNote"));
+ set(".country-desk .section-head h2",tr("international"));set(".country-desk .section-head span",tr("coverage"));
+ const countryLinks=document.querySelectorAll(".country-links a");
+ [tr("uk"),tr("do"),tr("spain")].forEach((v,i)=>{if(countryLinks[i])countryLinks[i].lastChild.textContent=" "+v;});
+ set(".frontpage-top .kicker",tr("front"));const live=document.querySelector(".live-mark");if(live)live.innerHTML="<i></i> "+tr("live");
+ const latest=document.querySelector(".aside-heading");if(latest)latest.innerHTML="<span>"+(en?"IN DEVELOPMENT":"EN DESARROLLO")+"</span><span>"+tr("latest")+"</span>";
+ const fallback=document.querySelector("#latestBriefs");
+ if(fallback && !fallback.querySelector(".brief-link"))fallback.innerHTML=(en?[
+  ["Reporting","Verified facts and identified sources."],["Context","The key points behind every event."],["Opinion","Signed analysis, clearly separated from reporting."]
+ ]:[["Información","Hechos contrastados y fuentes identificadas."],["Contexto","Claves para entender cada acontecimiento."],["Opinión","Análisis firmado y diferenciado de la información."]]).map((x,i)=>'<div class="brief"><span class="number">'+String(i+1).padStart(2,"0")+'</span><div><b>'+x[0]+'</b><p>'+x[1]+'</p></div></div>').join("");
+ set("#latest-publications .section-head h2",tr("latestPublications"));set("#latest-publications .section-head span",tr("published"));
+ set(".opinion .kicker",tr("opinion"));set(".opinion h2",tr("ideas"));set(".opinion p",tr("opinionText"));set(".opinion .read-link",tr("origin"));
+ set("#secciones .section-head h2",tr("sections"));set("#secciones .section-head span",tr("explore"));
+ const keys=["politics","security","economy","technology","world","analysis"];
+ document.querySelectorAll(".topics a").forEach((el,i)=>{const arrow=el.querySelector("span");el.firstChild.textContent=tr(keys[i])+" ";if(arrow)arrow.textContent="→";});
+ const author=document.querySelector(".author");if(author){const spans=author.querySelectorAll("span");const es=["Articulista · Emprendedor","Estudios de grado en España · Grado en Ciberseguridad en curso, en Inglaterra","Experiencia profesional en empresas y sectores IT, financiero y salud","Londres, Inglaterra"];const enText=["Columnist · Entrepreneur","Undergraduate studies in Spain · Cybersecurity degree in progress in England","Professional experience across IT, finance and healthcare sectors","London, England"];spans.forEach((el,i)=>{if(i<4)el.textContent=(en?enText:es)[i];});}
+ const foot=document.querySelector("footer>span");if(foot)foot.textContent=tr("footer");
+ const yearLabel=document.querySelector("footer span:last-child");if(yearLabel)yearLabel.innerHTML="© <span id='year'>"+new Date().getFullYear()+"</span> "+(en?"Evoford":"Evoford");
+}
 
 const year = document.getElementById("year");
 if (date) date.textContent = now.toLocaleDateString(currentLanguage==="en"?"en-GB":"es-ES",{day:"numeric",month:"long",year:"numeric"});
@@ -64,13 +96,13 @@ async function loadPublishedArticles() {
   const countryRoot=document.getElementById("countryCoverage");
   if(countryRoot){
     const editions=[
-      {id:"uk",name:"Reino Unido",flag:"🇬🇧",terms:["reino unido","united kingdom","uk","inglaterra","escocia","gales","irlanda del norte"]},
-      {id:"do",name:"República Dominicana",flag:"🇩🇴",terms:["republica dominicana","dominican republic","rd"]},
-      {id:"es",name:"España",flag:"🇪🇸",terms:["espana","spain"]}
+      {id:"uk",name:tr("uk"),flag:"🇬🇧",terms:["reino unido","united kingdom","uk","inglaterra","escocia","gales","irlanda del norte"]},
+      {id:"do",name:tr("do"),flag:"🇩🇴",terms:["republica dominicana","dominican republic","rd"]},
+      {id:"es",name:tr("spain"),flag:"🇪🇸",terms:["espana","spain"]}
     ];
     countryRoot.innerHTML=editions.map(country=>{
       const matches=data.filter(a=>country.terms.includes(normalize(a.country))).slice(0,3);
-      const liveStories=matches.map(a=>'<a class="country-story" href="'+articleUrl(a.slug||"")+'"><span class="kicker">'+escapeHtml(a.category||"ACTUALIDAD")+'</span><b>'+escapeHtml(a.title)+'</b><span class="country-read">'+tr("read")+'</span></a>').join("");
+      const liveStories=matches.map(a=>'<a class="country-story" href="'+articleUrl(a.slug||"")+'"><span class="kicker">'+escapeHtml(categoryLabel(a.category||"ACTUALIDAD"))+'</span><b>'+escapeHtml(currentLanguage==="en"?(a.title_en||a.title):a.title)+'</b><span class="country-read">'+tr("read")+'</span></a>').join("");
       const stories=liveStories||'<p class="country-empty">'+tr("noCountry")+'</p>';
       return '<section class="country-card" id="country-'+country.id+'"><div class="country-title"><span class="country-flag" aria-hidden="true">'+country.flag+'</span><h3>'+country.name+'</h3></div>'+stories+'</section>';
     }).join("");
@@ -78,20 +110,20 @@ async function loadPublishedArticles() {
   const sectionRoot=document.getElementById("sectionFeeds");
   if(sectionRoot){
     const sections=[
-      {name:"Internacional",id:"internacional",terms:["internacional","mundo"]},
-      {name:"Política",id:"politica",terms:["politica"]},
-      {name:"Economía",id:"economia",terms:["economia"]},
-      {name:"Seguridad y defensa",id:"seguridad",terms:["seguridad","defensa"]},
-      {name:"Tecnología",id:"tecnologia",terms:["tecnologia"]},
-      {name:"Opinión y análisis",id:"opinion-analisis",terms:["opinion","opinion y analisis","analisis"]}
+      {name:tr("world"),id:"internacional",terms:["internacional","mundo"]},
+      {name:tr("politics"),id:"politica",terms:["politica"]},
+      {name:tr("economy"),id:"economia",terms:["economia"]},
+      {name:tr("security"),id:"seguridad",terms:["seguridad","defensa"]},
+      {name:tr("technology"),id:"tecnologia",terms:["tecnologia"]},
+      {name:tr("analysis"),id:"opinion-analisis",terms:["opinion","opinion y analisis","analisis"]}
     ];
     const normalize=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
     sectionRoot.innerHTML=sections.map(section=>{
       const matches=data.filter(a=>section.terms.includes(normalize(a.category))).slice(0,3);
       if(!matches.length)return "";
       const cards=matches.map((a,i)=>{
-        const dateText=a.created_at?new Date(a.created_at).toLocaleDateString("es-ES",{day:"numeric",month:"short",year:"numeric"}):"";
-        return '<article class="story reveal" style="--delay:'+i*60+'ms"><a class="story-link" href="'+articleUrl(a.slug||"")+'">'+articleImage(a,"story-image")+'<div class="story-copy"><div class="kicker">'+escapeHtml(categoryLabel(section.name))+'</div><h3>'+escapeHtml(a.title)+'</h3><p>'+escapeHtml(a.summary||"")+'</p></div></a><div class="lead-meta">'+escapeHtml(a.author||"EVOFORD NEWS")+(dateText?" · "+escapeHtml(dateText):"")+'</div><a href="'+articleUrl(a.slug||"")+'" class="read-link">'+tr("readArticle")+' <span>↗</span></a></article>';
+        const dateText=a.created_at?new Date(a.created_at).toLocaleDateString(currentLanguage==="en"?"en-GB":"es-ES",{day:"numeric",month:"short",year:"numeric"}):"";
+        return '<article class="story reveal" style="--delay:'+i*60+'ms"><a class="story-link" href="'+articleUrl(a.slug||"")+'">'+articleImage(a,"story-image")+'<div class="story-copy"><div class="kicker">'+escapeHtml(categoryLabel(section.name))+'</div><h3>'+escapeHtml(a.title)+'</h3><p>'+escapeHtml(currentLanguage==="en"?(a.summary_en||a.summary||""):(a.summary||""))+'</p></div></a><div class="lead-meta">'+escapeHtml(a.author||"EVOFORD NEWS")+(dateText?" · "+escapeHtml(dateText):"")+'</div><a href="'+articleUrl(a.slug||"")+'" class="read-link">'+tr("readArticle")+' <span>↗</span></a></article>';
       }).join("");
       return '<section class="section category-section" id="section-'+section.id+'"><div class="section-head"><h2>'+section.name+'</h2><span>'+(currentLanguage==="en"?"LATEST STORIES":"ÚLTIMAS PUBLICACIONES")+'</span></div><div class="cards">'+cards+'</div></section>';
     }).join("");

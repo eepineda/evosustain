@@ -144,8 +144,11 @@ body{font-family:Georgia,'Times New Roman',serif;background:#fff;color:#171717}
 .topline{font-family:Arial,sans-serif;font-size:9px;letter-spacing:.09em;border-bottom:1px solid #222}
 .brand{font-family:Georgia,'Times New Roman',serif;font-weight:700;letter-spacing:-.045em;color:#171717;font-size:clamp(42px,6vw,72px);padding:13px 0 17px}
 .brand em{color:#9f1d20}
-.nav{border-top:1px solid #222;border-bottom:1px solid #222;padding:10px 0;gap:clamp(12px,2.4vw,29px)}
-.nav a{font-family:Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:.015em}
+.nav{display:flex;justify-content:center;align-items:center;column-gap:clamp(14px,2vw,28px);row-gap:6px;border-top:1px solid #222;border-bottom:1px solid #222;padding:9px 8px;flex-wrap:wrap}
+.nav a{display:inline-flex;align-items:center;min-height:34px;padding:5px 2px;font-family:Arial,sans-serif;font-size:12px;font-weight:700;letter-spacing:.02em;line-height:1.25;text-decoration:none}
+.nav a:focus-visible{outline:2px solid #9f1d20;outline-offset:3px}
+.nav a:last-child{color:#8f1b20}
+.nav a:last-child:hover{color:#171717}
 .wrap{max-width:1240px}
 .edition{font-family:Arial,sans-serif;border-bottom:1px solid var(--line);font-size:9px}
 .frontpage{border-top:2px solid #222}
@@ -169,7 +172,8 @@ body{font-family:Georgia,'Times New Roman',serif;background:#fff;color:#171717}
 footer{background:#202020;border-top:2px solid #9f1d20;color:#eee}
 .footer-brand{font-family:Georgia,'Times New Roman',serif}
 footer a:not(.footer-brand){color:#e6c98b;border-bottom-color:rgba(230,201,139,.6)}
-@media(max-width:620px){.brand{font-size:43px}.nav{gap:11px 17px}.nav a{font-size:10px}}
+@media(max-width:760px){.nav{justify-content:flex-start;column-gap:16px;row-gap:4px;padding:8px 0}.nav a{font-size:11px;min-height:32px}}
+@media(max-width:620px){.brand{font-size:43px}.nav{column-gap:13px}.nav a{font-size:10px}}
 
 /* Botón de edición imprimible */
 .edition{gap:14px;align-items:center;flex-wrap:wrap}

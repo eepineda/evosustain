@@ -223,10 +223,15 @@ async function runRssImport(){
     const checked=Number(data?.checked_sources||0);
     const results=Array.isArray(data?.results)?data.results:[];
     const failed=results.filter(x=>x.error);
-    const details=failed.map(x=>`• ${x.source}: ${x.error}`).join("\\n");
-    const skipped=results.reduce((n,x)=>n+Number(x.skipped||0),0);
-    const summary=`Proceso terminado: ${imported} noticias nuevas de ${checked} fuentes; ${skipped} elementos omitidos.`;
-    say("rssRunMessage",failed.length?summary+"\\nErrores por fuente:\\n"+details:summary+"\\nSin errores de fuente.");
+    const invalid=results.reduce((n,x)=>n+Number(x.invalid||0),0);
+    const duplicates=results.reduce((n,x)=>n+Number(x.duplicates||0),0);
+    const duration=Math.max(0,...results.map(x=>Number(x.duration_ms||0)));
+    const details=results.map(x=>{
+      const time=(Number(x.duration_ms||0)/1000).toFixed(1)+" s";
+      return "• "+x.source+": "+(x.error?"ERROR · "+x.error:Number(x.imported||0)+" nuevas · "+Number(x.duplicates||0)+" repetidas · "+Number(x.invalid||0)+" inválidas")+" · "+time;
+    }).join("\n");
+    const summary="Proceso terminado: "+imported+" noticias nuevas de "+checked+" fuentes. Repetidas: "+duplicates+". Inválidas: "+invalid+".";
+    say("rssRunMessage",summary+"\n"+(failed.length?"Fuentes con errores:":"Detalle por fuente:")+"\n"+details);
     await loadInbox();
   }catch(error){
     say("rssRunMessage","No se pudo importar: "+(error.message||"Error desconocido")+". Comprueba el despliegue de rss-ingest.");

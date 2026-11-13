@@ -134,7 +134,7 @@ async function uploadArticleImage(){
 function editArticle(a){
   $("articleForm").hidden=false;$("formHeading").textContent=a?"Editar artículo":"Nuevo artículo";
   $("articleId").value=a?.id||"";$("publishArticleBtn").hidden=!(a?.status==="approved");$("saveChangesBtn").hidden=!a;$("title").value=a?.title||"";$("titleEn").value=a?.title_en||"";$("titleEs").value=a?.title_es||"";$("category").value=a?.category||"Internacional";
-  $("author").value=a?.author||"";$("summary").value=a?.summary||"";
+  $("author").value=a?.author||"Evoford News";$("summary").value=a?.summary||"";
   $("content").value=a?.content||"";$("imageUrl").value=a?.image_url||"";$("imageFile").value="";$("imagePreview").src=a?.image_url||"";$("imagePreview").hidden=!a?.image_url;say("imageMessage","");$("country").value=a?.country||"";$("region").value=a?.region||"";$("language").value=a?.language||"es";$("summaryEn").value=a?.summary_en||"";$("contentEn").value=a?.content_en||"";$("summaryEs").value=a?.summary_es||"";$("contentEs").value=a?.content_es||"";const translation=translationStatus(a||{language:"es"});say("translationStatus",translation.label+". Completa los campos de titular y texto en ambos idiomas antes de considerar la versión bilingüe terminada.");$("sourceTitle").value=a?.source_title||"";$("sourceUrl").value=a?.source_url||"";
   $("articleForm").scrollIntoView({behavior:"smooth",block:"start"});
 }

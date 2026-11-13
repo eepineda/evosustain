@@ -2,9 +2,11 @@ const sb=window.supabase.createClient("https://poywsdigujbarvnzbfnz.supabase.co"
 const form=document.getElementById("submissionForm"),msg=document.getElementById("msg");
 const submissionParams=new URLSearchParams(location.search);
 if(submissionParams.get("colaboracion")==="experta"){
+ const expertIntro=document.getElementById("expert-intro");
+ if(expertIntro)expertIntro.hidden=false;
  document.getElementById("kind").value="otro";
  document.getElementById("title").value="Propuesta de colaboración experta";
- document.getElementById("body").placeholder="Cuéntanos tu experiencia, especialidad, el tema que propones y el formato que te interesa (entrevista, análisis, columna o conversación).";
+
 }
 
 const types=["image/jpeg","image/png","image/webp","application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document"];

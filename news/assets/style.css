@@ -557,3 +557,61 @@ footer a:not(.footer-brand){color:#e6c98b;border-bottom-color:rgba(230,201,139,.
  .opinion .avatar{width:54px;height:54px;flex-basis:54px}
  .opinion-latest{padding-top:15px}
 }
+
+
+/* Print edition: A4 newspaper layout and clean PDF output */
+@page{size:A4;margin:15mm 14mm 17mm}
+@media print{
+  html,body{background:#fff!important;color:#111!important;font-family:Georgia,'Times New Roman',serif!important;font-size:10.5pt!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{margin:0!important}
+  .ecosystem-nav,.ecosystem-bar,.masthead .nav,.edition-actions,.market-strip,.country-links,.feature-cta,.share-panel,.comments-panel,.article-actions,.read-link[href='../']{display:none!important}
+  .masthead{max-width:none!important;padding:0!important}
+  .topline{font:7pt Arial,sans-serif!important;padding-bottom:5mm!important;border-bottom:1px solid #222!important}
+  .brand{font:700 31pt Georgia,'Times New Roman',serif!important;letter-spacing:-1.2pt!important;padding:5mm 0 4mm!important;color:#111!important}
+  .brand em{color:#9f1d20!important}
+  .wrap{max-width:none!important;padding:0!important;margin:0!important}
+  .edition{font:7pt Arial,sans-serif!important;padding:3mm 0!important;border-top:1px solid #222;border-bottom:1px solid #222}
+  .frontpage{margin-top:4mm!important;padding:4mm 0 6mm!important;border-top:2px solid #222!important}
+  .frontpage-grid{grid-template-columns:1.65fr .85fr!important;gap:7mm!important}
+  .featured-story{grid-template-columns:1fr 1fr!important;gap:5mm!important}
+  .feature-image-link,.feature-image-link>.story-art,.feature-image-link>.feature-image:not(.story-art){min-height:0!important;height:57mm!important;max-height:57mm!important}
+  .feature-copy{padding:0!important}
+  .feature-copy h1{font:700 22pt/1.05 Georgia,'Times New Roman',serif!important;margin:3mm 0!important}
+  .feature-copy .dek{font:11pt/1.45 Georgia,'Times New Roman',serif!important}
+  .feature-meta{font:7pt Arial,sans-serif!important}
+  .frontpage-aside{padding-left:5mm!important}
+  .brief-link{padding:3mm 0!important;break-inside:avoid}
+  .brief-link b{font:700 11pt/1.2 Georgia,serif!important}
+  .brief-link p{font:8pt/1.35 Georgia,serif!important;display:block!important;overflow:visible!important}
+  .country-desk{padding:5mm 0!important;break-inside:avoid}
+  .country-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:4mm!important}
+  .country-card{break-inside:avoid!important;border:1px solid #ccc!important;padding:3mm!important}
+  .country-title h3{font-size:12pt!important}
+  .country-story{padding:2mm 0!important}
+  .country-story b{font-size:9pt!important}
+  .section{padding:7mm 0!important}
+  .section-head{margin-bottom:4mm!important;padding-bottom:2mm!important}
+  .section-head h2{font-size:18pt!important}
+  .cards{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5mm!important}
+  .story,.country-card,.opinion,.brief,.featured-story{break-inside:avoid!important}
+  .story{padding-right:3mm!important}
+  .story img,.story-art{height:32mm!important;max-height:32mm!important;object-fit:cover!important}
+  .story-copy h3,.story-feature .story-copy h3{font:700 13pt/1.15 Georgia,serif!important}
+  .story-copy p{font:8.5pt/1.4 Georgia,serif!important}
+  .opinion{display:grid!important;grid-template-columns:1fr 1fr!important;gap:6mm!important;padding:6mm!important;background:#f4f2ee!important}
+  .opinion h2{font-size:19pt!important}
+  .opinion-latest{padding-left:5mm!important}
+  .topics{grid-template-columns:repeat(3,1fr)!important}
+  .topics a{font-size:11pt!important;padding:3mm 0!important}
+  footer{margin-top:6mm!important;padding:5mm 0!important;background:#fff!important;color:#222!important;border-top:2px solid #222!important;font:7pt Arial,sans-serif!important}
+  footer a:not(.footer-brand){color:#222!important;border:0!important}
+  .footer-brand{color:#111!important}
+  #articleView{max-width:none!important;padding:8mm 0!important}
+  #articleView h1{font:700 30pt/1.06 Georgia,'Times New Roman',serif!important;max-width:none!important}
+  #articleView .dek{font:14pt/1.45 Georgia,serif!important}
+  #articleView>p:not(.dek):not(.lead-meta){max-width:none!important;font:11pt/1.7 Georgia,serif!important;margin:0 0 5mm!important}
+  #articleView>img{max-height:105mm!important;object-fit:contain!important}
+  #articleView .source-credit{max-width:none!important}
+  #articleView .read-link{display:none!important}
+  .language-notice{font-size:9pt!important}
+}

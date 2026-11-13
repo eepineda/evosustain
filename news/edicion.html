@@ -10,9 +10,13 @@
 </head>
 <body>
 <header class="toolbar">
- <a href="./" class="back">← Evoford News</a>
- <div class="tools"><label for="paperSize">Formato <select id="paperSize"><option value="A4">A4</option><option value="A3">A3</option></select></label>
- <button id="languageToggle" type="button">English</button><button id="printBtn" type="button">Imprimir / Guardar PDF</button></div>
+ <a href="./" class="back" id="backLink">← Volver a Evoford News</a>
+ <nav class="tools" aria-label="Herramientas de edición">
+  <label for="paperSize"><span id="formatLabel">Formato</span><select id="paperSize"><option value="A4">A4 · Estándar</option><option value="A3">A3 · Periódico</option></select></label>
+  <button id="languageToggle" type="button" aria-label="Change edition language">English</button>
+  <button id="refreshBtn" class="secondary-tool" type="button">Actualizar edición</button>
+  <button id="printBtn" type="button">Imprimir / Guardar PDF</button>
+ </nav>
 </header>
 <main class="newspaper" id="newspaper">
  <div class="paper-topline"><span id="editionDate">EDICIÓN DIGITAL</span><span>INFORMACIÓN · OPINIÓN · ANÁLISIS</span><span id="editionNumber">EVOFORD NEWS</span></div>

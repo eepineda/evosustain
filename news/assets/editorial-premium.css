@@ -146,3 +146,31 @@ footer a:not(.footer-brand):hover{color:#fff;text-decoration:underline}
 @media(prefers-reduced-motion:reduce){
  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+
+/* Front-page proportion correction: preserve headline width on standard laptop/tablet screens */
+.frontpage-grid{grid-template-columns:minmax(0,1fr) minmax(245px,.34fr);gap:26px}
+.featured-story{grid-template-columns:minmax(230px,.9fr) minmax(290px,1.1fr);gap:22px}
+.feature-copy{min-width:0}
+.feature-copy h1{max-width:100%;font-size:clamp(34px,3.35vw,48px);line-height:1.045;letter-spacing:-.035em;overflow-wrap:normal;word-break:normal}
+.feature-image-link,.feature-image-link>.feature-image,.feature-image-link>.story-art{min-height:320px;height:100%;max-height:430px}
+.frontpage-aside{min-width:0;padding-left:20px}
+.brief-link{min-width:0;gap:10px;padding-right:4px}
+.brief-link>div{min-width:0}
+@media(max-width:1080px){
+ .frontpage-grid{grid-template-columns:minmax(0,1fr);gap:24px}
+ .featured-story{grid-template-columns:minmax(250px,.88fr) minmax(0,1.12fr);gap:26px}
+ .feature-copy h1{font-size:clamp(36px,4.2vw,48px)}
+ .frontpage-aside{padding:18px 0 0;border-left:0;border-top:1px solid var(--line)}
+ .frontpage-aside #latestBriefs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+ .frontpage-aside .aside-heading{margin-bottom:0}
+ .frontpage-aside .brief-link{padding:13px 8px 13px 0;border-bottom:1px solid var(--line)}
+}
+@media(max-width:620px){
+ .frontpage-grid{display:block}
+ .featured-story{grid-template-columns:minmax(0,1fr);gap:18px}
+ .feature-image-link,.feature-image-link>.feature-image,.feature-image-link>.story-art{min-height:230px;height:230px;max-height:260px}
+ .feature-copy h1{font-size:clamp(34px,9.5vw,44px);line-height:1.06}
+ .frontpage-aside #latestBriefs{grid-template-columns:1fr;gap:0}
+ .frontpage-aside .brief-link{padding:13px 0}
+}

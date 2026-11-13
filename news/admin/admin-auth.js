@@ -473,7 +473,7 @@ async function deleteCourse(id){
  if(error){say("globalMessage","No se pudo eliminar la solicitud: "+error.message);return;}
  courseEnquiries=courseEnquiries.filter(x=>x.id!==id);filterCourses();say("globalMessage","Solicitud eliminada definitivamente.");
 }
-\nasync function saveCourseNotes(id){
+async function saveCourseNotes(id){
  const field=document.querySelector('[data-course-notes="'+id+'"]');if(!field)return;
  const {error}=await client.from("course_enquiries").update({internal_notes:field.value}).eq("id",id);
  if(error){say("globalMessage","No se pudieron guardar las notas: "+error.message);return;}

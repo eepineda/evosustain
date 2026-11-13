@@ -21,6 +21,7 @@ function renderStaticLanguage(){
   "#section-economia":en?"Economy":"Economía",
   "#section-seguridad":en?"Security":"Seguridad",
   "startups.html":en?"Startups & innovation":"Startups e innovación",
+  "aula-innovacion.html":en?"Innovation Academy":"Aula de Innovación",
   "#section-opinion-analisis":en?"Opinion":"Opinión",
   "directory.html":en?"Directory":"Directorio",
   "enviar.html":en?"Submit a story":"Envía tu noticia"

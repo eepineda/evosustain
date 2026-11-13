@@ -164,33 +164,27 @@ Deno.serve(async (req) => {
       const parsed = parser.parse(xml) as Record<string, unknown>;
       const items = extractItems(parsed).slice(0, MAX_ITEMS_PER_SOURCE);
 
+      const rows: Array<Record<string, unknown>> = [];
       for (const rawItem of items) {
         const item = normalizeItem(rawItem);
         if (!item.title || !item.article_url || !item.feed_guid) {
           result.skipped++;
           continue;
         }
+
         let articleUrl: URL;
-        try { articleUrl = new URL(item.article_url); } catch { result.skipped++; continue; }
+        try {
+          articleUrl = new URL(item.article_url);
+        } catch {
+          result.skipped++;
+          continue;
+        }
         if (!["http:", "https:"].includes(articleUrl.protocol)) {
           result.skipped++;
           continue;
         }
 
-        const { data: existing, error: lookupError } = await admin
-          .from("imported_items")
-          .select("id")
-          .eq("source_id", String(source.id))
-          .eq("feed_guid", item.feed_guid)
-          .maybeSingle();
-        if (lookupError) throw lookupError;
-
-        if (existing) {
-          result.skipped++;
-          continue;
-        }
-
-        const { error: insertError } = await admin.from("imported_items").insert({
+        rows.push({
           source_id: String(source.id),
           feed_guid: item.feed_guid,
           title: item.title,
@@ -201,13 +195,21 @@ Deno.serve(async (req) => {
           status: "pending",
           imported_at: new Date().toISOString(),
         });
+      }
 
-        if (insertError) {
-          if (insertError.code === "23505") result.skipped++;
-          else throw insertError;
-        } else {
-          result.imported++;
-        }
+      if (rows.length) {
+        // One database request per feed; the unique key prevents re-importing existing items.
+        const { data: inserted, error: insertError } = await admin
+          .from("imported_items")
+          .upsert(rows, {
+            onConflict: "source_id,feed_guid",
+            ignoreDuplicates: true,
+          })
+          .select("id");
+
+        if (insertError) throw insertError;
+        result.imported = inserted?.length || 0;
+        result.skipped += rows.length - result.imported;
       }
     } catch (error) {
       if (error instanceof Error) {

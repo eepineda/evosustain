@@ -27,3 +27,5 @@
 @media(max-width:650px){.rss-modal{padding:12px}.rss-modal-card{padding:18px}}
 
 .rss-edit-panel{margin:18px 0;padding:22px;border:1px solid var(--line);background:#f8fafc;scroll-margin-top:24px}.rss-edit-panel .section-head{align-items:center;margin-bottom:18px}.rss-edit-panel .field{margin:0 0 14px}.rss-edit-panel h2{margin:0}.rss-edit-form{display:grid;gap:12px}.rss-edit-panel .actions{margin-top:12px}
+
+.directory-edit-panel{margin:22px 0;padding:22px;border:1px solid var(--line);background:#f8fafc;scroll-margin-top:24px}.directory-edit-panel .section-head{align-items:center;margin-bottom:20px}.directory-edit-panel .field{margin:0 0 14px}.directory-edit-panel h2{margin:0}.directory-edit-panel textarea{min-height:88px}

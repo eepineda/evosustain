@@ -227,19 +227,27 @@ function editorialSuggestion(item){
 }
 
 async function loadInbox(){
-  const [{data,error},{data:sources}] = await Promise.all([
+  const [{data,error},{data:sources},{data:articles,error:articlesError}] = await Promise.all([
     client.from("imported_items").select("*").order("created_at",{ascending:false}),
-    client.from("rss_sources").select("id,name,category")
+    client.from("rss_sources").select("id,name,category"),
+    client.from("articles").select("id,title,source_url,status")
   ]);
   if(error){$("inboxList").innerHTML=`<p class="muted">${safe(error.message)}</p>`;return;}
+  if(articlesError){$("inboxList").innerHTML=`<p class="muted">No se pudo comprobar la relación con los borradores: ${safe(articlesError.message)}</p>`;return;}
   const sourceMap=new Map((sources||[]).map(source=>[String(source.id),source]));
+  const articleBySource=new Map((articles||[]).filter(a=>a.source_url).map(a=>[a.source_url,a]));
   $("inboxList").innerHTML=data.length?data.map(n=>{
     const source=sourceMap.get(String(n.source_id));
+    const linkedArticle=articleBySource.get(n.article_url);
     const guess=editorialSuggestion(n);
     const suggested=n.suggested_category||guess.category;
     const country=n.country||guess.country;
     const region=n.region||guess.region;
-    return `<article class="item"><div><h3>${safe(n.title)}</h3><p>${safe(source?.name||"Fuente RSS")} · Sección sugerida: ${safe(suggested)} · <a href="${safe(n.article_url)}" target="_blank" rel="noopener noreferrer">Consultar fuente original</a> · <span class="pill">${safe(n.status)}</span></p>${n.summary?`<p class="rss-extract"><strong>Extracto disponible del RSS (${n.summary.length} caracteres):</strong> ${safe(n.summary)}</p><p class="muted">Este texto es material de consulta de la fuente; no cuenta como redacción propia para aprobar.</p>`:"<p class=\"muted\">El RSS no proporciona un extracto de texto.</p>"}<p>Clasificación orientativa: ${safe(country||"País por verificar")} · ${safe(region||"Región por verificar")}</p></div><div class="item-actions"><button type="button" class="secondary" data-draft="${n.id}">Preparar borrador manual</button><button class="secondary" data-reject="${n.id}">Descartar</button></div></article>`;
+    const workflowLabel=linkedArticle?"Borrador vinculado · "+({draft:"Borrador",pending:"En revisión",approved:"Aprobado",published:"Publicado",rejected:"Descartado"}[linkedArticle.status]||linkedArticle.status):"Pendiente de borrador";
+    const action=linkedArticle
+      ?`<button type="button" class="secondary" data-open-article="${linkedArticle.id}">Abrir borrador</button>`
+      :`<button type="button" class="secondary" data-draft="${n.id}">Pasar extracto al editor</button>`;
+    return `<article class="item"><div><h3>${safe(n.title)}</h3><p>${safe(source?.name||"Fuente RSS")} · Sección sugerida: ${safe(suggested)} · <a href="${safe(n.article_url)}" target="_blank" rel="noopener noreferrer">Consultar fuente original</a> · <span class="pill">${safe(n.status)}</span> · <span class="rss-workflow-pill ${linkedArticle?"linked":"waiting"}">${safe(workflowLabel)}</span></p>${n.summary?`<p class="rss-extract"><strong>Extracto disponible del RSS (${n.summary.length} caracteres):</strong> ${safe(n.summary)}</p><p class="muted">Este texto es material de consulta de la fuente; no cuenta como redacción propia para aprobar.</p>`:"<p class='muted'>El RSS no proporciona un extracto de texto.</p>"}<p>Clasificación orientativa: ${safe(country||"País por verificar")} · ${safe(region||"Región por verificar")}</p></div><div class="item-actions">${action}<button class="secondary" data-reject="${n.id}">Descartar</button></div></article>`;
   }).join(""):'<p class="muted">No hay noticias importadas. Añade fuentes RSS activas e inicia una importación.</p>';
 }
 async function loadSources(){
@@ -305,7 +313,16 @@ function wire(){
   $("refreshInboxBtn").addEventListener("click",loadInbox);
   $("inboxList").addEventListener("click",async e=>{
     const draftButton=e.target.closest("[data-draft]");
+    const openArticleButton=e.target.closest("[data-open-article]");
     const rejectButton=e.target.closest("[data-reject]");
+    if(openArticleButton){
+      const {data:article,error}=await client.from("articles").select("*").eq("id",openArticleButton.dataset.openArticle).single();
+      if(error){say("globalMessage","No se pudo abrir el borrador: "+error.message);return;}
+      editArticle(article);
+      document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab==="articles"));
+      ["articles","inbox","sources"].forEach(k=>$(k+"Tab").hidden=k!=="articles");
+      return;
+    }
     if(draftButton){
       const {data:item,error}=await client.from("imported_items").select("*").eq("id",draftButton.dataset.draft).single();
       if(error){say("globalMessage","No se pudo abrir la noticia: "+error.message);return;}

@@ -7,7 +7,7 @@
 <title>Envía tu noticia | Evoford News</title>
 <style>
 *{box-sizing:border-box}html{background:#f7f7f5}body{margin:0;color:#20252b;font:16px/1.55 Arial, sans-serif;background:#f7f7f5}
-header{background:#102b4e;color:#fff;padding:13px 22px}header nav{max-width:960px;margin:auto;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}header a{color:#fff;text-decoration:none;font-size:13px;font-weight:bold}
+header{background:#102b4e;color:#fff;padding:13px 22px}header nav{max-width:960px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}header .nav-right{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.language-switch{display:inline-flex;gap:4px}.language-switch button{padding:5px 8px;background:transparent;color:#fff;border:1px solid #71839a;font-size:11px}.language-switch button[aria-pressed="true"]{background:#fff;color:#102b4e}header a{color:#fff;text-decoration:none;font-size:13px;font-weight:bold}
 main{max-width:760px;margin:38px auto;padding:0 18px}article{background:#fff;border:1px solid #d9dee7;padding:clamp(20px,4vw,38px);box-shadow:0 5px 22px rgba(0,0,0,.05)}
 .kicker{font-size:11px;font-weight:bold;letter-spacing:.15em;color:#a9232d}h1{font:700 clamp(30px,5vw,44px)/1.1 Georgia,serif;margin:12px 0}p{color:#596574}
 form{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px}
@@ -20,22 +20,23 @@ footer{text-align:center;padding:20px;color:#596574;font-size:12px}
 </style>
 </head>
 <body>
-<header><nav><a href="../index.html">EVOFORD ECOSYSTEM</a><span><a href="./">Evoford News</a>　<a href="admin/">Acceso editorial</a></span></nav></header>
+<header><nav><a href="../index.html">EVOFORD ECOSYSTEM</a><span class="nav-right"><a href="./" data-i18n="news">Evoford News</a><a href="admin/" data-i18n="admin">Acceso editorial</a><span class="language-switch" aria-label="Language"><button type="button" data-language="es" aria-pressed="true">ES</button><button type="button" data-language="en" aria-pressed="false">EN</button></span></span></nav></header>
 <main><article>
-<div class="kicker">PARTICIPA EN EVOFORD NEWS</div>
-<h1>Envía tu noticia</h1>
-<p>Comparte una noticia, nota de prensa o artículo de opinión. Todo envío será revisado por la redacción. Enviar una propuesta no garantiza su publicación.</p>
+<div class="kicker" data-i18n="kicker">PARTICIPA EN EVOFORD NEWS</div>
+<h1 data-i18n="title">Envía tu noticia</h1>
+<p data-i18n="intro">Comparte una noticia, nota de prensa o artículo de opinión. Todo envío será revisado por la redacción. Enviar una propuesta no garantiza su publicación.</p>
 <form id="submissionForm">
-<div><label for="name">Nombre y apellidos</label><input id="name" minlength="2" maxlength="120" autocomplete="name" required></div>
-<div><label for="email">Correo electrónico</label><input id="email" type="email" maxlength="254" autocomplete="email" required></div>
-<div><label for="kind">Tipo de contenido</label><select id="kind"><option value="noticia">Noticia</option><option value="nota_prensa">Nota de prensa</option><option value="opinion">Artículo de opinión</option><option value="otro">Otro</option></select></div>
-<div><label for="title">Título</label><input id="title" minlength="5" maxlength="180" required></div>
-<div class="full"><label for="body">Texto</label><textarea id="body" minlength="50" maxlength="30000" required></textarea><small>Entre 50 y 30.000 caracteres.</small></div>
-<div class="full"><label for="files">Adjuntos (opcional)</label><input id="files" type="file" multiple accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx"><small>Máximo 3 archivos de hasta 8 MB cada uno.</small></div>
-<div class="trap"><label for="website">No rellenar</label><input id="website" tabindex="-1" autocomplete="off"></div>
-<button type="submit">Enviar a la redacción</button><p id="msg" role="status" aria-live="polite"></p>
+<div><label for="name" data-i18n="name">Nombre y apellidos</label><input id="name" minlength="2" maxlength="120" autocomplete="name" required></div>
+<div><label for="email" data-i18n="email">Correo electrónico</label><input id="email" type="email" maxlength="254" autocomplete="email" required></div>
+<div><label for="kind" data-i18n="kind">Tipo de contenido</label><select id="kind"><option value="noticia" data-i18n="newsType">Noticia</option><option value="nota_prensa" data-i18n="pressType">Nota de prensa</option><option value="opinion" data-i18n="opinionType">Artículo de opinión</option><option value="otro" data-i18n="otherType">Otro</option></select></div>
+<div><label for="title" data-i18n="headline">Título</label><input id="title" minlength="5" maxlength="180" required></div>
+<div class="full"><label for="body" data-i18n="body">Texto</label><textarea id="body" minlength="50" maxlength="30000" required></textarea><small data-i18n="bodyHelp">Entre 50 y 30.000 caracteres.</small></div>
+<div class="full"><label for="files" data-i18n="files">Adjuntos (opcional)</label><input id="files" type="file" multiple accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx"><small data-i18n="filesHelp">Máximo 3 archivos de hasta 8 MB cada uno.</small></div>
+<div class="trap"><label for="website" data-i18n="honeypot">No rellenar</label><input id="website" tabindex="-1" autocomplete="off"></div>
+<button type="submit" data-i18n="submit">Enviar a la redacción</button><p id="msg" role="status" aria-live="polite"></p>
 </form></article></main>
-<footer>EVOFORD NEWS · Redacción</footer>
+<footer data-i18n="footer">EVOFORD NEWS · Redacción</footer>
+<script src="assets/submit-language.js?v=20261113-1"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/submit.js?v=20261113-3"></script>
 </body></html>

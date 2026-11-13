@@ -17,8 +17,18 @@ function renderStaticLanguage(){
  ["EvoSustain",en?"Platform Hub":"Centro de plataforma",en?"News":"Noticias"].forEach((v,i)=>{if(ecosystemLinks[i])ecosystemLinks[i].textContent=v;});
  set(".topline span:first-child",en?"LONDON · UNITED KINGDOM":"LONDRES · REINO UNIDO");
  set(".topline span:last-child",en?"NEWS · OPINION · ANALYSIS":"INFORMACIÓN · OPINIÓN · ANÁLISIS");
- const navLabels=en?["International","Politics","Economy","Security","Technology","Opinion"]:["Internacional","Política","Economía","Seguridad","Tecnología","Opinión"];
- document.querySelectorAll(".masthead .nav a").forEach((el,i)=>{if(navLabels[i])el.textContent=navLabels[i];});
+ const navTranslations={
+  "#section-internacional":en?"International":"Internacional",
+  "#section-politica":en?"Politics":"Política",
+  "#section-economia":en?"Economy":"Economía",
+  "#section-seguridad":en?"Security":"Seguridad",
+  "#section-tecnologia":en?"Technology":"Tecnología",
+  "#section-opinion-analisis":en?"Opinion":"Opinión"
+ };
+ document.querySelectorAll(".masthead .nav a, .topics a").forEach(el=>{
+  const label=navTranslations[el.getAttribute("href")];
+  if(label){const arrow=el.querySelector("span");el.textContent=label;if(arrow)el.appendChild(arrow);}
+ });
  set("#editionLabel",tr("edition"));
  const print=document.getElementById("printEditionBtn");if(print)print.innerHTML=tr("print")+" <span aria-hidden='true'>↗</span>";
  set(".market-heading .kicker",tr("markets"));set(".market-heading span:last-child",tr("marketData"));set(".market-note",tr("marketNote"));

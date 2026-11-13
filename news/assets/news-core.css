@@ -1,0 +1,63 @@
+/*!
+ * Evoford News Design Tokens
+ * Shared foundations for the progressive migration of all News sections.
+ */
+:root {
+  --en-ink: #172638;
+  --en-navy: #102b4e;
+  --en-navy-deep: #071b2b;
+  --en-red: #a9232d;
+  --en-teal: #55c7bb;
+  --en-paper: #f7f7f5;
+  --en-surface: #ffffff;
+  --en-muted: #687585;
+  --en-line: #dce2e8;
+  --en-radius-sm: 3px;
+  --en-radius-md: 8px;
+  --en-radius-lg: 14px;
+  --en-shadow-card: 0 8px 28px rgba(16, 43, 78, .08);
+  --en-content-width: 1240px;
+  --en-reading-width: 740px;
+  --en-space-1: 4px;
+  --en-space-2: 8px;
+  --en-space-3: 12px;
+  --en-space-4: 16px;
+  --en-space-6: 24px;
+  --en-space-8: 32px;
+  --en-space-12: 48px;
+}
+
+.en-container {
+  width: min(calc(100% - 40px), var(--en-content-width));
+  margin-inline: auto;
+}
+
+.en-reading {
+  width: min(calc(100% - 40px), var(--en-reading-width));
+  margin-inline: auto;
+}
+
+.en-card {
+  min-width: 0;
+  background: var(--en-surface);
+  border: 1px solid var(--en-line);
+  border-radius: var(--en-radius-md);
+  box-shadow: var(--en-shadow-card);
+}
+
+.en-eyebrow {
+  color: var(--en-red);
+  font: 700 10px/1.4 Arial, sans-serif;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.en-focus-visible :focus-visible,
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 3px solid var(--en-teal);
+  outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+  .en-container, .en-reading { width: min(calc(100% - 28px), var(--en-content-width)); }
+}

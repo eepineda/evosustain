@@ -17,3 +17,11 @@
 .item>div:first-child{min-width:0;overflow-wrap:anywhere}
 
 .maintenance-panel{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:18px 0;padding:18px 22px}.maintenance-panel h2{margin:3px 0 6px}.maintenance-panel p{margin:0}.maintenance-panel button.maintenance-active{background:#a21b2b;color:#fff}@media(max-width:650px){.maintenance-panel{align-items:flex-start;flex-direction:column}}
+
+.rss-modal{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:20px;background:rgba(7,27,43,.62)}
+.rss-modal[hidden]{display:none!important}
+.rss-modal-card{width:min(100%,560px);max-height:min(90vh,760px);overflow:auto;padding:26px;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 22px 70px rgba(0,0,0,.24)}
+.rss-modal-card .section-head{align-items:center;margin-bottom:22px}
+.rss-modal-card .field{margin:0 0 16px}
+.rss-modal-card h2{margin:0}
+@media(max-width:650px){.rss-modal{padding:12px}.rss-modal-card{padding:18px}}

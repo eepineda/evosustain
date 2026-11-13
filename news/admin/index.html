@@ -9,7 +9,7 @@
   <title>Acceso editorial | Evoford News</title>
   <link rel="stylesheet" href="./admin.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="./admin.js?v=20261113-rssinline2"></script>
+  <script defer src="./admin.js?v=20261113-directoryedit1"></script>
 </head>
 <body>
   <header class="topbar">
@@ -80,7 +80,33 @@
       </section>
 
       <section id="submissionsTab" class="tabview" hidden><div class="section-head"><div><p class="eyebrow">COLABORACIONES EXTERNAS</p><h2>Envíos recibidos</h2></div><button id="refreshSubmissionsBtn" class="secondary">Actualizar</button></div><p class="muted">Los envíos son privados. Puedes convertirlos en borradores para revisarlos antes de aprobarlos.</p><div id="submissionsList" class="list"><p class="muted">Cargando…</p></div></section>
-      <section id="directoryTab" class="tabview" hidden><div class="section-head"><div><p class="eyebrow">COMUNIDAD DOMINICANA · LONDRES</p><h2>Directorio y solicitudes</h2></div><button id="refreshDirectoryBtn" class="secondary">Actualizar</button></div><p class="muted">Revisa las solicitudes recibidas y publica únicamente las fichas verificadas. Las fichas comerciales patrocinadas deben identificarse como tales.</p><div id="directorySubmissionList" class="list"><p class="muted">Cargando solicitudes…</p></div><h2>Fichas del directorio</h2><div id="directoryAdminList" class="list"><p class="muted">Cargando fichas…</p></div></section>
+      <section id="directoryTab" class="tabview" hidden><div class="section-head"><div><p class="eyebrow">COMUNIDAD DOMINICANA · LONDRES</p><h2>Directorio y solicitudes</h2></div><button id="refreshDirectoryBtn" class="secondary">Actualizar</button></div><p class="muted">Revisa las solicitudes recibidas y publica únicamente las fichas verificadas. Las fichas comerciales patrocinadas deben identificarse como tales.</p><div id="directorySubmissionList" class="list"><p class="muted">Cargando solicitudes…</p></div><h2>Fichas del directorio</h2><div id="directoryAdminList" class="list"><p class="muted">Cargando fichas…</p></div><section id="directoryEditPanel" class="panel directory-edit-panel" hidden aria-labelledby="directoryEditTitle">
+  <div class="section-head"><div><p class="eyebrow">GESTIÓN DEL DIRECTORIO</p><h2 id="directoryEditTitle">Editar ficha</h2></div><button type="button" id="closeDirectoryEdit" class="secondary">Cerrar</button></div>
+  <form id="directoryEditForm">
+    <input id="directoryEditId" type="hidden">
+    <div class="form-grid">
+      <div class="field full"><label for="directoryEditName">Nombre de la ficha</label><input id="directoryEditName" required maxlength="180"></div>
+      <div class="field"><label for="directoryEditSlug">Identificador URL (slug)</label><input id="directoryEditSlug" required maxlength="180"></div>
+      <div class="field"><label for="directoryEditCategory">Categoría</label><select id="directoryEditCategory"><option>Embajadas y consulados</option><option>Instituciones dominicanas</option><option>Asociaciones</option><option>Educación y formación</option><option>Vivienda y apoyo público</option><option>Banca y finanzas</option><option>Asesoría legal y migratoria</option><option>Salud y bienestar</option><option>Empleo y formación</option><option>Negocios</option><option>Servicios profesionales</option><option>Comunidad y eventos</option></select></div>
+      <div class="field"><label for="directoryEditType">Tipo de ficha</label><select id="directoryEditType"><option value="community">Comunidad / institución</option><option value="business">Empresa / negocio</option></select></div>
+      <div class="field"><label for="directoryEditCity">Ciudad / ámbito</label><input id="directoryEditCity"></div>
+      <div class="field"><label for="directoryEditPostcode">Código postal</label><input id="directoryEditPostcode"></div>
+      <div class="field full"><label for="directoryEditAddress">Dirección</label><input id="directoryEditAddress"></div>
+      <div class="field"><label for="directoryEditPhone">Teléfono</label><input id="directoryEditPhone" type="tel"></div>
+      <div class="field"><label for="directoryEditEmail">Correo electrónico</label><input id="directoryEditEmail" type="email"></div>
+      <div class="field full"><label for="directoryEditWebsite">Sitio web</label><input id="directoryEditWebsite" type="url" placeholder="https://…"></div>
+      <div class="field full"><label for="directoryEditDescription">Descripción</label><textarea id="directoryEditDescription" rows="4"></textarea></div>
+      <div class="field full"><label for="directoryEditServices">Servicios (uno por línea)</label><textarea id="directoryEditServices" rows="4"></textarea></div>
+      <div class="field full"><label for="directoryEditHours">Horario de atención</label><input id="directoryEditHours"></div>
+      <div class="field full"><label for="directoryEditImage">URL de imagen</label><input id="directoryEditImage" type="url" placeholder="https://…"></div>
+      <div class="field"><label for="directoryEditStatus">Estado</label><select id="directoryEditStatus"><option value="draft">Borrador</option><option value="pending">Pendiente</option><option value="published">Publicado</option><option value="rejected">Rechazado</option></select></div>
+      <div class="field"><label><input id="directoryEditSponsored" type="checkbox" style="width:auto;margin-right:8px">Ficha comercial patrocinada</label></div>
+    </div>
+    <p id="directoryEditMessage" class="message" role="status"></p>
+    <div class="actions"><button type="submit" id="saveDirectoryEdit">Guardar cambios</button><button type="button" id="cancelDirectoryEdit" class="secondary">Cancelar</button></div>
+  </form>
+</section>
+</section>
       <section id="sourcesTab" class="tabview" hidden>
         <div class="section-head"><div><p class="eyebrow">AGREGADORES</p><h2>Fuentes RSS</h2></div></div>
         <form id="sourceForm" class="panel source-form">

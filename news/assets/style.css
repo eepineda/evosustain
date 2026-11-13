@@ -492,3 +492,14 @@ footer a:not(.footer-brand){color:#e6c98b;border-bottom-color:rgba(230,201,139,.
  .frontpage-aside #latestBriefs{grid-template-columns:1fr}
  .brief-link{padding:10px 8px 10px 0;border-bottom:1px solid var(--line)}
 }
+
+
+/* Mobile author block: prevent horizontal overflow on narrow screens */
+@media(max-width:620px){
+ .opinion{width:100%;min-width:0;gap:16px;padding:20px 16px}
+ .opinion>div:first-child{min-width:0}
+ .author{width:100%;min-width:0;align-items:flex-start;gap:11px}
+ .author .avatar{flex:0 0 46px;width:46px;height:46px}
+ .author>div:last-child{min-width:0;overflow-wrap:anywhere}
+ .author span{line-height:1.45}
+}

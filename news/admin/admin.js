@@ -283,6 +283,27 @@ async function loadInbox(){
 async function loadSubmissions(){const {data,error}=await client.from("article_submissions").select("*").order("created_at",{ascending:false});if(error){$("submissionsList").innerHTML='<p class="muted">No se pudieron cargar: '+safe(error.message)+'</p>';return;}$("submissionsList").innerHTML=data.length?data.map(s=>'<article class="item"><div><h3>'+safe(s.title)+'</h3><p>'+safe(s.sender_name)+' · '+safe(s.sender_email)+' · '+safe(s.submission_type)+' · '+new Date(s.created_at).toLocaleString("es-ES")+' · <span class="pill">'+safe(s.status)+'</span></p><p>'+safe(s.body.slice(0,240))+(s.body.length>240?"…":"")+'</p><p class="muted">'+(s.attachment_paths||[]).length+' adjunto(s)</p></div><div class="item-actions">'+(s.status==="received"?'<button class="secondary" data-convert-sub="'+s.id+'">Convertir en borrador</button><button class="secondary" data-reject-sub="'+s.id+'">Descartar</button>':'')+((s.attachment_paths||[]).length?'<button class="secondary" data-files-sub="'+s.id+'">Ver adjuntos</button>':'')+'<button class="secondary danger" data-delete-sub="'+s.id+'">Eliminar</button></div></article>').join(""):'<p class="muted">No hay envíos recibidos.</p>';}
 async function handleSubmissionAction(e){const c=e.target.closest("[data-convert-sub]"),r=e.target.closest("[data-reject-sub]"),f=e.target.closest("[data-files-sub]"),d=e.target.closest("[data-delete-sub]");if(d){if(!window.confirm("¿Eliminar definitivamente este envío y sus archivos adjuntos? Esta acción no se puede deshacer."))return;d.disabled=true;const {data:record,error:readError}=await client.from("article_submissions").select("attachment_paths").eq("id",d.dataset.deleteSub).single();if(readError){say("globalMessage","No se pudo leer el envío: "+readError.message);d.disabled=false;return;}const paths=record.attachment_paths||[];if(paths.length){const {error:storageError}=await client.storage.from("news-submissions").remove(paths);if(storageError){say("globalMessage","No se pudieron eliminar los adjuntos: "+storageError.message);d.disabled=false;return;}}const {error:deleteError}=await client.from("article_submissions").delete().eq("id",d.dataset.deleteSub);if(deleteError){say("globalMessage","No se pudo eliminar el envío: "+deleteError.message);d.disabled=false;return;}say("globalMessage","Envío y adjuntos eliminados definitivamente.");await loadSubmissions();return;}if(c){const {data:s,error}=await client.from("article_submissions").select("*").eq("id",c.dataset.convertSub).single();if(error){say("globalMessage",error.message);return;}const {data:a,error:ie}=await client.from("articles").insert({title:s.title,slug:slugify(s.title)+"-"+s.id.slice(0,8),category:s.submission_type==="opinion"?"Opinión":"Internacional",author:s.sender_name,summary:"Envío recibido de "+s.sender_name+" ("+s.sender_email+"). Pendiente de edición y verificación.",content:s.body,language:"es",source_title:"Envío externo",status:"draft",updated_at:new Date().toISOString()}).select("id").single();if(ie){say("globalMessage","No se pudo crear el borrador: "+ie.message);return;}const {error:ue}=await client.from("article_submissions").update({status:"converted",article_id:a.id}).eq("id",s.id);if(ue){say("globalMessage","Borrador creado, pero no se pudo vincular: "+ue.message);return;}await Promise.all([loadSubmissions(),loadArticles()]);document.querySelector('[data-tab="articles"]').click();const {data:created}=await client.from("articles").select("*").eq("id",a.id).single();if(created)editArticle(created);say("globalMessage","Envío convertido en borrador. Revísalo antes de aprobarlo.");return;}if(r){if(!confirm("¿Descartar este envío?"))return;const {error}=await client.from("article_submissions").update({status:"rejected"}).eq("id",r.dataset.rejectSub);if(error)say("globalMessage",error.message);await loadSubmissions();return;}if(f){const {data:s}=await client.from("article_submissions").select("attachment_paths").eq("id",f.dataset.filesSub).single();let count=0;for(const path of s.attachment_paths||[]){const {data,error}=await client.storage.from("news-submissions").createSignedUrl(path,300);if(!error){window.open(data.signedUrl,"_blank","noopener");count++;}}if(!count)say("globalMessage","No se pudieron abrir los adjuntos.");}}
 
+function closeRssEdit(){ $("rssEditModal").hidden=true; $("rssEditForm").reset(); $("rssEditMessage").textContent=""; }
+$("closeRssEdit")?.addEventListener("click",closeRssEdit);
+$("cancelRssEdit")?.addEventListener("click",closeRssEdit);
+$("rssEditModal")?.addEventListener("click",event=>{if(event.target===$("rssEditModal"))closeRssEdit();});
+$("rssEditForm")?.addEventListener("submit",async event=>{
+  event.preventDefault();
+  const id=$("rssEditId").value;
+  const name=$("rssEditName").value.trim();
+  const feedUrl=$("rssEditUrl").value.trim();
+  const category=$("rssEditCategory").value.trim()||"General";
+  if(!id||!name||!feedUrl){$("rssEditMessage").textContent="Completa todos los campos.";return;}
+  let parsedUrl;
+  try{parsedUrl=new URL(feedUrl);}catch{$("rssEditMessage").textContent="La URL del feed no es válida.";return;}
+  if(!["https:","http:"].includes(parsedUrl.protocol)){$("rssEditMessage").textContent="El feed debe usar http:// o https://.";return;}
+  const save=$("saveRssEdit");save.disabled=true;$("rssEditMessage").textContent="Guardando cambios…";
+  const {error}=await client.from("rss_sources").update({name,feed_url:feedUrl,category}).eq("id",id);
+  save.disabled=false;
+  if(error){$("rssEditMessage").textContent="No se pudo actualizar la fuente: "+error.message;return;}
+  $("sourceMessage").textContent="Fuente actualizada. La nueva dirección se utilizará en próximas importaciones.";
+  closeRssEdit();await loadSources();
+});
 async function loadSources(){
   const {data,error}=await client.from("rss_sources").select("*").order("created_at",{ascending:false});
   if(error){$("sourceList").innerHTML=`<p class="muted">${safe(error.message)}</p>`;return;}
@@ -296,25 +317,16 @@ async function loadSources(){
     say("sourceMessage",source.active?"Fuente pausada. No se consultará en próximas importaciones.":"Fuente activada. Volverá a consultarse en próximas importaciones.");
     await loadSources();
   }));
-  $("sourceList").querySelectorAll("[data-edit-source]").forEach(button=>button.addEventListener("click",async()=>{
+  $("sourceList").querySelectorAll("[data-edit-source]").forEach(button=>button.addEventListener("click",()=>{
     const source=data.find(s=>String(s.id)===button.dataset.editSource);
     if(!source)return;
-    const name=window.prompt("Nombre del medio:",source.name);
-    if(name===null)return;
-    const feedUrl=window.prompt("URL del feed RSS:",source.feed_url);
-    if(feedUrl===null)return;
-    const category=window.prompt("Sección:",source.category||"General");
-    if(category===null)return;
-    const cleanName=name.trim(),cleanUrl=feedUrl.trim(),cleanCategory=category.trim()||"General";
-    if(!cleanName){say("sourceMessage","El nombre del medio no puede estar vacío.");return;}
-    let parsedUrl;
-    try{parsedUrl=new URL(cleanUrl);}catch{say("sourceMessage","La URL del feed no es válida.");return;}
-    if(!["https:","http:"].includes(parsedUrl.protocol)){say("sourceMessage","El feed debe usar http:// o https://.");return;}
-    button.disabled=true;
-    const {error}=await client.from("rss_sources").update({name:cleanName,feed_url:cleanUrl,category:cleanCategory}).eq("id",source.id);
-    if(error){say("sourceMessage","No se pudo actualizar la fuente: "+error.message);button.disabled=false;return;}
-    say("sourceMessage","Fuente actualizada. La nueva dirección se utilizará en próximas importaciones.");
-    await loadSources();
+    $("rssEditId").value=source.id;
+    $("rssEditName").value=source.name||"";
+    $("rssEditUrl").value=source.feed_url||"";
+    $("rssEditCategory").value=source.category||"General";
+    $("rssEditMessage").textContent="";
+    $("rssEditModal").hidden=false;
+    $("rssEditName").focus();
   }));
   $("sourceList").querySelectorAll("[data-delete-source]").forEach(button=>button.addEventListener("click",async()=>{
     const source=data.find(s=>String(s.id)===button.dataset.deleteSource);

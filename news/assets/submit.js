@@ -2,6 +2,7 @@ const sb=window.supabase.createClient("https://poywsdigujbarvnzbfnz.supabase.co"
 const form=document.getElementById("submissionForm"),msg=document.getElementById("msg");
 const submissionParams=new URLSearchParams(location.search);
 if(submissionParams.get("colaboracion")==="experta"){
+ document.getElementById("expert-intro").style.display="block";
  document.getElementById("kind").value="otro";
  document.getElementById("title").value="Propuesta de colaboración experta";
  document.getElementById("body").placeholder="Cuéntanos tu experiencia, especialidad, el tema que propones y el formato que te interesa (entrevista, análisis, columna o conversación).";

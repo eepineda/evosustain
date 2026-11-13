@@ -22,6 +22,7 @@ function renderStaticLanguage(){
   "#section-seguridad":en?"Security":"Seguridad",
   "#section-tecnologia":en?"Technology":"Tecnología",
   "#section-opinion-analisis":en?"Opinion":"Opinión",
+  "directory.html":en?"Directory":"Directorio",
   "enviar.html":en?"Submit a story":"Envía tu noticia"
  };
  document.querySelectorAll(".masthead .nav a, .topics a").forEach(el=>{

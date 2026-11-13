@@ -8,7 +8,7 @@ async function load(){const root=document.getElementById("politicsArticles");if(
 
 const en={
 edition:"SPECIAL SECTION · DOMINICAN REPUBLIC",top:["London · United Kingdom","NEWS · OPINION · ANALYSIS"],
-nav:["Home","International","Politics","Economy","Security","Technology","Opinion","Directory","Submit a story"],
+nav:["Home","International","Politics","Economy","Security","Startups & innovation","Opinion","Directory","Submit a story"],
 kicker:"POLITICS · DOMINICAN REPUBLIC",title:"Power, ideas and public decisions.",
 intro:"Coverage of Dominican political parties, government, Congress, elections and institutions, with attention to issues affecting citizens at home and abroad.",
 subnav:["Political parties","Government","Congress","Elections","Diaspora"],

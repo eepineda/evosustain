@@ -162,6 +162,24 @@ async function loadPublishedArticles() {
 const printEditionButton=document.getElementById("printEditionBtn");
 if(printEditionButton) printEditionButton.addEventListener("click",()=>window.print());
 
+
+/* Keep the section directory readable if a missing label slips into the markup. */
+function sanitizeTopicLinks(){
+  document.querySelectorAll(".topics a").forEach(link=>{
+    const label=(link.textContent||"").trim().toLowerCase();
+    if(!label||label==="undefined"||label==="null") link.remove();
+  });
+  const topics=document.querySelector(".topics");
+  if(topics&&!Array.from(topics.querySelectorAll("a")).some(a=>a.getAttribute("href")==="aula-innovacion.html")){
+    const aula=document.createElement("a");
+    aula.href="aula-innovacion.html";
+    aula.append(document.createTextNode(currentLanguage==="en"?"Innovation Classroom":"Aula de Innovación "));
+    const arrow=document.createElement("span"); arrow.textContent="→"; aula.append(arrow);
+    topics.append(aula);
+  }
+}
+sanitizeTopicLinks();
+
 document.querySelectorAll("[data-language]").forEach(b=>b.addEventListener("click",()=>setLanguage(b.dataset.language)));
 renderStaticLanguage();
 loadPublishedArticles();

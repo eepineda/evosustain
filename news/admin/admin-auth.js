@@ -89,6 +89,55 @@ async function init(){
   }
 }
 function showLogin(){ $("loginView").hidden=false; $("appView").hidden=true; }
+
+async function loadOverview(){
+ const kpis=$("overviewKpis"),activity=$("overviewActivity"),statusRoot=$("overviewStatus"),operations=$("overviewOperations");
+ if(!kpis)return;
+ kpis.innerHTML='<p class="muted">Actualizando indicadores…</p>';
+ const specs=[
+  ["articles","articles","status,created_at"],
+  ["submissions","article_submissions","status,created_at"],
+  ["courses","course_enquiries","status,created_at"],
+  ["directoryRequests","directory_submissions","status,created_at"],
+  ["listings","directory_listings","status,created_at"],
+  ["rss","imported_items","status,created_at"]
+ ];
+ const results=await Promise.all(specs.map(async ([key,table,fields])=>{
+  const {data,error}=await client.from(table).select(fields);
+  return {key,table,data:data||[],error};
+ }));
+ const by=Object.fromEntries(results.map(x=>[x.key,x]));
+ const count=(key,predicate=()=>true)=>by[key].data.filter(predicate).length;
+ const recent=(key,days=7)=>by[key].data.filter(x=>x.created_at&&new Date(x.created_at)>=new Date(Date.now()-days*86400000)).length;
+ const cards=[
+  ["Artículos publicados",count("articles",x=>x.status==="published"),"Contenido visible"],
+  ["Envíos editoriales",by.submissions.data.length,count("submissions",x=>x.status==="received")+" pendientes"],
+  ["Solicitudes de formación",by.courses.data.length,count("courses",x=>x.status==="received")+" recibidas"],
+  ["Solicitudes de directorio",by.directoryRequests.data.length,count("directoryRequests",x=>x.status==="received")+" pendientes"],
+  ["Fichas del directorio",by.listings.data.length,count("listings",x=>x.status==="published")+" publicadas"],
+  ["Noticias RSS pendientes",count("rss",x=>x.status==="pending"),"Para revisión editorial"],
+  ["Artículos en revisión",count("articles",x=>x.status==="pending"),"Pendientes de decisión"],
+  ["Actividad últimos 7 días",recent("submissions")+recent("courses")+recent("directoryRequests"),"Nuevas solicitudes"]
+ ];
+ kpis.innerHTML=cards.map(([label,value,note])=>'<article class="overview-kpi"><span>'+safe(label)+'</span><strong>'+value+'</strong><small>'+safe(note)+'</small></article>').join("");
+ const days=Array.from({length:7},(_,i)=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-(6-i));return d;});
+ const daily=days.map(d=>({date:d,sub:0,course:0,directory:0}));
+ for(const x of by.submissions.data){if(!x.created_at)continue;const d=new Date(x.created_at);d.setHours(0,0,0,0);const row=daily.find(y=>y.date.getTime()===d.getTime());if(row)row.sub++;}
+ for(const x of by.courses.data){if(!x.created_at)continue;const d=new Date(x.created_at);d.setHours(0,0,0,0);const row=daily.find(y=>y.date.getTime()===d.getTime());if(row)row.course++;}
+ for(const x of by.directoryRequests.data){if(!x.created_at)continue;const d=new Date(x.created_at);d.setHours(0,0,0,0);const row=daily.find(y=>y.date.getTime()===d.getTime());if(row)row.directory++;}
+ const max=Math.max(1,...daily.map(x=>x.sub+x.course+x.directory));
+ activity.innerHTML='<div class="overview-legend"><span>Envíos editoriales</span><span>Formación</span><span>Directorio</span></div>'+daily.map(x=>{const total=x.sub+x.course+x.directory;return '<div class="overview-day"><span>'+x.date.toLocaleDateString("es-ES",{weekday:"short",day:"2-digit"})+'</span><div class="overview-bar"><i style="width:'+Math.round(total/max*100)+'%"></i></div><b>'+total+'</b><small>'+x.sub+' / '+x.course+' / '+x.directory+'</small></div>';}).join("");
+ const groups=[
+  ["Envíos editoriales",by.submissions.data,[["Recibidos","received"],["Descartados","rejected"]]],
+  ["Formación",by.courses.data,[["Recibidas","received"],["Contactadas","contacted"],["Matriculadas","enrolled"],["Cerradas","closed"],["Descartadas","discarded"]]],
+  ["Directorio",by.directoryRequests.data,[["Recibidas","received"],["Publicadas / vinculadas","published"],["Rechazadas","rejected"]]]
+ ];
+ statusRoot.innerHTML=groups.map(([name,rows,states])=>'<div class="overview-status-group"><strong>'+name+'</strong>'+states.map(([label,key])=>'<span>'+label+' <b>'+rows.filter(x=>x.status===key).length+'</b></span>').join("")+'</div>').join("");
+ const err=results.filter(x=>x.error);
+ operations.innerHTML='<div class="overview-operation-row"><span>Artículos en total</span><b>'+by.articles.data.length+'</b><span>Fichas en borrador</span><b>'+count("listings",x=>x.status==="draft")+'</b></div><div class="overview-operation-row"><span>Fuentes RSS cargadas</span><b>'+by.rss.data.length+'</b><span>Noticias RSS descartadas</span><b>'+count("rss",x=>x.status==="rejected")+'</b></div>'+(err.length?'<p class="message">Algunos indicadores no se pudieron consultar: '+safe(err.map(x=>x.table).join(", "))+'</p>':'');
+ $("overviewUpdated").textContent="Última actualización: "+new Date().toLocaleString("es-ES");
+}
+
 async function showApp(user){
   if((user.email||"").toLowerCase() !== ADMIN_EMAIL){
     await client.auth.signOut();
@@ -97,7 +146,7 @@ async function showApp(user){
   }
   currentUser=user; $("loginView").hidden=true; $("appView").hidden=false;
   $("signedInAs").textContent=user.email;
-  await Promise.all([loadArticles(),loadInbox(),loadSources(),loadSubmissions(),loadCourses(),loadMaintenanceControl()]);
+  await Promise.all([loadOverview(),loadArticles(),loadInbox(),loadSources(),loadSubmissions(),loadCourses(),loadMaintenanceControl()]);
 }
 async function login(e){
   e.preventDefault();
@@ -527,6 +576,7 @@ async function handleDirectoryAction(e){
 
 function wire(){
   $("maintenanceToggleBtn").addEventListener("click",toggleMaintenance);
+  $("refreshOverviewBtn").addEventListener("click",loadOverview);
   $("loginForm").addEventListener("submit",login);
   $("logoutBtn").addEventListener("click",()=>client.auth.signOut());
   $("newArticleBtn").addEventListener("click",()=>editArticle(null));
@@ -565,7 +615,7 @@ function wire(){
       if(error){say("globalMessage","No se pudo abrir el borrador: "+error.message);return;}
       editArticle(article);
       document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab==="articles"));
-      ["articles","inbox","sources","submissions","directory"].forEach(k=>$(k+"Tab").hidden=k!=="articles");
+      ["overview","articles","inbox","sources","submissions","directory","courses"].forEach(k=>$(k+"Tab").hidden=k!=="articles");
       return;
     }
     if(draftButton){
@@ -592,7 +642,7 @@ function wire(){
       $("content").value="NOTA DE FUENTE (EXTRACTO RSS; NO ES REDACCIÓN PROPIA):\\n"+(rssNote||"El feed RSS no incluye un resumen. Consulta la fuente original.")+"\\n\\nPENDIENTE DE REDACCIÓN: verifica los datos con la fuente original y redacta aquí una noticia propia. No copies literalmente el contenido de terceros.\\n\\nFuente consultada: "+(item.article_url||"");
       say("editorMessage",rssNote?"Borrador preparado con el titular y el extracto RSS en el campo Resumen. El texto se conserva como nota de consulta; redacta y revisa el artículo antes de enviarlo a aprobación.":"Borrador preparado. El feed no incluye extracto; consulta la fuente original y añade el resumen manualmente.");
       document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab==="articles"));
-      ["articles","inbox","sources","submissions","directory","courses"].forEach(k=>$(k+"Tab").hidden=k!=="articles");
+      ["overview","articles","inbox","sources","submissions","directory","courses"].forEach(k=>$(k+"Tab").hidden=k!=="articles");
       $("articleForm").scrollIntoView({behavior:"smooth",block:"start"});
       return;
     }
@@ -605,7 +655,8 @@ function wire(){
   $("runRssBtn").addEventListener("click",runRssImport);
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
-    ["articles","inbox","sources","submissions","directory","courses"].forEach(k=>$(k+"Tab").hidden=k!==b.dataset.tab);
+    ["overview","articles","inbox","sources","submissions","directory","courses"].forEach(k=>$(k+"Tab").hidden=k!==b.dataset.tab);
+    if(b.dataset.tab==="overview")loadOverview();
     if(b.dataset.tab==="directory")loadDirectoryAdmin();
     if(b.dataset.tab==="courses")loadCourses();
   }));

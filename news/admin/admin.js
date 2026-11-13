@@ -15,6 +15,19 @@ const slugify = (s) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]
 function say(id, message){ $(id).textContent = message || ""; }
 function safe(value=""){ return String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 
+function translationStatus(article){
+  const baseLanguage=String(article.language||"es").toLowerCase().startsWith("en")?"en":"es";
+  const hasSpanish=baseLanguage==="es"
+    ?Boolean(article.title&&article.content)
+    :Boolean(article.title_es&&article.content_es);
+  const hasEnglish=baseLanguage==="en"
+    ?Boolean(article.title&&article.content)
+    :Boolean(article.title_en&&article.content_en);
+  if(hasSpanish&&hasEnglish)return {label:"ES + EN completos",kind:"complete"};
+  if(!hasSpanish&&!hasEnglish)return {label:"Faltan ES y EN",kind:"missing"};
+  return {label:hasSpanish?"Falta inglés":"Falta español",kind:"partial"};
+}
+
 function editorialGate(payload){
   const author=String(payload.author||"").trim();
   const body=String(payload.content||"").replace(/\\n/g," ").replace(/<[^>]*>/g," ").trim();
@@ -80,7 +93,7 @@ async function login(e){
 async function loadArticles(){
   const {data,error}=await client.from("articles").select("*").order("created_at",{ascending:false});
   if(error){$("articleList").innerHTML=`<p class="muted">${safe(error.message)}</p>`;return;}
-  $("articleList").innerHTML=data.length?data.map(a=>`<article class="item"><div><h3>${safe(a.title)}</h3><p>${safe(a.category)} · ${safe(a.author)} · <span class="pill">${safe(({draft:"Borrador",pending:"En revisión",approved:"Aprobado",published:"Publicado",rejected:"Descartado"})[a.status]||a.status)}</span></p></div><div class="item-actions"><button class="secondary" data-edit="${a.id}">Editar</button>${a.status!=="published"?`<button class="secondary" data-discard="${a.id}">Descartar</button>`:""}<button class="secondary" data-delete="${a.id}">Eliminar</button></div></article>`).join(""):'<p class="muted">Todavía no hay artículos.</p>';
+  $("articleList").innerHTML=data.length?data.map(a=>`<article class="item"><div><h3>${safe(a.title)}</h3><p>${safe(a.category)} · ${safe(a.author)} · <span class="pill">${safe(({draft:"Borrador",pending:"En revisión",approved:"Aprobado",published:"Publicado",rejected:"Descartado"})[a.status]||a.status)}</span> · <span class="translation-pill ${translationStatus(a).kind}">${translationStatus(a).label}</span></p></div><div class="item-actions"><button class="secondary" data-edit="${a.id}">Editar</button>${a.status!=="published"?`<button class="secondary" data-discard="${a.id}">Descartar</button>`:""}<button class="secondary" data-delete="${a.id}">Eliminar</button></div></article>`).join(""):'<p class="muted">Todavía no hay artículos.</p>';
   $("articleList").querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>editArticle(data.find(a=>a.id===b.dataset.edit))));
   $("articleList").querySelectorAll("[data-discard]").forEach(b=>b.addEventListener("click",async()=>{
     const article=data.find(a=>a.id===b.dataset.discard);
@@ -122,7 +135,7 @@ function editArticle(a){
   $("articleForm").hidden=false;$("formHeading").textContent=a?"Editar artículo":"Nuevo artículo";
   $("articleId").value=a?.id||"";$("publishArticleBtn").hidden=!(a?.status==="approved");$("saveChangesBtn").hidden=!a;$("title").value=a?.title||"";$("titleEn").value=a?.title_en||"";$("titleEs").value=a?.title_es||"";$("category").value=a?.category||"Internacional";
   $("author").value=a?.author||"";$("summary").value=a?.summary||"";
-  $("content").value=a?.content||"";$("imageUrl").value=a?.image_url||"";$("imageFile").value="";$("imagePreview").src=a?.image_url||"";$("imagePreview").hidden=!a?.image_url;say("imageMessage","");$("country").value=a?.country||"";$("region").value=a?.region||"";$("language").value=a?.language||"es";$("summaryEn").value=a?.summary_en||"";$("contentEn").value=a?.content_en||"";$("summaryEs").value=a?.summary_es||"";$("contentEs").value=a?.content_es||"";$("sourceTitle").value=a?.source_title||"";$("sourceUrl").value=a?.source_url||"";
+  $("content").value=a?.content||"";$("imageUrl").value=a?.image_url||"";$("imageFile").value="";$("imagePreview").src=a?.image_url||"";$("imagePreview").hidden=!a?.image_url;say("imageMessage","");$("country").value=a?.country||"";$("region").value=a?.region||"";$("language").value=a?.language||"es";$("summaryEn").value=a?.summary_en||"";$("contentEn").value=a?.content_en||"";$("summaryEs").value=a?.summary_es||"";$("contentEs").value=a?.content_es||"";const translation=translationStatus(a||{language:"es"});say("translationStatus",translation.label+". Completa los campos de titular y texto en ambos idiomas antes de considerar la versión bilingüe terminada.");$("sourceTitle").value=a?.source_title||"";$("sourceUrl").value=a?.source_url||"";
   $("articleForm").scrollIntoView({behavior:"smooth",block:"start"});
 }
 async function saveArticle(status,preserveStatus=false){

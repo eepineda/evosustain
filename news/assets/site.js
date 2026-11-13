@@ -12,9 +12,7 @@ function renderStaticLanguage(){
  const en=currentLanguage==="en";
  document.documentElement.lang=currentLanguage;
  document.querySelectorAll("[data-language]").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.language===currentLanguage)));
- set(".ecosystem-mark", "EVOFORD  "+(en?"ECOSYSTEM":"ECOSYSTEM"));
- const ecosystemLinks=document.querySelectorAll(".ecosystem-nav nav a");
- ["EvoSustain",en?"Platform Hub":"Centro de plataforma",en?"News":"Noticias"].forEach((v,i)=>{if(ecosystemLinks[i])ecosystemLinks[i].textContent=v;});
+ // Los nombres del Evoford Ecosystem son marcas corporativas y no se traducen.
  set(".topline span:first-child",en?"LONDON · UNITED KINGDOM":"LONDRES · REINO UNIDO");
  set(".topline span:last-child",en?"NEWS · OPINION · ANALYSIS":"INFORMACIÓN · OPINIÓN · ANÁLISIS");
  const navTranslations={

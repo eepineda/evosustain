@@ -529,3 +529,27 @@ footer a:not(.footer-brand){color:#e6c98b;border-bottom-color:rgba(230,201,139,.
   #latest-publications .story:nth-child(3n),
   #latest-publications .story:nth-child(n+4){padding-bottom:17px;margin-bottom:17px}
 }
+
+
+/* Opinion area: author identity plus a live link to the latest opinion article */
+.opinion{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:34px}
+.opinion-intro{min-width:0}
+.opinion-intro>p{margin-bottom:18px}
+.opinion .author{min-width:0;align-items:flex-start;gap:12px}
+.opinion .avatar{width:62px;height:62px;flex:0 0 62px;object-fit:cover;border-radius:50%;border:1px solid #d1d1d1;background:#222}
+.opinion .author>div{min-width:0}
+.opinion-latest{min-width:0;padding:22px 0 22px 28px;border-left:1px solid #c9c6c0}
+.opinion-latest>.kicker{display:block;margin-bottom:13px}
+.opinion-article-link{display:block;color:inherit;text-decoration:none}
+.opinion-article-link h3{font:700 clamp(21px,2.4vw,29px)/1.13 Georgia,'Times New Roman',serif;letter-spacing:-.02em;margin:0 0 10px}
+.opinion-article-link p{font:14px/1.65 Georgia,'Times New Roman',serif;color:#555;margin:0 0 16px}
+.opinion-article-link:hover h3{color:#9f1d20}
+@media(max-width:760px){
+ .opinion{grid-template-columns:1fr;gap:18px}
+ .opinion-latest{padding:18px 0 0;border-left:0;border-top:1px solid #c9c6c0}
+}
+@media(max-width:620px){
+ .opinion .author{align-items:flex-start}
+ .opinion .avatar{width:54px;height:54px;flex-basis:54px}
+ .opinion-latest{padding-top:15px}
+}

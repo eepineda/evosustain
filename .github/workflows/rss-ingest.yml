@@ -1,0 +1,33 @@
+name: Evoford News RSS import
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evoford-rss-import
+  cancel-in-progress: true
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Import RSS feeds
+        env:
+          SUPABASE_URL: https://poywsdigujbarvnzbfnz.supabase.co
+          RSS_CRON_SECRET: ${{ secrets.EVOFORD_RSS_CRON_SECRET }}
+        run: |
+          if [ -z "$RSS_CRON_SECRET" ]; then
+            echo "::error::Missing GitHub Actions secret EVOFORD_RSS_CRON_SECRET"
+            exit 1
+          fi
+          curl --fail-with-body --silent --show-error \
+            --request POST \
+            --header "Content-Type: application/json" \
+            --header "x-cron-secret: $RSS_CRON_SECRET" \
+            --data '{}' \
+            "$SUPABASE_URL/functions/v1/rss-ingest"

@@ -248,3 +248,45 @@
  .story-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14pt!important}
  .story{display:block!important;width:auto!important;break-inside:avoid!important;page-break-inside:avoid!important}
 }
+
+/* Natural newspaper flow across pages: avoid fixed column boxes and forced blank pages */
+@media print{
+ .embedded-lead-story{
+   break-before:auto!important;
+   page-break-before:auto!important;
+   display:block!important;
+   width:100%!important;
+   margin-top:6pt!important;
+   padding-top:6pt!important;
+ }
+ .embedded-lead-story .full-article-body{
+   display:block!important;
+   column-count:3!important;
+   column-width:auto!important;
+   column-fill:balance!important;
+   column-gap:12pt!important;
+   column-rule:.4pt solid #ccc!important;
+   height:auto!important;
+   min-height:0!important;
+   max-height:none!important;
+   overflow:visible!important;
+ }
+ .embedded-lead-story .article-text-column{display:contents!important}
+ .embedded-lead-story .full-article-body p{
+   display:block!important;
+   font:9pt/1.38 Georgia,'Times New Roman',serif!important;
+   text-align:justify!important;
+   margin:0 0 6pt!important;
+   break-inside:avoid-column!important;
+   page-break-inside:avoid!important;
+ }
+ .embedded-lead-story .full-article-body p:first-child:first-letter{
+   float:left;font-size:22pt;line-height:.8;padding:2pt 4pt 0 0;font-weight:bold
+ }
+ .secondary-area{
+   break-before:auto!important;
+   page-break-before:auto!important;
+ }
+ .story-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12pt!important}
+ .story{display:block!important;width:auto!important;break-inside:avoid!important;page-break-inside:avoid!important}
+}

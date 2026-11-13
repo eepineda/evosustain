@@ -24,7 +24,8 @@ function renderStaticLanguage(){
   "aula-innovacion.html":en?"Innovation Academy":"Aula de Innovación",
   "#section-opinion-analisis":en?"Opinion":"Opinión",
   "directory.html":en?"Directory":"Directorio",
-  "enviar.html":en?"Submit a story":"Envía tu noticia"
+  "enviar.html":en?"Submit a story":"Envía tu noticia",
+  "edicion.html":en?"Print edition":"Edición impresa"
  };
  document.querySelectorAll(".masthead .nav a, .topics a").forEach(el=>{
   const rawLabel=(el.textContent||"").trim().replace(/\s+/g," ").toLocaleLowerCase();

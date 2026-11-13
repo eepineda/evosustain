@@ -38,7 +38,7 @@
       <nav class="tabs" aria-label="Secciones del panel">
         <button class="tab active" data-tab="articles">Artículos</button>
         <button class="tab" data-tab="inbox">Noticias RSS</button>
-        <button class="tab" data-tab="sources">Fuentes RSS</button><button class="tab" data-tab="submissions">Envíos recibidos</button><button class="tab" data-tab="directory">Directorio</button>
+        <button class="tab" data-tab="sources">Fuentes RSS</button><button class="tab" data-tab="submissions">Envíos recibidos</button><button class="tab" data-tab="directory">Directorio</button><button class="tab" data-tab="courses">Solicitudes de formación</button>
       </nav>
 
       <section id="articlesTab" class="tabview">
@@ -112,6 +112,12 @@
   </form>
 </section>
 </section>
+      <section id="coursesTab" class="tabview" hidden>
+        <div class="section-head"><div><p class="eyebrow">AULA DE INNOVACIÓN</p><h2>Solicitudes de formación</h2></div><button id="refreshCoursesBtn" class="secondary">Actualizar</button></div>
+        <p class="muted">Consultas recibidas desde el formulario independiente de cursos. Gestiona el seguimiento de cada persona; estas solicitudes no son envíos de noticias.</p>
+        <div class="article-filters"><label class="filter-search" for="courseSearch">Buscar solicitud<input id="courseSearch" type="search" placeholder="Nombre, correo o curso…"></label><label class="filter-status" for="courseStatusFilter">Estado<select id="courseStatusFilter"><option value="">Todos los estados</option><option value="received">Recibida</option><option value="contacted">Contactada</option><option value="enrolled">Matriculada</option><option value="closed">Cerrada</option></select></label><p id="courseCount" class="muted" aria-live="polite">Cargando solicitudes…</p></div>
+        <div id="courseEnquiryList" class="list"><p class="muted">Cargando solicitudes…</p></div>
+      </section>
       <section id="sourcesTab" class="tabview" hidden>
         <div class="section-head"><div><p class="eyebrow">AGREGADORES</p><h2>Fuentes RSS</h2></div></div>
         <form id="sourceForm" class="panel source-form">

@@ -3,7 +3,7 @@ const form=document.getElementById("submissionForm"),msg=document.getElementById
 const submissionParams=new URLSearchParams(location.search);
 if(submissionParams.get("colaboracion")==="experta"){
  const expertIntro=document.getElementById("expert-intro");
- if(expertIntro)expertIntro.hidden=false;
+ if(expertIntro){expertIntro.hidden=false;expertIntro.style.display="block";}
  document.getElementById("kind").value="otro";
  document.getElementById("title").value="Propuesta de colaboración experta";
 

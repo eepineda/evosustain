@@ -74,15 +74,26 @@ async function init(){
       say("loginMessage","No se ha cargado la biblioteca de acceso de Supabase. Recarga la página.");
       return;
     }
-    client = window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+    client = window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{
+      auth:{
+        flowType:"pkce",
+        detectSessionInUrl:true,
+        persistSession:true,
+        autoRefreshToken:true,
+        storageKey:"evoford-news-admin-auth"
+      }
+    });
+    // Register the listener before reading the session so the callback cannot be missed.
+    client.auth.onAuthStateChange((event,session)=>{
+      // Do not run Supabase queries inside this callback; defer app loading outside the auth lock.
+      if(session) queueMicrotask(()=>showApp(session.user));
+      else if(event==="SIGNED_OUT") showLogin();
+    });
+    // Supabase exchanges the PKCE code from the magic-link URL during client initialization.
     const {data,error}=await client.auth.getSession();
     if(error) throw error;
     if(data?.session) await showApp(data.session.user);
-    client.auth.onAuthStateChange(async (_event,session)=> {
-      if(session) await showApp(session.user);
-      else showLogin();
-    });
-    if(!data?.session) say("loginMessage","");
+    else say("loginMessage","");
   }catch(error){
     console.error("Evoford News init:",error);
     say("loginMessage","Error al iniciar el panel: "+(error?.message||"comprueba la conexión y recarga."));

@@ -35,6 +35,10 @@ function editorialGate(payload){
   if(body.length<500) return "El artículo necesita al menos 500 caracteres de texto propio para poder aprobarse.";
   if(/borrador editorial|redacta aquí|no copies literalmente|fuente consultada:|fuente original:/i.test(body)) return "El texto todavía contiene instrucciones o una referencia de fuente. Sustitúyelas por una redacción propia.";
   if(payload.source_url&&!payload.source_title) return "Indica el nombre del medio original para mostrar correctamente su enlace.";
+  const baseLanguage=String(payload.language||"es").toLowerCase().startsWith("en")?"en":"es";
+  const hasEnglish=baseLanguage==="en"?Boolean(payload.title&&payload.content):Boolean(payload.title_en&&payload.content_en);
+  const hasSpanish=baseLanguage==="es"?Boolean(payload.title&&payload.content):Boolean(payload.title_es&&payload.content_es);
+  if(!hasSpanish||!hasEnglish) return "Para aprobar o publicar, completa las dos versiones: titular y texto íntegro en español y en inglés. Revisa también los resúmenes.";
   return "";
 }
 

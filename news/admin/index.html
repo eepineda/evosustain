@@ -44,11 +44,15 @@
 
       <section id="overviewTab" class="tabview">
         <div class="section-head"><div><p class="eyebrow">EVOFORD NEWS · CONTROL EDITORIAL</p><h2>Resumen general</h2><p class="muted">Indicadores de actividad y solicitudes registradas en el sistema.</p></div><button id="refreshOverviewBtn" class="secondary">Actualizar métricas</button></div>
-        <p id="overviewUpdated" class="muted">Consultando datos…</p>
+        <div class="overview-controls"><label for="overviewRange">Periodo de análisis<select id="overviewRange"><option value="7">Últimos 7 días</option><option value="30" selected>Últimos 30 días</option><option value="90">Últimos 90 días</option></select></label><p id="overviewUpdated" class="muted">Consultando datos…</p></div>
         <div id="overviewKpis" class="overview-grid"><p class="muted">Cargando indicadores…</p></div>
         <div class="overview-panels">
-          <section class="panel overview-panel"><p class="eyebrow">SOLICITUDES · ÚLTIMOS 7 DÍAS</p><h3>Actividad reciente</h3><div id="overviewActivity"><p class="muted">Cargando actividad…</p></div></section>
+          <section class="panel overview-panel"><p class="eyebrow">SOLICITUDES · PERIODO SELECCIONADO</p><h3>Actividad reciente</h3><div id="overviewActivity"><p class="muted">Cargando actividad…</p></div></section>
           <section class="panel overview-panel"><p class="eyebrow">ESTADO DE LAS SOLICITUDES</p><h3>Seguimiento</h3><div id="overviewStatus"><p class="muted">Cargando estados…</p></div></section>
+        </div>
+        <div class="overview-panels overview-deep-panels">
+          <section class="panel overview-panel"><p class="eyebrow">PRODUCCIÓN PROPIA</p><h3>Artículos por sección</h3><div id="overviewCategories"><p class="muted">Cargando…</p></div></section>
+          <section class="panel overview-panel"><p class="eyebrow">CURACIÓN DE CONTENIDOS</p><h3>Cola de noticias RSS</h3><div id="overviewRss"><p class="muted">Cargando…</p></div></section>
         </div>
         <section class="panel overview-panel"><p class="eyebrow">OPERACIÓN EDITORIAL</p><h3>Contenido y comunidad</h3><div id="overviewOperations"><p class="muted">Cargando…</p></div></section>
       </section>

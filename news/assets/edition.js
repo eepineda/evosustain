@@ -25,11 +25,11 @@ function applyLanguage(){
 function render(){
  const lead=articles[0];
  if(!lead){$("lead").innerHTML='<p class="empty">'+ui[language].empty+'</p>';$("storyGrid").innerHTML="";$("storyCount").textContent="0 "+ui[language].stories;return;}
- const title=pick(lead,"title","title_en"),summary=pick(lead,"summary","summary_en");
+ const title=language==="en"?(lead.title_en||lead.title):(lead.title_es||lead.title),summary=language==="en"?(lead.summary_en||lead.summary):(lead.summary_es||lead.summary);
  const side=articles.slice(1,4);
  $("lead").innerHTML='<div class="lead-headline"><div class="category">'+category(lead)+'</div><h1>'+esc(title)+'</h1><p class="summary">'+esc(summary)+'</p><div class="byline">'+ui[language].by+' '+esc(lead.author||"Evoford News")+' · '+esc(lead.country||"Evoford News")+'</div></div><div class="lead-content"><div class="lead-photo">'+(lead.image_url&&/^https:\/\//i.test(lead.image_url)?'<img src="'+esc(lead.image_url)+'" alt="'+esc(title)+'">':'<div class="lead-placeholder">EVOFORD NEWS</div>')+'</div><aside class="lead-sidebar"><div class="sidebar-heading">'+(language==="en"?"MORE HEADLINES":"OTROS TITULARES")+'</div>'+side.map((a,i)=>'<article class="side-story"><span class="side-number">0'+(i+1)+'</span><div><div class="category">'+category(a)+'</div><h2><a href="'+url(a)+'">'+esc(pick(a,"title","title_en"))+'</a></h2><p>'+esc(pick(a,"summary","summary_en"))+'</p></div></article>').join("")+'</aside></div>';
- const fullText=language==="en"?(lead.content_en||lead.content||""):(lead.content||lead.content_en||"");
- const paragraphs=String(fullText).replace(/\r/g,"").split(/\n\s*\n/).map(part=>part.trim()).filter(Boolean);
+ const fullText=language==="en"?(lead.content_en||lead.content||""):(lead.content_es||lead.content||"");
+ const paragraphs=String(fullText).replace(/\\n/g,"\n").replace(/\r/g,"").split(/\n\s*\n/).map(part=>part.trim()).filter(Boolean);
  const bodyHtml=paragraphs.length?paragraphs.map(part=>"<p>"+esc(part).replace(/\n/g,"<br>")+"</p>").join(""):"<p class=\"empty\">"+(language==="en"?"The full article text is not available in this language.":"El texto completo de este artículo no está disponible.")+"</p>";
  $("fullArticle").innerHTML="<div class=\"full-article-heading\"><span>"+(language==="en"?"FULL STORY":"ARTÍCULO COMPLETO")+"</span><h2>"+esc(title)+"</h2><div class=\"byline\">"+ui[language].by+" "+esc(lead.author||"Evoford News")+"</div></div><div class=\"full-article-body\">"+bodyHtml+"</div>";
  const rest=articles.slice(4,13);
@@ -39,7 +39,7 @@ function render(){
 async function load(){
  try{
  const client=window.supabase.createClient(URL,KEY);
- const result=await client.from("articles").select("title,title_en,slug,category,author,summary,summary_en,image_url,created_at,updated_at,country,content,content_en").eq("status","published").order("updated_at",{ascending:false}).limit(40);
+ const result=await client.from("articles").select("title,title_en,title_es,slug,category,author,summary,summary_en,summary_es,image_url,created_at,updated_at,country,content,content_es,content_en").eq("status","published").order("updated_at",{ascending:false}).limit(40);
  if(result.error)throw result.error;articles=result.data||[];render();
  }catch(error){$("lead").innerHTML='<p class="empty">No se pudo cargar la edición. '+esc(error.message||"Comprueba la conexión.")+'</p>';console.error("Evoford print edition:",error);}
 }

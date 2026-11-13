@@ -58,3 +58,24 @@
  .full-article-body p{break-inside:avoid;page-break-inside:avoid;margin-bottom:7pt}
  .secondary-area{break-before:page!important;page-break-before:always!important}
 }
+/* Final newspaper composition: full story follows the lead photo in continuous newspaper columns */
+@media print{
+ .lead{break-inside:auto!important;page-break-inside:auto!important;padding-bottom:7pt}
+ .lead-content{grid-template-columns:minmax(0,2fr) minmax(0,1fr)!important;gap:9pt!important;break-inside:avoid!important;page-break-inside:avoid!important}
+ .lead-photo img{height:58mm!important;max-height:58mm!important;object-fit:cover}
+ .lead-sidebar{padding-left:7pt!important}
+ .side-story{padding:4pt 0!important;grid-template-columns:18pt 1fr!important}
+ .side-story h2{font-size:10pt!important;line-height:1.05!important}
+ .side-story p{font-size:7.5pt!important;line-height:1.25!important}
+ .full-article{display:block!important;visibility:visible!important;clear:both!important;position:static!important;break-before:auto!important;page-break-before:auto!important;padding:9pt 0 12pt!important}
+ .full-article-heading{margin-bottom:7pt!important;padding-bottom:5pt!important}
+ .full-article-heading h2{font-size:15pt!important;margin:3pt 0!important}
+ .full-article-body{display:block!important;visibility:visible!important;overflow:visible!important;column-count:3!important;column-fill:auto!important;column-gap:12pt!important;column-rule:.4pt solid #ccc!important;font:9pt/1.35 Georgia,'Times New Roman',serif!important;text-align:justify!important}
+ .full-article-body p{display:block!important;font:9pt/1.35 Georgia,'Times New Roman',serif!important;margin:0 0 5pt!important;break-inside:avoid!important;page-break-inside:avoid!important;color:#171717!important}
+ .full-article-body p:first-child:first-letter{font-size:22pt!important}
+ .secondary-area{break-before:auto!important;page-break-before:auto!important}
+}
+@media screen{
+ .full-article{break-before:auto!important;page-break-before:auto!important}
+ .full-article-body{column-count:3}
+}

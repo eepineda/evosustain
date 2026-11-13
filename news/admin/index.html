@@ -49,6 +49,7 @@
           <div class="form-grid">
             <div class="field full"><label for="title">Titular en español (o idioma principal)</label><input id="title" required maxlength="180"></div>
             <div class="field full"><label for="titleEn">Headline in English</label><input id="titleEn" maxlength="180"></div>
+            <div class="field full"><label for="titleEs">Titular en español</label><input id="titleEs" maxlength="180"></div>
             <div class="field"><label for="category">Sección</label><select id="category"><option>Internacional</option><option>Política</option><option>Economía</option><option>Seguridad</option><option>Tecnología</option><option>Opinión</option><option>Clima</option><option>Sociedad</option></select></div>
             <div class="field"><label for="author">Autor</label><input id="author" value="EDWIN PINEDA CARRASCO"></div>
             <div class="field full"><label for="summary">Resumen</label><textarea id="summary" rows="2"></textarea></div>
@@ -57,7 +58,9 @@
             <div class="field"><label for="region">Región</label><input id="region" placeholder="Europe, Americas…"></div>
             <div class="field"><label for="language">Idioma principal</label><select id="language"><option value="es">Español</option><option value="en">English</option></select></div>
             <div class="field full"><label for="summaryEn">Resumen en inglés</label><textarea id="summaryEn" rows="2"></textarea></div>
+            <div class="field full"><label for="summaryEs">Resumen en español</label><textarea id="summaryEs" rows="2"></textarea></div>
             <div class="field full"><label for="contentEn">Article text (English)</label><textarea id="contentEn" rows="10"></textarea></div>
+            <div class="field full"><label for="contentEs">Texto del artículo en español</label><textarea id="contentEs" rows="10"></textarea></div>
             <div class="field full"><label for="imageFile">Fotografía desde tu dispositivo (JPG, PNG o WebP; máximo 8 MB)</label><input id="imageFile" type="file" accept="image/jpeg,image/png,image/webp"><button type="button" id="uploadImageBtn" class="secondary">Subir fotografía</button><p id="imageMessage" class="message" role="status"></p><img id="imagePreview" alt="Vista previa de la fotografía" hidden style="max-width:100%;max-height:320px;object-fit:contain;margin-top:12px"><label for="imageUrl">O utiliza una URL de imagen</label><input id="imageUrl" type="url" placeholder="https://…"></div>
             <div class="field"><label for="sourceTitle">Medio original</label><input id="sourceTitle" placeholder="El País, BBC, Reuters…"></div>
             <div class="field full"><label for="sourceUrl">Enlace a la noticia original</label><input id="sourceUrl" type="url" placeholder="https://…"></div>

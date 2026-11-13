@@ -89,7 +89,9 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return response({ error: "Method not allowed" }, 405);
 
   const authHeader = req.headers.get("Authorization") || "";
-  if (!authHeader.startsWith("Bearer ")) return response({ error: "Authentication required" }, 401);
+  const cronSecret = Deno.env.get("RSS_CRON_SECRET") || "";
+  const suppliedCronSecret = req.headers.get("x-cron-secret") || "";
+  const isScheduled = Boolean(cronSecret && suppliedCronSecret && suppliedCronSecret === cronSecret);
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
@@ -98,13 +100,16 @@ Deno.serve(async (req) => {
     return response({ error: "Server configuration is incomplete." }, 500);
   }
 
-  const authClient = createClient(supabaseUrl, anonKey, {
-    global: { headers: { Authorization: authHeader } },
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-  const { data: userData, error: userError } = await authClient.auth.getUser();
-  if (userError || userData.user?.email?.toLowerCase() !== ADMIN_EMAIL) {
-    return response({ error: "Not authorized." }, 403);
+  if (!isScheduled) {
+    if (!authHeader.startsWith("Bearer ")) return response({ error: "Authentication required" }, 401);
+    const authClient = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: authHeader } },
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    const { data: userData, error: userError } = await authClient.auth.getUser();
+    if (userError || userData.user?.email?.toLowerCase() !== ADMIN_EMAIL) {
+      return response({ error: "Not authorized." }, 403);
+    }
   }
 
   const admin = createClient(supabaseUrl, serviceRoleKey, {

@@ -136,20 +136,31 @@ Deno.serve(async (req) => {
   const results: Array<{ source: string; imported: number; skipped: number; error?: string }> = [];
   let totalImported = 0;
 
-  for (const source of sources || []) {
-    const result = { source: source.name, imported: 0, skipped: 0 } as { source: string; imported: number; skipped: number; error?: string };
+  const sourceList = sources || [];
+  const concurrency = 5;
+  let nextSourceIndex = 0;
+
+  async function processSource(source: (typeof sourceList)[number]) {
+    const result = { source: source.name, imported: 0, skipped: 0 } as {
+      source: string; imported: number; skipped: number; error?: string;
+    };
     try {
       const feedUrl = new URL(source.feed_url);
       if (!["http:", "https:"].includes(feedUrl.protocol)) throw new Error("Feed URL must use HTTP or HTTPS.");
 
       const feedResponse = await fetch(feedUrl, {
-        headers: { "User-Agent": "EvofordNewsBot/1.0 (+https://evoford.com/news/)", "Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml, */*" },
-        signal: AbortSignal.timeout(15000),
+        headers: {
+          "User-Agent": "EvofordNewsBot/1.0 (+https://evoford.com/news/)",
+          "Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml, */*",
+        },
+        signal: AbortSignal.timeout(10000),
       });
       if (!feedResponse.ok) throw new Error(`Feed returned HTTP ${feedResponse.status}`);
 
       const xml = await feedResponse.text();
-      if (xml.length > MAX_FEED_BYTES) throw new Error("Feed exceeds the 2 MB safety limit.");
+      if (new TextEncoder().encode(xml).byteLength > MAX_FEED_BYTES) {
+        throw new Error("Feed exceeds the 2 MB safety limit.");
+      }
       const parsed = parser.parse(xml) as Record<string, unknown>;
       const items = extractItems(parsed).slice(0, MAX_ITEMS_PER_SOURCE);
 
@@ -161,14 +172,18 @@ Deno.serve(async (req) => {
         }
         let articleUrl: URL;
         try { articleUrl = new URL(item.article_url); } catch { result.skipped++; continue; }
-        if (!["http:", "https:"].includes(articleUrl.protocol)) { result.skipped++; continue; }
+        if (!["http:", "https:"].includes(articleUrl.protocol)) {
+          result.skipped++;
+          continue;
+        }
 
-        const { data: existing } = await admin
+        const { data: existing, error: lookupError } = await admin
           .from("imported_items")
           .select("id")
           .eq("source_id", String(source.id))
           .eq("feed_guid", item.feed_guid)
           .maybeSingle();
+        if (lookupError) throw lookupError;
 
         if (existing) {
           result.skipped++;
@@ -192,7 +207,6 @@ Deno.serve(async (req) => {
           else throw insertError;
         } else {
           result.imported++;
-          totalImported++;
         }
       }
     } catch (error) {
@@ -205,8 +219,24 @@ Deno.serve(async (req) => {
         result.error = String(error);
       }
     }
-    results.push(result);
+    return result;
   }
+
+  const workers = Array.from(
+    { length: Math.min(concurrency, sourceList.length) },
+    async () => {
+      const completed: typeof results = [];
+      while (true) {
+        const index = nextSourceIndex++;
+        if (index >= sourceList.length) break;
+        completed.push(await processSource(sourceList[index]));
+      }
+      return completed;
+    },
+  );
+  const batches = await Promise.all(workers);
+  results.push(...batches.flat());
+  totalImported = results.reduce((sum, result) => sum + result.imported, 0);
 
   return response({
     success: true,

@@ -326,6 +326,7 @@ async function loadSources(){
     $("rssEditCategory").value=source.category||"General";
     $("rssEditMessage").textContent="";
     $("rssEditModal").hidden=false;
+    $("rssEditModal").scrollIntoView({behavior:"smooth",block:"center"});
     $("rssEditName").focus();
   }));
   $("sourceList").querySelectorAll("[data-delete-source]").forEach(button=>button.addEventListener("click",async()=>{

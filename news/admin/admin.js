@@ -508,7 +508,11 @@ function wire(){
   $("publishArticleBtn").addEventListener("click",()=>saveArticle("published"));$("saveChangesBtn").addEventListener("click",()=>saveArticle(null,true));
   $("sourceForm").addEventListener("submit",addSource);
   $("refreshSubmissionsBtn").addEventListener("click",loadSubmissions);
-  $("refreshDirectoryBtn").addEventListener("click",loadDirectoryAdmin);\n  $("refreshCoursesBtn").addEventListener("click",loadCourses);\n  $("courseSearch").addEventListener("input",filterCourses);\n  $("courseStatusFilter").addEventListener("change",filterCourses);\n  $("courseEnquiryList").addEventListener("click",e=>{const b=e.target.closest("[data-course-status]");if(b)updateCourseStatus(b.dataset.courseId,b.dataset.courseStatus);});
+  $("refreshDirectoryBtn").addEventListener("click",loadDirectoryAdmin);
+  $("refreshCoursesBtn").addEventListener("click",loadCourses);
+  $("courseSearch").addEventListener("input",filterCourses);
+  $("courseStatusFilter").addEventListener("change",filterCourses);
+  $("courseEnquiryList").addEventListener("click",e=>{const b=e.target.closest("[data-course-status]");if(b)updateCourseStatus(b.dataset.courseId,b.dataset.courseStatus);});
   $("directorySubmissionList").addEventListener("click",handleDirectoryAction);
   $("directoryAdminList").addEventListener("click",handleDirectoryAction);
   $("submissionsList").addEventListener("click",handleSubmissionAction);
@@ -564,7 +568,8 @@ function wire(){
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
     ["articles","inbox","sources","submissions","directory","courses"].forEach(k=>$(k+"Tab").hidden=k!==b.dataset.tab);
-    if(b.dataset.tab==="directory")loadDirectoryAdmin();\n    if(b.dataset.tab==="courses")loadCourses();
+    if(b.dataset.tab==="directory")loadDirectoryAdmin();
+    if(b.dataset.tab==="courses")loadCourses();
   }));
 }
 window.addEventListener("error",event=>{

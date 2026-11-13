@@ -101,15 +101,19 @@ async function loadPublishedArticles() {
       opinionRoot.innerHTML='<span class="kicker">'+label+'</span><p class="muted">'+(currentLanguage==="en"?"No opinion articles have been published yet.":"Todavía no hay artículos de opinión publicados.")+'</p>';
     }
   }
-  const featured=data.find(a=>!normalize(a.category).includes("opinion"))||data[0];
-  const remaining=data.filter(a=>a.slug!==featured.slug);
+  const frontStories=data.filter(a=>!normalize(a.category).includes("opinion")).slice(0,2);
+  const featured=frontStories[0]||data[0];
+  const remaining=data.filter(a=>!frontStories.some(f=>f.slug===a.slug));
   const briefItems=remaining.slice(0,3);
   const publicationItems=remaining.slice(3,9);
   const feature=document.getElementById("featuredStory");
   if(feature){
-    feature.innerHTML='<a class="feature-image-link" href="'+articleUrl(featured.slug||"")+'">'+articleImage(featured,"feature-image")+'<span class="image-stamp">EVOFORD<br>NEWS</span></a>'+
-      '<div class="feature-copy"><div class="kicker">'+escapeHtml(categoryLabel(featured.category||"INTERNACIONAL"))+'</div><h1><a href="'+articleUrl(featured.slug||"")+'">'+escapeHtml(currentLanguage==="en"?(featured.title_en||featured.title):featured.title)+'</a></h1>'+
-      '<p class="dek">'+escapeHtml(currentLanguage==="en"?(featured.summary_en||featured.summary||""):(featured.summary||""))+'</p><div class="feature-meta"><span>'+tr("author")+' '+escapeHtml(featured.author||"EVOFORD NEWS")+'</span><span>'+tr("source")+'</span></div><a class="feature-cta" href="'+articleUrl(featured.slug||"")+'">'+tr("readFeature")+' <b>↗</b></a></div>';
+    feature.classList.add("feature-pair-shell");
+    feature.innerHTML='<div class="feature-pair">'+frontStories.map((a,i)=>{
+      const title=currentLanguage==="en"?(a.title_en||a.title):a.title;
+      const summary=currentLanguage==="en"?(a.summary_en||a.summary||""):(a.summary||"");
+      return '<article class="feature-card'+(i===0?' feature-card-lead':'')+'"><a class="feature-card-image" href="'+articleUrl(a.slug||"")+'">'+articleImage(a,"feature-image")+(i===0?'<span class="image-stamp">EVOFORD<br>NEWS</span>':'')+'</a><div class="feature-copy"><div class="kicker">'+escapeHtml(categoryLabel(a.category||"INTERNACIONAL"))+'</div>'+(i===0?'<h1>':'<h2>')+'<a href="'+articleUrl(a.slug||"")+'">'+escapeHtml(title)+'</a>'+(i===0?'</h1>':'</h2>')+'<p class="dek">'+escapeHtml(summary)+'</p><div class="feature-meta"><span>'+tr("author")+' '+escapeHtml(a.author||"EVOFORD NEWS")+'</span><span>'+tr("source")+'</span></div><a class="feature-cta" href="'+articleUrl(a.slug||"")+'">'+tr("readFeature")+' <b>↗</b></a></div></article>';
+    }).join("")+'</div>';
   }
   const briefs=document.getElementById("latestBriefs");
   if(briefs) briefs.innerHTML=briefItems.map((a,i)=>'<a class="brief brief-link" href="'+articleUrl(a.slug||"")+'"><span class="number">'+String(i+1).padStart(2,"0")+'</span><div><span class="brief-category">'+escapeHtml(categoryLabel(a.category||"INTERNACIONAL"))+'</span><b>'+escapeHtml(currentLanguage==="en"?(a.title_en||a.title):a.title)+'</b><p>'+escapeHtml(currentLanguage==="en"?(a.summary_en||a.summary||""):(a.summary||""))+'</p></div><span class="brief-arrow">↗</span></a>').join("")||'<p class="muted">'+(currentLanguage==="en"?"More stories coming soon.":"Más noticias próximamente.")+'</p>';

@@ -1,7 +1,21 @@
 <!doctype html>
 <html lang="es">
 <head>
-<script>document.documentElement.classList.add('evo-maintenance-checking')</script><style>.evo-maintenance-checking body{visibility:hidden}</style><script src="/maintenance.js"></script>
+<script>document.documentElement.classList.add('evo-maintenance-checking')</script><style>.evo-maintenance-checking body{visibility:hidden}
+/* Compact, modern course directory: override shared editorial card sizing. */
+details.aula-track{min-height:0!important;height:auto;padding:0!important;overflow:hidden;border:1px solid #d9dfe5;border-top:3px solid var(--navy);border-radius:3px;background:#fff;box-shadow:0 2px 8px rgba(16,43,78,.045);transition:border-color .18s ease,box-shadow .18s ease}
+details.aula-track[open]{border-top-color:var(--red);box-shadow:0 5px 18px rgba(16,43,78,.09)}
+details.aula-track summary{min-height:0;padding:16px 17px;gap:5px 12px}
+details.aula-track .track-no{font-size:10px;letter-spacing:.08em}
+details.aula-track h3{margin:1px 0 0;font-size:clamp(17px,1.7vw,20px);line-height:1.18}
+details.aula-track .track-toggle{width:28px;height:28px;background:#fbfcfd;transition:background .18s ease,color .18s ease,border-color .18s ease}
+details.aula-track[open] .track-toggle{background:var(--navy);border-color:var(--navy);color:#fff}
+details.aula-track .track-details{padding:0 17px 16px}
+details.aula-track p{font-size:13px;line-height:1.65}
+details.aula-track ul{margin-top:9px}
+@media(max-width:760px){.aula-tracks{grid-template-columns:1fr;gap:10px}details.aula-track summary{padding:15px}}
+
+</style><script src="/maintenance.js"></script>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#102b4e">
 <meta name="description" content="Aula de Innovación Evoford: charlas, formación práctica y orientación para emprendedores, profesionales y equipos innovadores.">

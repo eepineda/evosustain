@@ -31,3 +31,19 @@
  .side-story p{font-size:8pt}
  .side-story{padding:7pt 0}
 }
+.full-article{padding:18px 0 22px;border-bottom:3px double #222;break-inside:auto}
+.full-article-heading{border-bottom:1px solid #999;padding-bottom:10px;margin-bottom:12px}
+.full-article-heading>span{font:bold 10px Arial,sans-serif;letter-spacing:1.5px;color:#9c1d24}
+.full-article-heading h2{font:700 27px/1.08 Georgia,'Times New Roman',serif;margin:6px 0}
+.full-article-body{font:16px/1.58 Georgia,'Times New Roman',serif;text-align:justify;column-count:2;column-gap:28px;column-rule:1px solid #ddd;hyphens:auto}
+.full-article-body p{margin:0 0 11px;orphans:3;widows:3}
+.full-article-body p:first-child:first-letter{float:left;font-size:3.1em;line-height:.82;padding:5px 7px 0 0;font-weight:bold}
+@media(max-width:700px){.full-article-body{column-count:1;font-size:16px;line-height:1.55}.full-article-heading h2{font-size:23px}}
+@media print{
+ .full-article{padding:12pt 0 16pt;break-before:auto}
+ .full-article-heading h2{font-size:19pt}
+ .full-article-body{font-size:10.5pt;line-height:1.48;column-count:2;column-gap:18pt;column-rule:.5pt solid #ccc}
+ .full-article-body p{margin-bottom:7pt}
+ .full-article-body p:first-child:first-letter{font-size:28pt}
+ .secondary-area{break-before:page}
+}

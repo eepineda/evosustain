@@ -615,3 +615,25 @@ footer a:not(.footer-brand){color:#e6c98b;border-bottom-color:rgba(230,201,139,.
   #articleView .read-link{display:none!important}
   .language-notice{font-size:9pt!important}
 }
+
+
+/* Print correction: readable front page and non-overlapping latest briefs */
+@media print{
+  .frontpage-grid{display:block!important}
+  .featured-story{display:grid!important;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)!important;gap:7mm!important}
+  .feature-image-link,.feature-image-link>.story-art,.feature-image-link>.feature-image:not(.story-art){height:66mm!important;min-height:66mm!important;max-height:66mm!important}
+  .feature-copy h1{font-size:25pt!important;line-height:1.08!important}
+  .feature-copy .dek{font-size:12pt!important;line-height:1.5!important}
+  .frontpage-aside{display:block!important;width:100%!important;margin-top:7mm!important;padding:5mm 0 0!important;border-left:0!important;border-top:1px solid #aaa!important}
+  .frontpage-aside #latestBriefs{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5mm!important;align-items:start!important}
+  .frontpage-aside .brief-link{display:flex!important;min-width:0!important;gap:2mm!important;padding:3mm!important;border:1px solid #ccc!important;align-items:flex-start!important;overflow-wrap:anywhere!important}
+  .frontpage-aside .brief-link>div{min-width:0!important;flex:1 1 auto!important}
+  .frontpage-aside .brief-link b{display:block!important;font:700 10pt/1.25 Georgia,serif!important;overflow-wrap:anywhere!important}
+  .frontpage-aside .brief-link p{display:block!important;font:8.5pt/1.4 Georgia,serif!important;white-space:normal!important;overflow:visible!important;-webkit-line-clamp:unset!important;overflow-wrap:anywhere!important}
+  .frontpage-aside .brief-arrow{display:none!important}
+  .country-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4mm!important}
+  .country-card{min-width:0!important;padding:4mm!important}
+  .country-title h3{font-size:13pt!important}
+  .country-story b{font-size:10pt!important;line-height:1.3!important}
+  .country-story .kicker,.country-read{font-size:7.5pt!important}
+}

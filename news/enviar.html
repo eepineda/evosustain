@@ -26,10 +26,10 @@ footer{text-align:center;padding:20px;color:#596574;font-size:12px}
 <h1>Envía tu noticia</h1>
 <p>Comparte una noticia, nota de prensa o artículo de opinión. Todo envío será revisado por la redacción. Enviar una propuesta no garantiza su publicación.</p>
 <form id="submissionForm">
-<div><label for="name">Nombre y apellidos</label><input id="name" maxlength="120" autocomplete="name" required></div>
+<div><label for="name">Nombre y apellidos</label><input id="name" minlength="2" maxlength="120" autocomplete="name" required></div>
 <div><label for="email">Correo electrónico</label><input id="email" type="email" maxlength="254" autocomplete="email" required></div>
 <div><label for="kind">Tipo de contenido</label><select id="kind"><option value="noticia">Noticia</option><option value="nota_prensa">Nota de prensa</option><option value="opinion">Artículo de opinión</option><option value="otro">Otro</option></select></div>
-<div><label for="title">Título</label><input id="title" maxlength="180" required></div>
+<div><label for="title">Título</label><input id="title" minlength="5" maxlength="180" required></div>
 <div class="full"><label for="body">Texto</label><textarea id="body" minlength="50" maxlength="30000" required></textarea><small>Entre 50 y 30.000 caracteres.</small></div>
 <div class="full"><label for="files">Adjuntos (opcional)</label><input id="files" type="file" multiple accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx"><small>Máximo 3 archivos de hasta 8 MB cada uno.</small></div>
 <div class="trap"><label for="website">No rellenar</label><input id="website" tabindex="-1" autocomplete="off"></div>

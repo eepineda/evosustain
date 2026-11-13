@@ -370,3 +370,32 @@ footer a:not(.footer-brand){color:#e6c98b;border-bottom-color:rgba(230,201,139,.
  .frontpage{padding-top:10px}
  .feature-image-link,.feature-image,.feature-image-link .story-art{min-height:240px;height:240px}
 }
+
+
+/* Reduce the lead story height: the previous 350px minimum made the front page too tall */
+.frontpage-grid{align-items:start}
+.featured-story{align-items:start}
+.feature-image-link,
+.feature-image-link>.story-art,
+.feature-image-link>.feature-image:not(.story-art){
+  height:250px!important;
+  min-height:250px!important;
+  max-height:250px!important;
+}
+.feature-image-link>.story-art{overflow:hidden}
+.feature-copy{padding:0;min-height:0}
+.feature-copy h1{font-size:clamp(29px,3.1vw,42px);line-height:1.02;margin:8px 0 10px}
+.feature-copy .dek{font-size:15px;line-height:1.42}
+.feature-meta{padding-top:12px}
+.frontpage-aside{align-self:start}
+@media(max-width:900px){
+ .feature-image-link,
+ .feature-image-link>.story-art,
+ .feature-image-link>.feature-image:not(.story-art){height:230px!important;min-height:230px!important;max-height:230px!important}
+}
+@media(max-width:620px){
+ .feature-image-link,
+ .feature-image-link>.story-art,
+ .feature-image-link>.feature-image:not(.story-art){height:210px!important;min-height:210px!important;max-height:210px!important}
+ .feature-copy h1{font-size:34px}
+}

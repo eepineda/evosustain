@@ -39,7 +39,7 @@ async function loadPublishedArticles() {
     console.error("Evoford News:",error.message); return;
   }
   if (!data?.length) {
-    container.innerHTML='<p class="muted">Todavía no hay artículos publicados.</p>'; return;
+    container.innerHTML='<p class="muted">'+tr("empty")+'</p>'; return;
   }
   const normalize=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
   const featured=data.find(a=>!normalize(a.category).includes("opinion"))||data[0];
@@ -49,13 +49,13 @@ async function loadPublishedArticles() {
   const feature=document.getElementById("featuredStory");
   if(feature){
     feature.innerHTML='<a class="feature-image-link" href="'+articleUrl(featured.slug||"")+'">'+articleImage(featured,"feature-image")+'<span class="image-stamp">EVOFORD<br>NEWS</span></a>'+
-      '<div class="feature-copy"><div class="kicker">'+escapeHtml(featured.category||"INTERNACIONAL")+'</div><h1><a href="'+articleUrl(featured.slug||"")+'">'+escapeHtml(featured.title)+'</a></h1>'+
-      '<p class="dek">'+escapeHtml(featured.summary||"")+'</p><div class="feature-meta"><span>POR '+escapeHtml(featured.author||"EVOFORD NEWS")+'</span><span>EDICIÓN LONDRES</span></div><a class="feature-cta" href="'+articleUrl(featured.slug||"")+'">Leer reportaje <b>↗</b></a></div>';
+      '<div class="feature-copy"><div class="kicker">'+escapeHtml(categoryLabel(featured.category||"INTERNACIONAL"))+'</div><h1><a href="'+articleUrl(featured.slug||"")+'">'+escapeHtml(currentLanguage==="en"?(featured.title_en||featured.title):featured.title)+'</a></h1>'+
+      '<p class="dek">'+escapeHtml(currentLanguage==="en"?(featured.summary_en||featured.summary||""):(featured.summary||""))+'</p><div class="feature-meta"><span>POR '+escapeHtml(featured.author||"EVOFORD NEWS")+'</span><span>EDICIÓN LONDRES</span></div><a class="feature-cta" href="'+articleUrl(featured.slug||"")+'">'+tr("readFeature")+' <b>↗</b></a></div>';
   }
   const briefs=document.getElementById("latestBriefs");
   if(briefs) briefs.innerHTML=briefItems.map((a,i)=>'<a class="brief brief-link" href="'+articleUrl(a.slug||"")+'"><span class="number">'+String(i+1).padStart(2,"0")+'</span><div><span class="brief-category">'+escapeHtml(categoryLabel(a.category||"INTERNACIONAL"))+'</span><b>'+escapeHtml(currentLanguage==="en"?(a.title_en||a.title):a.title)+'</b><p>'+escapeHtml(currentLanguage==="en"?(a.summary_en||a.summary||""):(a.summary||""))+'</p></div><span class="brief-arrow">↗</span></a>').join("")||'<p class="muted">'+(currentLanguage==="en"?"More stories coming soon.":"Más noticias próximamente.")+'</p>';
   container.innerHTML=publicationItems.map((a,i)=>'<article class="story reveal" style="--delay:'+i*70+'ms"><a class="story-link" href="'+articleUrl(a.slug||"")+'">'+articleImage(a,"story-image")+
-    '<div class="story-copy"><div class="kicker">'+escapeHtml(a.category||"INTERNACIONAL")+'</div><h3>'+escapeHtml(a.title)+'</h3><p>'+escapeHtml(a.summary||"")+'</p></div></a>'+
+    '<div class="story-copy"><div class="kicker">'+escapeHtml(a.category||"INTERNACIONAL")+'</div><h3>'+escapeHtml(currentLanguage==="en"?(a.title_en||a.title):a.title)+'</h3><p>'+escapeHtml(currentLanguage==="en"?(a.summary_en||a.summary||""):(a.summary||""))+'</p></div></a>'+
     '<div class="lead-meta">'+escapeHtml(a.author||"EVOFORD NEWS")+'</div><a href="'+articleUrl(a.slug||"")+'" class="read-link">'+tr("readArticle")+' <span>↗</span></a></article>').join("");
   const countryRoot=document.getElementById("countryCoverage");
   if(countryRoot){
@@ -66,8 +66,8 @@ async function loadPublishedArticles() {
     ];
     countryRoot.innerHTML=editions.map(country=>{
       const matches=data.filter(a=>country.terms.includes(normalize(a.country))).slice(0,3);
-      const liveStories=matches.map(a=>'<a class="country-story" href="'+articleUrl(a.slug||"")+'"><span class="kicker">'+escapeHtml(a.category||"ACTUALIDAD")+'</span><b>'+escapeHtml(a.title)+'</b><span class="country-read">Leer noticia ↗</span></a>').join("");
-      const stories=liveStories||'<p class="country-empty">Aún no hay artículos publicados con esta etiqueta. La cobertura aparecerá aquí cuando la redacción publique noticias de este país.</p>';
+      const liveStories=matches.map(a=>'<a class="country-story" href="'+articleUrl(a.slug||"")+'"><span class="kicker">'+escapeHtml(a.category||"ACTUALIDAD")+'</span><b>'+escapeHtml(a.title)+'</b><span class="country-read">'+tr("read")+'</span></a>').join("");
+      const stories=liveStories||'<p class="country-empty">'+tr("noCountry")+'</p>';
       return '<section class="country-card" id="country-'+country.id+'"><div class="country-title"><span class="country-flag" aria-hidden="true">'+country.flag+'</span><h3>'+country.name+'</h3></div>'+stories+'</section>';
     }).join("");
   }
@@ -87,7 +87,7 @@ async function loadPublishedArticles() {
       if(!matches.length)return "";
       const cards=matches.map((a,i)=>{
         const dateText=a.created_at?new Date(a.created_at).toLocaleDateString("es-ES",{day:"numeric",month:"short",year:"numeric"}):"";
-        return '<article class="story reveal" style="--delay:'+i*60+'ms"><a class="story-link" href="'+articleUrl(a.slug||"")+'">'+articleImage(a,"story-image")+'<div class="story-copy"><div class="kicker">'+escapeHtml(categoryLabel(section.name))+'</div><h3>'+escapeHtml(a.title)+'</h3><p>'+escapeHtml(a.summary||"")+'</p></div></a><div class="lead-meta">'+escapeHtml(a.author||"EVOFORD NEWS")+(dateText?" · "+escapeHtml(dateText):"")+'</div><a href="'+articleUrl(a.slug||"")+'" class="read-link">Leer artículo <span>↗</span></a></article>';
+        return '<article class="story reveal" style="--delay:'+i*60+'ms"><a class="story-link" href="'+articleUrl(a.slug||"")+'">'+articleImage(a,"story-image")+'<div class="story-copy"><div class="kicker">'+escapeHtml(categoryLabel(section.name))+'</div><h3>'+escapeHtml(a.title)+'</h3><p>'+escapeHtml(a.summary||"")+'</p></div></a><div class="lead-meta">'+escapeHtml(a.author||"EVOFORD NEWS")+(dateText?" · "+escapeHtml(dateText):"")+'</div><a href="'+articleUrl(a.slug||"")+'" class="read-link">'+tr("readArticle")+' <span>↗</span></a></article>';
       }).join("");
       return '<section class="section category-section" id="section-'+section.id+'"><div class="section-head"><h2>'+section.name+'</h2><span>'+(currentLanguage==="en"?"LATEST STORIES":"ÚLTIMAS PUBLICACIONES")+'</span></div><div class="cards">'+cards+'</div></section>';
     }).join("");

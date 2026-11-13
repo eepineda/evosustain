@@ -142,3 +142,22 @@
  .embedded-lead-story .full-article-body{column-count:3!important;column-gap:13pt!important;column-rule:.4pt solid #ccc!important;font:9pt/1.38 Georgia,'Times New Roman',serif!important}
  .embedded-lead-story .full-article-body p{font:9pt/1.38 Georgia,'Times New Roman',serif!important;margin:0 0 6pt!important}
 }
+/* Compact the right rail so the article begins immediately below the lead photograph */
+.lead-content{align-items:start}
+.lead-sidebar{align-self:start}
+.side-story{padding:6px 0!important;grid-template-columns:19px 1fr!important;gap:5px!important}
+.side-story p{display:none!important}
+.side-story h2{font-size:15px!important;line-height:1.06!important;margin:2px 0!important}
+.side-story .category{font-size:9px!important}
+.side-number{font-size:15px!important}
+@media print{
+ .lead-content{align-items:start!important}
+ .lead-photo img{height:58mm!important;max-height:58mm!important}
+ .lead-sidebar{align-self:start!important}
+ .side-story{padding:4pt 0!important;grid-template-columns:13pt 1fr!important;gap:3pt!important}
+ .side-story p{display:none!important}
+ .side-story h2{font-size:9pt!important;line-height:1.05!important}
+ .side-story .category{font-size:7pt!important}
+ .side-number{font-size:11pt!important}
+ .embedded-lead-story{margin-top:5pt!important;padding-top:5pt!important}
+}

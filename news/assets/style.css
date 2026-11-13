@@ -339,3 +339,34 @@ footer a:not(.footer-brand){color:#e6c98b;border-bottom-color:rgba(230,201,139,.
 /* Bilingual edition controls */
 .edition{align-items:center;gap:12px;flex-wrap:wrap}.edition-actions{display:flex;align-items:center;gap:12px}.language-switch{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);padding:3px;border-radius:3px;background:#fff}.language-switch button,.language-switch a{border:0;background:transparent;color:var(--navy);font:700 10px 'DM Sans',Arial,sans-serif;letter-spacing:.08em;text-decoration:none;padding:7px 9px;cursor:pointer}.language-switch button[aria-pressed="true"],.language-switch a[aria-current="true"]{background:var(--navy);color:#fff}.article-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:24px}.article-actions .language-switch{margin-right:auto}
 @media(max-width:600px){.edition{align-items:flex-start}.edition-actions{width:100%;justify-content:space-between}.article-actions{flex-wrap:wrap}}
+
+
+/* Compact front-page spacing without removing editorial content */
+.edition{padding-top:11px;padding-bottom:10px}
+.market-strip{margin-top:2px;margin-bottom:14px;padding:10px 0 8px}
+.country-desk{padding:13px 0 0}
+.country-desk .section-head{margin-bottom:13px;padding-bottom:9px}
+.country-links{margin-bottom:11px;gap:8px}
+.country-links a{padding:8px 12px}
+.country-grid{gap:14px}
+.country-card{padding:11px 14px 8px}
+.country-title{padding-bottom:9px}
+.country-story{gap:5px;padding:9px 0}
+.country-empty{min-height:0}
+.frontpage{margin-top:5px;padding:12px 0 20px}
+.frontpage-top{margin-bottom:12px}
+.frontpage-grid{gap:26px}
+.feature-image-link{min-height:300px}
+.feature-image{min-height:300px;max-height:380px}
+.feature-image-link .story-art{min-height:300px}
+.feature-image-link>.story-art{min-height:300px!important}
+.feature-image-link>.feature-image:not(.story-art){min-height:300px}
+@media(max-width:900px){
+ .frontpage-grid{gap:20px}
+ .feature-image-link,.feature-image-link>.story-art{min-height:280px!important}
+}
+@media(max-width:620px){
+ .country-desk{padding-top:10px}
+ .frontpage{padding-top:10px}
+ .feature-image-link,.feature-image,.feature-image-link .story-art{min-height:240px;height:240px}
+}

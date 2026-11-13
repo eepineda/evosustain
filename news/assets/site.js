@@ -27,7 +27,7 @@ function renderStaticLanguage(){
   "enviar.html":en?"Submit a story":"Envía tu noticia"
  };
  document.querySelectorAll(".masthead .nav a, .topics a").forEach(el=>{
-  const rawLabel=(el.textContent||"").trim().replace(/\\s+/g," ");
+  const rawLabel=(el.textContent||"").trim().replace(/\s+/g," ");
   if(rawLabel==="Aula de Innovación"||rawLabel==="Innovation Academy")el.setAttribute("href","aula-innovacion.html");
   if(rawLabel==="Startups e innovación"||rawLabel==="Startups & innovation")el.setAttribute("href","startups.html");
   const label=navTranslations[el.getAttribute("href")];

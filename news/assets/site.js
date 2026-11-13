@@ -32,8 +32,12 @@ async function loadPublishedArticles() {
   const container = document.getElementById("publishedArticles");
   if (!container || !window.supabase) return;
   const client = window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-  const {data,error} = await client.from("articles").select("title,title_en,slug,category,author,summary,summary_en,image_url,created_at,country,region")
+  let {data,error} = await client.from("articles").select("title,title_en,slug,category,author,summary,summary_en,image_url,created_at,country,region")
     .eq("status","published").order("updated_at",{ascending:false}).limit(30);
+  if(error && String(error.message||"").includes("title_en")){
+    ({data,error}=await client.from("articles").select("title,slug,category,author,summary,image_url,created_at,country,region")
+      .eq("status","published").order("updated_at",{ascending:false}).limit(30));
+  }
   if (error) {
     container.innerHTML='<p class="muted">'+(currentLanguage==="en"?"Stories could not be loaded. Please try again later.":"No se pudieron cargar las publicaciones. Inténtalo más tarde.")+'</p>';
     console.error("Evoford News:",error.message); return;

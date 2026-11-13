@@ -428,20 +428,18 @@ function courseStatusLabel(status){return ({received:"Recibida",contacted:"Conta
 function filterCourses(){
  const q=($("courseSearch")?.value||"").trim().toLocaleLowerCase("es");
  const status=$("courseStatusFilter")?.value||"";
- const filtered=courseEnquiries.filter(x=>(!status||x.status===status)&&[x.full_name,x.email,x.course_interest,x.message].some(v=>String(v||"").toLocaleLowerCase("es").includes(q)));
+ const filtered=courseEnquiries.filter(x=>(!status||x.status===status)&&[x.full_name,x.email,x.course_interest,x.message,x.internal_notes].some(v=>String(v||"").toLocaleLowerCase("es").includes(q)));
  $("courseCount").textContent=filtered.length+" de "+courseEnquiries.length+" solicitudes";
  const counts={received:0,contacted:0,enrolled:0,closed:0};courseEnquiries.forEach(x=>{if(counts[x.status]!==undefined)counts[x.status]++;});
  $("courseStats").innerHTML=[["Recibidas",counts.received],["Contactadas",counts.contacted],["Matriculadas",counts.enrolled],["Cerradas",counts.closed]].map(([label,n])=>'<div class="course-stat"><strong>'+n+'</strong><span>'+label+'</span></div>').join("");
  $("courseEnquiryList").innerHTML=filtered.length?filtered.map(x=>{
   const date=x.created_at?new Date(x.created_at).toLocaleString("es-GB",{dateStyle:"medium",timeStyle:"short"}):"Fecha no disponible";
-  const actions=[["received","Marcar contactada"],["contacted","Marcar matriculada"],["enrolled","Cerrar solicitud"],["closed","Reabrir solicitud"]];
-  const next=actions.find(a=>a[0]===x.status);
-  return '<article class="item"><div><p class="eyebrow">'+safe(date)+' · '+safe(courseStatusLabel(x.status))+'</p><h3>'+safe(x.full_name)+'</h3><p><a href="mailto:'+safe(x.email)+'">'+safe(x.email)+'</a></p><p><strong>Curso:</strong> '+safe(x.course_interest)+'</p><p>'+safe(x.message).replace(/\n/g,"<br>")+'</p></div><div class="item-actions">'+(next?'<button type="button" class="secondary" data-course-status="'+safe(next[0])+'" data-course-id="'+safe(x.id)+'">'+safe(next[1])+'</button>':'')+'</div></article>';
+  return '<article class="item course-enquiry-card"><div class="course-enquiry-main"><p class="eyebrow">'+safe(date)+'</p><h3>'+safe(x.full_name)+'</h3><p><a href="mailto:'+safe(x.email)+'">'+safe(x.email)+'</a></p><p><strong>Curso:</strong> '+safe(x.course_interest)+'</p><p>'+safe(x.message).replace(/\n/g,"<br>")+'</p></div><div class="course-enquiry-manage"><label>Estado<select class="course-card-status" data-course-id="'+safe(x.id)+'"><option value="received" '+(x.status==="received"?"selected":"")+'>Recibida</option><option value="contacted" '+(x.status==="contacted"?"selected":"")+'>Contactada</option><option value="enrolled" '+(x.status==="enrolled"?"selected":"")+'>Matriculada</option><option value="closed" '+(x.status==="closed"?"selected":"")+'>Cerrada</option></select></label><label>Notas internas<textarea class="course-card-notes" data-course-notes="'+safe(x.id)+'" rows="3" maxlength="3000" placeholder="Ej.: enviar precio, llamar el viernes, pendiente de financiación…">'+safe(x.internal_notes||"")+'</textarea></label><button type="button" class="secondary" data-save-course-notes="'+safe(x.id)+'">Guardar notas</button></div></article>';
  }).join(""):'<p class="muted">No hay solicitudes que coincidan con estos filtros.</p>';
 }
 
 function exportCoursesCsv(){
- const rows=[["Fecha","Nombre","Correo","Curso","Consulta","Estado"],...courseEnquiries.map(x=>[x.created_at?new Date(x.created_at).toISOString():"",x.full_name,x.email,x.course_interest,x.message,courseStatusLabel(x.status)])];
+ const rows=[["Fecha","Nombre","Correo","Curso","Consulta","Estado","Notas internas"],...courseEnquiries.map(x=>[x.created_at?new Date(x.created_at).toISOString():"",x.full_name,x.email,x.course_interest,x.message,courseStatusLabel(x.status),x.internal_notes||""])];
  const csv="\uFEFF"+rows.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\r\n");
  const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
  const url=URL.createObjectURL(blob),a=document.createElement("a");
@@ -457,8 +455,16 @@ async function loadCourses(){
 }
 async function updateCourseStatus(id,status){
  const {error}=await client.from("course_enquiries").update({status}).eq("id",id);
- if(error){say("globalMessage","No se pudo actualizar la solicitud: "+error.message);return;}
- await loadCourses();
+ if(error){say("globalMessage","No se pudo actualizar el estado: "+error.message);return;}
+ const item=courseEnquiries.find(x=>x.id===id);if(item)item.status=status;
+ filterCourses();
+}
+async function saveCourseNotes(id){
+ const field=document.querySelector('[data-course-notes="'+id+'"]');if(!field)return;
+ const {error}=await client.from("course_enquiries").update({internal_notes:field.value}).eq("id",id);
+ if(error){say("globalMessage","No se pudieron guardar las notas: "+error.message);return;}
+ const item=courseEnquiries.find(x=>x.id===id);if(item)item.internal_notes=field.value;
+ say("globalMessage","Notas internas guardadas.");
 }
 
 async function loadDirectoryAdmin(){
@@ -524,7 +530,8 @@ function wire(){
   $("exportCoursesBtn").addEventListener("click",exportCoursesCsv);
   $("courseSearch").addEventListener("input",filterCourses);
   $("courseStatusFilter").addEventListener("change",filterCourses);
-  $("courseEnquiryList").addEventListener("click",e=>{const b=e.target.closest("[data-course-status]");if(b)updateCourseStatus(b.dataset.courseId,b.dataset.courseStatus);});
+  $("courseEnquiryList").addEventListener("change",e=>{const select=e.target.closest(".course-card-status");if(select)updateCourseStatus(select.dataset.courseId,select.value);});
+  $("courseEnquiryList").addEventListener("click",e=>{const b=e.target.closest("[data-save-course-notes]");if(b)saveCourseNotes(b.dataset.saveCourseNotes);});
   $("directorySubmissionList").addEventListener("click",handleDirectoryAction);
   $("directoryAdminList").addEventListener("click",handleDirectoryAction);
   $("submissionsList").addEventListener("click",handleSubmissionAction);

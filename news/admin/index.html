@@ -9,7 +9,7 @@
   <title>Acceso editorial | Evoford News</title>
   <link rel="stylesheet" href="./admin.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="./admin.js?v=20261113-bilingual1"></script>
+  <script defer src="./admin.js?v=20261113-rssmodal1"></script>
 </head>
 <body>
   <header class="topbar">
@@ -96,6 +96,17 @@
       <p id="globalMessage" class="message" role="status"></p>
     </section>
   </main>
+  <section id="rssEditModal" class="rss-modal" hidden aria-labelledby="rssEditTitle" role="dialog" aria-modal="true">
+    <form id="rssEditForm" class="rss-modal-card">
+      <div class="section-head"><div><p class="eyebrow">CONFIGURACIÓN DE FUENTES</p><h2 id="rssEditTitle">Editar fuente RSS</h2></div><button type="button" id="closeRssEdit" class="secondary">Cerrar</button></div>
+      <input id="rssEditId" type="hidden">
+      <div class="field"><label for="rssEditName">Nombre del medio</label><input id="rssEditName" required maxlength="160"></div>
+      <div class="field"><label for="rssEditUrl">Dirección del feed RSS</label><input id="rssEditUrl" type="url" required placeholder="https://…"></div>
+      <div class="field"><label for="rssEditCategory">Sección</label><select id="rssEditCategory"><option>General</option><option>Internacional</option><option>Política</option><option>Economía</option><option>Seguridad</option><option>Startups e innovación</option><option>Opinión</option><option>República Dominicana</option><option>Reino Unido</option><option>España</option></select></div>
+      <p id="rssEditMessage" class="message" role="status"></p>
+      <div class="actions"><button type="submit" id="saveRssEdit">Guardar cambios</button><button type="button" id="cancelRssEdit" class="secondary">Cancelar</button></div>
+    </form>
+  </section>
   <footer>© Evoford News · Londres, Reino Unido</footer>
 </body>
 </html>

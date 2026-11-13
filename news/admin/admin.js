@@ -430,6 +430,8 @@ function filterCourses(){
  const status=$("courseStatusFilter")?.value||"";
  const filtered=courseEnquiries.filter(x=>(!status||x.status===status)&&[x.full_name,x.email,x.course_interest,x.message].some(v=>String(v||"").toLocaleLowerCase("es").includes(q)));
  $("courseCount").textContent=filtered.length+" de "+courseEnquiries.length+" solicitudes";
+ const counts={received:0,contacted:0,enrolled:0,closed:0};courseEnquiries.forEach(x=>{if(counts[x.status]!==undefined)counts[x.status]++;});
+ $("courseStats").innerHTML=[["Recibidas",counts.received],["Contactadas",counts.contacted],["Matriculadas",counts.enrolled],["Cerradas",counts.closed]].map(([label,n])=>'<div class="course-stat"><strong>'+n+'</strong><span>'+label+'</span></div>').join("");
  $("courseEnquiryList").innerHTML=filtered.length?filtered.map(x=>{
   const date=x.created_at?new Date(x.created_at).toLocaleString("es-GB",{dateStyle:"medium",timeStyle:"short"}):"Fecha no disponible";
   const actions=[["received","Marcar contactada"],["contacted","Marcar matriculada"],["enrolled","Cerrar solicitud"],["closed","Reabrir solicitud"]];
@@ -437,7 +439,15 @@ function filterCourses(){
   return '<article class="item"><div><p class="eyebrow">'+safe(date)+' · '+safe(courseStatusLabel(x.status))+'</p><h3>'+safe(x.full_name)+'</h3><p><a href="mailto:'+safe(x.email)+'">'+safe(x.email)+'</a></p><p><strong>Curso:</strong> '+safe(x.course_interest)+'</p><p>'+safe(x.message).replace(/\n/g,"<br>")+'</p></div><div class="item-actions">'+(next?'<button type="button" class="secondary" data-course-status="'+safe(next[0])+'" data-course-id="'+safe(x.id)+'">'+safe(next[1])+'</button>':'')+'</div></article>';
  }).join(""):'<p class="muted">No hay solicitudes que coincidan con estos filtros.</p>';
 }
-async function loadCourses(){
+
+function exportCoursesCsv(){
+ const rows=[["Fecha","Nombre","Correo","Curso","Consulta","Estado"],...courseEnquiries.map(x=>[x.created_at?new Date(x.created_at).toISOString():"",x.full_name,x.email,x.course_interest,x.message,courseStatusLabel(x.status)])];
+ const csv="\\uFEFF"+rows.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\\r\\n");
+ const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="evoford-solicitudes-formacion.csv";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+\nasync function loadCourses(){
  const root=$("courseEnquiryList");if(!root)return;
  root.innerHTML='<p class="muted">Cargando solicitudes…</p>';
  const {data,error}=await client.from("course_enquiries").select("*").order("created_at",{ascending:false});
@@ -509,7 +519,7 @@ function wire(){
   $("sourceForm").addEventListener("submit",addSource);
   $("refreshSubmissionsBtn").addEventListener("click",loadSubmissions);
   $("refreshDirectoryBtn").addEventListener("click",loadDirectoryAdmin);
-  $("refreshCoursesBtn").addEventListener("click",loadCourses);
+  $("refreshCoursesBtn").addEventListener("click",loadCourses);\n  $("exportCoursesBtn").addEventListener("click",exportCoursesCsv);
   $("courseSearch").addEventListener("input",filterCourses);
   $("courseStatusFilter").addEventListener("change",filterCourses);
   $("courseEnquiryList").addEventListener("click",e=>{const b=e.target.closest("[data-course-status]");if(b)updateCourseStatus(b.dataset.courseId,b.dataset.courseStatus);});

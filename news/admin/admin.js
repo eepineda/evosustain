@@ -303,6 +303,46 @@ async function addSource(e){
   say("sourceMessage",error?error.message:"Fuente añadida. La importación automática se conectará en la siguiente fase.");
   if(!error){$("sourceForm").reset();await loadSources();}
 }
+
+async function loadDirectoryAdmin(){
+  const [sub,items]=await Promise.all([
+    client.from("directory_submissions").select("*").order("created_at",{ascending:false}),
+    client.from("directory_listings").select("*").order("created_at",{ascending:false})
+  ]);
+  const subRoot=$("directorySubmissionList"),listRoot=$("directoryAdminList");
+  if(sub.error)subRoot.innerHTML='<p class="muted">'+safe(sub.error.message)+'</p>';
+  else subRoot.innerHTML=sub.data.length?sub.data.map(x=>'<article class="item"><div><h3>'+safe(x.listing_name)+'</h3><p>'+safe(x.category)+' · '+safe(x.listing_type)+' · '+safe(x.contact_name)+' · '+safe(x.contact_email)+' · '+safe(x.status)+'</p><p>'+safe(x.description)+'</p></div><div class="item-actions">'+(x.status==='received'?'<button class="secondary" data-directory-convert="'+x.id+'">Crear ficha</button><button class="secondary" data-directory-reject="'+x.id+'">Descartar</button>':'')+'</div></article>').join(""):'<p class="muted">No hay solicitudes pendientes.</p>';
+  if(items.error)listRoot.innerHTML='<p class="muted">'+safe(items.error.message)+'</p>';
+  else listRoot.innerHTML=items.data.length?items.data.map(x=>'<article class="item"><div><h3>'+safe(x.name)+'</h3><p>'+safe(x.category)+' · '+safe(x.city)+' · '+safe(x.status)+(x.sponsored?' · Patrocinado':'')+'</p></div><div class="item-actions"><button class="secondary" data-directory-toggle="'+x.id+'" data-status="'+x.status+'">'+(x.status==='published'?'Retirar':'Publicar')+'</button><button class="secondary" data-directory-delete="'+x.id+'">Eliminar</button></div></article>').join(""):'<p class="muted">Todavía no hay fichas creadas.</p>';
+}
+async function handleDirectoryAction(e){
+ const b=e.target.closest("button");if(!b)return;
+ if(b.dataset.directoryConvert){
+  const {data:s,error}=await client.from("directory_submissions").select("*").eq("id",b.dataset.directoryConvert).single();
+  if(error){say("globalMessage",error.message);return;}
+  const slug=slugify(s.listing_name)+"-"+Math.random().toString(36).slice(2,7);
+  const payload={name:s.listing_name,slug,category:s.category,listing_type:s.listing_type,description:s.description,address:s.address,postcode:s.postcode,phone:s.phone,email:s.contact_email,website:s.website,status:"draft",city:"London"};
+  const {data:item,error:insertError}=await client.from("directory_listings").insert(payload).select("id").single();
+  if(insertError){say("globalMessage","No se pudo crear la ficha: "+insertError.message);return;}
+  const {error:updateError}=await client.from("directory_submissions").update({status:"converted",listing_id:item.id}).eq("id",s.id);
+  say("globalMessage",updateError?"Ficha creada, pero no se pudo actualizar la solicitud: "+updateError.message:"Ficha creada como borrador. Verifica sus datos y publícala cuando esté lista.");
+  await loadDirectoryAdmin();return;
+ }
+ if(b.dataset.directoryReject){
+  const {error}=await client.from("directory_submissions").update({status:"rejected"}).eq("id",b.dataset.directoryReject);
+  say("globalMessage",error?error.message:"Solicitud descartada.");await loadDirectoryAdmin();return;
+ }
+ if(b.dataset.directoryToggle){
+  const next=b.dataset.status==="published"?"draft":"published";
+  const {error}=await client.from("directory_listings").update({status:next,verified_at:next==="published"?new Date().toISOString():null,updated_at:new Date().toISOString()}).eq("id",b.dataset.directoryToggle);
+  say("globalMessage",error?error.message:(next==="published"?"Ficha publicada.":"Ficha retirada de la web."));await loadDirectoryAdmin();return;
+ }
+ if(b.dataset.directoryDelete&&window.confirm("¿Eliminar definitivamente esta ficha?")){
+  const {error}=await client.from("directory_listings").delete().eq("id",b.dataset.directoryDelete);
+  say("globalMessage",error?error.message:"Ficha eliminada.");await loadDirectoryAdmin();
+ }
+}
+
 function wire(){
   $("loginForm").addEventListener("submit",login);
   $("logoutBtn").addEventListener("click",()=>client.auth.signOut());
@@ -314,6 +354,9 @@ function wire(){
   $("publishArticleBtn").addEventListener("click",()=>saveArticle("published"));$("saveChangesBtn").addEventListener("click",()=>saveArticle(null,true));
   $("sourceForm").addEventListener("submit",addSource);
   $("refreshSubmissionsBtn").addEventListener("click",loadSubmissions);
+  $("refreshDirectoryBtn").addEventListener("click",loadDirectoryAdmin);
+  $("directorySubmissionList").addEventListener("click",handleDirectoryAction);
+  $("directoryAdminList").addEventListener("click",handleDirectoryAction);
   $("submissionsList").addEventListener("click",handleSubmissionAction);
   $("uploadImageBtn").addEventListener("click",uploadArticleImage);
   $("refreshInboxBtn").addEventListener("click",loadInbox);
@@ -366,7 +409,8 @@ function wire(){
   $("runRssBtn").addEventListener("click",runRssImport);
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
-    ["articles","inbox","sources","submissions"].forEach(k=>$(k+"Tab").hidden=k!==b.dataset.tab);
+    ["articles","inbox","sources","submissions","directory"].forEach(k=>$(k+"Tab").hidden=k!==b.dataset.tab);
+    if(b.dataset.tab==="directory")loadDirectoryAdmin();
   }));
 }
 window.addEventListener("error",event=>{

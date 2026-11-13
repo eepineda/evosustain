@@ -5,7 +5,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg"><meta name="theme-color" content="#102b4e">
 <meta name="description" content="Artículo publicado en Evoford News.">
-<title>Artículo | Evoford News</title><link rel="stylesheet" href="../assets/style.css?v=20261113-print3">
+<title>Artículo | Evoford News</title><link rel="stylesheet" href="../assets/style.css?v=20261114-print4">
 <style>
 .ecosystem-bar{display:none!important;min-height:34px;padding:0 5.5%;display:flex;align-items:center;justify-content:space-between;gap:18px;background:#071b2b;color:#fff;font:700 10px/1.2 Arial,sans-serif;letter-spacing:.08em}
 .ecosystem-brand,.ecosystem-links a{color:#fff;text-decoration:none}
@@ -52,6 +52,22 @@
 const SUPABASE_URL = "https://poywsdigujbarvnzbfnz.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_1t7gv1Y9-6HHwMqW5E343A_51GH_L7f";
 const root=document.getElementById("articleView");
+document.addEventListener("click",event=>{
+ const button=event.target.closest("#printArticleBtn");
+ if(!button)return;
+ event.preventDefault();
+ button.disabled=true;
+ let restored=false;
+ const restore=()=>{if(restored)return;restored=true;button.disabled=false;};
+ window.addEventListener("afterprint",restore,{once:true});
+ // Do not wait indefinitely for remote images or fonts; the browser can print
+ // the article text even when a third-party image is unavailable.
+ if(document.fonts?.ready)document.fonts.ready.catch(()=>{});
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  try{window.print();}finally{setTimeout(restore,1200);}
+ }));
+});
+
 document.getElementById("year").textContent=new Date().getFullYear();
 function esc(v=""){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 async function loadArticle(){
@@ -146,8 +162,8 @@ async function loadArticle(){
  await refreshCommentAuth();
  client.auth.onAuthStateChange(()=>{refreshCommentAuth();});
  if(commentForm)commentForm.addEventListener("submit",async event=>{event.preventDefault();const feedback=document.getElementById("commentFeedback");const submit=commentForm.querySelector("button[type='submit']");const commentBody=document.getElementById("commentBody").value.trim();const {data:sessionData}=await client.auth.getSession();const user=sessionData?.session?.user;if(!user){feedback.textContent=ui.login;await refreshCommentAuth();return;}if(commentBody.length<3)return;submit.disabled=true;feedback.textContent=requestedLanguage==="en"?"Sending…":"Enviando…";const {error:sendError}=await client.from("article_comments").insert({article_id:a.id,user_id:user.id,author_name:profileName(user),body:commentBody,status:"approved"});submit.disabled=false;if(sendError){feedback.textContent=sendError.message||"No se pudo enviar. Inténtalo de nuevo más tarde.";console.error(sendError.message);}else{commentForm.reset();feedback.textContent=requestedLanguage==="en"?"Comment posted. Thank you.":"Comentario publicado. Gracias por participar."; }});
- const printButton=document.getElementById("printArticleBtn");
- if(printButton) printButton.addEventListener("click",async event=>{event.preventDefault();printButton.disabled=true;try{if(document.fonts?.ready)await document.fonts.ready;const images=Array.from(root.querySelectorAll("img"));await Promise.all(images.map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true});setTimeout(resolve,4000);})));requestAnimationFrame(()=>requestAnimationFrame(()=>{window.print();printButton.disabled=false;}));}catch(error){printButton.disabled=false;window.print();}});
+ // Printing is delegated at document level so it remains available even if
+ // optional article widgets (sharing/comments) fail to initialise.
 }
 loadArticle();
 </script>

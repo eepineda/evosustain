@@ -4,9 +4,10 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg"><meta name="theme-color" content="#102b4e">
 <meta name="description" content="Artículo publicado en Evoford News.">
-<title>Artículo | Evoford News</title><link rel="stylesheet" href="../assets/style.css?v=20261112-24">
+<title>Artículo | Evoford News</title><link rel="stylesheet" href="../assets/style.css?v=20261113-32">
 </head>
 <body>
+<div class="ecosystem-bar" aria-label="Evoford ecosystem"><a class="ecosystem-brand" href="../index.html">EVOFORD&nbsp; ECOSYSTEM</a><nav class="ecosystem-links"><a href="../index.html">EvoSustain</a><a href="../../app/evosustainhub.html">Platform Hub</a><a href="../index.html">News</a></nav></div>
 <header class="masthead"><div class="topline"><span id="articleLocation">Londres · Reino Unido</span><span id="articleDescriptor">INFORMACIÓN · OPINIÓN · ANÁLISIS</span></div><a class="brand" href="../">EVOFORD <em>NEWS</em></a><nav class="nav"><a id="navHome" href="../">Portada</a><a id="navInternational" href="../#section-internacional">Internacional</a><a id="navPolitics" href="../#section-politica">Política</a><a id="navEconomy" href="../#section-economia">Economía</a><a id="navSecurity" href="../#section-seguridad">Seguridad</a><a id="navTechnology" href="../#section-tecnologia">Tecnología</a><a id="navOpinion" href="../#espacio-opinion">Opinión</a></nav></header>
 <main id="articleView" class="wrap" style="max-width:850px;padding-top:40px;padding-bottom:70px"><p class="muted">Cargando artículo…</p></main>
 <footer><a class="footer-brand" href="../">EVOFORD NEWS</a><span id="articleFooter">Noticias · Opinión · Análisis</span><span>© <span id="year"></span> Evoford</span></footer>
@@ -21,22 +22,20 @@ async function loadArticle(){
  const slug=new URLSearchParams(location.search).get("slug");
  if(!slug){root.innerHTML="<h1>Artículo no disponible</h1><p>Falta identificar la publicación.</p><a class='read-link' href='../'>Volver a portada →</a>";return;}
  const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
- let {data:a,error}=await client.from("articles").select("id,title,title_en,slug,category,author,summary,content,image_url,country,region,language,summary_en,content_en,source_title,source_url,updated_at").eq("slug",slug).eq("status","published").maybeSingle();
+ let {data:a,error}=await client.from("articles").select("*").eq("slug",slug).eq("status","published").maybeSingle();
  if(error && String(error.message||"").includes("title_en")){
-   ({data:a,error}=await client.from("articles").select("id,title,slug,category,author,summary,content,image_url,country,region,language,summary_en,content_en,source_title,source_url,updated_at").eq("slug",slug).eq("status","published").maybeSingle());
+   ({data:a,error}=await client.from("articles").select("*").eq("slug",slug).eq("status","published").maybeSingle());
  }
  if(error||!a){root.innerHTML="<h1>Artículo no disponible</h1><p>La publicación no existe o no está disponible.</p><a class='read-link' href='../'>Volver a portada →</a>";return;}
  const requestedLanguage=new URLSearchParams(location.search).get("lang")==="en"?"en":"es";
  const english=requestedLanguage==="en";
- const originalLanguage=(a.language||"").toLowerCase().startsWith("en")?"en":"es";
- // Select translated fields independently: a missing summary must not block an available headline or body.
- const hasEnglishTitle=Boolean(a.title_en);
- const hasEnglishSummary=Boolean(a.summary_en);
- const hasEnglishBody=Boolean(a.content_en);
- const title=english&&hasEnglishTitle?a.title_en:a.title;
- const summary=english&&hasEnglishSummary?a.summary_en:a.summary;
- let body=english&&hasEnglishBody?a.content_en:a.content;
- const languageNotice=english&&(!hasEnglishTitle||!hasEnglishSummary||!hasEnglishBody)?"<p class='muted language-notice'>Some parts of this article are not yet available in English; the original text is shown where a translation is missing.</p>":"";
+ const originalLanguage=(a.language||"es").toLowerCase().startsWith("en")?"en":"es";
+ // Use the original-language fields as the fallback and the matching translation fields when available.
+ const title=english?(a.title_en||(originalLanguage==="en"?a.title:a.title)):(a.title_es||(originalLanguage==="es"?a.title:a.title));
+ const summary=english?(a.summary_en||(originalLanguage==="en"?a.summary:a.summary)):(a.summary_es||(originalLanguage==="es"?a.summary:a.summary));
+ let body=english?(a.content_en||(originalLanguage==="en"?a.content:a.content)):(a.content_es||(originalLanguage==="es"?a.content:a.content));
+ const missingTranslation=english?(!a.title_en&&!a.summary_en&&!a.content_en):(!a.title_es&&!a.summary_es&&!a.content_es);
+ const languageNotice=missingTranslation?(english?"<p class='muted language-notice'>The English translation is not complete yet. The original text is shown for any missing part.</p>":"<p class='muted language-notice'>La traducción al español todavía no está completa. Se muestra el texto original en las partes pendientes.</p>"):"";
  let sourceUrl=a.source_url||"";
  let sourceTitle=a.source_title||"";
  body=String(body||"").replace(/\\n/g,"\n");

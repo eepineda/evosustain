@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#102b4e"><meta name="description" content="Edición impresa de Evoford News">
+<title>Edición impresa | Evoford News</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/edition.css?v=1">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<header class="toolbar">
+ <a href="./" class="back">← Evoford News</a>
+ <div class="tools"><label for="paperSize">Formato <select id="paperSize"><option value="A4">A4</option><option value="A3">A3</option></select></label>
+ <button id="languageToggle" type="button">English</button><button id="printBtn" type="button">Imprimir / Guardar PDF</button></div>
+</header>
+<main class="newspaper" id="newspaper">
+ <div class="paper-topline"><span id="editionDate">EDICIÓN DIGITAL</span><span>INFORMACIÓN · OPINIÓN · ANÁLISIS</span><span id="editionNumber">EVOFORD NEWS</span></div>
+ <header class="paper-masthead"><div class="paper-kicker">EL PERIÓDICO GLOBAL · INFORMACIÓN CON CONTEXTO</div><div class="paper-brand">EVOFORD <span>NEWS</span></div><div class="paper-motto">Noticias para entender el mundo</div></header>
+ <div class="paper-rule"></div>
+ <div class="paper-sections">INTERNACIONAL <i>·</i> ECONOMÍA <i>·</i> SOCIEDAD <i>·</i> TECNOLOGÍA <i>·</i> OPINIÓN</div>
+ <section id="lead" class="lead"><p class="loading">Preparando la edición…</p></section>
+ <section class="secondary-area"><div class="section-label"><span>OTRAS NOTICIAS</span><span id="storyCount"></span></div><div id="storyGrid" class="story-grid"></div></section>
+ <footer class="paper-footer"><strong>EVOFORD NEWS</strong><span>Edición digital preparada para impresión</span><span>evoford.com/news</span></footer>
+</main>
+<script src="assets/edition.js?v=1"></script>
+</body></html>

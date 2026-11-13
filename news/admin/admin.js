@@ -369,7 +369,7 @@ function wire(){
       if(error){say("globalMessage","No se pudo abrir el borrador: "+error.message);return;}
       editArticle(article);
       document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab==="articles"));
-      ["articles","inbox","sources"].forEach(k=>$(k+"Tab").hidden=k!=="articles");
+      ["articles","inbox","sources","submissions","directory"].forEach(k=>$(k+"Tab").hidden=k!=="articles");
       return;
     }
     if(draftButton){

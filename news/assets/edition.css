@@ -47,3 +47,14 @@
  .full-article-body p:first-child:first-letter{font-size:28pt}
  .secondary-area{break-before:page}
 }
+/* Keep the lead story and its complete text together in the print flow */
+.full-article{display:block!important;visibility:visible!important;min-height:1px;position:relative;clear:both;break-before:page!important;page-break-before:always!important}
+.full-article-body{display:block!important;visibility:visible!important;color:#171717!important;overflow:visible!important}
+.full-article-body p{display:block!important;color:#171717!important}
+.lead-content{break-inside:avoid;page-break-inside:avoid}
+@media print{
+ .full-article{break-before:page!important;page-break-before:always!important;break-inside:auto!important}
+ .full-article-body{column-count:2!important;column-fill:auto;column-gap:17pt;font-family:Georgia,'Times New Roman',serif!important;font-size:10.5pt!important;line-height:1.5!important}
+ .full-article-body p{break-inside:avoid;page-break-inside:avoid;margin-bottom:7pt}
+ .secondary-area{break-before:page!important;page-break-before:always!important}
+}

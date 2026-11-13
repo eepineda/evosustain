@@ -11,6 +11,7 @@ function setLanguage(lang){
  const t=copy[currentLanguage];document.documentElement.lang=currentLanguage;
  document.querySelectorAll("[data-language]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.language===currentLanguage)));
  const set=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value;};
+ applyExpertLanguage();
  set("startupEdition",t.edition);set("startupMeta",t.meta);set("startupHeadline",t.headline);set("startupP1",t.p1);set("startupP2",t.p2);set("startupVisit",t.visit);
  set("startupArtLabel",currentLanguage==="en"?"LONDON-BORN · UK STARTUP · DOMINICAN HEART":"NACIDA EN LONDRES · STARTUP BRITÁNICA · CORAZÓN DOMINICANO");
  const top=document.querySelectorAll(".topline span");if(top[0])top[0].textContent=t.topline;if(top[1])top[1].textContent=t.strap;
@@ -26,6 +27,43 @@ function setLanguage(lang){
  const year=document.getElementById("year");if(year)year.textContent=now.getFullYear();
 }
 document.querySelectorAll("[data-language]").forEach(b=>b.addEventListener("click",()=>setLanguage(b.dataset.language)));
+
+
+/* Expert collaboration section */
+const expertCopy = {
+ es: {
+  title:"Un espacio para voces expertas",
+  eyebrow:"CONOCIMIENTO QUE SUMA",
+  heading:"¿Trabajas en innovación? Queremos escuchar tu experiencia.",
+  p1:"Evoford News abre este espacio a profesionales, investigadores, fundadores de startups, emprendedores, desarrolladores, inversores y especialistas que quieran compartir conocimiento sobre startups e innovación.",
+  p2:"Puedes proponer una entrevista, una columna de análisis, una conversación temática o una colaboración puntual. Queremos abordar cualquier tema relacionado con el ecosistema innovador: tecnología, inteligencia artificial, financiación, sostenibilidad, modelos de negocio, emprendimiento, investigación y nuevos retos.",
+  p3:"Cuéntanos quién eres, tu área de experiencia y qué tema te gustaría tratar. La redacción revisará cada propuesta y contactará contigo si encaja en la línea editorial.",
+  cta:"Proponer una colaboración",topics:"Temas que puedes proponer",
+  list:["Startups y creación de empresas","Inteligencia artificial, datos y software","Financiación, inversión y fintech","Climate tech y sostenibilidad","Investigación, ciencia y transferencia tecnológica","Experiencias profesionales y liderazgo","Innovación con impacto social"],
+  note:"Las colaboraciones están sujetas a revisión editorial. El envío de una propuesta no garantiza su publicación y se indicarán los posibles conflictos de interés."
+ },
+ en: {
+  title:"A space for expert voices",eyebrow:"KNOWLEDGE THAT MOVES IDEAS FORWARD",
+  heading:"Working in innovation? We want to hear from you.",
+  p1:"Evoford News welcomes professionals, researchers, startup founders, entrepreneurs, developers, investors and specialists who want to share knowledge about startups and innovation.",
+  p2:"Propose an interview, an analysis column, a themed conversation or a one-off contribution. We are interested in every part of the innovation ecosystem: technology, artificial intelligence, funding, sustainability, business models, entrepreneurship, research and emerging challenges.",
+  p3:"Tell us who you are, your area of expertise and the subject you would like to explore. The newsroom will review your proposal and get in touch if it fits our editorial approach.",
+  cta:"Propose a contribution",topics:"Topics you could explore",
+  list:["Startups and company building","Artificial intelligence, data and software","Funding, investment and fintech","Climate tech and sustainability","Research, science and technology transfer","Professional experience and leadership","Innovation with social impact"],
+  note:"All contributions are subject to editorial review. Submitting a proposal does not guarantee publication. Relevant conflicts of interest will be disclosed."
+ }
+};
+function applyExpertLanguage(){
+ const t=expertCopy[currentLanguage]||expertCopy.es;
+ const section=document.getElementById("colabora");if(!section)return;
+ const put=(selector,value)=>{const el=section.querySelector(selector);if(el)el.textContent=value;};
+ put(".section-head h2",t.title);put(".expert-eyebrow",t.eyebrow);put("h3",t.heading);
+ const ps=section.querySelectorAll(".expert-call-grid > div > p:not(.expert-eyebrow)");
+ [t.p1,t.p2,t.p3].forEach((v,i)=>{if(ps[i])ps[i].textContent=v;});
+ put(".expert-cta",t.cta);put(".expert-topics h4",t.topics);
+ const list=section.querySelectorAll(".expert-topics li");t.list.forEach((v,i)=>{if(list[i])list[i].textContent=v;});
+ put(".expert-note",t.note);
+}
 
 function esc(v=""){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 async function load(){const root=document.getElementById("startupArticles");if(!window.supabase){root.innerHTML='<p class="empty-startups">No se pudo conectar con el servicio de noticias.</p>';return;}const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);const {data,error}=await client.from("articles").select("title,slug,category,author,summary,image_url,created_at").eq("status","published").in("category",["Tecnología","Startups","Innovación"]).order("updated_at",{ascending:false}).limit(9);if(error){root.innerHTML='<p class="empty-startups">No se pudieron cargar las publicaciones en este momento.</p>';console.error(error);return;}if(!data||!data.length){root.innerHTML='<p class="empty-startups">Todavía no hay noticias de startups o innovación publicadas. Aquí aparecerán perfiles, entrevistas y noticias cuando la redacción las publique.</p>';return;}root.innerHTML=data.map(a=>'<article class="story"><a class="story-link" href="articles/plantilla-articulo.html?slug='+encodeURIComponent(a.slug||"")+'">'+(a.image_url&&/^https:\/\//i.test(a.image_url)?'<img class="story-image" src="'+esc(a.image_url)+'" alt="'+esc(a.title||"")+'" loading="lazy">':'<div class="story-art art-blue"><span>STARTUP</span></div>')+'<div class="story-copy"><div class="kicker">'+esc(a.category||"INNOVACIÓN")+'</div><h3>'+esc(a.title||"")+'</h3><p>'+esc(a.summary||"")+'</p></div></a><div class="lead-meta">'+esc(a.author||"EVOFORD NEWS")+'</div><a class="read-link" href="articles/plantilla-articulo.html?slug='+encodeURIComponent(a.slug||"")+'">Leer artículo ↗</a></article>').join("");}

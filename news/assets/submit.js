@@ -5,7 +5,7 @@ if(submissionParams.get("colaboracion")==="experta"){
  document.getElementById("expert-intro").style.display="block";
  document.getElementById("kind").value="otro";
  document.getElementById("title").value="Propuesta de colaboración experta";
- document.getElementById("body").placeholder="Cuéntanos tu experiencia, especialidad, el tema que propones y el formato que te interesa (entrevista, análisis, columna o conversación).";
+
 }
 
 const types=["image/jpeg","image/png","image/webp","application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document"];

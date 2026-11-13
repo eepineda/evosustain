@@ -23,6 +23,24 @@
 .country-flag-card small{display:block;font-size:9px;font-weight:400;color:#66717d;margin-top:2px}
 @media(max-width:760px){.country-primary{grid-template-columns:1fr;gap:14px}.country-flag-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.country-directory-head h2{font-size:21px}}
 @media(max-width:380px){.country-flag-grid{grid-template-columns:1fr}}
+
+/* Fichas compactas para todas las categorías del directorio */
+.directory-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;align-items:start}
+.directory-card{padding:13px 14px;border-top-width:2px;min-width:0}
+.directory-card .directory-tag{font-size:9px;line-height:1.35}
+.directory-card h3{font-size:16px;line-height:1.25;margin:6px 0}
+.directory-card .directory-summary{font-size:12px;line-height:1.45;color:#596574;margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.directory-card details{margin-top:10px;border-top:1px solid #e1e5ea;padding-top:8px}
+.directory-card details summary{cursor:pointer;color:#102b4e;font-size:11px;font-weight:700;list-style:none}
+.directory-card details summary::-webkit-details-marker{display:none}
+.directory-card details summary:after{content:"＋";float:right;color:#a9232d}
+.directory-card details[open] summary:after{content:"−"}
+.directory-card .directory-details{padding-top:7px}
+.directory-card .directory-details p{font-size:12px;line-height:1.45;margin:7px 0;overflow-wrap:anywhere}
+.directory-card .directory-details a{overflow-wrap:anywhere}
+@media(max-width:950px){.directory-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:680px){.directory-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.directory-card{padding:12px}}
+@media(max-width:440px){.directory-grid{grid-template-columns:1fr}}
 </style></head><body>
 <header class="directory-header"><div class="directory-brandrow"><a class="directory-brand" href="./">EVOFORD <em>NEWS</em><small>DIRECTORIO</small></a><span class="directory-tag">LONDRES · REINO UNIDO</span></div><nav class="directory-nav" aria-label="Navegación"><a href="./">PORTADA</a><a href="directory.html" aria-current="page">DIRECTORIO</a><a href="enviar.html">ENVÍA TU NOTICIA</a><a href="admin/">ACCESO EDITORIAL</a></nav></header>
 <main class="directory-wrap"><section class="directory-hero"><span class="kicker">GUÍA DE SERVICIOS · COMUNIDAD HISPANOHABLANTE</span><h1>Directorio Hispano de Londres</h1><p>Una guía para quienes acaban de llegar a Londres y para quienes ya viven aquí: recursos, servicios, negocios y actividades de la comunidad hispanohablante, con raíces dominicanas y españolas y puertas abiertas a toda América Latina y el Caribe.</p></section>

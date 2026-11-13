@@ -9,7 +9,7 @@
   <title>Acceso editorial | Evoford News</title>
   <link rel="stylesheet" href="./admin.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="./admin.js?v=20261113-directoryedit1"></script>
+  <script defer src="./admin.js?v=20261114-articlefilters1"></script>
 </head>
 <body>
   <header class="topbar">
@@ -43,6 +43,11 @@
 
       <section id="articlesTab" class="tabview">
         <div class="section-head"><div><p class="eyebrow">REDACCIÓN PROPIA</p><h2>Artículos y borradores</h2></div><button id="newArticleBtn">Nuevo artículo</button></div>
+        <div class="article-filters" aria-label="Filtros de artículos">
+          <label class="filter-search" for="articleSearch">Buscar artículo<input id="articleSearch" type="search" placeholder="Titular, autor o sección…"></label>
+          <label class="filter-status" for="articleStatusFilter">Estado<select id="articleStatusFilter"><option value="">Todos los estados</option><option value="draft">Borrador</option><option value="pending">En revisión</option><option value="approved">Aprobado</option><option value="published">Publicado</option><option value="rejected">Descartado</option></select></label>
+          <p id="articleFilterCount" class="muted" aria-live="polite">Todos los artículos</p>
+        </div>
         <div id="articleList" class="list"><p class="muted">Cargando artículos…</p></div>
         <form id="articleForm" class="panel editor" hidden>
           <div class="section-head"><h2 id="formHeading">Nuevo artículo</h2><button type="button" id="cancelEdit" class="secondary">Cerrar</button></div>

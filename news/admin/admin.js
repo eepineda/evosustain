@@ -74,22 +74,13 @@ async function init(){
       say("loginMessage","No se ha cargado la biblioteca de acceso de Supabase. Recarga la página.");
       return;
     }
-    client = window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{
-      auth:{
-        flowType:"pkce",
-        detectSessionInUrl:true,
-        persistSession:true,
-        autoRefreshToken:true,
-        storageKey:"evoford-news-admin-auth"
-      }
-    });
-    // Register the listener before reading the session so the callback cannot be missed.
+    // Keep Supabase's default implicit magic-link flow, which was used before the auth change.
+    client = window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+    // Register before reading the session; defer app queries outside the auth callback.
     client.auth.onAuthStateChange((event,session)=>{
-      // Do not run Supabase queries inside this callback; defer app loading outside the auth lock.
       if(session) queueMicrotask(()=>showApp(session.user));
       else if(event==="SIGNED_OUT") showLogin();
     });
-    // Supabase exchanges the PKCE code from the magic-link URL during client initialization.
     const {data,error}=await client.auth.getSession();
     if(error) throw error;
     if(data?.session) await showApp(data.session.user);

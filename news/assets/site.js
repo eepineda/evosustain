@@ -27,9 +27,9 @@ function renderStaticLanguage(){
   "enviar.html":en?"Submit a story":"Envía tu noticia"
  };
  document.querySelectorAll(".masthead .nav a, .topics a").forEach(el=>{
-  const rawLabel=(el.textContent||"").trim().replace(/\s+/g," ");
-  if(rawLabel==="Aula de Innovación"||rawLabel==="Innovation Academy")el.setAttribute("href","aula-innovacion.html");
-  if(rawLabel==="Startups e innovación"||rawLabel==="Startups & innovation")el.setAttribute("href","startups.html");
+  const rawLabel=(el.textContent||"").trim().replace(/\s+/g," ").toLocaleLowerCase();
+  if(rawLabel==="aula de innovación"||rawLabel==="innovation academy")el.setAttribute("href","aula-innovacion.html");
+  if(rawLabel==="startups e innovación"||rawLabel==="startups & innovation")el.setAttribute("href","startups.html");
   const label=navTranslations[el.getAttribute("href")];
   if(label){const arrow=el.querySelector("span");el.textContent=label;if(arrow)el.appendChild(arrow);}
  });

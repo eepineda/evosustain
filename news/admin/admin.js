@@ -343,7 +343,7 @@ function wire(){
       const {data:source}=await client.from("rss_sources").select("name").eq("id",item.source_id).maybeSingle();
       $("sourceTitle").value=source?.name||"";
       $("sourceUrl").value=item.article_url||"";
-      $("author").value="";
+      $("author").value="Evoford News";
       $("content").value="NOTA DE FUENTE (EXTRACTO RSS; NO ES REDACCIÓN PROPIA):\\n"+(rssNote||"El feed RSS no incluye un resumen. Consulta la fuente original.")+"\\n\\nPENDIENTE DE REDACCIÓN: verifica los datos con la fuente original y redacta aquí una noticia propia. No copies literalmente el contenido de terceros.\\n\\nFuente consultada: "+(item.article_url||"");
       say("editorMessage",rssNote?"Borrador preparado con el titular y el extracto RSS en el campo Resumen. El texto se conserva como nota de consulta; redacta y revisa el artículo antes de enviarlo a aprobación.":"Borrador preparado. El feed no incluye extracto; consulta la fuente original y añade el resumen manualmente.");
       document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab==="articles"));

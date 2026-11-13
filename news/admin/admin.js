@@ -298,7 +298,9 @@ function wire(){
       if(error){say("globalMessage","No se pudo abrir la noticia: "+error.message);return;}
       editArticle(null);
       $("title").value=item.title||"";
-      $("summary").value=item.summary||"";
+      // Keep the RSS excerpt as a source note/summary, not as an article written by Evoford.
+      const rssNote=(item.summary||"").trim();
+      $("summary").value=rssNote;
       const guess=editorialSuggestion(item);
       const allowedCategories=["Internacional","Política","Economía","Seguridad","Tecnología","Opinión","Clima","Sociedad"];
       const suggested=item.suggested_category||guess.category;
@@ -312,8 +314,8 @@ function wire(){
       $("sourceTitle").value=source?.name||"";
       $("sourceUrl").value=item.article_url||"";
       $("author").value="";
-      $("content").value="[BORRADOR EDITORIAL: verifica la información y redacta una noticia original. No reproduzcas el artículo original.]\\n\\nFuente consultada: "+(item.article_url||"");
-      say("editorMessage","Borrador manual iniciado. Verifica la noticia, clasifícala y redacta las versiones en español e inglés.");
+      $("content").value="NOTA DE FUENTE (EXTRACTO RSS; NO ES REDACCIÓN PROPIA):\\n"+(rssNote||"El feed RSS no incluye un resumen. Consulta la fuente original.")+"\\n\\nPENDIENTE DE REDACCIÓN: verifica los datos con la fuente original y redacta aquí una noticia propia. No copies literalmente el contenido de terceros.\\n\\nFuente consultada: "+(item.article_url||"");
+      say("editorMessage",rssNote?"Borrador preparado con el titular y el extracto RSS en el campo Resumen. El texto se conserva como nota de consulta; redacta y revisa el artículo antes de enviarlo a aprobación.":"Borrador preparado. El feed no incluye extracto; consulta la fuente original y añade el resumen manualmente.");
       document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab==="articles"));
       ["articles","inbox","sources"].forEach(k=>$(k+"Tab").hidden=k!=="articles");
       $("articleForm").scrollIntoView({behavior:"smooth",block:"start"});

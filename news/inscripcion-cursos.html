@@ -8,7 +8,11 @@
 <link rel="stylesheet" href="assets/style.css?v=20261114-courseform1">
 <link rel="stylesheet" href="assets/editorial-premium.css?v=20261114-courseform1">
 <style>
-.course-page{max-width:920px;margin:0 auto;padding:30px 22px 64px}
+.course-page{display:block;width:calc(100% - 48px);max-width:1120px;margin:0 auto;padding:30px 0 64px;box-sizing:border-box}
+.course-page>*{max-width:100%}
+.course-page .course-intro{max-width:760px}
+.course-panel{width:100%}
+.course-header-spacer{height:12px}
 .course-breadcrumb{display:flex;gap:10px;flex-wrap:wrap;padding:12px 0;border-bottom:1px solid #d8dee5;font:700 10px Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase}
 .course-breadcrumb a{color:#102b4e;text-decoration:none}
 .course-kicker{margin:35px 0 8px;color:#b32632;font:700 10px Arial,sans-serif;letter-spacing:.13em;text-transform:uppercase}
@@ -29,11 +33,11 @@
 #courseMsg{margin:0;color:#34465b;font:13px/1.5 Arial,sans-serif}
 .course-privacy{grid-column:1/-1;margin:0;color:#687482;font:11px/1.6 Arial,sans-serif}
 .course-trap{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
-@media(max-width:640px){.course-page{padding:20px 16px 45px}.course-form{grid-template-columns:1fr}.course-field.full,.course-submit,.course-privacy{grid-column:1}}
+@media(max-width:640px){.course-page{width:calc(100% - 32px);padding:20px 0 45px}.course-form{grid-template-columns:1fr}.course-field.full,.course-submit,.course-privacy{grid-column:1}}
 </style>
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a href="../index.html" class="brand">EVOFORD ECOSYSTEM</a><nav><a href="index.html">Evoford News</a><a href="aula-innovacion.html">Aula de Innovación</a></nav></div></header>
+<div class="ecosystem-nav"><div class="ecosystem-nav-inner"><a class="ecosystem-mark" href="../index.html">EVOFORD <span>ECOSYSTEM</span></a><nav aria-label="Evoford ecosystem"><a href="../index.html">Inicio</a><a href="index.html">Evoford News</a><a href="aula-innovacion.html">Aula de Innovación</a></nav></div></div>
 <main class="course-page">
 <nav class="course-breadcrumb" aria-label="Migas de pan"><a href="index.html">Evoford News</a><span>·</span><a href="aula-innovacion.html">Aula de Innovación</a><span>·</span><span>Inscripción</span></nav>
 <p class="course-kicker">AULA DE INNOVACIÓN · FORMACIÓN</p>
@@ -63,7 +67,7 @@
 </form>
 </section>
 </main>
-<footer class="site-footer">EVOFORD · AULA DE INNOVACIÓN</footer>
+<footer class="site-footer" style="padding:22px 24px;text-align:center;border-top:1px solid #d9dde1;color:#687481;font:700 10px Arial,sans-serif;letter-spacing:.1em">EVOFORD · AULA DE INNOVACIÓN</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (()=> {

@@ -346,6 +346,60 @@ async function addSource(e){
   if(!error){$("sourceForm").reset();await loadSources();}
 }
 
+function openDirectoryEdit(item){
+  $("directoryEditId").value=item.id;
+  $("directoryEditName").value=item.name||"";
+  $("directoryEditSlug").value=item.slug||"";
+  $("directoryEditCategory").value=item.category||"Instituciones dominicanas";
+  $("directoryEditType").value=item.listing_type||"community";
+  $("directoryEditCity").value=item.city||"";
+  $("directoryEditPostcode").value=item.postcode||"";
+  $("directoryEditAddress").value=item.address||"";
+  $("directoryEditPhone").value=item.phone||"";
+  $("directoryEditEmail").value=item.email||"";
+  $("directoryEditWebsite").value=item.website||"";
+  $("directoryEditDescription").value=item.description||"";
+  $("directoryEditServices").value=Array.isArray(item.services)?item.services.join("\n"):"";
+  $("directoryEditHours").value=item.opening_hours||"";
+  $("directoryEditImage").value=item.image_url||"";
+  $("directoryEditStatus").value=item.status||"draft";
+  $("directoryEditSponsored").checked=Boolean(item.sponsored);
+  $("directoryEditMessage").textContent="";
+  $("directoryEditPanel").hidden=false;
+  $("directoryEditPanel").scrollIntoView({behavior:"smooth",block:"start"});
+  $("directoryEditName").focus();
+}
+function closeDirectoryEdit(){ $("directoryEditPanel").hidden=true; $("directoryEditForm").reset(); $("directoryEditMessage").textContent=""; }
+$("closeDirectoryEdit")?.addEventListener("click",closeDirectoryEdit);
+$("cancelDirectoryEdit")?.addEventListener("click",closeDirectoryEdit);
+$("directoryEditForm")?.addEventListener("submit",async event=>{
+  event.preventDefault();
+  const id=$("directoryEditId").value;
+  const name=$("directoryEditName").value.trim();
+  const slug=$("directoryEditSlug").value.trim();
+  if(!id||!name||!slug){$("directoryEditMessage").textContent="El nombre y el identificador URL son obligatorios.";return;}
+  const website=$("directoryEditWebsite").value.trim();
+  const imageUrl=$("directoryEditImage").value.trim();
+  for(const [label,value] of [["Sitio web",website],["Imagen",imageUrl]]){
+    if(value){try{const u=new URL(value);if(!["http:","https:"].includes(u.protocol))throw new Error();}catch{$("directoryEditMessage").textContent=label+" debe ser una URL válida.";return;}}
+  }
+  const status=$("directoryEditStatus").value;
+  const payload={
+    name,slug,category:$("directoryEditCategory").value,listing_type:$("directoryEditType").value,
+    city:$("directoryEditCity").value.trim()||"London",postcode:$("directoryEditPostcode").value.trim()||null,
+    address:$("directoryEditAddress").value.trim()||null,phone:$("directoryEditPhone").value.trim()||null,
+    email:$("directoryEditEmail").value.trim()||null,website:website||null,
+    description:$("directoryEditDescription").value.trim(),services:$("directoryEditServices").value.split("\n").map(x=>x.trim()).filter(Boolean),
+    opening_hours:$("directoryEditHours").value.trim()||null,image_url:imageUrl||null,
+    status,sponsored:$("directoryEditSponsored").checked,
+    verified_at:status==="published"?new Date().toISOString():null,updated_at:new Date().toISOString()
+  };
+  const save=$("saveDirectoryEdit");save.disabled=true;$("directoryEditMessage").textContent="Guardando cambios…";
+  const {error}=await client.from("directory_listings").update(payload).eq("id",id);
+  save.disabled=false;
+  if(error){$("directoryEditMessage").textContent="No se pudo guardar la ficha: "+error.message;return;}
+  say("globalMessage","Ficha actualizada correctamente.");closeDirectoryEdit();await loadDirectoryAdmin();
+});
 async function loadDirectoryAdmin(){
   const [sub,items]=await Promise.all([
     client.from("directory_submissions").select("*").order("created_at",{ascending:false}),
@@ -355,10 +409,15 @@ async function loadDirectoryAdmin(){
   if(sub.error)subRoot.innerHTML='<p class="muted">'+safe(sub.error.message)+'</p>';
   else subRoot.innerHTML=sub.data.length?sub.data.map(x=>'<article class="item"><div><h3>'+safe(x.listing_name)+'</h3><p>'+safe(x.category)+' · '+safe(x.listing_type)+' · '+safe(x.contact_name)+' · '+safe(x.contact_email)+' · '+safe(x.status)+'</p><p>'+safe(x.description)+'</p></div><div class="item-actions">'+(x.status==='received'?'<button class="secondary" data-directory-convert="'+x.id+'">Crear ficha</button><button class="secondary" data-directory-reject="'+x.id+'">Descartar</button>':'')+'</div></article>').join(""):'<p class="muted">No hay solicitudes pendientes.</p>';
   if(items.error)listRoot.innerHTML='<p class="muted">'+safe(items.error.message)+'</p>';
-  else listRoot.innerHTML=items.data.length?items.data.map(x=>'<article class="item"><div><h3>'+safe(x.name)+'</h3><p>'+safe(x.category)+' · '+safe(x.city)+' · '+safe(x.status)+(x.sponsored?' · Patrocinado':'')+'</p></div><div class="item-actions"><button class="secondary" data-directory-toggle="'+x.id+'" data-status="'+x.status+'">'+(x.status==='published'?'Retirar':'Publicar')+'</button><button class="secondary" data-directory-delete="'+x.id+'">Eliminar</button></div></article>').join(""):'<p class="muted">Todavía no hay fichas creadas.</p>';
+  else listRoot.innerHTML=items.data.length?items.data.map(x=>'<article class="item"><div><h3>'+safe(x.name)+'</h3><p>'+safe(x.category)+' · '+safe(x.city)+' · '+safe(x.status)+(x.sponsored?' · Patrocinado':'')+'</p></div><div class="item-actions"><button type="button" class="secondary" data-directory-edit="'+x.id+'">Editar</button><button class="secondary" data-directory-toggle="'+x.id+'" data-status="'+x.status+'">'+(x.status==='published'?'Retirar':'Publicar')+'</button><button class="secondary" data-directory-delete="'+x.id+'">Eliminar</button></div></article>').join(""):'<p class="muted">Todavía no hay fichas creadas.</p>';
 }
 async function handleDirectoryAction(e){
  const b=e.target.closest("button");if(!b)return;
+ if(b.dataset.directoryEdit){
+  const {data:item,error}=await client.from("directory_listings").select("*").eq("id",b.dataset.directoryEdit).single();
+  if(error){say("globalMessage","No se pudo abrir la ficha: "+error.message);return;}
+  openDirectoryEdit(item);return;
+ }
  if(b.dataset.directoryConvert){
   const {data:s,error}=await client.from("directory_submissions").select("*").eq("id",b.dataset.directoryConvert).single();
   if(error){say("globalMessage",error.message);return;}

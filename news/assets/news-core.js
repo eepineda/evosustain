@@ -82,7 +82,16 @@
     }
   });
 
-  window.EvofordNews = window.EvofordNews || {};\n  Object.defineProperties(window.EvofordNews, {\n    version: { value: api.version, configurable: true },\n    supportedLanguages: { value: api.supportedLanguages, configurable: true },\n    language: { get: () => language, configurable: true },\n    translate: { value: api.translate, configurable: true },\n    setLanguage: { value: api.setLanguage, configurable: true },\n    apply: { value: api.apply, configurable: true },\n    onLanguageChange: { value: api.onLanguageChange, configurable: true }\n  });
+  window.EvofordNews = window.EvofordNews || {};
+  Object.defineProperties(window.EvofordNews, {
+    version: { value: api.version, configurable: true },
+    supportedLanguages: { value: api.supportedLanguages, configurable: true },
+    language: { get: () => language, configurable: true },
+    translate: { value: api.translate, configurable: true },
+    setLanguage: { value: api.setLanguage, configurable: true },
+    apply: { value: api.apply, configurable: true },
+    onLanguageChange: { value: api.onLanguageChange, configurable: true }
+  });
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => apply(), { once: true });
   } else {

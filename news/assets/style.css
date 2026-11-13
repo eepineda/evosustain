@@ -216,24 +216,36 @@ footer a:not(.footer-brand){color:#e6c98b;border-bottom-color:rgba(230,201,139,.
  img{max-width:100%!important}
 }
 
-/* Impresión individual de artículos */
+/* Impresión fiable de artículos individuales */
 .article-actions{display:flex;justify-content:flex-end;margin:0 0 22px}
 .print-article-btn{display:inline-flex;align-items:center;gap:12px;padding:10px 15px;border:1px solid #252525;background:#252525;color:#fff;font:700 10px/1 Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
 .print-article-btn:hover{background:#9f1d20;border-color:#9f1d20}
 .print-article-btn span{font-size:14px}
 @media print{
- body:has(#articleView){background:#fff!important}
- body:has(#articleView) .masthead,body:has(#articleView) footer,body:has(#articleView) .article-actions{display:none!important}
- body:has(#articleView) #articleView{max-width:none!important;width:100%!important;padding:0!important;margin:0!important}
- body:has(#articleView) #articleView h1{font-family:Georgia,'Times New Roman',serif!important;font-size:27pt!important;line-height:1.08!important;letter-spacing:-.02em!important;margin:0 0 14pt!important}
- body:has(#articleView) #articleView .kicker{font-size:8pt!important;letter-spacing:.14em!important;margin-bottom:10pt!important}
- body:has(#articleView) #articleView .dek{font:13pt/1.45 Georgia,serif!important;color:#444!important;margin:0 0 13pt!important}
- body:has(#articleView) #articleView .lead-meta{font-size:8pt!important;letter-spacing:.08em!important;margin:12pt 0 16pt!important;padding-bottom:10pt!important;border-bottom:1px solid #bbb!important}
- body:has(#articleView) #articleView>img{max-height:95mm!important;width:auto!important;max-width:100%!important;object-fit:contain!important;display:block!important;margin:12pt auto!important}
- body:has(#articleView) #articleView>p:not(.dek):not(.lead-meta){max-width:none!important;font:11pt/1.55 Georgia,serif!important;color:#111!important;margin:0 0 11pt!important;break-inside:avoid}
- body:has(#articleView) #articleView hr{margin:12pt 0!important;border-top:1px solid #bbb!important}
- body:has(#articleView) #articleView .source-credit{font:8pt/1.4 Arial,sans-serif!important;margin-top:18pt!important;padding-top:8pt!important}
- body:has(#articleView) #articleView a{color:#111!important;text-decoration:none!important}
+ @page{size:auto;margin:17mm 18mm}
+ html,body.article-page{display:block!important;width:auto!important;min-width:0!important;margin:0!important;padding:0!important;background:#fff!important;color:#111!important;font-size:11pt!important}
+ body.article-page>*{display:none!important}
+ body.article-page>#articleView{display:block!important;position:static!important;float:none!important;width:100%!important;max-width:none!important;min-height:0!important;margin:0!important;padding:0!important;overflow:visible!important;background:#fff!important;color:#111!important}
+ body.article-page #articleView *{visibility:visible!important;box-shadow:none!important;text-shadow:none!important}
+ body.article-page #articleView .article-actions,
+ body.article-page #articleView .share-panel,
+ body.article-page #articleView .comments-section,
+ body.article-page #articleView .comments-wrap,
+ body.article-page #articleView #commentsSection{display:none!important}
+ body.article-page #articleView h1{font-family:Georgia,'Times New Roman',serif!important;font-size:27pt!important;line-height:1.08!important;letter-spacing:-.02em!important;margin:0 0 14pt!important;color:#111!important}
+ body.article-page #articleView .kicker{font-size:8pt!important;letter-spacing:.14em!important;margin-bottom:10pt!important;color:#444!important}
+ body.article-page #articleView .dek{font:13pt/1.45 Georgia,serif!important;color:#444!important;margin:0 0 13pt!important;background:#fff!important}
+ body.article-page #articleView .lead-meta{font-size:8pt!important;letter-spacing:.08em!important;margin:12pt 0 16pt!important;padding-bottom:10pt!important;border-bottom:1px solid #bbb!important;color:#555!important}
+ body.article-page #articleView>img{max-height:95mm!important;width:auto!important;max-width:100%!important;object-fit:contain!important;display:block!important;margin:12pt auto!important;break-inside:avoid}
+ body.article-page #articleView .article-body{display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
+ body.article-page #articleView .article-body p{font:11pt/1.55 Georgia,serif!important;color:#111!important;margin:0 0 11pt!important;white-space:normal!important;orphans:3;widows:3}
+ body.article-page #articleView .article-body p.article-opening:first-letter{float:none!important;font:inherit!important;color:inherit!important}
+ body.article-page #articleView .article-body p.article-subheading{font:bold 15pt/1.3 Georgia,serif!important;margin:18pt 0 8pt!important;padding-top:8pt!important;break-after:avoid}
+ body.article-page #articleView .article-body p.article-related{background:#fff!important;border-left:2px solid #777!important;color:#333!important}
+ body.article-page #articleView hr{margin:12pt 0!important;border-top:1px solid #bbb!important}
+ body.article-page #articleView .source-credit{font:8pt/1.4 Arial,sans-serif!important;margin-top:18pt!important;padding-top:8pt!important;color:#444!important}
+ body.article-page #articleView a{color:#111!important;text-decoration:none!important}
+ body.article-page #articleView img{max-width:100%!important}
 }
 
 /* Nueva jerarquía editorial propia de Evoford News */

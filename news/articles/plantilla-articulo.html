@@ -29,12 +29,14 @@ async function loadArticle(){
  const requestedLanguage=new URLSearchParams(location.search).get("lang")==="en"?"en":"es";
  const english=requestedLanguage==="en";
  const originalLanguage=(a.language||"").toLowerCase().startsWith("en")?"en":"es";
- const hasEnglish=Boolean(a.title_en&&a.summary_en&&a.content_en);
- const useEnglish=english&&(hasEnglish||originalLanguage==="en");
- const title=useEnglish?(hasEnglish?a.title_en:a.title):a.title;
- const summary=useEnglish?(hasEnglish?a.summary_en:a.summary):a.summary;
- let body=useEnglish?(hasEnglish?a.content_en:a.content):a.content;
- const languageNotice=english&&!hasEnglish&&originalLanguage!=="en"?"<p class='muted'>This article is not yet available in English. The original version is shown below.</p>":"";
+ // Select translated fields independently: a missing summary must not block an available headline or body.
+ const hasEnglishTitle=Boolean(a.title_en);
+ const hasEnglishSummary=Boolean(a.summary_en);
+ const hasEnglishBody=Boolean(a.content_en);
+ const title=english&&hasEnglishTitle?a.title_en:a.title;
+ const summary=english&&hasEnglishSummary?a.summary_en:a.summary;
+ let body=english&&hasEnglishBody?a.content_en:a.content;
+ const languageNotice=english&&(!hasEnglishTitle||!hasEnglishSummary||!hasEnglishBody)?"<p class='muted language-notice'>Some parts of this article are not yet available in English; the original text is shown where a translation is missing.</p>":"";
  let sourceUrl=a.source_url||"";
  let sourceTitle=a.source_title||"";
  body=String(body||"").replace(/\\n/g,"\n");

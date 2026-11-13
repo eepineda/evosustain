@@ -91,88 +91,67 @@ async function init(){
 function showLogin(){ $("loginView").hidden=false; $("appView").hidden=true; }
 
 async function loadOverview(){
- const kpis=$("overviewKpis"),activity=$("overviewActivity"),statusRoot=$("overviewStatus"),operations=$("overviewOperations");
+ const $id=id=>$(id);
+ const kpis=$id("overviewKpis"),activity=$id("overviewActivity"),statusRoot=$id("overviewStatus"),operations=$id("overviewOperations");
  if(!kpis)return;
- const updated=$("overviewUpdated");
- kpis.innerHTML='<p class="muted">Consultando indicadores…</p>';
- activity.innerHTML='<p class="muted">Consultando actividad…</p>';
- statusRoot.innerHTML='<p class="muted">Consultando estados…</p>';
- operations.innerHTML='<p class="muted">Consultando contenido…</p>';
- const cutoff7=new Date(Date.now()-7*86400000).toISOString();
+ const range=Math.max(7,Math.min(90,Number($id("overviewRange")?.value||30)));
+ const cutoff=new Date(Date.now()-range*86400000).toISOString();
+ const updated=$id("overviewUpdated");
+ for(const [node,msg] of [[kpis,"Consultando indicadores…"],[activity,"Consultando actividad…"],[statusRoot,"Consultando estados…"],[operations,"Consultando contenido…"],[$id("overviewCategories"),"Consultando secciones…"],[$id("overviewRss"),"Consultando bandeja RSS…"]])if(node)node.innerHTML='<p class="muted">'+msg+'</p>';
  const specs=[
-  ["articlesTotal","articles"],
-  ["articlesPublished","articles","published"],
-  ["articlesPending","articles","pending"],
-  ["submissionsTotal","article_submissions"],
-  ["submissionsReceived","article_submissions","received"],
-  ["submissionsRejected","article_submissions","rejected"],
-  ["coursesTotal","course_enquiries"],
-  ["coursesReceived","course_enquiries","received"],
-  ["coursesContacted","course_enquiries","contacted"],
-  ["coursesEnrolled","course_enquiries","enrolled"],
-  ["coursesClosed","course_enquiries","closed"],
-  ["coursesDiscarded","course_enquiries","discarded"],
-  ["directoryRequestsTotal","directory_submissions"],
-  ["directoryRequestsReceived","directory_submissions","received"],
-  ["directoryRequestsPublished","directory_submissions","published"],
-  ["directoryRequestsRejected","directory_submissions","rejected"],
-  ["listingsTotal","directory_listings"],
-  ["listingsPublished","directory_listings","published"],
-  ["listingsDraft","directory_listings","draft"],
-  ["rssTotal","imported_items"],
-  ["rssPending","imported_items","pending"],
-  ["rssRejected","imported_items","rejected"],
-  ["submissions7","article_submissions",null,cutoff7],
-  ["courses7","course_enquiries",null,cutoff7],
-  ["directory7","directory_submissions",null,cutoff7]
+  ["articlesTotal","articles"],["articlesPublished","articles","published"],["articlesPending","articles","pending"],["articlesDraft","articles","draft"],["articlesApproved","articles","approved"],
+  ["submissionsTotal","article_submissions"],["submissionsReceived","article_submissions","received"],["submissionsRejected","article_submissions","rejected"],["submissionsPeriod","article_submissions",null,cutoff],
+  ["coursesTotal","course_enquiries"],["coursesReceived","course_enquiries","received"],["coursesContacted","course_enquiries","contacted"],["coursesEnrolled","course_enquiries","enrolled"],["coursesClosed","course_enquiries","closed"],["coursesDiscarded","course_enquiries","discarded"],["coursesPeriod","course_enquiries",null,cutoff],
+  ["directoryRequestsTotal","directory_submissions"],["directoryRequestsReceived","directory_submissions","received"],["directoryRequestsPublished","directory_submissions","published"],["directoryRequestsRejected","directory_submissions","rejected"],["directoryPeriod","directory_submissions",null,cutoff],
+  ["listingsTotal","directory_listings"],["listingsPublished","directory_listings","published"],["listingsDraft","directory_listings","draft"],
+  ["rssTotal","imported_items"],["rssPending","imported_items","pending"],["rssRejected","imported_items","rejected"],["rssPeriod","imported_items",null,cutoff],
+  ["sourcesTotal","rss_sources"],["sourcesActive","rss_sources",true]
  ];
  const results=await Promise.all(specs.map(async ([key,table,status,since])=>{
   try{
    let query=client.from(table).select("id",{count:"exact",head:true});
-   if(status)query=query.eq("status",status);
+   if(table==="rss_sources"&&typeof status==="boolean")query=query.eq("active",status);
+   else if(status)query=query.eq("status",status);
    if(since)query=query.gte("created_at",since);
-   const result=await Promise.race([
-    query,
-    new Promise(resolve=>setTimeout(()=>resolve({count:null,error:{message:"Tiempo de espera agotado"}}),12000))
-   ]);
+   const result=await Promise.race([query,new Promise(resolve=>setTimeout(()=>resolve({count:null,error:{message:"Tiempo de espera agotado"}}),12000))]);
    return {key,table,count:result.count??0,error:result.error||null};
   }catch(error){return {key,table,count:0,error};}
  }));
- const by=Object.fromEntries(results.map(x=>[x.key,x]));
- const val=key=>by[key]?.count??0;
+ const by=Object.fromEntries(results.map(x=>[x.key,x])),val=key=>by[key]?.count??0;
  const cards=[
   ["Artículos publicados",val("articlesPublished"),"de "+val("articlesTotal")+" artículos"],
   ["Envíos editoriales",val("submissionsTotal"),val("submissionsReceived")+" recibidos"],
   ["Solicitudes de formación",val("coursesTotal"),val("coursesReceived")+" recibidas"],
   ["Solicitudes de directorio",val("directoryRequestsTotal"),val("directoryRequestsReceived")+" pendientes"],
   ["Fichas del directorio",val("listingsTotal"),val("listingsPublished")+" publicadas"],
-  ["Noticias RSS pendientes",val("rssPending"),"Para revisión editorial"],
-  ["Artículos en revisión",val("articlesPending"),"Pendientes de decisión"],
-  ["Actividad últimos 7 días",val("submissions7")+val("courses7")+val("directory7"),"Nuevas solicitudes"]
+  ["Noticias RSS pendientes",val("rssPending"),"En cola de revisión"],
+  ["Artículos en revisión",val("articlesPending"),val("articlesDraft")+" borradores"],
+  ["Solicitudes en el periodo",val("submissionsPeriod")+val("coursesPeriod")+val("directoryPeriod"),"Últimos "+range+" días"]
  ];
  kpis.innerHTML=cards.map(([label,value,note])=>'<article class="overview-kpi"><span>'+safe(label)+'</span><strong>'+value+'</strong><small>'+safe(note)+'</small></article>').join("");
- const dailySpecs=[
-  ["Envíos editoriales","article_submissions"],
-  ["Formación","course_enquiries"],
-  ["Directorio","directory_submissions"]
- ];
- const dailyResults=await Promise.all(dailySpecs.map(async ([label,table])=>{
-  const days=Array.from({length:7},(_,i)=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-(6-i));return d;});
-  const counts=await Promise.all(days.map(async d=>{
-   const next=new Date(d);next.setDate(next.getDate()+1);
+ const bins=range===7?7:range===30?10:12;
+ const unitDays=range/bins;
+ const binStarts=Array.from({length:bins},(_,i)=>new Date(Date.now()-(bins-1-i)*unitDays*86400000));
+ const dailyTables=[["Editorial","article_submissions"],["Formación","course_enquiries"],["Directorio","directory_submissions"]];
+ const dailyResults=await Promise.all(dailyTables.map(async ([label,table])=>{
+  const counts=await Promise.all(binStarts.map(async (d,i)=>{
+   const from=new Date(d);from.setHours(0,0,0,0);
+   const to=i===bins-1?new Date():new Date(binStarts[i+1]);
+   to.setHours(0,0,0,0);
    try{
-    const q=client.from(table).select("id",{count:"exact",head:true}).gte("created_at",d.toISOString()).lt("created_at",next.toISOString());
-    const r=await Promise.race([q,new Promise(resolve=>setTimeout(()=>resolve({count:0,error:{message:"timeout"}}),10000))]);
+    const q=client.from(table).select("id",{count:"exact",head:true}).gte("created_at",from.toISOString()).lt("created_at",to.toISOString());
+    const r=await Promise.race([q,new Promise(resolve=>setTimeout(()=>resolve({count:0,error:true}),10000))]);
     return r.count??0;
    }catch{return 0;}
   }));
   return {label,counts};
  }));
  const max=Math.max(1,...dailyResults.flatMap(x=>x.counts));
- const days=Array.from({length:7},(_,i)=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-(6-i));return d;});
- activity.innerHTML='<div class="overview-legend"><span>Solicitudes por día</span></div>'+days.map((d,i)=>{
-  const vals=dailyResults.map(x=>x.counts[i]),total=vals.reduce((a,b)=>a+b,0);
-  return '<div class="overview-day"><span>'+d.toLocaleDateString("es-ES",{weekday:"short",day:"2-digit"})+'</span><div class="overview-bar"><i style="width:'+Math.round(total/max*100)+'%"></i></div><b>'+total+'</b><small>'+vals.join(" / ")+'</small></div>';
+ activity.innerHTML='<div class="overview-legend"><span>Editorial</span><span>Formación</span><span>Directorio</span></div>'+binStarts.map((d,i)=>{
+  const nums=dailyResults.map(x=>x.counts[i]),total=nums.reduce((a,b)=>a+b,0);
+  const end=new Date(d.getTime()+unitDays*86400000);
+  const label=range===7?d.toLocaleDateString("es-ES",{weekday:"short",day:"2-digit"}):d.toLocaleDateString("es-ES",{day:"2-digit",month:"short"});
+  return '<div class="overview-day"><span>'+label+'</span><div class="overview-bar"><i style="width:'+Math.round(total/max*100)+'%"></i></div><b>'+total+'</b><small>'+nums.join(" / ")+'</small></div>';
  }).join("");
  const groups=[
   ["Envíos editoriales",[["Recibidos",val("submissionsReceived")],["Descartados",val("submissionsRejected")]]],
@@ -180,8 +159,25 @@ async function loadOverview(){
   ["Directorio",[["Recibidas",val("directoryRequestsReceived")],["Publicadas / vinculadas",val("directoryRequestsPublished")],["Rechazadas",val("directoryRequestsRejected")]]]
  ];
  statusRoot.innerHTML=groups.map(([name,states])=>'<div class="overview-status-group"><strong>'+name+'</strong>'+states.map(([label,n])=>'<span>'+label+' <b>'+n+'</b></span>').join("")+'</div>').join("");
+ const [articleRows,rssRows]=await Promise.all([
+  client.from("articles").select("category,status").limit(500),
+  client.from("imported_items").select("status").limit(1500)
+ ]);
+ const categoryRoot=$id("overviewCategories");
+ if(articleRows.error)categoryRoot.innerHTML='<p class="muted">No se pudieron consultar las secciones: '+safe(articleRows.error.message)+'</p>';
+ else{
+  const cats={};(articleRows.data||[]).forEach(x=>{const name=x.category||"Sin sección";cats[name]=(cats[name]||0)+1;});
+  const entries=Object.entries(cats).sort((a,b)=>b[1]-a[1]),maxCat=Math.max(1,...entries.map(x=>x[1]));
+  categoryRoot.innerHTML=entries.length?entries.map(([name,n])=>'<div class="overview-rank"><span>'+safe(name)+'</span><div class="overview-bar"><i style="width:'+Math.round(n/maxCat*100)+'%"></i></div><b>'+n+'</b></div>').join(""):'<p class="muted">No hay artículos registrados.</p>';
+ }
+ const rssRoot=$id("overviewRss");
+ if(rssRows.error)rssRoot.innerHTML='<p class="muted">No se pudo consultar RSS: '+safe(rssRows.error.message)+'</p>';
+ else{
+  const states={};(rssRows.data||[]).forEach(x=>states[x.status||"Sin estado"]=(states[x.status||"Sin estado"]||0)+1);
+  rssRoot.innerHTML=Object.entries(states).sort((a,b)=>b[1]-a[1]).map(([name,n])=>'<div class="overview-rank"><span>'+safe(name==="pending"?"Pendientes":name==="rejected"?"Descartadas":name)+'</span><div class="overview-bar"><i style="width:'+Math.round(n/Math.max(1,...Object.values(states))*100)+'%"></i></div><b>'+n+'</b></div>').join("")+'<p class="muted">'+val("sourcesActive")+' fuentes activas de '+val("sourcesTotal")+'</p>';
+ }
  const errors=results.filter(x=>x.error);
- operations.innerHTML='<div class="overview-operation-row"><span>Artículos en total</span><b>'+val("articlesTotal")+'</b><span>Fichas en borrador</span><b>'+val("listingsDraft")+'</b></div><div class="overview-operation-row"><span>Noticias RSS registradas</span><b>'+val("rssTotal")+'</b><span>Noticias RSS descartadas</span><b>'+val("rssRejected")+'</b></div>'+(errors.length?'<p class="message">No se pudieron consultar algunos indicadores ('+safe([...new Set(errors.map(x=>x.table))].join(", "))+'). Pulsa «Actualizar métricas» para reintentar.</p>':'');
+ operations.innerHTML='<div class="overview-operation-row"><span>Artículos en total</span><b>'+val("articlesTotal")+'</b><span>Borradores</span><b>'+val("articlesDraft")+'</b></div><div class="overview-operation-row"><span>Artículos aprobados</span><b>'+val("articlesApproved")+'</b><span>Fichas en borrador</span><b>'+val("listingsDraft")+'</b></div><div class="overview-operation-row"><span>Noticias RSS registradas</span><b>'+val("rssTotal")+'</b><span>Fuentes RSS activas</span><b>'+val("sourcesActive")+'</b></div>'+(errors.length?'<p class="message">Algunos recuentos no se pudieron consultar: '+safe([...new Set(errors.map(x=>x.table))].join(", "))+'.</p>':'');
  if(updated)updated.textContent="Última actualización: "+new Date().toLocaleString("es-ES")+(errors.length?" · "+errors.length+" consultas con incidencias":"");
 }
 
@@ -624,6 +620,7 @@ async function handleDirectoryAction(e){
 function wire(){
   $("maintenanceToggleBtn").addEventListener("click",toggleMaintenance);
   $("refreshOverviewBtn").addEventListener("click",loadOverview);
+  $("overviewRange").addEventListener("change",loadOverview);
   $("loginForm").addEventListener("submit",login);
   $("logoutBtn").addEventListener("click",()=>client.auth.signOut());
   $("newArticleBtn").addEventListener("click",()=>editArticle(null));

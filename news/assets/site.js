@@ -21,7 +21,8 @@ function renderStaticLanguage(){
   "#section-economia":en?"Economy":"Economía",
   "#section-seguridad":en?"Security":"Seguridad",
   "#section-tecnologia":en?"Technology":"Tecnología",
-  "#section-opinion-analisis":en?"Opinion":"Opinión"
+  "#section-opinion-analisis":en?"Opinion":"Opinión",
+  "enviar.html":en?"Submit a story":"Envía tu noticia"
  };
  document.querySelectorAll(".masthead .nav a, .topics a").forEach(el=>{
   const label=navTranslations[el.getAttribute("href")];

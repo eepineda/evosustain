@@ -45,7 +45,7 @@ links:["PRM history and principles ↗","Official website of Fuerza del Pueblo �
 note:"How to read these profiles: we summarise each organisation’s history and stated principles; this is not an endorsement by Evoford News. Links point to party documents or public institutions. Leadership details reflect public information located as of 13 November 2026. Party leadership can change; consult institutional sources and the JCE register for updates.",
 editorial:"Editorial policy: Evoford News will cover organisations neutrally, identify sources, distinguish reporting from opinion and update representation and recognition details using official documents."
 };
-function setPoliticsLanguage(lang){
+window.setPoliticsLanguage=function(lang){
  const t=lang==="en"?en:null;localStorage.setItem("evoford-news-language",lang);document.documentElement.lang=lang;
  document.querySelectorAll("[data-language]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.language===lang)));
  const set=(s,v)=>{const e=document.querySelector(s);if(e)e.textContent=v;};

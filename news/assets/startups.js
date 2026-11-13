@@ -19,7 +19,7 @@ function setLanguage(lang){
  document.querySelectorAll(".startup-nav a").forEach((a,i)=>{if(t.subnav[i])a.textContent=t.subnav[i];});
  document.querySelectorAll(".section-head h2").forEach((el,i)=>{if(t.section[i])el.textContent=t.section[i];});
  document.querySelectorAll(".startup-category").forEach((el,i)=>{el.querySelector("h3").textContent=t.sectors[i];el.querySelector("p").textContent=t.sectorP[i];});
- const note=document.querySelector(".editorial-note");if(note)note.textContent=t.note;
+ const note=document.querySelector("#destacada .editorial-note");if(note)note.textContent=t.note;
  const criteria=document.querySelector("#criterios .editorial-note");if(criteria)criteria.textContent=t.criteria;
  const footer=document.querySelector("footer>span");if(footer)footer.textContent=t.footer;
  const today=document.getElementById("today");if(today)today.textContent=now.toLocaleDateString(currentLanguage==="en"?"en-GB":"es-ES",{day:"numeric",month:"long",year:"numeric"});

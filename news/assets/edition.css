@@ -203,3 +203,48 @@
  }
  .secondary-area{break-before:auto!important;page-break-before:auto!important}
 }
+
+/* Deliberate newspaper pagination: cover, balanced full-story page, then other news */
+@media print{
+ .embedded-lead-story{
+   break-before:page!important;
+   page-break-before:always!important;
+   display:block!important;
+   width:100%!important;
+ }
+ .embedded-lead-story .full-article-heading{margin:0 0 12pt!important}
+ .embedded-lead-story .full-article-body{
+   display:grid!important;
+   grid-template-columns:repeat(3,minmax(0,1fr))!important;
+   align-items:start!important;
+   gap:14pt!important;
+   column-count:initial!important;
+   column-fill:initial!important;
+   height:auto!important;
+   overflow:visible!important;
+ }
+ .embedded-lead-story .article-text-column{
+   display:block!important;
+   min-width:0!important;
+   border-right:.4pt solid #ccc;
+   padding-right:9pt;
+ }
+ .embedded-lead-story .article-text-column:last-child{border-right:0;padding-right:0}
+ .embedded-lead-story .article-text-column p{
+   display:block!important;
+   font:9.5pt/1.45 Georgia,'Times New Roman',serif!important;
+   text-align:justify!important;
+   margin:0 0 9pt!important;
+   break-inside:avoid!important;
+   page-break-inside:avoid!important;
+ }
+ .embedded-lead-story .article-text-column p:first-child:first-letter{
+   float:left;font-size:23pt;line-height:.8;padding:2pt 4pt 0 0;font-weight:bold
+ }
+ .secondary-area{
+   break-before:page!important;
+   page-break-before:always!important;
+ }
+ .story-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14pt!important}
+ .story{display:block!important;width:auto!important;break-inside:avoid!important;page-break-inside:avoid!important}
+}

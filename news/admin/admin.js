@@ -38,6 +38,31 @@ function editorialGate(payload){
   return "";
 }
 
+
+let maintenanceEnabled=false;
+async function loadMaintenanceControl(){
+  const button=$("maintenanceToggleBtn");
+  const {data,error}=await client.from("site_settings").select("value").eq("key","maintenance").maybeSingle();
+  if(error){$("maintenanceStatus").textContent="No se pudo leer el estado. Ejecuta la migración de mantenimiento en Supabase.";button.textContent="No disponible";button.disabled=true;return;}
+  maintenanceEnabled=data?.value?.enabled===true;
+  $("maintenanceStatus").textContent=maintenanceEnabled?"La web pública está en mantenimiento. El panel editorial sigue disponible.":"La web pública está visible.";
+  button.textContent=maintenanceEnabled?"Desactivar mantenimiento":"Activar mantenimiento";
+  button.classList.toggle("maintenance-active",maintenanceEnabled);
+  button.disabled=false;
+}
+async function toggleMaintenance(){
+  const next=!maintenanceEnabled;
+  const prompt=next
+    ?"La web completa dejará de estar visible para el público. ¿Quieres activar el mantenimiento?"
+    :"La web volverá a estar visible para todos. ¿Quieres desactivar el mantenimiento?";
+  if(!window.confirm(prompt))return;
+  const button=$("maintenanceToggleBtn");button.disabled=true;
+  const {error}=await client.from("site_settings").update({value:{enabled:next},updated_at:new Date().toISOString()}).eq("key","maintenance");
+  if(error){say("globalMessage","No se pudo cambiar el mantenimiento: "+error.message);button.disabled=false;return;}
+  await loadMaintenanceControl();
+  say("globalMessage",next?"Mantenimiento activado. La web pública mostrará el aviso.":"Mantenimiento desactivado. La web vuelve a estar visible.");
+}
+
 async function init(){
   try{
     say("loginMessage","Conectando con el servicio de acceso…");
@@ -68,7 +93,7 @@ async function showApp(user){
   }
   currentUser=user; $("loginView").hidden=true; $("appView").hidden=false;
   $("signedInAs").textContent=user.email;
-  await Promise.all([loadArticles(),loadInbox(),loadSources(),loadSubmissions()]);
+  await Promise.all([loadArticles(),loadInbox(),loadSources(),loadSubmissions(),loadMaintenanceControl()]);
 }
 async function login(e){
   e.preventDefault();
@@ -344,6 +369,7 @@ async function handleDirectoryAction(e){
 }
 
 function wire(){
+  $("maintenanceToggleBtn").addEventListener("click",toggleMaintenance);
   $("loginForm").addEventListener("submit",login);
   $("logoutBtn").addEventListener("click",()=>client.auth.signOut());
   $("newArticleBtn").addEventListener("click",()=>editArticle(null));

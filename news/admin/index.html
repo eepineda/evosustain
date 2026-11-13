@@ -37,7 +37,7 @@
       <nav class="tabs" aria-label="Secciones del panel">
         <button class="tab active" data-tab="articles">Artículos</button>
         <button class="tab" data-tab="inbox">Noticias RSS</button>
-        <button class="tab" data-tab="sources">Fuentes RSS</button><button class="tab" data-tab="submissions">Envíos recibidos</button>
+        <button class="tab" data-tab="sources">Fuentes RSS</button><button class="tab" data-tab="submissions">Envíos recibidos</button><button class="tab" data-tab="directory">Directorio</button>
       </nav>
 
       <section id="articlesTab" class="tabview">
@@ -79,6 +79,7 @@
       </section>
 
       <section id="submissionsTab" class="tabview" hidden><div class="section-head"><div><p class="eyebrow">COLABORACIONES EXTERNAS</p><h2>Envíos recibidos</h2></div><button id="refreshSubmissionsBtn" class="secondary">Actualizar</button></div><p class="muted">Los envíos son privados. Puedes convertirlos en borradores para revisarlos antes de aprobarlos.</p><div id="submissionsList" class="list"><p class="muted">Cargando…</p></div></section>
+      <section id="directoryTab" class="tabview" hidden><div class="section-head"><div><p class="eyebrow">COMUNIDAD DOMINICANA · LONDRES</p><h2>Directorio y solicitudes</h2></div><button id="refreshDirectoryBtn" class="secondary">Actualizar</button></div><p class="muted">Revisa las solicitudes recibidas y publica únicamente las fichas verificadas. Las fichas comerciales patrocinadas deben identificarse como tales.</p><div id="directorySubmissionList" class="list"><p class="muted">Cargando solicitudes…</p></div><h2>Fichas del directorio</h2><div id="directoryAdminList" class="list"><p class="muted">Cargando fichas…</p></div></section>
       <section id="sourcesTab" class="tabview" hidden>
         <div class="section-head"><div><p class="eyebrow">AGREGADORES</p><h2>Fuentes RSS</h2></div></div>
         <form id="sourceForm" class="panel source-form">

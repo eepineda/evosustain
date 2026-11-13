@@ -46,7 +46,7 @@ function renderStaticLanguage(){
  set("#secciones .section-head h2",tr("sections"));set("#secciones .section-head span",tr("explore"));
  const keys=["politics","security","economy","technology","world","analysis"];
  document.querySelectorAll(".topics a").forEach((el,i)=>{const arrow=el.querySelector("span");el.firstChild.textContent=tr(keys[i])+" ";if(arrow)arrow.textContent="→";});
- const author=document.querySelector(".author");if(author){const spans=author.querySelectorAll("span");const es=["Articulista · Emprendedor","Formación universitaria en España · BSc (Hons) Cyber Security en curso en The Open University, Inglaterra","Londres, Inglaterra"];const enText=["Columnist · Entrepreneur","University studies in Spain · BSc (Hons) Cyber Security in progress at The Open University, England","London, England"];spans.forEach((el,i)=>{if(i<5)el.textContent=(en?enText:es)[i];});}
+ const author=document.querySelector(".author");if(author){const spans=author.querySelectorAll("span");const labels= en?["Columnist · Entrepreneur","University studies in Spain · BSc (Hons) Cyber Security in progress at The Open University, England"]:["Articulista · Emprendedor","Formación universitaria en España · BSc (Hons) Cyber Security en curso en The Open University, Inglaterra"];spans.forEach((el,i)=>{if(i<labels.length)el.textContent=labels[i];});}
  const foot=document.querySelector("footer>span");if(foot)foot.textContent=tr("footer");
  const yearLabel=document.querySelector("footer span:last-child");if(yearLabel)yearLabel.innerHTML="© <span id='year'>"+new Date().getFullYear()+"</span> "+(en?"Evoford":"Evoford");
 }

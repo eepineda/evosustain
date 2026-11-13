@@ -173,3 +173,33 @@
  .section-label{margin-bottom:6pt!important;padding:5pt 0!important}
  .paper-footer{break-inside:avoid!important;page-break-inside:avoid!important;margin-top:10pt!important}
 }
+/* Final print pagination: balance columns instead of filling only the first one */
+@media print{
+ .embedded-lead-story .full-article-body{
+   column-count:3!important;
+   column-fill:balance!important;
+   column-gap:12pt!important;
+   column-rule:.4pt solid #ccc!important;
+   height:auto!important;
+   max-height:none!important;
+   overflow:visible!important;
+ }
+ .embedded-lead-story .full-article-body p{
+   break-inside:avoid-column!important;
+   page-break-inside:avoid!important;
+ }
+ .story-grid{
+   display:block!important;
+   column-count:3!important;
+   column-fill:balance!important;
+   column-gap:14pt!important;
+ }
+ .story{
+   display:inline-block!important;
+   width:100%!important;
+   vertical-align:top!important;
+   break-inside:avoid-column!important;
+   page-break-inside:avoid!important;
+ }
+ .secondary-area{break-before:auto!important;page-break-before:auto!important}
+}

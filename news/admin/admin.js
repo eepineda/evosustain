@@ -97,7 +97,7 @@ async function showApp(user){
   }
   currentUser=user; $("loginView").hidden=true; $("appView").hidden=false;
   $("signedInAs").textContent=user.email;
-  await Promise.all([loadArticles(),loadInbox(),loadSources(),loadSubmissions(),loadMaintenanceControl()]);
+  await Promise.all([loadArticles(),loadInbox(),loadSources(),loadSubmissions(),loadCourses(),loadMaintenanceControl()]);
 }
 async function login(e){
   e.preventDefault();
@@ -422,6 +422,34 @@ $("directoryEditForm")?.addEventListener("submit",async event=>{
   if(error){$("directoryEditMessage").textContent="No se pudo guardar la ficha: "+error.message;return;}
   say("globalMessage","Ficha actualizada correctamente.");closeDirectoryEdit();await loadDirectoryAdmin();
 });
+
+let courseEnquiries=[];
+function courseStatusLabel(status){return ({received:"Recibida",contacted:"Contactada",enrolled:"Matriculada",closed:"Cerrada"})[status]||status;}
+function filterCourses(){
+ const q=($("courseSearch")?.value||"").trim().toLocaleLowerCase("es");
+ const status=$("courseStatusFilter")?.value||"";
+ const filtered=courseEnquiries.filter(x=>(!status||x.status===status)&&[x.full_name,x.email,x.course_interest,x.message].some(v=>String(v||"").toLocaleLowerCase("es").includes(q)));
+ $("courseCount").textContent=filtered.length+" de "+courseEnquiries.length+" solicitudes";
+ $("courseEnquiryList").innerHTML=filtered.length?filtered.map(x=>{
+  const date=x.created_at?new Date(x.created_at).toLocaleString("es-GB",{dateStyle:"medium",timeStyle:"short"}):"Fecha no disponible";
+  const actions=[["received","Marcar contactada"],["contacted","Marcar matriculada"],["enrolled","Cerrar solicitud"],["closed","Reabrir solicitud"]];
+  const next=actions.find(a=>a[0]===x.status);
+  return '<article class="item"><div><p class="eyebrow">'+safe(date)+' · '+safe(courseStatusLabel(x.status))+'</p><h3>'+safe(x.full_name)+'</h3><p><a href="mailto:'+safe(x.email)+'">'+safe(x.email)+'</a></p><p><strong>Curso:</strong> '+safe(x.course_interest)+'</p><p>'+safe(x.message).replace(/\n/g,"<br>")+'</p></div><div class="item-actions">'+(next?'<button type="button" class="secondary" data-course-status="'+safe(next[0])+'" data-course-id="'+safe(x.id)+'">'+safe(next[1])+'</button>':'')+'</div></article>';
+ }).join(""):'<p class="muted">No hay solicitudes que coincidan con estos filtros.</p>';
+}
+async function loadCourses(){
+ const root=$("courseEnquiryList");if(!root)return;
+ root.innerHTML='<p class="muted">Cargando solicitudes…</p>';
+ const {data,error}=await client.from("course_enquiries").select("*").order("created_at",{ascending:false});
+ if(error){root.innerHTML='<p class="muted">No se pudieron cargar las solicitudes: '+safe(error.message)+'</p>';return;}
+ courseEnquiries=data||[];filterCourses();
+}
+async function updateCourseStatus(id,status){
+ const {error}=await client.from("course_enquiries").update({status}).eq("id",id);
+ if(error){say("globalMessage","No se pudo actualizar la solicitud: "+error.message);return;}
+ await loadCourses();
+}
+
 async function loadDirectoryAdmin(){
   const [sub,items]=await Promise.all([
     client.from("directory_submissions").select("*").order("created_at",{ascending:false}),
@@ -480,7 +508,7 @@ function wire(){
   $("publishArticleBtn").addEventListener("click",()=>saveArticle("published"));$("saveChangesBtn").addEventListener("click",()=>saveArticle(null,true));
   $("sourceForm").addEventListener("submit",addSource);
   $("refreshSubmissionsBtn").addEventListener("click",loadSubmissions);
-  $("refreshDirectoryBtn").addEventListener("click",loadDirectoryAdmin);
+  $("refreshDirectoryBtn").addEventListener("click",loadDirectoryAdmin);\n  $("refreshCoursesBtn").addEventListener("click",loadCourses);\n  $("courseSearch").addEventListener("input",filterCourses);\n  $("courseStatusFilter").addEventListener("change",filterCourses);\n  $("courseEnquiryList").addEventListener("click",e=>{const b=e.target.closest("[data-course-status]");if(b)updateCourseStatus(b.dataset.courseId,b.dataset.courseStatus);});
   $("directorySubmissionList").addEventListener("click",handleDirectoryAction);
   $("directoryAdminList").addEventListener("click",handleDirectoryAction);
   $("submissionsList").addEventListener("click",handleSubmissionAction);
@@ -522,7 +550,7 @@ function wire(){
       $("content").value="NOTA DE FUENTE (EXTRACTO RSS; NO ES REDACCIÓN PROPIA):\\n"+(rssNote||"El feed RSS no incluye un resumen. Consulta la fuente original.")+"\\n\\nPENDIENTE DE REDACCIÓN: verifica los datos con la fuente original y redacta aquí una noticia propia. No copies literalmente el contenido de terceros.\\n\\nFuente consultada: "+(item.article_url||"");
       say("editorMessage",rssNote?"Borrador preparado con el titular y el extracto RSS en el campo Resumen. El texto se conserva como nota de consulta; redacta y revisa el artículo antes de enviarlo a aprobación.":"Borrador preparado. El feed no incluye extracto; consulta la fuente original y añade el resumen manualmente.");
       document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab==="articles"));
-      ["articles","inbox","sources"].forEach(k=>$(k+"Tab").hidden=k!=="articles");
+      ["articles","inbox","sources","submissions","directory","courses"].forEach(k=>$(k+"Tab").hidden=k!=="articles");
       $("articleForm").scrollIntoView({behavior:"smooth",block:"start"});
       return;
     }
@@ -535,8 +563,8 @@ function wire(){
   $("runRssBtn").addEventListener("click",runRssImport);
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
-    ["articles","inbox","sources","submissions","directory"].forEach(k=>$(k+"Tab").hidden=k!==b.dataset.tab);
-    if(b.dataset.tab==="directory")loadDirectoryAdmin();
+    ["articles","inbox","sources","submissions","directory","courses"].forEach(k=>$(k+"Tab").hidden=k!==b.dataset.tab);
+    if(b.dataset.tab==="directory")loadDirectoryAdmin();\n    if(b.dataset.tab==="courses")loadCourses();
   }));
 }
 window.addEventListener("error",event=>{

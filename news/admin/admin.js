@@ -447,7 +447,8 @@ function exportCoursesCsv(){
  const url=URL.createObjectURL(blob),a=document.createElement("a");
  a.href=url;a.download="evoford-solicitudes-formacion.csv";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
 }
-\nasync function loadCourses(){
+
+async function loadCourses(){
  const root=$("courseEnquiryList");if(!root)return;
  root.innerHTML='<p class="muted">Cargando solicitudes…</p>';
  const {data,error}=await client.from("course_enquiries").select("*").order("created_at",{ascending:false});
@@ -519,7 +520,8 @@ function wire(){
   $("sourceForm").addEventListener("submit",addSource);
   $("refreshSubmissionsBtn").addEventListener("click",loadSubmissions);
   $("refreshDirectoryBtn").addEventListener("click",loadDirectoryAdmin);
-  $("refreshCoursesBtn").addEventListener("click",loadCourses);\n  $("exportCoursesBtn").addEventListener("click",exportCoursesCsv);
+  $("refreshCoursesBtn").addEventListener("click",loadCourses);
+  $("exportCoursesBtn").addEventListener("click",exportCoursesCsv);
   $("courseSearch").addEventListener("input",filterCourses);
   $("courseStatusFilter").addEventListener("change",filterCourses);
   $("courseEnquiryList").addEventListener("click",e=>{const b=e.target.closest("[data-course-status]");if(b)updateCourseStatus(b.dataset.courseId,b.dataset.courseStatus);});

@@ -7,9 +7,9 @@
 <title>Artículo | Evoford News</title><link rel="stylesheet" href="../assets/style.css?v=20261112-24">
 </head>
 <body>
-<header class="masthead"><div class="topline"><span>Londres · Reino Unido</span><span>INFORMACIÓN · OPINIÓN · ANÁLISIS</span></div><a class="brand" href="../">EVOFORD <em>NEWS</em></a><nav class="nav"><a href="../">Portada</a><a href="../#internacional">Internacional</a><a href="../#opinion">Opinión</a></nav></header>
+<header class="masthead"><div class="topline"><span id="articleLocation">Londres · Reino Unido</span><span id="articleDescriptor">INFORMACIÓN · OPINIÓN · ANÁLISIS</span></div><a class="brand" href="../">EVOFORD <em>NEWS</em></a><nav class="nav"><a id="navHome" href="../">Portada</a><a id="navInternational" href="../#section-internacional">Internacional</a><a id="navPolitics" href="../#section-politica">Política</a><a id="navEconomy" href="../#section-economia">Economía</a><a id="navSecurity" href="../#section-seguridad">Seguridad</a><a id="navTechnology" href="../#section-tecnologia">Tecnología</a><a id="navOpinion" href="../#espacio-opinion">Opinión</a></nav></header>
 <main id="articleView" class="wrap" style="max-width:850px;padding-top:40px;padding-bottom:70px"><p class="muted">Cargando artículo…</p></main>
-<footer><a class="footer-brand" href="../">EVOFORD NEWS</a><span>Noticias · Opinión · Análisis</span><span>© <span id="year"></span> Evoford</span></footer>
+<footer><a class="footer-brand" href="../">EVOFORD NEWS</a><span id="articleFooter">Noticias · Opinión · Análisis</span><span>© <span id="year"></span> Evoford</span></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = "https://poywsdigujbarvnzbfnz.supabase.co";
@@ -28,11 +28,13 @@ async function loadArticle(){
  if(error||!a){root.innerHTML="<h1>Artículo no disponible</h1><p>La publicación no existe o no está disponible.</p><a class='read-link' href='../'>Volver a portada →</a>";return;}
  const requestedLanguage=new URLSearchParams(location.search).get("lang")==="en"?"en":"es";
  const english=requestedLanguage==="en";
+ const originalLanguage=a.language==="en"?"en":"es";
  const hasEnglish=Boolean(a.title_en&&a.summary_en&&a.content_en);
- const title=english&&hasEnglish?a.title_en:a.title;
- const summary=english&&hasEnglish?a.summary_en:a.summary;
- let body=english&&hasEnglish?a.content_en:a.content;
- const languageNotice=english&&!hasEnglish?"<p class='muted'>This article is currently available in Spanish only. / Este artículo solo está disponible en español.</p>":"";
+ const useEnglish=english&&(hasEnglish||originalLanguage==="en");
+ const title=useEnglish?(hasEnglish?a.title_en:a.title):a.title;
+ const summary=useEnglish?(hasEnglish?a.summary_en:a.summary):a.summary;
+ let body=useEnglish?(hasEnglish?a.content_en:a.content):a.content;
+ const languageNotice=english&&!hasEnglish&&originalLanguage!=="en"?"<p class='muted'>This article is not yet available in English. The original version is shown below.</p>":"";
  let sourceUrl=a.source_url||"";
  let sourceTitle=a.source_title||"";
  body=String(body||"").replace(/\\n/g,"\n");
@@ -44,7 +46,17 @@ async function loadArticle(){
  const paragraphs=String(body||"").split(/\n\s*\n|\r?\n/).filter(Boolean).map(p=>"<p style='font:18px/1.85 Georgia,serif;white-space:pre-wrap'>"+esc(p)+"</p>").join("");
  const sourceCredit=sourceUrl&&/^https:\/\//i.test(sourceUrl)?"<p class='source-credit'>Fuente original: <a href='"+esc(sourceUrl)+"' target='_blank' rel='noopener noreferrer'>"+esc(sourceTitle||"Consultar medio original")+" ↗</a></p>":"";
  root.innerHTML="<div class='article-actions'><div class='language-switch'><a href='?slug="+encodeURIComponent(a.slug)+"&lang=es' aria-label='Español'>ES</a><a href='?slug="+encodeURIComponent(a.slug)+"&lang=en' aria-label='English'>EN</a></div><button class='print-article-btn' id='printArticleBtn' type='button'>Imprimir artículo <span aria-hidden='true'>↗</span></button></div><div class='kicker'>"+esc(a.category||"INTERNACIONAL")+"</div><h1 style='font:800 clamp(38px,6vw,64px)/1.05 Playfair Display,Georgia,serif;letter-spacing:-.04em'>"+esc(title)+"</h1><p class='dek'>"+esc(summary||"")+"</p><div class='lead-meta'>POR "+esc(a.author||"EVOFORD NEWS")+( [a.country,a.region].filter(Boolean).length ? " · "+esc([a.country,a.region].filter(Boolean).join(" · ")) : "" )+"</div>"+(a.image_url&&/^https:\/\//i.test(a.image_url)?"<img src='"+esc(a.image_url)+"' alt='' style='width:100%;height:auto;margin:28px 0'>":"")+"<hr style='border:0;border-top:1px solid #d9dee5;margin:28px 0'>"+paragraphs+sourceCredit+"<section class='share-panel' aria-label='Compartir artículo'><div class='share-heading'>COMPARTIR ESTE ARTÍCULO</div><div class='share-buttons'><a class='share-button whatsapp' id='shareWhatsapp' target='_blank' rel='noopener noreferrer' aria-label='Compartir por WhatsApp' title='WhatsApp'>wa</a><a class='share-button facebook' id='shareFacebook' target='_blank' rel='noopener noreferrer' aria-label='Compartir en Facebook' title='Facebook'>f</a><a class='share-button x-social' id='shareX' target='_blank' rel='noopener noreferrer' aria-label='Compartir en X' title='X'>𝕏</a><a class='share-button telegram' id='shareTelegram' target='_blank' rel='noopener noreferrer' aria-label='Compartir por Telegram' title='Telegram'>➤</a><button class='share-button copy-share' id='copyArticleLink' type='button' aria-label='Copiar enlace' title='Copiar enlace'>↗</button></div><p class='share-feedback' id='shareFeedback' aria-live='polite'></p></section><section class='comments-panel' id='commentsPanel'><div class='comments-title'><div class='kicker'>PARTICIPACIÓN</div><h2>Comentarios</h2><p>Publica tu opinión con respeto. Los comentarios se publican al instante si superan los filtros automáticos contra lenguaje ofensivo y spam.</p></div><div id='commentLogin' class='comment-login'><p>Inicia sesión para participar en la conversación.</p><div class='login-providers'><button type='button' id='googleLogin' class='provider-button google-login'>Continuar con Google</button></div><p id='loginFeedback' class='comment-feedback' aria-live='polite'></p></div><div id='commentSignedIn' class='comment-signed-in' hidden><span id='commentUserLabel'></span><button type='button' id='commentSignOut' class='signout-button'>Cerrar sesión</button></div><form id='commentForm' class='comment-form' hidden><label for='commentBody'>Comentario</label><textarea id='commentBody' name='comment' maxlength='2000' required minlength='3' rows='4' placeholder='Escribe tu comentario…'></textarea><button type='submit' class='comment-submit'>Enviar comentario</button><p id='commentFeedback' class='comment-feedback' aria-live='polite'></p></form><div id='approvedComments' class='approved-comments'><p class='muted'>Cargando comentarios…</p></div></section><p><a class='read-link' href='../'>← Volver a Evoford News</a></p>";
- document.documentElement.lang=english&&hasEnglish?"en":"es";
+ 
+ const ui=requestedLanguage==="en"?{location:"LONDON · UNITED KINGDOM",descriptor:"NEWS · OPINION · ANALYSIS",home:"Home",international:"International",politics:"Politics",economy:"Economy",security:"Security",technology:"Technology",opinion:"Opinion",print:"Print article",share:"SHARE THIS ARTICLE",participation:"PARTICIPATION",comments:"Comments",intro:"Share your view respectfully. Comments are published immediately if they pass automated filters for abusive language and spam.",login:"Sign in to join the conversation.",google:"Continue with Google",signout:"Sign out",comment:"Comment",placeholder:"Write your comment…",submit:"Post comment",footer:"News · Opinion · Analysis",back:"← Back to Evoford News",copy:"Link copied.",copyFail:"Could not copy automatically. Copy the browser address.",noComments:"No comments yet. You can start the conversation.",loadFail:"Comments could not be loaded.",connected:"Signed in as ",connecting:"Connecting to Google…",loginFail:"Could not sign in. Check the provider configuration.",loading:"Loading comments…"}:{location:"LONDRES · REINO UNIDO",descriptor:"INFORMACIÓN · OPINIÓN · ANÁLISIS",home:"Portada",international:"Internacional",politics:"Política",economy:"Economía",security:"Seguridad",technology:"Tecnología",opinion:"Opinión",print:"Imprimir artículo",share:"COMPARTIR ESTE ARTÍCULO",participation:"PARTICIPACIÓN",comments:"Comentarios",intro:"Publica tu opinión con respeto. Los comentarios se publican al instante si superan los filtros automáticos contra lenguaje ofensivo y spam.",login:"Inicia sesión para participar en la conversación.",google:"Continuar con Google",signout:"Cerrar sesión",comment:"Comentario",placeholder:"Escribe tu comentario…",submit:"Enviar comentario",footer:"Noticias · Opinión · Análisis",back:"← Volver a Evoford News",copy:"Enlace copiado.",copyFail:"No se pudo copiar automáticamente. Copia la dirección del navegador.",noComments:ui.noComments,loadFail:ui.loadFail,connected:"Conectado como ",connecting:ui.connecting,loginFail:ui.loginFail,loading:ui.loading};
+ const put=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value;};
+ put("articleLocation",ui.location);put("articleDescriptor",ui.descriptor);put("navHome",ui.home);put("navInternational",ui.international);put("navPolitics",ui.politics);put("navEconomy",ui.economy);put("navSecurity",ui.security);put("navTechnology",ui.technology);put("navOpinion",ui.opinion);put("articleFooter",ui.footer);
+ const printLabel=document.getElementById("printArticleBtn");if(printLabel)printLabel.textContent=ui.print+" ↗";
+ const share=document.querySelector(".share-heading");if(share)share.textContent=ui.share;
+ const labels=[[".comments-title .kicker",ui.participation],[".comments-title h2",ui.comments],[".comments-title p",ui.intro],["#commentLogin>p:first-child",ui.login],["#googleLogin",ui.google],["#commentSignOut",ui.signout],["#commentForm label",ui.comment],["#commentForm button[type=submit]",ui.submit]];
+ labels.forEach(([selector,value])=>{const el=document.querySelector(selector);if(el)el.textContent=value;});
+ const input=document.getElementById("commentBody");if(input)input.placeholder=ui.placeholder;
+ const back=root.querySelector("p>a.read-link");if(back)back.textContent=ui.back;
+ document.documentElement.lang=requestedLanguage;
  document.title=title+" | Evoford News";
  // Enlaces sociales y copia del enlace permanente
  const pageUrl=location.href;
@@ -55,11 +67,11 @@ async function loadArticle(){
  setShare("shareX","https://twitter.com/intent/tweet?text="+encodeURIComponent(shareText)+"&url="+encodeURIComponent(pageUrl));
  setShare("shareTelegram","https://t.me/share/url?url="+encodeURIComponent(pageUrl)+"&text="+encodeURIComponent(shareText));
  const copyBtn=document.getElementById("copyArticleLink");
- if(copyBtn)copyBtn.addEventListener("click",async()=>{const feedback=document.getElementById("shareFeedback");try{await navigator.clipboard.writeText(pageUrl);feedback.textContent="Enlace copiado."; }catch(_e){feedback.textContent="No se pudo copiar automáticamente. Copia la dirección del navegador."; }});
+ if(copyBtn)copyBtn.addEventListener("click",async()=>{const feedback=document.getElementById("shareFeedback");try{await navigator.clipboard.writeText(pageUrl);feedback.textContent=ui.copy; }catch(_e){feedback.textContent=ui.copyFail; }});
  // Comentarios: se muestran los aprobados; los nuevos se publican tras superar los filtros automáticos.
  const commentsBox=document.getElementById("approvedComments");
  const {data:comments,error:commentsError}=await client.from("article_comments").select("author_name,body,created_at").eq("article_id",a.id).eq("status","approved").order("created_at",{ascending:false}).limit(50);
- if(commentsBox){commentsBox.innerHTML=commentsError?"<p class='muted'>No se pudieron cargar los comentarios.</p>":(comments?.length?comments.map(c=>"<article class='comment-item'><b>"+esc(c.author_name)+"</b><p>"+esc(c.body).replace(/\\n/g,"<br>")+"</p><time>"+new Date(c.created_at).toLocaleDateString("es-ES",{day:"numeric",month:"long",year:"numeric"})+"</time></article>").join(""):"<p class='muted'>Todavía no hay comentarios. Puedes iniciar la conversación.</p>");}
+ if(commentsBox){commentsBox.innerHTML=commentsError?"<p class='muted'>No se pudieron cargar los comentarios.</p>":(comments?.length?comments.map(c=>"<article class='comment-item'><b>"+esc(c.author_name)+"</b><p>"+esc(c.body).replace(/\\n/g,"<br>")+"</p><time>"+new Date(c.created_at).toLocaleDateString(requestedLanguage==="en"?"en-GB":"es-ES",{day:"numeric",month:"long",year:"numeric"})+"</time></article>").join(""):"<p class='muted'>Todavía no hay comentarios. Puedes iniciar la conversación.</p>");}
  const loginBox=document.getElementById("commentLogin");
  const signedInBox=document.getElementById("commentSignedIn");
  const commentForm=document.getElementById("commentForm");
@@ -68,7 +80,7 @@ async function loadArticle(){
  const refreshCommentAuth=async()=>{
    const {data}=await client.auth.getSession();
    const user=data?.session?.user;
-   if(user){loginBox.hidden=true;signedInBox.hidden=false;commentForm.hidden=false;document.getElementById("commentUserLabel").textContent="Conectado como "+profileName(user);}
+   if(user){loginBox.hidden=true;signedInBox.hidden=false;commentForm.hidden=false;document.getElementById("commentUserLabel").textContent=ui.connected+profileName(user);}
    else{loginBox.hidden=false;signedInBox.hidden=true;commentForm.hidden=true;}
  };
  const oauthLogin=async()=>{

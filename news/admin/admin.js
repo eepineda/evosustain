@@ -729,7 +729,7 @@ function wire(){
         "• Resumen público redactado por Evoford en su campo correspondiente.",
         "",
         "ESTADO: borrador interno. La importación RSS no autoriza la publicación."
-      ].join("\\n");
+      ].join("\n");
       say("editorMessage","Hoja editorial preparada. El extracto RSS queda identificado como material de consulta y no se ha copiado al resumen público. Completa la verificación y redacta el artículo original antes de enviarlo a revisión.");
       document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab==="articles"));
       ["articles","inbox","sources","submissions","directory","courses"].forEach(k=>$(k+"Tab").hidden=k!=="articles");

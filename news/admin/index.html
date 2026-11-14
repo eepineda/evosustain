@@ -40,6 +40,7 @@
       <nav class="tabs" aria-label="Secciones del panel">
         <button class="tab active" data-tab="overview">Resumen</button>
         <button class="tab" data-tab="articles">Artículos</button>
+        <button class="tab" data-tab="briefing">Evoford Briefing</button>
         <button class="tab" data-tab="inbox">Noticias RSS</button>
         <button class="tab" data-tab="sources">Fuentes RSS</button><button class="tab" data-tab="submissions">Envíos recibidos</button><button class="tab" data-tab="directory">Directorio</button><button class="tab" data-tab="courses">Solicitudes de formación</button><button class="tab" data-tab="ads">Anuncios y publicidad</button>
       </nav>
@@ -58,6 +59,11 @@
         </div>
         <section class="panel overview-panel"><p class="eyebrow">OPERACIÓN EDITORIAL</p><h3>Contenido y comunidad</h3><div id="overviewOperations"><p class="muted">Cargando…</p></div></section>
       </section>
+      <section id="briefingTab" class="tabview" hidden>
+        <div class="section-head"><div><p class="eyebrow">BOLETÍN EDITORIAL · PERIODICIDAD SEMANAL</p><h2>Evoford Briefing</h2><p class="muted">Prepara ediciones propias, conserva el guion y la transcripción, y publícalas solo después de la revisión editorial.</p></div><button type="button" id="newBriefingBtn">Nueva edición</button></div>
+        <div class="panel briefing-guidance"><strong>Flujo de producción</strong><p>Selecciona los temas, verifica los hechos, redacta el guion, prepara el resumen y la versión en inglés. Guarda como borrador, envía a revisión y publica únicamente después de la aprobación.</p><p class="muted">Las ediciones utilizan el flujo de artículos existente y aparecen separadas en la página pública de Briefing.</p></div>
+        <div id="briefingList" class="list"><p class="muted">Cargando ediciones…</p></div>
+      </section>
       <section id="articlesTab" class="tabview" hidden>
         <div class="section-head"><div><p class="eyebrow">REDACCIÓN PROPIA</p><h2>Artículos y borradores</h2></div><button id="newArticleBtn">Nuevo artículo</button></div>
         <div class="article-filters" aria-label="Filtros de artículos">
@@ -73,7 +79,7 @@
             <div class="field full"><label for="title">Titular en español (o idioma principal)</label><input id="title" required maxlength="180"></div>
             <div class="field full"><label for="titleEn">Headline in English</label><input id="titleEn" maxlength="180"></div>
             <div class="field full"><label for="titleEs">Titular en español</label><input id="titleEs" maxlength="180"></div>
-            <div class="field"><label for="category">Sección</label><select id="category"><option>Internacional</option><option>Política</option><option>Economía</option><option>Seguridad</option><option>Tecnología</option><option>Opinión</option><option>Clima</option><option>Sociedad</option></select></div>
+            <div class="field"><label for="category">Sección</label><select id="category"><option>Internacional</option><option>Política</option><option>Economía</option><option>Seguridad</option><option>Tecnología</option><option>Opinión</option><option>Clima</option><option>Sociedad</option><option>Evoford Briefing</option></select></div>
             <div class="field"><label for="author">Autor</label><input id="author" value="EDWIN PINEDA CARRASCO"></div>
             <div class="field full"><label for="summary">Resumen</label><textarea id="summary" rows="2"></textarea></div>
             <div class="field full"><label for="content">Texto del artículo</label><textarea id="content" rows="12" required></textarea><small class="muted">Para aprobar y publicar: redacta al menos 500 caracteres propios, elimina las instrucciones del borrador e identifica al autor.</small></div>

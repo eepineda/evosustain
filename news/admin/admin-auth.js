@@ -660,7 +660,7 @@ async function loadAds(){
  }else{
   const stats=[["Campañas",adCampaigns.length],["Activas",adCampaigns.filter(x=>x.status==="active").length],["Pagadas",adCampaigns.filter(x=>x.payment_status==="paid").length],["Por cobrar",adCampaigns.filter(x=>["unpaid","pending","overdue"].includes(x.payment_status)).length]];
   statsRoot.innerHTML=stats.map(([t,n])=>'<div class="course-stat"><strong>'+n+'</strong><span>'+t+'</span></div>').join("");
-  campaignRoot.innerHTML=adCampaigns.length?adCampaigns.map(a=>'<article class="item ad-item"><div><h3>'+safe(a.campaign_title)+'</h3><p>'+safe(a.advertiser_name)+' · '+safe(a.placement)+' · '+safe(adStatusText(a.status))+' · '+(a.publication_mode==='scheduled'?'Programada':'Manual')+'</p><p>'+safe(a.amount)+' '+safe(a.currency)+' · Pago: '+safe(adStatusText(a.payment_status))+(a.invoice_reference?' · Factura: '+safe(a.invoice_reference):'')+'</p><p>'+safe(a.start_date||"Sin inicio")+' → '+safe(a.end_date||"Sin fin")+'</p></div><div class="item-actions"><button class="secondary" data-ad-edit="'+a.id+'">Editar</button><button class="secondary" data-ad-delete="'+a.id+'">Eliminar</button></div></article>').join(""):'<p class="muted">Todavía no hay campañas.</p>';
+  campaignRoot.innerHTML=adCampaigns.length?adCampaigns.map(a=>'<article class="item ad-item"><div><h3>'+safe(a.campaign_title)+'</h3><p>'+safe(a.advertiser_name)+' · '+safe(adPlacementText(a.placement))+' · '+safe(adStatusText(a.status))+' · '+(a.publication_mode==='scheduled'?'Programada':'Manual')+'</p><p>'+safe(a.amount)+' '+safe(a.currency)+' · Pago: '+safe(adStatusText(a.payment_status))+(a.invoice_reference?' · Factura: '+safe(a.invoice_reference):'')+'</p><p>'+safe(a.start_date||"Sin inicio")+' → '+safe(a.end_date||"Sin fin")+'</p></div><div class="item-actions"><button class="secondary" data-ad-edit="'+a.id+'">Editar</button><button class="secondary" data-ad-delete="'+a.id+'">Eliminar</button></div></article>').join(""):'<p class="muted">Todavía no hay campañas.</p>';
   campaignRoot.querySelectorAll("[data-ad-edit]").forEach(b=>b.addEventListener("click",()=>editAd(adCampaigns.find(a=>a.id===b.dataset.adEdit))));
   campaignRoot.querySelectorAll("[data-ad-delete]").forEach(b=>b.addEventListener("click",async()=>{const a=adCampaigns.find(x=>x.id===b.dataset.adDelete);if(!a||!confirm("¿Eliminar esta campaña?"))return;const r=await client.from("ad_campaigns").delete().eq("id",a.id);if(r.error){say("globalMessage",r.error.message);return;}await loadAds();}));
  }
@@ -707,6 +707,9 @@ async function prepareAdFromEnquiry(x){
  }else{
   say("adMessage","Datos copiados. Sube el diseño, elige ubicación, modalidad y fechas antes de activar.");
  }
+}
+function adPlacementText(value){
+ return ({banner:"Banner web",homepage:"Portada",sidebar:"Columna lateral",article:"Publicidad en artículos",print:"Edición impresa",sponsored:"Artículo patrocinado"})[value]||value||"Sin ubicación";
 }
 function adEnquiryStatusText(status){
  return ({received:"Recibida",contacted:"Contactada",quoted:"Presupuesto enviado",converted:"Convertida",closed:"Cerrada",discarded:"Descartada"})[status]||status||"Recibida";

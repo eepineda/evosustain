@@ -1,148 +1,110 @@
-/* EVOFORD NEWS — documento de impresión aislado
-   Genera una composición limpia desde el contenido ya cargado.
-   No hereda hojas de estilo de la edición web. */
+/* EVOFORD NEWS — PDF editorial independiente. Genera páginas A3/A4 sin el motor de impresión del navegador. */
 (function(){
- "use strict";
- var sizeSelect=document.getElementById("paperSize");
- function getSize(){return sizeSelect&&sizeSelect.value==="A3"?"A3":"A4";}
- function cloneMarkup(selector){
-  var node=document.querySelector(selector);
-  return node?node.innerHTML:"";
- }
- function cloneElement(selector){
-  var node=document.querySelector(selector);
-  return node?node.outerHTML:"";
- }
- function makeDocument(size){
-  var lang=document.documentElement.lang==="en"?"en":"es";
-  var pageMargin=size==="A3"?"13mm":"11mm";
-  var title="Evoford News — "+(lang==="en"?"Print edition":"Edición impresa");
-  var leadNode=document.querySelector("#lead");
-  var secondaryNode=document.querySelector(".secondary-area");
-  var printLead=leadNode?leadNode.cloneNode(true):null;
-  var printSecondary=secondaryNode?secondaryNode.cloneNode(true):null;
-  if(printLead){
-   var content=printLead.querySelector(".lead-content");
-   var photo=printLead.querySelector(".lead-photo");
-   var sidebar=printLead.querySelector(".lead-sidebar");
-   if(content){
-    content.style.display="grid";
-    content.style.gridTemplateColumns="minmax(0,2fr) minmax(0,1fr)";
-    content.style.gap="9pt";
-    content.style.alignItems="start";
-   }
-   if(photo){
-    photo.style.display="block";
-    photo.style.width="100%";
-    photo.style.maxWidth="100%";
-    photo.style.margin="0";
-    photo.style.textAlign="center";
-   }
-   if(sidebar){
-    sidebar.style.display="block";
-    sidebar.style.paddingLeft="8pt";
-    sidebar.style.borderLeft="1px solid #c4cbd2";
-   }
-  }
-  var blocks={
-   topline:cloneMarkup(".paper-topline"),
-   masthead:cloneMarkup(".paper-masthead"),
-   rule:cloneMarkup(".paper-rule"),
-   sections:cloneMarkup(".paper-sections"),
-   lead:printLead?printLead.outerHTML:"",
-   article:cloneElement("#fullArticle"),
-   secondary:printSecondary?printSecondary.outerHTML:"",
-   footer:cloneElement(".paper-footer")
-  };
-  var css=`
-@page{size:${size} portrait;margin:${pageMargin}}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;background:#fff;color:#17212b}
-body{font-family:Georgia,"Times New Roman",serif;font-size:10pt;line-height:1.35;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-.sheet{width:100%;margin:0 auto}
-.topline{display:flex;justify-content:space-between;gap:8pt;border-bottom:1px solid #17212b;padding-bottom:5pt;color:#4b5661;font:700 7pt/1.3 Arial,sans-serif;letter-spacing:.08em}
-.masthead{text-align:center;padding:9pt 0 6pt}
-.paper-kicker{font:italic 8pt/1.3 Georgia,serif;color:#596575}
-.paper-brand{font:900 42pt/.98 Georgia,serif;letter-spacing:-2pt;color:#101820}
-.paper-motto{font:italic 8pt/1.3 Georgia,serif;color:#596575;margin-top:3pt}
-.paper-rule{height:4pt;border-top:3pt double #102b4e;margin:0}
-.paper-sections{text-align:center;padding:6pt 0;border-bottom:1px solid #b7bec6;color:#102b4e;font:700 7pt/1.3 Arial,sans-serif;letter-spacing:.1em}
-.lead{display:block;margin:0;padding:11pt 0 12pt;border-bottom:2pt solid #102b4e}
-.lead-headline{padding-bottom:8pt}
-.category{color:#9d2635;font:700 7pt/1.25 Arial,sans-serif;letter-spacing:.13em;text-transform:uppercase}
-.lead-headline h1{font:700 27pt/1.03 Georgia,serif;letter-spacing:-.5pt;margin:5pt 0 7pt;color:#101820}
-.lead-headline .summary{font:10pt/1.35 Georgia,serif;margin:0 0 6pt;color:#3e4852}
-.byline{font:6.5pt/1.3 Arial,sans-serif;letter-spacing:.05em;color:#65717d;text-transform:uppercase}
-.lead-content{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:9pt;align-items:start;margin-top:8pt;padding-top:8pt;border-top:1px solid #c4cbd2}.lead-photo{display:block;width:100%;max-width:100%;margin:0;text-align:center}.lead-photo img{display:block;width:100%;height:auto;max-height:92mm;margin:0 auto;object-fit:contain}
-
-.lead-sidebar{display:block;min-width:0;padding-left:8pt;border-left:1px solid #c4cbd2}
-.sidebar-heading{font:700 7pt/1.3 Arial,sans-serif;letter-spacing:.12em;color:#102b4e;border-bottom:2pt solid #102b4e;padding-bottom:4pt}
-.side-story{display:grid;grid-template-columns:18pt minmax(0,1fr);gap:4pt;padding:6pt 0;border-bottom:1px solid #c4cbd2}
-.side-number{font:700 12pt/1 Georgia,serif;color:#9d2635}
-.side-story h2{font:700 9.5pt/1.12 Georgia,serif;margin:2pt 0;color:#17212b}
-.side-story p{font:7pt/1.28 Georgia,serif;margin:3pt 0;color:#59636d}
-#fullArticle{display:block;margin:12pt 0;padding:10pt 0 12pt;border-top:2pt solid #102b4e;border-bottom:1px solid #c4cbd2;break-before:auto;page-break-before:auto;break-inside:auto;page-break-inside:auto}
-.full-article-heading{display:block;margin:0 0 8pt;padding:0 0 6pt;border-bottom:1px solid #c4cbd2;break-after:avoid-page;page-break-after:avoid}
-.full-article-heading>span{font:700 7pt/1.3 Arial,sans-serif;letter-spacing:.16em;color:#9d2635}
-.full-article-heading h2{font:700 17pt/1.08 Georgia,serif;margin:4pt 0;color:#111a23}
-.full-article-body{display:block;width:auto;height:auto;overflow:visible;columns:2;column-count:2;column-gap:16pt;column-fill:balance;font:9pt/1.38 Georgia,serif;text-align:justify;hyphens:auto;orphans:3;widows:3}
-.full-article-body p{margin:0 0 7pt;break-inside:auto;page-break-inside:auto}
-.full-article-body h2,.full-article-body h3,.full-article-body h4{font:700 12pt/1.15 Georgia,serif;color:#172b40;margin:9pt 0 4pt;break-after:avoid-page;page-break-after:avoid}
-.full-article-body ul,.full-article-body ol{padding-left:16pt;margin:4pt 0 7pt}
-.secondary-area{display:block;margin:12pt 0 0;padding:9pt 0 0;border-top:3pt double #102b4e;break-before:auto;page-break-before:auto}
-.section-label{display:flex;justify-content:space-between;margin:0 0 8pt;padding:5pt 0;border-bottom:1px solid #17212b;color:#102b4e;font:700 7pt/1.3 Arial,sans-serif;letter-spacing:.12em;break-after:avoid-page;page-break-after:avoid}
-/* Single-flow news list: avoids CSS grid page-fragmentation differences. */
-.story-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:9pt 10pt!important;align-items:start!important;width:100%!important;margin:0!important;padding:0!important;break-inside:auto!important;page-break-inside:auto!important}
-.story{display:block!important;min-width:0;margin:0;padding:0 0 7pt;border-bottom:1px solid #c4cbd2;break-inside:avoid;page-break-inside:avoid}
-.story-from-headline{padding-top:5pt}
-.story-from-headline:before{content:"TITULAR DESTACADO";display:block;margin-bottom:4pt;color:#9d2635;font:700 6pt/1.2 Arial,sans-serif;letter-spacing:.1em}
-.story img{display:block;width:100%;height:27mm;object-fit:cover;margin:0 0 5pt}
-.story .category,.story h2,.story p,.story .byline{display:block}
-.story h2{font:700 11pt/1.12 Georgia,serif;margin:1pt 0 3pt;color:#17212b}
-.story p{font:8pt/1.32 Georgia,serif;margin:2pt 0;color:#4e5963}
-.story .byline{font-size:6pt}
-.story:not(:has(img)){display:block!important}
-.ad-slot{margin:8pt 0;padding:8pt 5pt;border:1px dashed #9aa4ae;text-align:center;color:#66717c;font:700 6pt/1.3 Arial,sans-serif;letter-spacing:.16em}.paper-footer{display:flex!important;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:4pt 12pt;margin:10pt 0 0;padding:6pt 0 0;border-top:1.5pt solid #102b4e;font:6.5pt/1.3 Arial,sans-serif;color:#4e5963}.paper-footer>*{display:block;flex:0 1 auto}
-.paper-footer strong{color:#102b4e;letter-spacing:.1em}
-a{color:inherit;text-decoration:none}
-img{max-width:100%}
-@media print{
- .lead-content,.story{break-inside:avoid-page}
- .lead{break-inside:auto}
- .full-article-body{column-count:2;columns:2}
- .story-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
- .lead{break-inside:auto}
- #fullArticle,.secondary-area{break-before:auto!important;page-break-before:auto!important}
+"use strict";
+var select=document.getElementById("paperSize");
+var lang=function(){return document.documentElement.lang==="en"?"en":"es";};
+var $=function(s,r){return (r||document).querySelector(s);};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
+function paper(){return select&&select.value==="A3"?"a3":"a4";}
+function plain(n){return (n&&n.innerText||"").replace(/\u00a0/g," ").replace(/[\t ]+/g," ").trim();}
+function clean(s){return String(s||"").replace(/[\u2010-\u2015]/g,"-").replace(/[\u2018\u2019]/g,"'").replace(/[\u201c\u201d]/g,'"').replace(/\u2026/g,"...");}
+function getImage(url){
+ if(!url||!/^https:\/\//i.test(url))return Promise.resolve(null);
+ return fetch(url,{mode:"cors",credentials:"omit"}).then(function(r){if(!r.ok)throw Error("image");return r.blob();}).then(function(b){return new Promise(function(resolve){var rd=new FileReader();rd.onload=function(){resolve({data:rd.result,type:b.type||"image/jpeg"});};rd.onerror=function(){resolve(null);};rd.readAsDataURL(b);});}).catch(function(){return null;});
 }
-@media print{html[data-paper-size="A3"] .lead-photo img{max-height:115mm}html[data-paper-size="A3"] .full-article-body{column-count:3;columns:3}html[data-paper-size="A3"] .story-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
-@media screen{
- body{background:#e7e9ec;padding:24px}
- .sheet{max-width:${size==="A3"?"297mm":"210mm"};min-height:${size==="A3"?"420mm":"297mm"};padding:${pageMargin};background:white;box-shadow:0 4px 22px #0002}
-}
-`;
-  return "<!doctype html><html lang=\""+lang+"\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>"+title+"</title><style>"+css+"</style></head><body><main class=\"sheet\"><div class=\"topline\">"+blocks.topline+"</div><header class=\"masthead\">"+blocks.masthead+"</header><div class=\"paper-rule\"></div><div class=\"paper-sections\">"+blocks.sections+"</div>"+blocks.lead+blocks.article+'<aside class="ad-slot">ESPACIO PUBLICITARIO · EVOFORD NEWS</aside>'+blocks.secondary+blocks.footer+"</main></body></html>";
+function generate(){
+ var en=lang()==="en",a3=paper()==="a3";
+ if(!window.jspdf||!window.jspdf.jsPDF){alert(en?"PDF engine unavailable. Check your connection and retry.":"No se pudo cargar el motor PDF. Comprueba la conexión e inténtalo de nuevo.");return;}
+ var lead=$("#lead"),article=$("#fullArticle"),secondary=$(".secondary-area");
+ if(!lead||!$(".lead-headline h1",lead)){alert(en?"The edition is still loading.":"La edición todavía se está cargando.");return;}
+ var JsPDF=window.jspdf.jsPDF,doc=new JsPDF({orientation:"portrait",unit:"mm",format:a3?"a3":"a4",compress:true});
+ var W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight(),m=a3?14:11,U=W-2*m;
+ var navy=[16,43,78],red=[157,38,53],ink=[23,33,43],grey=[91,101,112],rule=[190,198,205];
+ var y=m,page=1;
+ var title=clean(plain($(".lead-headline h1",lead))),summary=clean(plain($(".lead-headline .summary",lead))),category=clean(plain($(".lead-headline .category",lead))),by=clean(plain($(".lead-headline .byline",lead)));
+ var leadImg=$(".lead-photo img",lead),side=$$(".side-story",lead).map(function(n){return {cat:clean(plain($(".category",n))),title:clean(plain($("h2",n))),summary:clean(plain($("p",n)))};});
+ var body=$(".full-article-body",article),bodyNodes=body?Array.prototype.slice.call(body.children):[];
+ var stories=$$(".story",secondary);
+ function font(style,pt,color){doc.setFont("times",style);doc.setFontSize(pt);doc.setTextColor.apply(doc,color||ink);}
+ function ruleLine(x1,y1,x2,y2,c,w){doc.setDrawColor.apply(doc,c||rule);doc.setLineWidth(w||.25);doc.line(x1,y1,x2,y2);}
+ function header(){
+  font("normal",7,grey);doc.text(new Date().toLocaleDateString(en?"en-GB":"es-ES",{day:"numeric",month:"long",year:"numeric"}).toUpperCase(),m,y);
+  doc.text(en?"EVOFORD NEWS · PRINT EDITION":"EVOFORD NEWS · EDICIÓN IMPRESA",W-m,y,{align:"right"});y+=4;
+  ruleLine(m,y,W-m,y,navy,.6);y+=5;font("italic",7,grey);
+  doc.text(en?"THE GLOBAL NEWSPAPER · INFORMATION WITH CONTEXT":"EL PERIÓDICO GLOBAL · INFORMACIÓN CON CONTEXTO",W/2,y,{align:"center"});y+=9;
+  font("bold",a3?35:29,ink);doc.text("EVOFORD NEWS",W/2,y,{align:"center"});y+=5;
+  font("italic",7,grey);doc.text(en?"News to understand the world":"Noticias para entender el mundo",W/2,y,{align:"center"});y+=4;
+  ruleLine(m,y,W-m,y,navy,.8);y+=4;font("bold",6.5,navy);
+  doc.text(en?"INTERNATIONAL · ECONOMY · SOCIETY · TECHNOLOGY · OPINION":"INTERNACIONAL · ECONOMÍA · SOCIEDAD · TECNOLOGÍA · OPINIÓN",W/2,y,{align:"center"});y+=5;ruleLine(m,y,W-m,y,rule,.25);y+=7;
  }
- function print(){
-  var size=getSize();
-  var popup=window.open("","_blank");
-  if(!popup){window.alert("Permite las ventanas emergentes para imprimir la edición de Evoford News.");return;}
-  popup.document.open();
-  popup.document.write(makeDocument(size));
-  popup.document.documentElement.setAttribute("data-paper-size",size);
-  popup.document.close();
-  var images=Array.prototype.slice.call(popup.document.images);
-  images.forEach(function(img){img.loading="eager";});
-  var imageWait=Promise.all(images.map(function(img){
-   if(img.complete)return img.decode?img.decode().catch(function(){}):Promise.resolve();
-   return new Promise(function(resolve){img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true});});
-  }));
-  var fonts=popup.document.fonts&&popup.document.fonts.ready?popup.document.fonts.ready:Promise.resolve();
-  var timeout=new Promise(function(resolve){window.setTimeout(resolve,8000);});
-  Promise.race([Promise.all([imageWait,fonts]),timeout]).then(function(){
-   popup.focus();
-   popup.print();
+ function footer(){
+  ruleLine(m,H-m-7,W-m,H-m-7,navy,.5);font("normal",6,grey);
+  doc.text(en?"EVOFORD NEWS · PRINT EDITION":"EVOFORD NEWS · EDICIÓN IMPRESA",m,H-m-3);
+  doc.text(String(page),W-m,H-m-3,{align:"right"});
+ }
+ function nextPage(){footer();doc.addPage();page++;y=m;header();}
+ function ensure(h){if(y+h>H-m-11)nextPage();}
+ function paragraph(str,x,width,pt,style,color,gap){
+  if(!str)return;var lines=doc.splitTextToSize(clean(str),width),step=pt*.39;
+  lines.forEach(function(ln){ensure(step+1);font(style,pt,color);doc.text(ln,x,y);y+=step;});y+=gap===undefined?1.5:gap;
+ }
+ function imageReady(url){return getImage(url);}
+ function leadBlock(image){
+  var gap=7,sideW=U*.31,photoW=U-sideW-gap,top=y,photoH=0;
+  if(image&&image.data){try{var p=doc.getImageProperties(image.data);photoH=Math.min(a3?100:72,photoW/(p.width/p.height));doc.addImage(image.data,image.type.indexOf("png")>=0?"PNG":"JPEG",m,top,photoW,photoH,undefined,"FAST");}catch(e){photoH=0;}}
+  if(!photoH){photoH=a3?40:32;ruleLine(m,top,m+photoW,top,rule,.3);font("italic",9,grey);doc.text(en?"Main photograph":"Fotografía principal",m+photoW/2,top+photoH/2,{align:"center"});}
+  var x=m+photoW+gap,sy=top+1;font("bold",6.5,navy);doc.text(en?"MORE HEADLINES":"OTROS TITULARES",x,sy);sy+=5;
+  side.forEach(function(s){
+   if(sy>top+photoH-8)return;
+   font("bold",6,red);doc.text(s.cat||"NEWS",x,sy);sy+=3.2;font("bold",a3?9:8,ink);
+   doc.splitTextToSize(s.title,sideW).slice(0,3).forEach(function(v){doc.text(v,x,sy);sy+=3.4;});
+   if(s.summary&&sy<top+photoH-5){font("normal",a3?6.5:6,grey);doc.splitTextToSize(s.summary,sideW).slice(0,2).forEach(function(v){doc.text(v,x,sy);sy+=2.7;});}
+   sy+=2;ruleLine(x,sy,x+sideW,sy,rule,.2);sy+=3;
+  });
+  y=top+Math.max(photoH,sy-top)+5;ruleLine(m,y,W-m,y,navy,.65);y+=6;
+ }
+ function articleColumns(nodes,cols,pt){
+  var gap=a3?7:5.5,cw=(U-gap*(cols-1))/cols,col=0,x=m,top=y;
+  function advance(){col++;if(col>=cols){nextPage();col=0;top=y;}x=m+col*(cw+gap);y=top;}
+  nodes.forEach(function(node){
+   var str=clean(plain(node));if(!str)return;
+   var heading=/^H[1-6]$/.test(node.tagName),fs=heading?(a3?10:9):pt,style=heading?"bold":"normal",step=fs*.4;
+   var lines=doc.splitTextToSize(str,cw);if(y+lines.length*step+3>H-m-12)advance();
+   if(heading)y+=1;
+   lines.forEach(function(ln){if(y+step>H-m-12)advance();font(style,fs,heading?navy:ink);doc.text(ln,x,y);y+=step;});
+   y+=heading?1.5:1.2;
   });
  }
- function setSize(){return getSize();}
- window.EvoPrintController={setSize:setSize,print:print};
+ function drawStories(images){
+  var cols=a3?4:3,gap=5,cw=(U-gap*(cols-1))/cols,idx=0;
+  while(idx<stories.length){
+   var row=stories.slice(idx,idx+cols),top=y,max=top;
+   row.forEach(function(node,j){
+    var x=m+j*(cw+gap),cy=top,im=images[idx+j];
+    if(im&&im.data){try{var p=doc.getImageProperties(im.data),ih=Math.min(a3?27:20,cw/(p.width/p.height));doc.addImage(im.data,im.type.indexOf("png")>=0?"PNG":"JPEG",x,cy,cw,ih,undefined,"FAST");cy+=ih+3;}catch(e){}}
+    font("bold",5.8,red);doc.text(clean(plain($(".category",node))).slice(0,35),x,cy);cy+=3.3;
+    font("bold",a3?9:8,ink);doc.splitTextToSize(clean(plain($("h2",node))),cw).slice(0,5).forEach(function(v){doc.text(v,x,cy);cy+=3.4;});
+    cy+=1;font("normal",a3?7:6.3,grey);doc.splitTextToSize(clean(plain($("p",node))),cw).slice(0,a3?7:6).forEach(function(v){doc.text(v,x,cy);cy+=2.8;});
+    ruleLine(x,cy+1,x+cw,cy+1,rule,.2);max=Math.max(max,cy+5);
+   });
+   y=max+6;idx+=cols;if(idx<stories.length&&y>H-m-28)nextPage();
+  }
+ }
+ Promise.all([imageReady(leadImg&&leadImg.src),Promise.all(stories.map(function(n){var im=$("img",n);return imageReady(im&&im.src);}))]).then(function(images){
+  header();font("bold",6.5,red);doc.text(category.toUpperCase(),m,y);y+=5;
+  var titlePt=a3?25:21;font("bold",titlePt,ink);
+  doc.splitTextToSize(title,U).forEach(function(v){ensure(titlePt*.42+1);doc.text(v,m,y);y+=titlePt*.42;});
+  y+=2;paragraph(summary,m,U,a3?10:8.5,"normal",ink,1.5);font("italic",6,grey);doc.text(by.slice(0,150),m,y);y+=6;
+  leadBlock(images[0]);var articleTitle=clean(plain($(".full-article-heading h2",article)))||title;
+  font("bold",6.5,red);doc.text(en?"FULL STORY":"ARTÍCULO COMPLETO",m,y);y+=4;
+  font("bold",a3?15:12,ink);doc.splitTextToSize(articleTitle,U).forEach(function(v){ensure(5);doc.text(v,m,y);y+=5;});
+  y+=3;ruleLine(m,y,W-m,y,rule,.3);y+=5;articleColumns(bodyNodes,a3?3:2,a3?9:7.6);y+=5;
+  if(y>H-m-30)nextPage();
+  ruleLine(m,y,W-m,y,navy,.7);y+=5;font("bold",7,navy);doc.text(en?"MORE STORIES":"OTRAS NOTICIAS",m,y);
+  font("normal",6,grey);doc.text(stories.length+" "+(en?"stories":"noticias"),W-m,y,{align:"right"});y+=6;
+  drawStories(images[1]);footer();
+  doc.save("Evoford-News-"+(a3?"A3":"A4")+"-"+(en?"EN":"ES")+"-"+new Date().toISOString().slice(0,10)+".pdf");
+ }).catch(function(err){console.error("Evoford PDF",err);alert(en?"Could not generate the PDF. Please retry.":"No se pudo generar el PDF. Inténtalo de nuevo.");});
+}
+window.EvoPrintController={setSize:function(){return paper();},print:generate};
 })();

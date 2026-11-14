@@ -17,14 +17,45 @@
   var lang=document.documentElement.lang==="en"?"en":"es";
   var pageMargin=size==="A3"?"13mm":"11mm";
   var title="Evoford News — "+(lang==="en"?"Print edition":"Edición impresa");
+  var leadNode=document.querySelector("#lead");
+  var secondaryNode=document.querySelector(".secondary-area");
+  var printLead=leadNode?leadNode.cloneNode(true):null;
+  var printSecondary=secondaryNode?secondaryNode.cloneNode(true):null;
+  if(printLead){
+   var sidebar=printLead.querySelector(".lead-sidebar");
+   var leadPhoto=printLead.querySelector(".lead-photo");
+   if(sidebar){
+    var grid=printSecondary&&printSecondary.querySelector(".story-grid");
+    var sideStories=Array.prototype.slice.call(sidebar.querySelectorAll(".side-story"));
+    sideStories.forEach(function(side){
+     var card=document.createElement("article");
+     card.className="story story-from-headline";
+     [".category","h2","p"].forEach(function(selector){
+      var part=side.querySelector(selector);
+      if(part)card.appendChild(part.cloneNode(true));
+     });
+     if(grid)grid.insertBefore(card,grid.firstChild);
+    });
+    sidebar.remove();
+   }
+   var content=printLead.querySelector(".lead-content");
+   if(content){content.style.display="block";content.style.width="100%";}
+   if(leadPhoto){
+    leadPhoto.style.display="block";
+    leadPhoto.style.width="100%";
+    leadPhoto.style.maxWidth="100%";
+    leadPhoto.style.margin="0 auto";
+    leadPhoto.style.textAlign="center";
+   }
+  }
   var blocks={
    topline:cloneMarkup(".paper-topline"),
    masthead:cloneMarkup(".paper-masthead"),
    rule:cloneMarkup(".paper-rule"),
    sections:cloneMarkup(".paper-sections"),
-   lead:cloneElement("#lead"),
+   lead:printLead?printLead.outerHTML:"",
    article:cloneElement("#fullArticle"),
-   secondary:cloneElement(".secondary-area"),
+   secondary:printSecondary?printSecondary.outerHTML:"",
    footer:cloneMarkup(".paper-footer")
   };
   var css=`
@@ -46,8 +77,8 @@ body{font-family:Georgia,"Times New Roman",serif;font-size:10pt;line-height:1.35
 .lead-headline h1{font:700 27pt/1.03 Georgia,serif;letter-spacing:-.5pt;margin:5pt 0 7pt;color:#101820}
 .lead-headline .summary{font:10pt/1.35 Georgia,serif;margin:0 0 6pt;color:#3e4852}
 .byline{font:6.5pt/1.3 Arial,sans-serif;letter-spacing:.05em;color:#65717d;text-transform:uppercase}
-.lead-content{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:10pt;margin-top:8pt;padding-top:8pt;border-top:1px solid #c4cbd2;align-items:start}
-.lead-photo img{display:block;width:100%;height:auto;max-height:68mm;object-fit:cover}
+.lead-content{display:block;width:100%;margin-top:8pt;padding-top:8pt;border-top:1px solid #c4cbd2}.lead-photo{display:block;width:100%;max-width:100%;margin:0 auto;text-align:center}.lead-photo img{display:block;width:100%;height:auto;max-height:95mm;margin:0 auto;object-fit:contain}
+
 .lead-sidebar{display:block;padding-left:8pt;border-left:1px solid #c4cbd2}
 .sidebar-heading{font:700 7pt/1.3 Arial,sans-serif;letter-spacing:.12em;color:#102b4e;border-bottom:2pt solid #102b4e;padding-bottom:4pt}
 .side-story{display:grid;grid-template-columns:18pt minmax(0,1fr);gap:4pt;padding:6pt 0;border-bottom:1px solid #c4cbd2}
@@ -65,7 +96,7 @@ body{font-family:Georgia,"Times New Roman",serif;font-size:10pt;line-height:1.35
 .secondary-area{display:block;margin:12pt 0 0;padding:9pt 0 0;border-top:3pt double #102b4e;break-before:auto;page-break-before:auto}
 .section-label{display:flex;justify-content:space-between;margin:0 0 8pt;padding:5pt 0;border-bottom:1px solid #17212b;color:#102b4e;font:700 7pt/1.3 Arial,sans-serif;letter-spacing:.12em;break-after:avoid-page;page-break-after:avoid}
 .story-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10pt 11pt;align-items:start}
-.story{min-width:0;padding:0 0 7pt;border-bottom:1px solid #c4cbd2;break-inside:avoid;page-break-inside:avoid}
+.story{min-width:0;padding:0 0 7pt;border-bottom:1px solid #c4cbd2;break-inside:avoid;page-break-inside:avoid}.story-from-headline{padding-top:5pt}.story-from-headline:before{content:"TITULAR DESTACADO";display:block;margin-bottom:3pt;color:#9d2635;font:700 6pt/1.2 Arial,sans-serif;letter-spacing:.1em}
 .story img{display:block;width:100%;height:27mm;object-fit:cover;margin:0 0 5pt}
 .story h2{font:700 10.5pt/1.12 Georgia,serif;margin:3pt 0;color:#17212b}
 .story p{font:7.5pt/1.3 Georgia,serif;margin:3pt 0;color:#4e5963}
@@ -75,7 +106,7 @@ body{font-family:Georgia,"Times New Roman",serif;font-size:10pt;line-height:1.35
 a{color:inherit;text-decoration:none}
 img{max-width:100%}
 @media print{
- .lead,.lead-content,.side-story,.story{break-inside:avoid-page}
+ .lead,.lead-content,.story{break-inside:avoid-page}
  .lead{break-inside:auto}
  #fullArticle,.secondary-area{break-before:auto!important;page-break-before:auto!important}
 }

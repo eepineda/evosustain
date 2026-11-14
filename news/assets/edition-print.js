@@ -89,13 +89,13 @@ function generate(){
    row.forEach(function(node,j){
     var im=images[idx+j],ih=0;
     if(im&&im.data){
-     try{var p=doc.getImageProperties(im.data);ih=Math.min(a3?20:12,cw/(p.width/p.height));}catch(e){}
+     try{var p=doc.getImageProperties(im.data);ih=Math.min(a3?20:8,cw/(p.width/p.height));}catch(e){}
     }
-    var titleSize=a3?8.2:7,titleStep=a3?3.15:2.8,summarySize=a3?6.2:5.5,summaryStep=a3?2.5:2.25;
+    var titleSize=a3?8.2:6.8,titleStep=a3?3.15:2.7,summarySize=a3?6.2:5.2,summaryStep=a3?2.5:2.1;
     doc.setFont("times","bold");doc.setFontSize(titleSize);
     var titleLines=doc.splitTextToSize(clean(plain($("h2",node))),cw).slice(0,a3?3:2);
     doc.setFont("times","normal");doc.setFontSize(summarySize);
-    var summaryLines=doc.splitTextToSize(clean(plain($("p",node))),cw).slice(0,a3?3:2);
+    var summaryLines=doc.splitTextToSize(clean(plain($("p",node))),cw).slice(0,a3?3:1);
     var height=(ih?ih+1.5:0)+2.6+titleLines.length*titleStep+.5+summaryLines.length*summaryStep+1.5;
     cards.push({node:node,image:im,x:m+j*(cw+gap),imageHeight:ih,titleLines:titleLines,summaryLines:summaryLines,titleSize:titleSize,titleStep:titleStep,summarySize:summarySize,summaryStep:summaryStep,height:height});
     rowHeight=Math.max(rowHeight,height);
@@ -125,10 +125,10 @@ function generate(){
   leadBlock(images[0]);var articleTitle=clean(plain($(".full-article-heading h2",article)))||title;
   font("bold",6.5,red);doc.text(en?"FULL STORY":"ARTÍCULO COMPLETO",m,y);y+=4;
   font("bold",a3?15:12,ink);doc.splitTextToSize(articleTitle,U).forEach(function(v){ensure(5);doc.text(v,m,y);y+=5;});
-  y+=3;ruleLine(m,y,W-m,y,rule,.3);y+=5;articleColumns(bodyNodes,a3?3:2,a3?9:7.6);y+=5;
-  var newsReserve=Math.ceil(stories.length/3)*16+35;
+  y+=3;ruleLine(m,y,W-m,y,rule,.3);y+=5;articleColumns(bodyNodes,3,a3?9:7.1);y+=4;
+  var newsReserve=a3?Math.ceil(stories.length/3)*16+35:Math.ceil(stories.length/3)*25+24;
   if(y+newsReserve>H-m-12)nextPage();
-  doc.setDrawColor(190,198,205);doc.setLineDash([1,1],0);doc.rect(m,y,U,11);doc.setLineDash([]);font("bold",6,grey);doc.text(en?"ADVERTISING SPACE":"ESPACIO PUBLICITARIO",W/2,y+6.5,{align:"center"});y+=17;
+  doc.setDrawColor(190,198,205);doc.setLineDash([1,1],0);doc.rect(m,y,U,a3?11:7);doc.setLineDash([]);font("bold",6,grey);doc.text(en?"ADVERTISING SPACE":"ESPACIO PUBLICITARIO",W/2,y+(a3?6.5:4.5),{align:"center"});y+=a3?17:11;
   ruleLine(m,y,W-m,y,navy,.7);y+=5;font("bold",7,navy);doc.text(en?"MORE STORIES":"OTRAS NOTICIAS",m,y);
   font("normal",6,grey);doc.text(stories.length+" "+(en?"stories":"noticias"),W-m,y,{align:"right"});y+=6;
   drawStories(images[1]);footer();

@@ -22,8 +22,21 @@
     if (!creative) return "";
     const target = safeHttps(campaign.target_url) || creative;
     const isPdf = /[.]pdf(?:$|[?#])/i.test(creative);
-    const label = placement === "sponsored" ? "CONTENIDO PATROCINADO" : "PUBLICIDAD";
-    const title = escapeHtml(campaign.campaign_title || "Publicidad");
+    const language = document.documentElement.lang || localStorage.getItem("evoford-news-language") || "es";
+    const en = language === "en";
+    const label = placement === "sponsored"
+      ? (en ? "SPONSORED CONTENT" : "CONTENIDO PATROCINADO")
+      : (en ? "ADVERTISING" : "PUBLICIDAD");
+    let campaignTitle = campaign.campaign_title || (en ? "Advertising" : "Publicidad");
+    if (en) {
+      campaignTitle = campaignTitle
+        .replace(/Banner web/gi, "Web banner")
+        .replace(/Publicidad en artículos/gi, "In-article advertising")
+        .replace(/Columna lateral/gi, "Sidebar")
+        .replace(/Edición impresa/gi, "Print edition")
+        .replace(/Portada/gi, "Homepage");
+    }
+    const title = escapeHtml(campaignTitle);
     const horizontal = ["banner", "homepage", "article", "sponsored"].includes(placement);
     const cardStyle = horizontal
       ? "display:flex;align-items:center;gap:18px;width:100%;max-width:814px;box-sizing:border-box;margin:0 auto;padding:12px;background:#fff;border:1px solid #d7dee7;color:#102b4e;text-decoration:none;overflow:hidden;"
@@ -77,6 +90,7 @@
   }
 
   document.addEventListener("evo:article-ready", refreshSlots);
+  window.addEventListener("evoford:languagechange", refreshSlots);
   const articleSlotExists = () => Boolean(document.querySelector('[data-ad-slot="article"]'));
   if (!articleSlotExists()) {
     const observer = new MutationObserver(() => {

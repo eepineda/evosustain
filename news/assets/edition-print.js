@@ -9,7 +9,11 @@
   var node=document.querySelector(selector);
   return node?node.innerHTML:"";
  }
- function cloneElement(selector){\n  var node=document.querySelector(selector);\n  return node?node.outerHTML:"";\n }\n function makeDocument(size){
+ function cloneElement(selector){
+  var node=document.querySelector(selector);
+  return node?node.outerHTML:"";
+ }
+ function makeDocument(size){
   var lang=document.documentElement.lang==="en"?"en":"es";
   var pageMargin=size==="A3"?"13mm":"11mm";
   var title="Evoford News — "+(lang==="en"?"Print edition":"Edición impresa");

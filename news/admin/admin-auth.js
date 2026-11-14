@@ -644,10 +644,37 @@ async function loadAds(){
  }
  if(e.error){
   enquiryRoot.innerHTML='<p class="muted">No se pudieron cargar las solicitudes: '+safe(e.error.message)+'</p>';
- }else{
-  const enquiries=e.data||[];
-  enquiryRoot.innerHTML=enquiries.length?enquiries.map(x=>'<article class="item"><div><h3>'+safe(x.company_name)+'</h3><p>'+safe(x.contact_name)+' · '+safe(x.email)+' · '+safe(x.placement_interest||"Formato no indicado")+'</p><p>'+safe(x.message)+'</p><p>Estado: '+safe(x.status)+' · '+new Date(x.created_at).toLocaleString("es-GB")+'</p></div></article>').join(""):'<p class="muted">No hay solicitudes comerciales.</p>';
+  return;
  }
+ const enquiries=e.data||[];
+ enquiryRoot.innerHTML=enquiries.length?enquiries.map(x=>'<article class="item ad-enquiry" data-enquiry-id="'+x.id+'"><div class="ad-enquiry-main"><h3>'+safe(x.company_name)+'</h3><p>'+safe(x.contact_name)+' · <a href="mailto:'+encodeURIComponent(x.email)+'">'+safe(x.email)+'</a>'+(x.phone?' · '+safe(x.phone):'')+'</p>'+(x.website?'<p><a href="'+safe(x.website)+'" target="_blank" rel="noopener">Web de la empresa</a></p>':'')+'<p>Presupuesto: '+safe(x.budget||"No indicado")+' · Formato: '+safe(x.placement_interest||"No indicado")+'</p><p class="ad-enquiry-message">'+safe(x.message)+'</p><p>Estado: <strong>'+safe(adEnquiryStatusText(x.status))+'</strong> · '+new Date(x.created_at).toLocaleString("es-GB")+'</p>'+(x.internal_notes?'<p><strong>Notas internas:</strong> '+safe(x.internal_notes)+'</p>':'')+'</div><div class="item-actions ad-enquiry-actions"><button type="button" class="secondary" data-enquiry-edit="'+x.id+'">Editar</button><a class="secondary" href="'+adReplyHref(x)+'">Responder por correo</a><button type="button" class="secondary" data-enquiry-delete="'+x.id+'">Eliminar</button></div><form class="panel ad-enquiry-edit" data-enquiry-form="'+x.id+'" hidden><div class="form-grid"><div class="field"><label>Empresa</label><input name="company_name" required maxlength="180 value="'+safe(x.company_name)+'"></div><div class="field"><label>Persona de contacto</label><input name="contact_name" required maxlength="120" value="'+safe(x.contact_name)+'"></div><div class="field"><label>Correo</label><input name="email" type="email" required maxlength="254" value="'+safe(x.email)+'"></div><div class="field"><label>Teléfono</label><input name="phone" value="'+safe(x.phone||"")+'"></div><div class="field"><label>Web</label><input name="website" type="url" value="'+safe(x.website||"")+'"></div><div class="field"><label>Presupuesto</label><input name="budget" value="'+safe(x.budget||"")+'"></div><div class="field"><label>Formato de interés</label><input name="placement_interest" value="'+safe(x.placement_interest||"")+'"></div><div class="field"><label>Estado</label><select name="status">'+adEnquiryStatusOptions(x.status)+'</select></div><div class="field full"><label>Mensaje recibido</label><textarea name="message" rows="4" required>'+safe(x.message)+'</textarea></div><div class="field full"><label>Notas internas (solo equipo editorial)</label><textarea name="internal_notes" rows="3">'+safe(x.internal_notes||"")+'</textarea></div></div><p class="message" data-enquiry-message></p><div class="actions"><button type="submit">Guardar cambios</button><button type="button" class="secondary" data-enquiry-cancel>Cancelar</button></div></form></article>').join(""):'<p class="muted">No hay solicitudes comerciales.</p>';
+ enquiryRoot.querySelectorAll("[data-enquiry-edit]").forEach(b=>b.addEventListener("click",()=>{const form=enquiryRoot.querySelector('[data-enquiry-form="'+b.dataset.enquiryEdit+'"]');form.hidden=!form.hidden;}));
+ enquiryRoot.querySelectorAll("[data-enquiry-cancel]").forEach(b=>b.addEventListener("click",()=>{b.closest("form").hidden=true;}));
+ enquiryRoot.querySelectorAll("[data-enquiry-form]").forEach(form=>form.addEventListener("submit",saveAdEnquiry));
+ enquiryRoot.querySelectorAll("[data-enquiry-delete]").forEach(b=>b.addEventListener("click",async()=>{if(!confirm("¿Eliminar definitivamente esta solicitud comercial? Esta acción no se puede deshacer."))return;const r=await client.from("ad_enquiries").delete().eq("id",b.dataset.enquiryDelete);if(r.error){say("globalMessage","No se pudo eliminar la solicitud: "+r.error.message);return;}say("globalMessage","Solicitud comercial eliminada.");await loadAds();}));
+}
+function adEnquiryStatusText(status){
+ return ({received:"Recibida",contacted:"Contactada",quoted:"Presupuesto enviado",converted:"Convertida",closed:"Cerrada",discarded:"Descartada"})[status]||status||"Recibida";
+}
+function adEnquiryStatusOptions(current){
+ return [["received","Recibida"],["contacted","Contactada"],["quoted","Presupuesto enviado"],["converted","Convertida"],["closed","Cerrada"],["discarded","Descartada"]].map(([v,t])=>'<option value="'+v+'"'+(current===v?" selected":"")+'>'+t+'</option>').join("");
+}
+function adReplyHref(enquiry){
+ const subject="Re: solicitud de publicidad en Evoford News";
+ const body="Hola "+(enquiry.contact_name||"")+",%0D%0A%0D%0AGracias por contactar con Evoford News. Hemos recibido tu solicitud sobre "+(enquiry.placement_interest||"publicidad y colaboraciones")+".%0D%0A%0D%0A";
+ return "mailto:"+encodeURIComponent(enquiry.email)+"?subject="+encodeURIComponent(subject)+"&body="+body;
+}
+async function saveAdEnquiry(event){
+ event.preventDefault();
+ const form=event.currentTarget,id=form.dataset.enquiryForm;
+ const data=Object.fromEntries(new FormData(form).entries());
+ for(const key of ["company_name","contact_name","email","message"])data[key]=String(data[key]||"").trim();
+ for(const key of ["phone","website","budget","placement_interest","internal_notes"])data[key]=String(data[key]||"").trim()||null;
+ const message=form.querySelector("[data-enquiry-message]");
+ const {error}=await client.from("ad_enquiries").update(data).eq("id",id);
+ if(error){message.textContent="No se pudieron guardar los cambios: "+error.message;return;}
+ say("globalMessage","Solicitud comercial actualizada.");
+ await loadAds();
 }
 async function saveAd(event){
  event.preventDefault();const id=$("adId").value,amount=Number($("adAmount").value);

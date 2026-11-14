@@ -58,7 +58,7 @@ function render(){
   bodyHtml=blocks.map(x=>"<p>"+esc(x).replace(/\\n/g,"<br>")+"</p>").join("");
  }
  if(!bodyHtml)bodyHtml="<p class=\\"empty\\">"+(language==="en"?"The full article text is not available in this language.":"El texto completo de este artículo no está disponible.")+"</p>";
- $("fullArticle").innerHTML=""; $("lead").insertAdjacentHTML("beforeend","<section class=\"full-article embedded-lead-story\"><div class=\"full-article-heading\"><span>"+(language==="en"?"FULL STORY":"ARTÍCULO COMPLETO")+"</span><h2>"+esc(title)+"</h2><div class=\"byline\">"+ui[language].by+" "+esc(lead.author||"Evoford News")+"</div></div><div class=\"full-article-body\">"+bodyHtml+"</div></section>");
+ $("fullArticle").classList.add("embedded-lead-story"); $("fullArticle").innerHTML="<div class=\\"full-article-heading\\"><span>"+(language==="en"?"FULL STORY":"ARTÍCULO COMPLETO")+"</span><h2>"+esc(title)+"</h2><div class=\\"byline\\">"+ui[language].by+" "+esc(lead.author||"Evoford News")+"</div></div><div class=\\"full-article-body\\">"+bodyHtml+"</div>";
  const rest=articles.slice(4,13);
  $("storyGrid").innerHTML=rest.map(a=>'<article class="story">'+(a.image_url&&/^https:\/\//i.test(a.image_url)?'<img loading="lazy" src="'+esc(a.image_url)+'" alt="'+esc(pick(a,"title","title_en"))+'">':'')+'<div class="category">'+category(a)+'</div><h2><a href="'+url(a)+'">'+esc(pick(a,"title","title_en"))+'</a></h2><p>'+esc(pick(a,"summary","summary_en"))+'</p><div class="byline">'+esc(a.author||"Evoford News")+'</div></article>').join("")||'<p class="empty">'+ui[language].noMore+'</p>';
  $("storyCount").textContent=rest.length+" "+ui[language].stories;

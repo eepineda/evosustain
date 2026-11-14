@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#102b4e">
   <meta name="robots" content="noindex,nofollow">
   <title>Acceso editorial | Evoford News</title>
-  <link rel="stylesheet" href="./admin.css?v=20261114-ads2">
+  <link rel="stylesheet" href="./admin.css?v=20261114-adpreview1">
   <link rel="stylesheet" href="./modern-admin.css?v=1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="/news/admin/admin-auth.js?v=20261114-ads3"></script>
@@ -143,6 +143,7 @@
 <div class="field"><label for="adEmail">Correo de contacto</label><input id="adEmail" type="email" required maxlength="254"></div><div class="field"><label for="adPhone">Teléfono</label><input id="adPhone" type="tel"></div>
 <div class="field full"><label for="adTitle">Nombre de campaña</label><input id="adTitle" required maxlength="180"></div>
 <div class="field"><label for="adPlacement">Ubicación</label><select id="adPlacement"><option value="banner">Banner web</option><option value="homepage">Portada</option><option value="sidebar">Columna lateral</option><option value="article">Artículo</option><option value="print">Edición impresa</option><option value="sponsored">Artículo patrocinado</option></select></div>
+<div class="field full ad-preview-field"><div class="ad-preview-heading"><div><p class="eyebrow">SIMULACIÓN DE PUBLICIDAD</p><strong id="adPreviewTitle">Banner web</strong><p class="muted">Vista orientativa en español e inglés. Cambia al seleccionar otra ubicación.</p></div><span class="ad-preview-tag">PREVIEW</span></div><div id="adPlacementPreview" class="ad-preview-card" aria-live="polite"></div></div>
 <div class="field"><label for="adStatus">Estado de campaña</label><select id="adStatus"><option value="draft">Borrador</option><option value="pending">Pendiente</option><option value="active">Activa</option><option value="paused">Pausada</option><option value="completed">Finalizada</option><option value="cancelled">Cancelada</option></select></div>
 <div class="field"><label for="adPublicationMode">Modalidad de publicación</label><select id="adPublicationMode"><option value="manual">Manual: publicar al activar</option><option value="scheduled">Programada: activar en fecha</option></select></div><div class="field full"><label for="adCreativeFile">Subir banner o flyer (JPG, PNG, WebP o PDF; máximo 8 MB)</label><input id="adCreativeFile" type="file" accept="image/jpeg,image/png,image/webp,application/pdf"><small class="muted">El archivo aprobado se copiará al espacio público de anuncios. El original recibido seguirá siendo privado.</small></div><div class="field full"><label for="adCreative">O URL de imagen / creatividad</label><input id="adCreative" type="url" placeholder="https://…"></div><div class="field full"><label for="adTarget">Enlace de destino</label><input id="adTarget" type="url" placeholder="https://…"></div>
 <div class="field"><label for="adStart">Fecha de inicio</label><input id="adStart" type="date"><small class="muted">En modo programado, la campaña aparecerá automáticamente este día.</small></div><div class="field"><label for="adEnd">Fecha de finalización</label><input id="adEnd" type="date"></div>

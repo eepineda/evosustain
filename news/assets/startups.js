@@ -73,6 +73,22 @@ function applyExpertLanguage(){
 }
 
 function esc(v=""){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-async function load(){const root=document.getElementById("startupArticles");if(!window.supabase){root.innerHTML='<p class="empty-startups">No se pudo conectar con el servicio de noticias.</p>';return;}const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);const {data,error}=await client.from("articles").select("title,slug,category,author,summary,image_url,created_at").eq("status","published").in("category",["Tecnología","Startups","Innovación"]).order("updated_at",{ascending:false}).limit(9);if(error){root.innerHTML='<p class="empty-startups">No se pudieron cargar las publicaciones en este momento.</p>';console.error(error);return;}if(!data||!data.length){root.innerHTML='<p class="empty-startups">Todavía no hay noticias de startups o innovación publicadas. Aquí aparecerán perfiles, entrevistas y noticias cuando la redacción las publique.</p>';return;}root.innerHTML=data.map(a=>'<article class="story"><a class="story-link" href="articles/plantilla-articulo.html?slug='+encodeURIComponent(a.slug||"")+'">'+(a.image_url&&/^https:\/\//i.test(a.image_url)?'<img class="story-image" src="'+esc(a.image_url)+'" alt="'+esc(a.title||"")+'" loading="lazy">':'<div class="story-art art-blue"><span>STARTUP</span></div>')+'<div class="story-copy"><div class="kicker">'+esc(a.category||"INNOVACIÓN")+'</div><h3>'+esc(a.title||"")+'</h3><p>'+esc(a.summary||"")+'</p></div></a><div class="lead-meta">'+esc(a.author||"EVOFORD NEWS")+'</div><a class="read-link" href="articles/plantilla-articulo.html?slug='+encodeURIComponent(a.slug||"")+'">Leer artículo ↗</a></article>').join("");}
+async function load(){
+ const root=document.getElementById("startupArticles"),lang=localStorage.getItem("evoford-news-language")==="en"?"en":"es";
+ if(!window.supabase){root.innerHTML='<p class="empty-startups">'+(lang==="en"?"The news service is unavailable.":"No se pudo conectar con el servicio de noticias.")+'</p>';return;}
+ const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+ const {data,error}=await client.from("articles").select("title,title_en,slug,category,author,summary,summary_en,image_url,created_at").eq("status","published").in("category",["Tecnología","Startups","Innovación"]).order("updated_at",{ascending:false}).limit(9);
+ if(error){root.innerHTML='<p class="empty-startups">'+(lang==="en"?"Stories could not be loaded at this time.":"No se pudieron cargar las publicaciones en este momento.")+'</p>';console.error(error);return;}
+ if(!data||!data.length){root.innerHTML='<p class="empty-startups">'+(lang==="en"?"No startup or innovation stories have been published yet.":"Todavía no hay noticias de startups o innovación publicadas.")+'</p>';return;}
+ const categoryNames=lang==="en"?{"Tecnología":"Technology","Startups":"Startups","Innovación":"Innovation"}:{};
+ root.innerHTML=data.map(a=>{
+  const title=lang==="en"?(a.title_en||a.title):(a.title||"");
+  const summary=lang==="en"?(a.summary_en||a.summary):(a.summary||"");
+  const category=categoryNames[a.category]||a.category||(lang==="en"?"INNOVATION":"INNOVACIÓN");
+  const imageHtml=a.image_url&&/^https:\/\//i.test(a.image_url)?'<img class="story-image" src="'+esc(a.image_url)+'" alt="'+esc(title)+'" loading="lazy">':'<div class="story-art art-blue"><span>STARTUP</span></div>';
+  const articleUrl='articles/plantilla-articulo.html?slug='+encodeURIComponent(a.slug||"");
+  return '<article class="story"><a class="story-link" href="'+articleUrl+'">'+imageHtml+'<div class="story-copy"><div class="kicker">'+esc(category)+'</div><h3>'+esc(title)+'</h3><p>'+esc(summary)+'</p></div></a><div class="lead-meta">'+esc(a.author||"EVOFORD NEWS")+'</div><a class="read-link" href="'+articleUrl+'">'+(lang==="en"?"Read story ↗":"Leer artículo ↗")+'</a></article>';
+ }).join("");
+}
 setLanguage(currentLanguage);
 load();

@@ -299,7 +299,7 @@ async function loadInbox(){
     const workflowLabel=linkedArticle?"Borrador vinculado · "+({draft:"Borrador",pending:"En revisión",approved:"Aprobado",published:"Publicado",rejected:"Descartado"}[linkedArticle.status]||linkedArticle.status):"Pendiente de borrador";
     const action=linkedArticle
       ?`<button type="button" class="secondary" data-open-article="${linkedArticle.id}">Abrir borrador</button>`
-      :`<button type="button" class="secondary" data-draft="${n.id}">Pasar extracto al editor</button>`;
+      :`<button type="button" class="secondary" data-draft="${n.id}">Preparar artículo propio</button>`;
     return `<article class="item"><div><h3>${safe(n.title)}</h3><p>${safe(source?.name||"Fuente RSS")} · Sección sugerida: ${safe(suggested)} · <a href="${safe(n.article_url)}" target="_blank" rel="noopener noreferrer">Consultar fuente original</a> · <span class="pill">${safe(n.status)}</span> · <span class="rss-workflow-pill ${linkedArticle?"linked":"waiting"}">${safe(workflowLabel)}</span></p>${n.summary?`<p class="rss-extract"><strong>Extracto disponible del RSS (${n.summary.length} caracteres):</strong> ${safe(n.summary)}</p><p class="muted">Este texto es material de consulta de la fuente; no cuenta como redacción propia para aprobar.</p>`:"<p class='muted'>El RSS no proporciona un extracto de texto.</p>"}<p>Clasificación orientativa: ${safe(country||"País por verificar")} · ${safe(region||"Región por verificar")}</p></div><div class="item-actions">${action}<button class="secondary" data-reject="${n.id}">Descartar</button></div></article>`;
   }).join(""):'<p class="muted">No hay noticias importadas. Añade fuentes RSS activas e inicia una importación.</p>';
 }
@@ -672,12 +672,13 @@ function wire(){
       if(error){say("globalMessage","No se pudo abrir la noticia: "+error.message);return;}
       editArticle(null);
       $("title").value=item.title||"";
-      // Keep the RSS excerpt as a source note/summary, not as an article written by Evoford.
+      // The RSS text is retained only as research material inside the private draft.
+      // Never place a third-party excerpt in the public summary field.
       const rssNote=(item.summary||"").trim();
-      $("summary").value=rssNote;
       const guess=editorialSuggestion(item);
       const allowedCategories=["Internacional","Política","Economía","Seguridad","Tecnología","Opinión","Clima","Sociedad"];
       const suggested=item.suggested_category||guess.category;
+      $("summary").value="";
       $("category").value=allowedCategories.includes(suggested)?suggested:"Internacional";
       $("country").value=item.country||guess.country;
       $("region").value=item.region||guess.region;
@@ -688,8 +689,48 @@ function wire(){
       $("sourceTitle").value=source?.name||"";
       $("sourceUrl").value=item.article_url||"";
       $("author").value="Evoford News";
-      $("content").value="NOTA DE FUENTE (EXTRACTO RSS; NO ES REDACCIÓN PROPIA):\\n"+(rssNote||"El feed RSS no incluye un resumen. Consulta la fuente original.")+"\\n\\nPENDIENTE DE REDACCIÓN: verifica los datos con la fuente original y redacta aquí una noticia propia. No copies literalmente el contenido de terceros.\\n\\nFuente consultada: "+(item.article_url||"");
-      say("editorMessage",rssNote?"Borrador preparado con el titular y el extracto RSS en el campo Resumen. El texto se conserva como nota de consulta; redacta y revisa el artículo antes de enviarlo a aprobación.":"Borrador preparado. El feed no incluye extracto; consulta la fuente original y añade el resumen manualmente.");
+      const sourceNote=rssNote||"El feed no ofrece un extracto. Lee la fuente original y toma tus propias notas.";
+      $("content").value=[
+        "HOJA DE TRABAJO EDITORIAL · NO PUBLICAR SIN REVISIÓN",
+        "",
+        "FUENTE DE DETECCIÓN",
+        "Medio: "+(source?.name||"Fuente RSS"),
+        "Enlace: "+(item.article_url||""),
+        "Fecha de la noticia: "+(item.published_at||"Por verificar"),
+        "",
+        "NOTA DEL RSS (MATERIAL DE CONSULTA; NO ES TEXTO DE EVOFORD)",
+        sourceNote,
+        "",
+        "1. HECHOS QUE DEBES CONFIRMAR",
+        "• ¿Qué ha ocurrido exactamente?",
+        "• ¿Quién lo confirma y qué documento o declaración primaria existe?",
+        "• ¿Cuándo y dónde ocurrió?",
+        "• ¿Qué cifras, nombres o afirmaciones necesitan una segunda comprobación?",
+        "",
+        "2. CONTRASTE Y CONTEXTO",
+        "• Segunda fuente independiente:",
+        "• Documento o fuente primaria:",
+        "• Antecedentes necesarios para entender el asunto:",
+        "• Qué información falta o no se ha podido verificar:",
+        "",
+        "3. ENFOQUE PROPIO DE EVOFORD",
+        "• ¿Por qué importa a nuestros lectores?",
+        "• ¿Qué aporta este artículo que no ofrece la fuente original?",
+        "• ¿A quién afecta y cuáles son las consecuencias?",
+        "",
+        "4. REDACCIÓN ORIGINAL",
+        "Escribe aquí una pieza propia. Atribuye las declaraciones y enlaza las fuentes. No copies ni traduzcas el texto de terceros.",
+        "",
+        "5. REVISIÓN ANTES DE ENVIAR",
+        "• Titular fiel a los hechos.",
+        "• Datos y citas comprobados.",
+        "• Contexto suficiente y lenguaje neutral.",
+        "• Fuentes enlazadas y atribuidas.",
+        "• Resumen público redactado por Evoford en su campo correspondiente.",
+        "",
+        "ESTADO: borrador interno. La importación RSS no autoriza la publicación."
+      ].join("\n");
+      say("editorMessage","Hoja editorial preparada. El extracto RSS queda identificado como material de consulta y no se ha copiado al resumen público. Completa la verificación y redacta el artículo original antes de enviarlo a revisión.");
       document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab==="articles"));
       ["articles","inbox","sources","submissions","directory","courses"].forEach(k=>$(k+"Tab").hidden=k!=="articles");
       $("articleForm").scrollIntoView({behavior:"smooth",block:"start"});

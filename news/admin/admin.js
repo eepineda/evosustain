@@ -549,7 +549,8 @@ async function saveAd(event){
  if(!p.advertiser_name||!p.contact_email||!p.campaign_title||!Number.isFinite(amount)||amount<0){say("adMessage","Revisa los campos obligatorios y el importe.");return;}if(p.start_date&&p.end_date&&p.end_date<p.start_date){say("adMessage","La fecha final no puede ser anterior al inicio.");return;}
  const r=id?await client.from("ad_campaigns").update(p).eq("id",id):await client.from("ad_campaigns").insert(p);if(r.error){say("adMessage",r.error.message);return;}say("adMessage","Campaña guardada.");$("adForm").hidden=true;$("adForm").reset();$("adId").value="";await loadAds();
 }
-\nfunction wire(){
+
+function wire(){
   $("maintenanceToggleBtn").addEventListener("click",toggleMaintenance);
   $("loginForm").addEventListener("submit",login);
   $("logoutBtn").addEventListener("click",()=>client.auth.signOut());

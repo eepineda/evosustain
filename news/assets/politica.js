@@ -76,7 +76,7 @@ window.setPoliticsLanguage=function(lang){
  const footer=document.querySelector("footer>span:nth-of-type(1)");if(footer)footer.textContent="News · Opinion · Analysis";
  const today=document.getElementById("today");if(today)today.textContent=now.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
 }
-document.querySelectorAll("[data-language]").forEach(b=>b.addEventListener("click",()=>setPoliticsLanguage(b.dataset.language)));
+document.querySelectorAll("[data-language]").forEach(b=>b.addEventListener("click",()=>{setPoliticsLanguage(b.dataset.language);load();}));
 if(localStorage.getItem("evoford-news-language")==="en")setPoliticsLanguage("en");
 
 load();

@@ -1,0 +1,38 @@
+/* Evoford News — shared modern treatment for article, directory and forms.
+   Presentation only: no form, URL, data or script behavior is changed. */
+:root{--modern-page-bg:#f4f6f8;--modern-page-ink:#142334;--modern-page-muted:#627184;--modern-page-line:#e1e7ed;--modern-page-blue:#12385d;--modern-page-red:#b52b37}
+body{background:var(--modern-page-bg);color:var(--modern-page-ink);font-family:Inter,"DM Sans",Arial,sans-serif}
+#articleView{max-width:960px!important;margin:0 auto 48px!important;padding:clamp(24px,5vw,60px) clamp(16px,3vw,30px)!important;background:#fff;border:1px solid var(--modern-page-line);border-radius:14px;box-shadow:0 6px 26px rgba(17,42,67,.045)}
+#articleView>.kicker{color:var(--modern-page-red)!important}
+#articleView h1{color:var(--modern-page-ink)!important;font-family:Inter,"DM Sans",Arial,sans-serif!important;font-weight:800!important;letter-spacing:-.045em!important}
+#articleView .dek{border-left-color:var(--modern-page-blue)!important;border-radius:0 8px 8px 0;background:#f3f6f9!important;color:#45576a!important;font-family:Inter,"DM Sans",Arial,sans-serif!important}
+#articleView .lead-meta{color:var(--modern-page-muted)!important}
+#articleView>img{border-radius:10px}
+#articleView .article-body p{color:#293b4d!important}
+#articleView .article-body p.article-subheading{color:var(--modern-page-blue)!important;font-family:Inter,"DM Sans",Arial,sans-serif!important}
+#articleView .article-actions button,#articleView .article-actions a{border-radius:7px!important}
+.directory-header,.directory-wrap{max-width:1200px}
+.directory-header{padding-top:20px}
+.directory-brand{font-family:Inter,"DM Sans",Arial,sans-serif;font-weight:800}
+.directory-nav{gap:8px}
+.directory-nav a{padding:8px 10px;border-radius:7px}
+.directory-hero{border:1px solid var(--modern-page-line);border-left:4px solid var(--modern-page-blue);border-radius:12px;background:#fff}
+.directory-hero h1,.directory-origin h2,.directory-card h3,.country-directory-head h2{font-family:Inter,"DM Sans",Arial,sans-serif;color:var(--modern-page-ink)}
+.directory-origin{border:1px solid var(--modern-page-line);border-radius:10px}
+.directory-card{border:1px solid var(--modern-page-line);border-top:3px solid var(--modern-page-blue);border-radius:9px;box-shadow:0 3px 12px rgba(17,42,67,.035)}
+.directory-card h3{font-size:17px}
+.directory-tools input,.directory-tools select,.directory-form input,.directory-form select,.directory-form textarea{border-color:#cbd5df;border-radius:7px}
+.directory-form button{border-radius:7px;background:var(--modern-page-blue)}
+.directory-request{border:1px solid var(--modern-page-line);border-radius:10px;background:#fff}
+body:has(#submissionForm) main,body:has(#adEnquiryForm) main{max-width:900px}
+body:has(#submissionForm) article,body:has(#adEnquiryForm) article{border:1px solid var(--modern-page-line);border-radius:12px;box-shadow:0 8px 28px rgba(17,42,67,.055)}
+body:has(#submissionForm) h1,body:has(#adEnquiryForm) h1{font-family:Inter,"DM Sans",Arial,sans-serif;font-weight:800;letter-spacing:-.04em;color:var(--modern-page-ink)}
+body:has(#submissionForm) input,body:has(#submissionForm) select,body:has(#submissionForm) textarea,body:has(#adEnquiryForm) input,body:has(#adEnquiryForm) select,body:has(#adEnquiryForm) textarea{border-color:#cbd5df;border-radius:7px}
+body:has(#submissionForm) button,body:has(#adEnquiryForm) button.submit{border-radius:7px;background:var(--modern-page-blue)}
+body:has(#submissionForm) button:hover,body:has(#adEnquiryForm) button.submit:hover{background:#1a4b77}
+@media(max-width:620px){
+ #articleView{margin:12px!important;padding:22px 16px!important;border-radius:10px}
+ .directory-wrap{padding:0 14px}
+ .directory-hero{padding:20px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}

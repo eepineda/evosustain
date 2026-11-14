@@ -7,6 +7,21 @@
 #historia-rd .history-map{display:block;width:100%;max-width:440px;height:270px;max-height:none;margin:0 auto;overflow:visible;filter:drop-shadow(0 10px 15px rgba(0,0,0,.22))}
 @media(max-width:760px){#historia-rd .history-hero{grid-template-columns:1fr}#historia-rd .history-map{width:100%;max-width:360px;height:220px;margin:4px auto 0}}
 
+
+/* Colores de los hitos sincronizados con la leyenda */
+#historia-rd .timeline-lower>div.event-constitutional{border-right-color:#315c7b}
+#historia-rd .timeline-lower>div.event-transition{border-right-color:#c08b36}
+#historia-rd .timeline-lower>div.event-interruption{border-right-color:#b3262d}
+#historia-rd .timeline-lower>div.event-constitutional i,
+#historia-rd .timeline-lower>div.event-constitutional i:after{background:#315c7b}
+#historia-rd .timeline-lower>div.event-transition i,
+#historia-rd .timeline-lower>div.event-transition i:after{background:#c08b36}
+#historia-rd .timeline-lower>div.event-interruption i,
+#historia-rd .timeline-lower>div.event-interruption i:after{background:#b3262d}
+#historia-rd .timeline-lower>div.event-constitutional i:after{box-shadow:0 0 0 1px #315c7b}
+#historia-rd .timeline-lower>div.event-transition i:after{box-shadow:0 0 0 1px #c08b36}
+#historia-rd .timeline-lower>div.event-interruption i:after{box-shadow:0 0 0 1px #b3262d}
+
 </style><script src="/maintenance.js"></script>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#202020"><meta name="build-refresh" content="20261114-hyphen-clean1"><meta name="description" content="Política dominicana: partidos, Gobierno, Congreso, elecciones y asuntos de interés para la diáspora.">
@@ -177,16 +192,16 @@
   <span>1840</span><span>1860</span><span>1880</span><span>1900</span><span>1920</span><span>1940</span><span>1960</span><span>1980</span><span>2000</span><span>2020</span>
  </div>
  <div class="timeline-lower">
-  <div><i></i><b>1844</b><p>Nace la República Dominicana tras la proclamación de la Independencia.</p></div>
-  <div><i></i><b>1861-1865</b><p>Anexión a España y Guerra de la Restauración: recuperación de la soberanía.</p></div>
-  <div><i></i><b>1865-1916</b><p>Segunda República: gobiernos cambiantes, conflictos políticos y transformación del Estado.</p></div>
-  <div><i></i><b>1916-1924</b><p>Primera ocupación militar estadounidense y posterior retirada.</p></div>
-  <div><i></i><b>1930-1961</b><p>Dictadura de Rafael Leónidas Trujillo y su final en 1961.</p></div>
-  <div><i></i><b>1961-1965</b><p>Consejo de Estado, gobierno de Juan Bosch y crisis institucional.</p></div>
-  <div><i></i><b>1965</b><p>Guerra de Abril e intervención militar estadounidense.</p></div>
-  <div><i></i><b>1978</b><p>Comienza una etapa de alternancia electoral y apertura democrática.</p></div>
-  <div><i></i><b>1996-2012</b><p>Nueva etapa política con alternancia entre distintas fuerzas partidarias.</p></div>
-  <div><i></i><b>2020-2026</b><p>Gobiernos constitucionales recientes y continuidad del sistema electoral.</p></div>
+  <div class="event-constitutional"><i></i><b>1844</b><p>Nace la República Dominicana tras la proclamación de la Independencia.</p></div>
+  <div class="event-interruption"><i></i><b>1861-1865</b><p>Anexión a España y Guerra de la Restauración: recuperación de la soberanía.</p></div>
+  <div class="event-constitutional"><i></i><b>1865-1916</b><p>Segunda República: gobiernos cambiantes, conflictos políticos y transformación del Estado.</p></div>
+  <div class="event-interruption"><i></i><b>1916-1924</b><p>Primera ocupación militar estadounidense y posterior retirada.</p></div>
+  <div class="event-interruption"><i></i><b>1930-1961</b><p>Dictadura de Rafael Leónidas Trujillo y su final en 1961.</p></div>
+  <div class="event-transition"><i></i><b>1961-1965</b><p>Consejo de Estado, gobierno de Juan Bosch y crisis institucional.</p></div>
+  <div class="event-interruption"><i></i><b>1965</b><p>Guerra de Abril e intervención militar estadounidense.</p></div>
+  <div class="event-constitutional"><i></i><b>1978</b><p>Comienza una etapa de alternancia electoral y apertura democrática.</p></div>
+  <div class="event-constitutional"><i></i><b>1996-2012</b><p>Nueva etapa política con alternancia entre distintas fuerzas partidarias.</p></div>
+  <div class="event-constitutional"><i></i><b>2020-2026</b><p>Gobiernos constitucionales recientes y continuidad del sistema electoral.</p></div>
  </div>
 </div>
 <div class="history-legend"><span><i class="legend-dot constitutional"></i>Gobierno constitucional</span><span><i class="legend-dot transition"></i>Transición / provisional</span><span><i class="legend-dot interruption"></i>Anexión / ocupación / ruptura institucional</span></div>
@@ -222,6 +237,6 @@
 <div class="editorial-note"><b>Criterio editorial:</b> Evoford News tratará a las organizaciones con neutralidad, identificará las fuentes, distinguirá información de opinión y actualizará los datos de representación y reconocimiento con documentación oficial.</div>
 </main>
 <footer><a class="footer-brand" href="./">EVOFORD NEWS</a><span>Noticias · Opinión · Análisis</span><a href="https://jce.gob.do/partidos-politicos" target="_blank" rel="noopener noreferrer">Junta Central Electoral</a><span>© <span id="year"></span> Evoford</span><a href="a.html?i=c29icmUtZXZvZm9yZC5odG1s">Sobre / About Evoford News</a></footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/politica.js?v=20261114-map-larger1"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/politica.js?v=20261114-legend-sync1"></script>
 
 </body></html>

@@ -64,7 +64,7 @@ function escapeHtml(value="") {
   return String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 function articleUrl(slug) {
-  // Every article opens in Spanish by default; readers can switch language on the article page.
+  // Article pages inherit the saved site language unless a reader chooses a language explicitly.
   return "articles/plantilla-articulo.html?slug=" + encodeURIComponent(slug);
 }
 function articleImage(a,cls="") {

@@ -62,4 +62,4 @@ La copia de seguridad protege el código de la rama, no sustituye una copia de s
 
 ## 6. Estado de validación
 
-La existencia de la rama de copia está confirmada. Los cambios recientes aún requieren pruebas automatizadas y revisión en navegador. Hasta completar esas comprobaciones, esta rama debe considerarse una propuesta de trabajo, no una versión lista para producción.
+La existencia de la rama de copia está confirmada. La sintaxis de los scripts de las páginas revisadas se ha comprobado, pero todavía falta probar los flujos en navegador y en dispositivos reales. El panel editorial privado conserva por ahora su interfaz en español; no se ha traducido parcialmente para evitar dejar controles y mensajes dinámicos en idiomas mezclados. Las fichas dinámicas del directorio tampoco se consideran traducidas: sus campos en inglés requieren un diseño de datos y una gestión editorial específica. Los artículos solo muestran versión inglesa cuando existen campos traducidos. Hasta completar estas comprobaciones, esta rama debe considerarse una propuesta de trabajo, no una versión lista para producción.

@@ -167,3 +167,8 @@ html.evo-pwa a[href*="ZWRpdGlvbi5odG1s"]{display:none!important}
 /* Reader app: keep section navigation in the bottom bar; remove the duplicate topic panel and website footer. */
 html.evo-pwa #secciones,
 html.evo-pwa footer { display:none!important; }
+
+/* Politics as a primary reader destination: one clear section header, no nested menus. */
+html.evo-pwa .masthead .nav{display:none!important}
+html.evo-pwa .politics-nav{display:none!important}
+html.evo-pwa .app-bottom-nav a[aria-current="page"]{color:#a9232d!important}

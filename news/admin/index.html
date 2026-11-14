@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#102b4e">
   <meta name="robots" content="noindex,nofollow">
   <title>Acceso editorial | Evoford News</title>
-  <link rel="stylesheet" href="./admin.css?v=20261114-adpreview1">
+  <link rel="stylesheet" href="./admin.css?v=20261114-rssmetrics1">
   <link rel="stylesheet" href="./modern-admin.css?v=1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="/news/admin/admin-auth.js?v=20261114-ads3"></script>
@@ -152,7 +152,7 @@
 <div class="field full"><label for="adNotes">Notas internas</label><textarea id="adNotes" rows="3"></textarea></div></div><p id="adMessage" class="message" role="status"></p><div class="actions"><button type="submit">Guardar campaña</button><button type="button" id="cancelAdBtn2" class="secondary">Cancelar</button></div></form>
 <h3>Campañas registradas</h3><div id="adCampaignList" class="list"><p class="muted">Cargando…</p></div><h3>Solicitudes comerciales</h3><div id="adEnquiryList" class="list"><p class="muted">Cargando…</p></div></section>
 <section id="sourcesTab" class="tabview" hidden>
-        <div class="section-head"><div><p class="eyebrow">AGREGADORES</p><h2>Fuentes RSS</h2></div></div>
+        <div class="section-head"><div><p class="eyebrow">AGREGADORES</p><h2>Fuentes RSS</h2><p class="muted">Actividad de importación, noticias almacenadas y última recepción por medio.</p></div><button type="button" id="refreshSourcesBtn" class="secondary">Actualizar fuentes</button></div><div id="rssSourceSummary" class="rss-source-summary" aria-live="polite"></div><p class="rss-source-note muted">El estado se calcula a partir de las noticias guardadas. «Sin registros» indica que todavía no se ha almacenado contenido de ese feed; no equivale a una comprobación en directo de su servidor.</p>
         <form id="sourceForm" class="panel source-form">
           <div class="form-grid">
             <div class="field"><label for="sourceName">Nombre del medio</label><input id="sourceName" required></div>

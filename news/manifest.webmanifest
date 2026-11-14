@@ -39,8 +39,16 @@
       "url": "/news/a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLWludGVybmFjaW9uYWw"
     },
     {
+      "name": "Política",
+      "url": "/news/a.html?i=cG9saXRpY2EuaHRtbA"
+    },
+    {
       "name": "Economía",
       "url": "/news/a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLWVjb25vbWlh"
+    },
+    {
+      "name": "Startups",
+      "url": "/news/a.html?i=c3RhcnR1cHMuaHRtbA"
     }
   ]
 }

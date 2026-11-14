@@ -96,18 +96,23 @@ body{font-family:Georgia,"Times New Roman",serif;font-size:10pt;line-height:1.35
 .full-article-body ul,.full-article-body ol{padding-left:16pt;margin:4pt 0 7pt}
 .secondary-area{display:block;margin:12pt 0 0;padding:9pt 0 0;border-top:3pt double #102b4e;break-before:auto;page-break-before:auto}
 .section-label{display:flex;justify-content:space-between;margin:0 0 8pt;padding:5pt 0;border-bottom:1px solid #17212b;color:#102b4e;font:700 7pt/1.3 Arial,sans-serif;letter-spacing:.12em;break-after:avoid-page;page-break-after:avoid}
-.story-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10pt 11pt;align-items:start}
-.story{min-width:0;padding:0 0 7pt;border-bottom:1px solid #c4cbd2;break-inside:avoid;page-break-inside:avoid}.story-from-headline{padding-top:5pt}.story-from-headline:before{content:"TITULAR DESTACADO";display:block;margin-bottom:3pt;color:#9d2635;font:700 6pt/1.2 Arial,sans-serif;letter-spacing:.1em}
-.story img{display:block;width:100%;height:27mm;object-fit:cover;margin:0 0 5pt}
-.story h2{font:700 10.5pt/1.12 Georgia,serif;margin:3pt 0;color:#17212b}
-.story p{font:7.5pt/1.3 Georgia,serif;margin:3pt 0;color:#4e5963}
+/* Single-flow news list: avoids CSS grid page-fragmentation differences. */
+.story-grid{display:block;width:100%;margin:0;padding:0;break-inside:auto;page-break-inside:auto}
+.story{display:grid;grid-template-columns:34mm minmax(0,1fr);column-gap:9pt;align-items:start;min-width:0;margin:0;padding:7pt 0;border-bottom:1px solid #c4cbd2;break-inside:avoid;page-break-inside:avoid}
+.story-from-headline{padding-top:7pt}
+.story-from-headline:before{content:"TITULAR DESTACADO";grid-column:1/-1;display:block;margin-bottom:4pt;color:#9d2635;font:700 6pt/1.2 Arial,sans-serif;letter-spacing:.1em}
+.story img{grid-column:1;grid-row:2/7;display:block;width:34mm;height:24mm;object-fit:cover;margin:0}
+.story .category,.story h2,.story p,.story .byline{grid-column:2}
+.story h2{font:700 11pt/1.12 Georgia,serif;margin:1pt 0 3pt;color:#17212b}
+.story p{font:8pt/1.32 Georgia,serif;margin:2pt 0;color:#4e5963}
 .story .byline{font-size:6pt}
-.paper-footer{display:flex;justify-content:space-between;gap:8pt;margin:10pt 0 0;padding:6pt 0 0;border-top:1.5pt solid #102b4e;font:6.5pt/1.3 Arial,sans-serif;color:#4e5963}
+.story:not(:has(img)){display:block}
+.paper-footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4pt 12pt;margin:10pt 0 0;padding:6pt 0 0;border-top:1.5pt solid #102b4e;font:6.5pt/1.3 Arial,sans-serif;color:#4e5963}
 .paper-footer strong{color:#102b4e;letter-spacing:.1em}
 a{color:inherit;text-decoration:none}
 img{max-width:100%}
 @media print{
- .lead,.lead-content,.story{break-inside:avoid-page}
+ .lead-content,.story{break-inside:avoid-page}\n .lead{break-inside:auto}
  .lead{break-inside:auto}
  #fullArticle,.secondary-area{break-before:auto!important;page-break-before:auto!important}
 }

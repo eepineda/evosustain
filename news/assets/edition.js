@@ -82,8 +82,10 @@ function render(){
 }
 async function load(){
  try{
+ $("lead").innerHTML='<p class="loading">Conectando con la base de datos…</p>';
  const client=window.supabase.createClient(URL,KEY);
- const result=await client.from("articles").select("title,title_en,title_es,slug,category,author,summary,summary_en,summary_es,image_url,created_at,updated_at,country,content,content_es,content_en").eq("status","published").order("updated_at",{ascending:false}).limit(40);
+ const request=client.from("articles").select("title,title_en,title_es,slug,category,author,summary,summary_en,summary_es,image_url,created_at,updated_at,country,content,content_es,content_en").eq("status","published").order("updated_at",{ascending:false}).limit(40);
+ const result=await Promise.race([request,new Promise((_,reject)=>setTimeout(()=>reject(new Error("La conexión con Supabase no respondió en 12 segundos.")),12000))]);
  if(result.error)throw result.error;articles=result.data||[];render();
  }catch(error){$("lead").innerHTML='<p class="empty">No se pudo cargar la edición. '+esc(error.message||"Comprueba la conexión.")+'</p>';console.error("Evoford print edition:",error);}
 }

@@ -118,6 +118,9 @@ async function loadOverview(){
   }catch(error){return {key,table,count:0,error};}
  }));
  const by=Object.fromEntries(results.map(x=>[x.key,x])),val=key=>by[key]?.count??0;
+ const adSpecs=[["adCampaignsTotal","ad_campaigns"],["adCampaignsActive","ad_campaigns","active"],["adCampaignsPaid","ad_campaigns",null,null,"paid"],["adCampaignsUnpaid","ad_campaigns",null,null,"unpaid"],["adEnquiriesTotal","ad_enquiries"],["adEnquiriesReceived","ad_enquiries","received"],["adEnquiriesPeriod","ad_enquiries",null,cutoff]];
+ const adResults=await Promise.all(adSpecs.map(async ([key,table,status,since,payment])=>{try{let q=client.from(table).select("id",{count:"exact",head:true});if(status)q=q.eq("status",status);if(payment)q=q.eq("payment_status",payment);if(since)q=q.gte("created_at",since);const r=await Promise.race([q,new Promise(resolve=>setTimeout(()=>resolve({count:null,error:{message:"Tiempo de espera agotado"}}),12000))]);return {key,count:r.count??0,error:r.error||null};}catch(error){return {key,count:0,error};}}));
+ const adBy=Object.fromEntries(adResults.map(x=>[x.key,x])),adVal=key=>adBy[key]?.count??0;
  const cards=[
   ["Artículos publicados",val("articlesPublished"),"de "+val("articlesTotal")+" artículos"],
   ["Envíos editoriales",val("submissionsTotal"),val("submissionsReceived")+" recibidos"],
@@ -126,7 +129,10 @@ async function loadOverview(){
   ["Fichas del directorio",val("listingsTotal"),val("listingsPublished")+" publicadas"],
   ["Noticias RSS pendientes",val("rssPending"),"En cola de revisión"],
   ["Artículos en revisión",val("articlesPending"),val("articlesDraft")+" borradores"],
-  ["Solicitudes en el periodo",val("submissionsPeriod")+val("coursesPeriod")+val("directoryPeriod"),"Últimos "+range+" días"]
+  ["Solicitudes en el periodo",val("submissionsPeriod")+val("coursesPeriod")+val("directoryPeriod"),"Últimos "+range+" días"],
+  ["Campañas publicitarias",adVal("adCampaignsTotal"),adVal("adCampaignsActive")+" activas"],
+  ["Solicitudes comerciales",adVal("adEnquiriesTotal"),adVal("adEnquiriesReceived")+" recibidas"],
+  ["Ingresos publicitarios",adVal("adCampaignsPaid"),"campañas pagadas · "+adVal("adCampaignsUnpaid")+" por cobrar"]
  ];
  kpis.innerHTML=cards.map(([label,value,note])=>'<article class="overview-kpi"><span>'+safe(label)+'</span><strong>'+value+'</strong><small>'+safe(note)+'</small></article>').join("");
  const bins=range===7?7:range===30?10:12;
@@ -156,7 +162,8 @@ async function loadOverview(){
  const groups=[
   ["Envíos editoriales",[["Recibidos",val("submissionsReceived")],["Descartados",val("submissionsRejected")]]],
   ["Formación",[["Recibidas",val("coursesReceived")],["Contactadas",val("coursesContacted")],["Matriculadas",val("coursesEnrolled")],["Cerradas",val("coursesClosed")],["Descartadas",val("coursesDiscarded")]]],
-  ["Directorio",[["Recibidas",val("directoryRequestsReceived")],["Publicadas / vinculadas",val("directoryRequestsPublished")],["Rechazadas",val("directoryRequestsRejected")]]]
+  ["Directorio",[["Recibidas",val("directoryRequestsReceived")],["Publicadas / vinculadas",val("directoryRequestsPublished")],["Rechazadas",val("directoryRequestsRejected")]]],
+  ["Publicidad y colaboraciones",[["Solicitudes recibidas",adVal("adEnquiriesReceived")],["Campañas activas",adVal("adCampaignsActive")],["Campañas pagadas",adVal("adCampaignsPaid")],["Pendientes de cobro",adVal("adCampaignsUnpaid")]]]
  ];
  statusRoot.innerHTML=groups.map(([name,states])=>'<div class="overview-status-group"><strong>'+name+'</strong>'+states.map(([label,n])=>'<span>'+label+' <b>'+n+'</b></span>').join("")+'</div>').join("");
  const [articleRows,rssRows]=await Promise.all([
@@ -177,7 +184,7 @@ async function loadOverview(){
   rssRoot.innerHTML=Object.entries(states).sort((a,b)=>b[1]-a[1]).map(([name,n])=>'<div class="overview-rank"><span>'+safe(name==="pending"?"Pendientes":name==="rejected"?"Descartadas":name)+'</span><div class="overview-bar"><i style="width:'+Math.round(n/Math.max(1,...Object.values(states))*100)+'%"></i></div><b>'+n+'</b></div>').join("")+'<p class="muted">'+val("sourcesActive")+' fuentes activas de '+val("sourcesTotal")+'</p>';
  }
  const errors=results.filter(x=>x.error);
- operations.innerHTML='<div class="overview-operation-row"><span>Artículos en total</span><b>'+val("articlesTotal")+'</b><span>Borradores</span><b>'+val("articlesDraft")+'</b></div><div class="overview-operation-row"><span>Artículos aprobados</span><b>'+val("articlesApproved")+'</b><span>Fichas en borrador</span><b>'+val("listingsDraft")+'</b></div><div class="overview-operation-row"><span>Noticias RSS registradas</span><b>'+val("rssTotal")+'</b><span>Fuentes RSS activas</span><b>'+val("sourcesActive")+'</b></div>'+(errors.length?'<p class="message">Algunos recuentos no se pudieron consultar: '+safe([...new Set(errors.map(x=>x.table))].join(", "))+'.</p>':'');
+ operations.innerHTML='<div class="overview-operation-row"><span>Artículos en total</span><b>'+val("articlesTotal")+'</b><span>Borradores</span><b>'+val("articlesDraft")+'</b></div><div class="overview-operation-row"><span>Artículos aprobados</span><b>'+val("articlesApproved")+'</b><span>Fichas en borrador</span><b>'+val("listingsDraft")+'</b></div><div class="overview-operation-row"><span>Noticias RSS registradas</span><b>'+val("rssTotal")+'</b><span>Fuentes RSS activas</span><b>'+val("sourcesActive")+'</b></div><div class="overview-operation-row"><span>Campañas publicitarias</span><b>'+adVal("adCampaignsTotal")+'</b><span>Solicitudes comerciales</span><b>'+adVal("adEnquiriesTotal")+'</b></div><div class="overview-operation-row"><span>Campañas pagadas</span><b>'+adVal("adCampaignsPaid")+'</b><span>Por cobrar</span><b>'+adVal("adCampaignsUnpaid")+'</b></div>'+(errors.length?'<p class="message">Algunos recuentos no se pudieron consultar: '+safe([...new Set(errors.map(x=>x.table))].join(", "))+'.</p>':'');
  if(updated)updated.textContent="Última actualización: "+new Date().toLocaleString("es-ES")+(errors.length?" · "+errors.length+" consultas con incidencias":"");
 }
 

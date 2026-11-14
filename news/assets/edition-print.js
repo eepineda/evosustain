@@ -22,31 +22,26 @@
   var printLead=leadNode?leadNode.cloneNode(true):null;
   var printSecondary=secondaryNode?secondaryNode.cloneNode(true):null;
   if(printLead){
-   var sidebar=printLead.querySelector(".lead-sidebar");
-   var leadPhoto=printLead.querySelector(".lead-photo");
-   if(sidebar){
-    var grid=printSecondary&&printSecondary.querySelector(".story-grid");
-    var sideStories=Array.prototype.slice.call(sidebar.querySelectorAll(".side-story"));
-    var firstStory=grid&&grid.firstChild;
-    sideStories.forEach(function(side){
-     var card=document.createElement("article");
-     card.className="story story-from-headline";
-     [".category","h2","p"].forEach(function(selector){
-      var part=side.querySelector(selector);
-      if(part)card.appendChild(part.cloneNode(true));
-     });
-     if(grid)grid.insertBefore(card,firstStory);
-    });
-    sidebar.remove();
-   }
    var content=printLead.querySelector(".lead-content");
-   if(content){content.style.display="block";content.style.width="100%";}
-   if(leadPhoto){
-    leadPhoto.style.display="block";
-    leadPhoto.style.width="100%";
-    leadPhoto.style.maxWidth="100%";
-    leadPhoto.style.margin="0 auto";
-    leadPhoto.style.textAlign="center";
+   var photo=printLead.querySelector(".lead-photo");
+   var sidebar=printLead.querySelector(".lead-sidebar");
+   if(content){
+    content.style.display="grid";
+    content.style.gridTemplateColumns="minmax(0,2fr) minmax(0,1fr)";
+    content.style.gap="9pt";
+    content.style.alignItems="start";
+   }
+   if(photo){
+    photo.style.display="block";
+    photo.style.width="100%";
+    photo.style.maxWidth="100%";
+    photo.style.margin="0";
+    photo.style.textAlign="center";
+   }
+   if(sidebar){
+    sidebar.style.display="block";
+    sidebar.style.paddingLeft="8pt";
+    sidebar.style.borderLeft="1px solid #c4cbd2";
    }
   }
   var blocks={
@@ -78,9 +73,9 @@ body{font-family:Georgia,"Times New Roman",serif;font-size:10pt;line-height:1.35
 .lead-headline h1{font:700 27pt/1.03 Georgia,serif;letter-spacing:-.5pt;margin:5pt 0 7pt;color:#101820}
 .lead-headline .summary{font:10pt/1.35 Georgia,serif;margin:0 0 6pt;color:#3e4852}
 .byline{font:6.5pt/1.3 Arial,sans-serif;letter-spacing:.05em;color:#65717d;text-transform:uppercase}
-.lead-content{display:block;width:100%;margin-top:8pt;padding-top:8pt;border-top:1px solid #c4cbd2}.lead-photo{display:block;width:100%;max-width:100%;margin:0 auto;text-align:center}.lead-photo img{display:block;width:100%;height:auto;max-height:95mm;margin:0 auto;object-fit:contain}
+.lead-content{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:9pt;align-items:start;margin-top:8pt;padding-top:8pt;border-top:1px solid #c4cbd2}.lead-photo{display:block;width:100%;max-width:100%;margin:0;text-align:center}.lead-photo img{display:block;width:100%;height:auto;max-height:92mm;margin:0 auto;object-fit:contain}
 
-.lead-sidebar{display:block;padding-left:8pt;border-left:1px solid #c4cbd2}
+.lead-sidebar{display:block;min-width:0;padding-left:8pt;border-left:1px solid #c4cbd2}
 .sidebar-heading{font:700 7pt/1.3 Arial,sans-serif;letter-spacing:.12em;color:#102b4e;border-bottom:2pt solid #102b4e;padding-bottom:4pt}
 .side-story{display:grid;grid-template-columns:18pt minmax(0,1fr);gap:4pt;padding:6pt 0;border-bottom:1px solid #c4cbd2}
 .side-number{font:700 12pt/1 Georgia,serif;color:#9d2635}
@@ -90,33 +85,33 @@ body{font-family:Georgia,"Times New Roman",serif;font-size:10pt;line-height:1.35
 .full-article-heading{display:block;margin:0 0 8pt;padding:0 0 6pt;border-bottom:1px solid #c4cbd2;break-after:avoid-page;page-break-after:avoid}
 .full-article-heading>span{font:700 7pt/1.3 Arial,sans-serif;letter-spacing:.16em;color:#9d2635}
 .full-article-heading h2{font:700 17pt/1.08 Georgia,serif;margin:4pt 0;color:#111a23}
-.full-article-body{display:block;width:auto;height:auto;overflow:visible;columns:1;column-count:1;column-width:auto;font:9.5pt/1.43 Georgia,serif;text-align:justify;hyphens:auto;orphans:3;widows:3}
+.full-article-body{display:block;width:auto;height:auto;overflow:visible;columns:2;column-count:2;column-gap:16pt;column-fill:balance;font:9pt/1.38 Georgia,serif;text-align:justify;hyphens:auto;orphans:3;widows:3}
 .full-article-body p{margin:0 0 7pt;break-inside:auto;page-break-inside:auto}
 .full-article-body h2,.full-article-body h3,.full-article-body h4{font:700 12pt/1.15 Georgia,serif;color:#172b40;margin:9pt 0 4pt;break-after:avoid-page;page-break-after:avoid}
 .full-article-body ul,.full-article-body ol{padding-left:16pt;margin:4pt 0 7pt}
 .secondary-area{display:block;margin:12pt 0 0;padding:9pt 0 0;border-top:3pt double #102b4e;break-before:auto;page-break-before:auto}
 .section-label{display:flex;justify-content:space-between;margin:0 0 8pt;padding:5pt 0;border-bottom:1px solid #17212b;color:#102b4e;font:700 7pt/1.3 Arial,sans-serif;letter-spacing:.12em;break-after:avoid-page;page-break-after:avoid}
 /* Single-flow news list: avoids CSS grid page-fragmentation differences. */
-.story-grid{display:block!important;width:100%!important;margin:0!important;padding:0!important;columns:1!important;column-count:1!important;column-width:auto!important;break-inside:auto!important;page-break-inside:auto!important}
-.story{display:grid!important;grid-template-columns:34mm minmax(0,1fr)!important;column-gap:9pt;align-items:start;width:100%!important;min-width:0;margin:0;padding:7pt 0;border-bottom:1px solid #c4cbd2;break-inside:avoid-page;page-break-inside:avoid}
-.story-from-headline{padding-top:7pt}
-.story-from-headline:before{content:"TITULAR DESTACADO";grid-column:1/-1;display:block;margin-bottom:4pt;color:#9d2635;font:700 6pt/1.2 Arial,sans-serif;letter-spacing:.1em}
-.story img{grid-column:1;grid-row:2/7;display:block;width:34mm;height:24mm;object-fit:cover;margin:0}
-.story .category,.story h2,.story p,.story .byline{grid-column:2}
+.story-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:9pt 10pt!important;align-items:start!important;width:100%!important;margin:0!important;padding:0!important;break-inside:auto!important;page-break-inside:auto!important}
+.story{display:block!important;min-width:0;margin:0;padding:0 0 7pt;border-bottom:1px solid #c4cbd2;break-inside:avoid;page-break-inside:avoid}
+.story-from-headline{padding-top:5pt}
+.story-from-headline:before{content:"TITULAR DESTACADO";display:block;margin-bottom:4pt;color:#9d2635;font:700 6pt/1.2 Arial,sans-serif;letter-spacing:.1em}
+.story img{display:block;width:100%;height:27mm;object-fit:cover;margin:0 0 5pt}
+.story .category,.story h2,.story p,.story .byline{display:block}
 .story h2{font:700 11pt/1.12 Georgia,serif;margin:1pt 0 3pt;color:#17212b}
 .story p{font:8pt/1.32 Georgia,serif;margin:2pt 0;color:#4e5963}
 .story .byline{font-size:6pt}
 .story:not(:has(img)){display:block!important}
-.paper-footer{display:flex!important;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:4pt 12pt;margin:10pt 0 0;padding:6pt 0 0;border-top:1.5pt solid #102b4e;font:6.5pt/1.3 Arial,sans-serif;color:#4e5963}.paper-footer>*{display:block;flex:0 1 auto}
+.ad-slot{margin:8pt 0;padding:8pt 5pt;border:1px dashed #9aa4ae;text-align:center;color:#66717c;font:700 6pt/1.3 Arial,sans-serif;letter-spacing:.16em}.paper-footer{display:flex!important;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:4pt 12pt;margin:10pt 0 0;padding:6pt 0 0;border-top:1.5pt solid #102b4e;font:6.5pt/1.3 Arial,sans-serif;color:#4e5963}.paper-footer>*{display:block;flex:0 1 auto}
 .paper-footer strong{color:#102b4e;letter-spacing:.1em}
 a{color:inherit;text-decoration:none}
 img{max-width:100%}
 @media print{
- .lead-content,.story{break-inside:avoid-page}\n .lead{break-inside:auto}
+ .lead-content,.story{break-inside:avoid-page}\n .lead{break-inside:auto}\n .full-article-body{column-count:2;columns:2}\n .story-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
  .lead{break-inside:auto}
  #fullArticle,.secondary-area{break-before:auto!important;page-break-before:auto!important}
 }
-@media print{html[data-paper-size="A3"] .lead-photo img{max-height:135mm}}\n@media screen{
+@media print{html[data-paper-size="A3"] .lead-photo img{max-height:115mm}html[data-paper-size="A3"] .full-article-body{column-count:3;columns:3}html[data-paper-size="A3"] .story-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}}\n@media screen{
  body{background:#e7e9ec;padding:24px}
  .sheet{max-width:${size==="A3"?"297mm":"210mm"};min-height:${size==="A3"?"420mm":"297mm"};padding:${pageMargin};background:white;box-shadow:0 4px 22px #0002}
 }

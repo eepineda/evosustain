@@ -73,3 +73,6 @@
 
 /* Section pages use the same compact installed-app shell as the homepage. */
 .evo-pwa .ecosystem-nav,.evo-pwa .ecosystem-bar{display:none!important}
+
+/* App-mode route guard for standalone Android/iOS displays. */
+html.evo-pwa .ecosystem-nav,html.evo-pwa .ecosystem-bar{display:none!important}

@@ -1,7 +1,6 @@
 /* EVOFORD NEWS — estilo genérico de edición impresa
    Una sola composición para Chrome, Edge y otros navegadores Chromium.
    El tamaño físico del papel se confirma también en el diálogo de impresión. */
-@page{size:A4 portrait;margin:11mm}
 @media print{
   html,body.print-edition{margin:0!important;padding:0!important;width:auto!important;background:#fff!important;color:#17212b!important}
   body.print-edition{-webkit-print-color-adjust:exact;print-color-adjust:exact}

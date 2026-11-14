@@ -111,19 +111,13 @@ async function load(){
  }catch(error){$("lead").innerHTML='<p class="empty">No se pudo cargar la edición. '+esc(error.message||"Comprueba la conexión.")+'</p>';console.error("Evoford print edition:",error);}
 }
 function syncPrintPaper(){
- const raw=$("paperSize")?.value==="A3"?"A3":"A4";
- const isA3=raw==="A3";
+ const raw=$("paperSize").value==="A3"?"A3":"A4";
+ const a3=document.getElementById("paperA3");
+ const a4=document.getElementById("paperA4");
+ if(!a3||!a4)throw new Error("No se cargaron las hojas de tamaño A3/A4.");
+ a3.media=raw==="A3"?"print":"not all";
+ a4.media=raw==="A4"?"print":"not all";
  document.documentElement.dataset.printSize=raw.toLowerCase();
- let rule=document.getElementById("evoPrintPageRule");
- if(!rule){
-  rule=document.createElement("style");
-  rule.id="evoPrintPageRule";
-  rule.setAttribute("data-print-paper","true");
-  document.head.appendChild(rule);
- }
- rule.textContent=isA3
-  ? "@page { size: 297mm 420mm; margin: 12mm; }"
-  : "@page { size: 210mm 297mm; margin: 10mm; }";
  return raw;
 }
 $("paperSize").addEventListener("change",syncPrintPaper);

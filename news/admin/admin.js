@@ -529,9 +529,26 @@ async function handleDirectoryAction(e){
 
 
 let adCampaigns=[];
+const adPreviewExamples={
+ banner:{title:"Banner web / Web banner",className:"preview-banner",brand:"EcoEnergy",headline:"Energía limpia para un futuro sostenible",english:"Clean energy for a sustainable future",cta:"Conoce más / Learn more",note:"Franja horizontal situada en la parte superior del sitio."},
+ homepage:{title:"Portada / Homepage featured",className:"preview-homepage",brand:"GreenBuild",headline:"Ciudades más verdes e inteligentes",english:"Greener and smarter cities",cta:"Descubre más / Discover more",note:"Anuncio destacado integrado en la portada junto al contenido editorial."},
+ sidebar:{title:"Columna lateral / Sidebar",className:"preview-sidebar",brand:"CloudNet",headline:"Tecnología en la nube para impulsar tu negocio",english:"Cloud technology to grow your business",cta:"Solicita una demo / Request a demo",note:"Pieza vertical para la barra lateral de artículos y secciones."},
+ article:{title:"Artículo / In-article",className:"preview-article",brand:"AI Solutions",headline:"Inteligencia artificial para empresas",english:"Artificial intelligence for business",cta:"Conoce más / Learn more",note:"Creatividad insertada entre párrafos dentro de una noticia."},
+ print:{title:"Edición impresa / Print edition",className:"preview-print",brand:"EcoMobility",headline:"Movilidad limpia para ciudades más humanas",english:"Clean mobility for more liveable cities",cta:"Más información / More information",note:"Anuncio de página completa para edición impresa o PDF."},
+ sponsored:{title:"Artículo patrocinado / Sponsored article",className:"preview-sponsored",brand:"EcoIndustry",headline:"Cómo la innovación sostenible transforma la industria",english:"How sustainable innovation is transforming industry",cta:"Leer más / Read more",note:"Contenido comercial con identificación visible de patrocinio."}
+};
+function renderAdPlacementPreview(){
+ const placement=$("adPlacement")?.value||"banner";
+ const sample=adPreviewExamples[placement]||adPreviewExamples.banner;
+ const root=$("adPlacementPreview");
+ if(!root)return;
+ $("adPreviewTitle").textContent=sample.title;
+ root.className="ad-preview-card "+sample.className;
+ root.innerHTML='<div class="ad-preview-art" aria-hidden="true"><span class="ad-preview-orbit"></span><span class="ad-preview-leaf">✦</span><span class="ad-preview-city">E</span></div><div class="ad-preview-copy"><span class="ad-preview-brand">'+safe(sample.brand)+'</span><strong>'+safe(sample.headline)+'</strong><span class="ad-preview-en">'+safe(sample.english)+'</span><span class="ad-preview-cta">'+safe(sample.cta)+' →</span><small>'+safe(sample.note)+'</small></div>';
+}
 function adStatusText(s){return ({draft:"Borrador",pending:"Pendiente",active:"Activa",paused:"Pausada",completed:"Finalizada",cancelled:"Cancelada",unpaid:"Sin pagar",paid:"Pagado",overdue:"Vencido",waived:"Exento"})[s]||s;}
 function editAd(a){
- $("adForm").hidden=false;$("adId").value=a?.id||"";$("adAdvertiser").value=a?.advertiser_name||"";$("adContact").value=a?.contact_name||"";$("adEmail").value=a?.contact_email||"";$("adPhone").value=a?.contact_phone||"";$("adTitle").value=a?.campaign_title||"";$("adPlacement").value=a?.placement||"banner";$("adStatus").value=a?.status||"draft";$("adCreative").value=a?.creative_url||"";$("adTarget").value=a?.target_url||"";$("adStart").value=a?.start_date||"";$("adEnd").value=a?.end_date||"";$("adAmount").value=a?.amount??0;$("adCurrency").value=a?.currency||"GBP";$("adPayment").value=a?.payment_status||"unpaid";$("adInvoice").value=a?.invoice_reference||"";$("adNotes").value=a?.internal_notes||"";$("adForm").scrollIntoView({behavior:"smooth",block:"start"});
+ $("adForm").hidden=false;$("adId").value=a?.id||"";$("adAdvertiser").value=a?.advertiser_name||"";$("adContact").value=a?.contact_name||"";$("adEmail").value=a?.contact_email||"";$("adPhone").value=a?.contact_phone||"";$("adTitle").value=a?.campaign_title||"";$("adPlacement").value=a?.placement||"banner";renderAdPlacementPreview();$("adStatus").value=a?.status||"draft";$("adCreative").value=a?.creative_url||"";$("adTarget").value=a?.target_url||"";$("adStart").value=a?.start_date||"";$("adEnd").value=a?.end_date||"";$("adAmount").value=a?.amount??0;$("adCurrency").value=a?.currency||"GBP";$("adPayment").value=a?.payment_status||"unpaid";$("adInvoice").value=a?.invoice_reference||"";$("adNotes").value=a?.internal_notes||"";$("adForm").scrollIntoView({behavior:"smooth",block:"start"});
 }
 async function loadAds(){
  const campaignRoot=$("adCampaignList"),enquiryRoot=$("adEnquiryList"),statsRoot=$("adStats");
@@ -644,7 +661,7 @@ function wire(){
       await loadInbox();
     }
   });
-  $("runRssBtn").addEventListener("click",runRssImport);$("newAdBtn").addEventListener("click",()=>editAd(null));$("cancelAdBtn").addEventListener("click",()=>{$("adForm").hidden=true;});$("cancelAdBtn2").addEventListener("click",()=>{$("adForm").hidden=true;});$("adForm").addEventListener("submit",saveAd);
+  $("runRssBtn").addEventListener("click",runRssImport);$("newAdBtn").addEventListener("click",()=>editAd(null));$("cancelAdBtn").addEventListener("click",()=>{$("adForm").hidden=true;});$("cancelAdBtn2").addEventListener("click",()=>{$("adForm").hidden=true;});$("adForm").addEventListener("submit",saveAd);$("adPlacement").addEventListener("change",renderAdPlacementPreview);
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
     ["articles","inbox","sources","submissions","directory","courses","ads"].forEach(k=>$(k+"Tab").hidden=k!==b.dataset.tab);

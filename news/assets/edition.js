@@ -92,9 +92,9 @@ async function load(){
  if(result.error)throw result.error;articles=result.data||[];render();
  }catch(error){$("lead").innerHTML='<p class="empty">No se pudo cargar la edición. '+esc(error.message||"Comprueba la conexión.")+'</p>';console.error("Evoford print edition:",error);}
 }
-$("printBtn").addEventListener("click",()=>window.print());
+$("printBtn").addEventListener("click",()=>{if(window.EvoPrintController)window.EvoPrintController.print();else window.print();});
 $("languageToggle").addEventListener("click",()=>{language=language==="es"?"en":"es";try{localStorage.setItem("evoford-news-language",language)}catch(e){}applyLanguage();render();});
 $("refreshBtn").addEventListener("click",()=>{$("lead").innerHTML='<p class="loading">'+(language==="en"?"Refreshing edition…":"Actualizando edición…")+'</p>';load();});
-$("paperSize").addEventListener("change",e=>{const rule=document.getElementById("dynamicPageSize")||document.head.appendChild(document.createElement("style"));rule.id="dynamicPageSize";rule.textContent="@page{size:"+e.target.value+" portrait;margin:12mm}";});
+if(window.EvoPrintController)window.EvoPrintController.setSize();
 applyLanguage();load();
 })();

@@ -98,3 +98,42 @@
 @media(max-width:650px){.overview-controls{align-items:flex-start;flex-direction:column}.overview-controls label{width:100%}}
 
 .ad-item{align-items:flex-start}.ad-item>div:first-child{flex:1}.ad-item p{margin:4px 0;line-height:1.45}#adForm{margin:18px 0 26px;padding:22px;scroll-margin-top:20px}@media(max-width:650px){.ad-item{flex-direction:column}}
+
+/* Dynamic advertising placement mockup */
+.ad-preview-field{padding:16px;background:#f5f8fc;border:1px solid var(--line);border-radius:8px}
+.ad-preview-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
+.ad-preview-heading .eyebrow{margin:0 0 4px}
+.ad-preview-heading strong{display:block;color:var(--navy);font-size:16px}
+.ad-preview-heading .muted{margin:4px 0 0;font-size:12px}
+.ad-preview-tag{padding:5px 8px;border-radius:20px;background:#e7eef8;color:var(--navy);font-size:9px;font-weight:800;letter-spacing:.1em}
+.ad-preview-card{position:relative;display:flex;align-items:center;gap:18px;min-height:170px;overflow:hidden;padding:20px;border-radius:8px;background:linear-gradient(115deg,#05264a,#0873b7 68%,#0b4b75);color:#fff}
+.ad-preview-art{position:relative;flex:0 0 34%;min-height:126px;align-self:stretch;overflow:hidden;border-radius:6px;background:linear-gradient(145deg,#8fd5ef,#1765a0 54%,#0b365b)}
+.ad-preview-art:before{content:"";position:absolute;width:150%;height:52%;left:-12%;bottom:-14%;border-radius:50% 50% 0 0;background:linear-gradient(140deg,#5dbb4e,#07543e)}
+.ad-preview-art:after{content:"";position:absolute;width:68px;height:68px;right:16%;top:14%;border:2px solid rgba(255,255,255,.55);border-radius:50%;box-shadow:0 0 0 12px rgba(255,255,255,.08),0 0 0 25px rgba(255,255,255,.06)}
+.ad-preview-orbit{position:absolute;width:90px;height:90px;left:12%;top:10%;border:1px solid rgba(255,255,255,.35);border-radius:50%}
+.ad-preview-leaf{position:absolute;z-index:1;left:20%;top:20%;font-size:48px;color:#a6e34a;text-shadow:0 2px 8px #123}
+.ad-preview-city{position:absolute;z-index:1;right:16%;bottom:5%;font-size:42px;font-weight:900;color:rgba(255,255,255,.72)}
+.ad-preview-copy{position:relative;z-index:2;display:grid;justify-items:start;gap:7px;min-width:0}
+.ad-preview-brand{font-size:14px;font-weight:800;letter-spacing:.04em;color:#b9ee65}
+.ad-preview-copy strong{font-size:clamp(17px,2vw,25px);line-height:1.12}
+.ad-preview-en{font-size:13px;color:#dcecff}
+.ad-preview-cta{display:inline-block;margin-top:4px;padding:8px 13px;border-radius:5px;background:#188c45;color:#fff;font-size:12px;font-weight:800}
+.ad-preview-copy small{font-size:10px;color:#d5e1ef;line-height:1.4}
+.ad-preview-card.preview-sidebar{max-width:370px;min-height:310px;margin:auto;flex-direction:column;align-items:stretch;gap:10px}
+.preview-sidebar .ad-preview-art{flex:1 1 auto;min-height:140px}
+.ad-preview-card.preview-homepage{min-height:220px}
+.preview-homepage .ad-preview-art{flex-basis:46%}
+.ad-preview-card.preview-article{min-height:150px;flex-direction:row-reverse;background:linear-gradient(110deg,#061c36,#063d68)}
+.ad-preview-card.preview-article .ad-preview-art{flex-basis:28%}
+.ad-preview-card.preview-print{max-width:520px;min-height:330px;margin:auto;padding:28px 24px;background:#f7f7f4;color:#102b4e;border:8px solid #e3e7ed;box-shadow:0 8px 20px rgba(15,35,60,.12)}
+.preview-print .ad-preview-art{flex-basis:43%;min-height:260px}
+.preview-print .ad-preview-copy strong{color:#102b4e}
+.preview-print .ad-preview-en,.preview-print .ad-preview-copy small{color:#52657a}
+.preview-print .ad-preview-cta{background:#0a4777}
+.ad-preview-card.preview-sponsored{background:#fff;color:#102b4e;border:1px solid #d7e0eb}
+.preview-sponsored .ad-preview-art{flex-basis:30%}
+.preview-sponsored .ad-preview-brand{color:#0c5c37}
+.preview-sponsored .ad-preview-copy strong{color:#102b4e}
+.preview-sponsored .ad-preview-en,.preview-sponsored .ad-preview-copy small{color:#52657a}
+.preview-sponsored .ad-preview-cta{background:#0b4779}
+@media(max-width:650px){.ad-preview-card{padding:14px;gap:10px;min-height:150px}.ad-preview-art{flex-basis:30%;min-height:110px}.ad-preview-card.preview-sidebar{max-width:100%}.ad-preview-card.preview-print{min-height:260px;padding:12px}.preview-print .ad-preview-art{min-height:210px}.ad-preview-copy strong{font-size:16px}.ad-preview-en{font-size:11px}.ad-preview-heading{flex-direction:column}}

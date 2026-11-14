@@ -307,3 +307,50 @@
     column-count:2!important;column-gap:6mm!important;font-size:8.4pt!important;line-height:1.34!important;
   }
 }
+
+/* Maquetación transversal Chrome/Edge: evitar multicolumnas fragmentadas */
+@media print {
+  #fullArticle.embedded-lead-story {
+    display:block!important;position:static!important;float:none!important;clear:both!important;
+    width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;
+    overflow:visible!important;break-before:page!important;page-break-before:always!important;
+    break-inside:auto!important;page-break-inside:auto!important;
+  }
+  #fullArticle .full-article-heading {
+    display:block!important;break-inside:avoid!important;page-break-inside:avoid!important;
+    break-after:avoid-page!important;page-break-after:avoid!important;
+  }
+  #fullArticle .full-article-body {
+    display:block!important;position:static!important;float:none!important;
+    width:100%!important;max-width:165mm!important;margin:0 auto!important;
+    height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;
+    columns:auto!important;column-count:1!important;column-width:auto!important;
+    column-gap:0!important;column-rule:0!important;
+    font:9pt/1.42 Georgia,"Times New Roman",serif!important;
+    text-align:justify!important;hyphens:auto!important;
+    orphans:3!important;widows:3!important;
+  }
+  #fullArticle .full-article-body p {
+    display:block!important;break-inside:auto!important;page-break-inside:auto!important;
+    margin:0 0 3mm!important;orphans:3!important;widows:3!important;
+  }
+  #fullArticle .full-article-body p:first-child:first-letter {
+    float:none!important;font:inherit!important;line-height:inherit!important;
+    margin:0!important;padding:0!important;color:inherit!important;
+  }
+  #fullArticle .full-article-body h2,
+  #fullArticle .full-article-body h3,
+  #fullArticle .full-article-body h4 {
+    break-after:avoid-page!important;page-break-after:avoid!important;
+    break-inside:avoid!important;page-break-inside:avoid!important;
+  }
+  .print-ad-slot {
+    break-inside:avoid!important;page-break-inside:avoid!important;
+  }
+  html[data-print-size="a3"] #fullArticle .full-article-body {
+    max-width:205mm!important;font-size:10pt!important;line-height:1.48!important;
+  }
+  html[data-print-size="a4"] #fullArticle .full-article-body {
+    max-width:165mm!important;font-size:9pt!important;line-height:1.42!important;
+  }
+}

@@ -6,7 +6,7 @@ let currentLanguage=localStorage.getItem("evoford-news-language")==="en"?"en":"e
 const translations={es:{edition:"EDICIÓN DIGITAL",print:"Imprimir edición",markets:"MERCADOS",marketData:"INDICADORES FINANCIEROS · DATOS DE TRADINGVIEW",marketNote:"Los datos pueden tener retraso según el mercado y el proveedor. No constituyen asesoramiento financiero.",international:"Enfoque internacional",coverage:"COBERTURA POR PAÍSES",uk:"Reino Unido",do:"República Dominicana",spain:"España",front:"EN PORTADA",live:"ACTUALIDAD",latest:"ÚLTIMAS",latestPublications:"Últimas publicaciones",published:"ARTÍCULOS PUBLICADOS",opinion:"ESPACIO DE OPINIÓN",ideas:"Ideas, argumentos y análisis.",opinionText:"Los artículos de opinión aparecen identificados y separados de las noticias.",origin:"Conoce el origen y el plan editorial de Evoford News ↗",sections:"Secciones",explore:"EXPLORA EVOFORD NEWS",politics:"Política",security:"Seguridad y defensa",economy:"Economía",technology:"Startups e innovación",world:"Internacional",analysis:"Opinión y análisis",aula:"Aula de Innovación",read:"Leer noticia ↗",readArticle:"Leer artículo",readFeature:"Leer reportaje",empty:"Todavía no hay artículos publicados.",noCountry:"Aún no hay artículos publicados con esta etiqueta. La cobertura aparecerá aquí cuando la redacción publique noticias de este país.",footer:"Noticias · Opinión · Análisis",author:"POR",source:"EDICIÓN LONDRES"},en:{edition:"DIGITAL EDITION",print:"Print edition",markets:"MARKETS",marketData:"FINANCIAL INDICATORS · TRADINGVIEW DATA",marketNote:"Market data may be delayed depending on the exchange and provider. Not financial advice.",international:"International coverage",coverage:"COUNTRY COVERAGE",uk:"United Kingdom",do:"Dominican Republic",spain:"Spain",front:"TOP STORY",live:"LATEST",latest:"LATEST",latestPublications:"Latest stories",published:"PUBLISHED ARTICLES",opinion:"OPINION",ideas:"Ideas, arguments and analysis.",opinionText:"Opinion articles are clearly identified and separated from news reporting.",origin:"Read about the origins and editorial plan of Evoford News ↗",sections:"Sections",explore:"EXPLORE EVOFORD NEWS",politics:"Politics",security:"Security & defence",economy:"Economy",technology:"Startups & innovation",world:"International",analysis:"Opinion & analysis",aula:"Innovation Academy",read:"Read story ↗",readArticle:"Read article",readFeature:"Read full story",empty:"There are no published articles yet.",noCountry:"No articles have been published under this country yet. Coverage will appear here when the newsroom publishes a story.",footer:"News · Opinion · Analysis",author:"BY",source:"LONDON EDITION"}};
 const tr=key=>translations[currentLanguage][key]||key;
 function categoryLabel(value){const map={Internacional:"International",Política:"Politics",Economía:"Economy",Seguridad:"Security",Tecnología:"Technology",Opinión:"Opinion",Clima:"Climate",Sociedad:"Society"};return currentLanguage==="en"?(map[value]||value):value;}
-function setLanguage(lang){currentLanguage=lang==="en"?"en":"es";localStorage.setItem("evoford-news-language",currentLanguage);document.documentElement.lang=currentLanguage;document.querySelectorAll("[data-language]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.language===currentLanguage)));renderStaticLanguage();if(date)date.textContent=new Date().toLocaleDateString(currentLanguage==="en"?"en-GB":"es-ES",{day:"numeric",month:"long",year:"numeric"});loadPublishedArticles();}
+function setLanguage(lang){currentLanguage=lang==="en"?"en":"es";localStorage.setItem("evoford-news-language",currentLanguage);document.documentElement.lang=currentLanguage;document.querySelectorAll("[data-language]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.language===currentLanguage)));renderStaticLanguage();if(date)date.textContent=new Date().toLocaleDateString(currentLanguage==="en"?"en-GB":"es-ES",{day:"numeric",month:"long",year:"numeric"});loadPublishedArticles();window.dispatchEvent(new CustomEvent("evoford:languagechange",{detail:{language:currentLanguage}}));}
 function renderStaticLanguage(){
  const set=(selector,text)=>{const el=document.querySelector(selector);if(el)el.textContent=text;};
  const en=currentLanguage==="en";
@@ -15,24 +15,19 @@ function renderStaticLanguage(){
  // Los nombres del Evoford Ecosystem son marcas corporativas y no se traducen.
  set(".topline span:first-child",en?"LONDON · UNITED KINGDOM":"LONDRES · REINO UNIDO");
  set(".topline span:last-child",en?"NEWS · OPINION · ANALYSIS":"INFORMACIÓN · OPINIÓN · ANÁLISIS");
- const navTranslations={
-  "#section-internacional":en?"International":"Internacional",
-  "#section-politica":en?"Politics":"Política",
-  "#section-economia":en?"Economy":"Economía",
-  "#section-seguridad":en?"Security":"Seguridad",
-  "startups.html":en?"Startups & innovation":"Startups e innovación",
-  "aula-innovacion.html":en?"Innovation Academy":"Aula de Innovación",
-  "#section-opinion-analisis":en?"Opinion":"Opinión",
-  "directory.html":en?"Directory":"Directorio",
-  "enviar.html":en?"Submit a story":"Envía tu noticia",
-  "edicion.html":en?"Print edition":"Edición impresa"
- };
- document.querySelectorAll(".masthead .nav a, .topics a").forEach(el=>{
-  const rawLabel=(el.textContent||"").trim().replace(/\s+/g," ").toLocaleLowerCase();
-  if(rawLabel==="aula de innovación"||rawLabel==="innovation academy")el.setAttribute("href","aula-innovacion.html");
-  if(rawLabel==="startups e innovación"||rawLabel==="startups & innovation")el.setAttribute("href","startups.html");
-  const label=navTranslations[el.getAttribute("href")];
-  if(label){const arrow=el.querySelector("span");el.textContent=label;if(arrow)el.appendChild(arrow);}
+ const mainNavLabels=en
+  ? ["International","Politics","Economy","Security","Startups & innovation","Evoford Briefing","Opinion","Directory","Submit a story","Print edition"]
+  : ["Internacional","Política","Economía","Seguridad","Startups e innovación","Evoford Briefing","Opinión","Directorio","Envía tu noticia","Edición impresa"];
+ document.querySelectorAll(".masthead .nav a").forEach((el,i)=>{if(mainNavLabels[i])el.textContent=mainNavLabels[i];});
+ const topicLabels=en
+  ? ["Politics","Security & defence","Economy","Startups & innovation","Innovation Academy","International","Opinion & analysis"]
+  : ["Política","Seguridad y defensa","Economía","Startups e innovación","Aula de Innovación","Internacional","Opinión y análisis"];
+ document.querySelectorAll(".topics a").forEach((el,i)=>{
+  const current=el.textContent.trim().toLowerCase();
+  if(current.startsWith("aula de innovación")||current.startsWith("innovation academy"))el.setAttribute("href","aula-innovacion.html");
+  if(current.startsWith("startups"))el.setAttribute("href","startups.html");
+  const arrow=el.querySelector("span");
+  if(topicLabels[i]){el.firstChild.textContent=topicLabels[i]+" ";if(arrow)arrow.textContent="→";}
  });
  set("#editionLabel",tr("edition"));
  const print=document.getElementById("printEditionBtn");if(print)print.innerHTML=tr("print")+" <span aria-hidden='true'>↗</span>";
@@ -52,8 +47,15 @@ function renderStaticLanguage(){
  const keys=["politics","security","economy","technology","aula","world","analysis"];
  document.querySelectorAll(".topics a").forEach((el,i)=>{const arrow=el.querySelector("span");el.firstChild.textContent=tr(keys[i])+" ";if(arrow)arrow.textContent="→";});
  const author=document.querySelector(".author");if(author){const spans=author.querySelectorAll("span");const labels= en?["Columnist · Entrepreneur","University studies in Spain · BSc (Hons) Cyber Security in progress at The Open University, England"]:["Articulista · Emprendedor","Formación universitaria en España · BSc (Hons) Cyber Security en curso en The Open University, Inglaterra"];spans.forEach((el,i)=>{if(i<labels.length)el.textContent=labels[i];});}
- const foot=document.querySelector("footer>span");if(foot)foot.textContent=tr("footer");
- const yearLabel=document.querySelector("footer span:last-child");if(yearLabel)yearLabel.innerHTML="© <span id='year'>"+new Date().getFullYear()+"</span> "+(en?"Evoford":"Evoford");
+ const footer=document.querySelector("footer");
+ if(footer){
+  const footerLinks=footer.querySelectorAll("a");
+  if(footerLinks[1])footerLinks[1].textContent=en?"Advertise":"Anúnciate";
+  if(footerLinks[2])footerLinks[2].textContent=en?"Editorial access":"Acceso editorial";
+  if(footerLinks[3])footerLinks[3].textContent=en?"About Evoford News":"Sobre / About Evoford News";
+  const foot=footer.querySelector(":scope > span");if(foot)foot.textContent=tr("footer");
+  const yearLabel=footer.querySelector("span:last-child");if(yearLabel)yearLabel.innerHTML="© <span id='year'>"+new Date().getFullYear()+"</span> Evoford";
+ }
 }
 
 const year = document.getElementById("year");

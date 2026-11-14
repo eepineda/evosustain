@@ -81,19 +81,37 @@ function generate(){
   y=Math.max(colBottom,y);
  }
  function drawStories(images){
-  var cols=3,gap=5,cw=(U-gap*(cols-1))/cols,idx=0;
+  var cols=3,gap=a3?6:5,cw=(U-gap*(cols-1))/cols,idx=0;
   while(idx<stories.length){
-   if(y+(a3?78:60)>H-m-11)nextPage();
-   var row=stories.slice(idx,idx+cols),top=y,max=top;
+   var row=stories.slice(idx,idx+cols),cards=[],rowHeight=0;
    row.forEach(function(node,j){
-    var x=m+j*(cw+gap),cy=top,im=images[idx+j];
-    if(im&&im.data){try{var p=doc.getImageProperties(im.data),ih=Math.min(a3?27:15,cw/(p.width/p.height));doc.addImage(im.data,im.type.indexOf("png")>=0?"PNG":"JPEG",x,cy,cw,ih,undefined,"FAST");cy+=ih+3;}catch(e){}}
-    font("bold",5.8,red);doc.text(clean(plain($(".category",node))).slice(0,35),x,cy);cy+=3.3;
-    font("bold",a3?9:8,ink);doc.splitTextToSize(clean(plain($("h2",node))),cw).slice(0,a3?5:4).forEach(function(v){doc.text(v,x,cy);cy+=a3?3.4:3.1;});
-    cy+=1;font("normal",a3?7:6.3,grey);doc.splitTextToSize(clean(plain($("p",node))),cw).slice(0,a3?7:4).forEach(function(v){doc.text(v,x,cy);cy+=a3?2.8:2.5;});
-    ruleLine(x,cy+1,x+cw,cy+1,rule,.2);max=Math.max(max,cy+5);
+    var x=m+j*(cw+gap),cy=0,im=images[idx+j],titleText=clean(plain($("h2",node))),summaryText=clean(plain($("p",node)));
+    if(im&&im.data){
+     try{
+      var p=doc.getImageProperties(im.data),maxImage=a3?17:11,ih=Math.min(maxImage,cw/(p.width/p.height));
+      doc.addImage(im.data,im.type.indexOf("png")>=0?"PNG":"JPEG",x,y,cw,ih,undefined,"FAST");
+      cy=ih+2.5;
+     }catch(e){}
+    }
+    font("bold",5.4,red);doc.text(clean(plain($(".category",node))).slice(0,35),x,y+cy);cy+=3;
+    var titleSize=a3?8.2:7.2,titleStep=a3?3.25:2.9;
+    font("bold",titleSize,ink);
+    var titleLines=doc.splitTextToSize(titleText,cw).slice(0,3);
+    titleLines.forEach(function(line){doc.text(line,x,y+cy);cy+=titleStep;});
+    cy+=.8;
+    font("normal",a3?6.2:5.6,grey);
+    var summaryLines=doc.splitTextToSize(summaryText,cw).slice(0,a3?3:2);
+    summaryLines.forEach(function(line){doc.text(line,x,y+cy);cy+=a3?2.55:2.3;});
+    cards.push({x:x,bottom:y+cy+2});
+    rowHeight=Math.max(rowHeight,cy+2);
    });
-   y=max+6;idx+=cols;if(idx<stories.length&&y>H-m-28)nextPage();
+   if(y+rowHeight>H-m-12){
+    nextPage();
+    continue;
+   }
+   cards.forEach(function(card){ruleLine(card.x,y+rowHeight,card.x+cw,y+rowHeight,rule,.2);});
+   y+=rowHeight+ (a3?5:4);
+   idx+=cols;
   }
  }
  Promise.all([imageReady(leadImg&&leadImg.src),Promise.all(stories.map(function(n){var im=$("img",n);return imageReady(im&&im.src);}))]).then(function(images){

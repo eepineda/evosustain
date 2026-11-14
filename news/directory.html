@@ -25,6 +25,16 @@
 @media(max-width:760px){.country-primary{grid-template-columns:1fr;gap:14px}.country-flag-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.country-directory-head h2{font-size:21px}}
 @media(max-width:380px){.country-flag-grid{grid-template-columns:1fr}}
 
+
+.directory-detail-section{margin-top:12px;padding-top:10px;border-top:1px solid #e1e5ea}
+.directory-detail-section>strong{display:block;color:#102b4e;font:700 11px Arial,sans-serif;letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px}
+.directory-card .directory-details .directory-detail-intro{color:#344255}
+.directory-card .directory-services ul{display:grid;grid-template-columns:1fr 1fr;gap:5px 14px;list-style:none;padding:0;margin:7px 0 0}
+.directory-card .directory-services li{position:relative;padding-left:12px;color:#596574;font-size:12px;line-height:1.4}
+.directory-card .directory-services li:before{content:"*";position:absolute;left:0;color:#a9232d;font-weight:700}
+.directory-card .directory-detail-hours{margin-top:10px!important}
+@media(max-width:440px){.directory-card .directory-services ul{grid-template-columns:1fr}}
+
 /* Fichas compactas para todas las categorías del directorio */
 .directory-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;align-items:start}
 .directory-card{padding:13px 14px;border-top-width:2px;min-width:0}

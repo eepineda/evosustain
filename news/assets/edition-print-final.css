@@ -354,3 +354,28 @@
     max-width:165mm!important;font-size:9pt!important;line-height:1.42!important;
   }
 }
+
+/* v6: quitar salto forzado que separaba el encabezado del cuerpo en Edge */
+@media print {
+  #fullArticle.embedded-lead-story {
+    break-before:auto!important;page-break-before:auto!important;
+    break-inside:auto!important;page-break-inside:auto!important;
+    display:block!important;position:static!important;float:none!important;clear:both!important;
+    width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;
+  }
+  #fullArticle .full-article-heading {
+    break-before:auto!important;page-break-before:auto!important;
+    break-after:avoid!important;page-break-after:avoid!important;
+    break-inside:avoid!important;page-break-inside:avoid!important;
+  }
+  #fullArticle .full-article-body {
+    display:block!important;position:static!important;float:none!important;clear:none!important;
+    width:100%!important;max-width:100%!important;height:auto!important;min-height:0!important;
+    max-height:none!important;overflow:visible!important;
+    columns:1 auto!important;-webkit-column-count:1!important;column-count:1!important;
+    column-width:auto!important;column-gap:0!important;column-rule:0!important;column-fill:auto!important;
+    break-before:auto!important;page-break-before:auto!important;
+    break-inside:auto!important;page-break-inside:auto!important;
+  }
+  #fullArticle .full-article-body > * { break-inside:auto!important;page-break-inside:auto!important; }
+}

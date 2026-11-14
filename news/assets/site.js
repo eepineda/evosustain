@@ -63,9 +63,16 @@ if (year) year.textContent = now.getFullYear();
 function escapeHtml(value="") {
   return String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
-function articleUrl(slug) {
-  // Article pages inherit the saved site language unless a reader chooses a language explicitly.
-  return "articles/plantilla-articulo.html?slug=" + encodeURIComponent(slug);
+function shortArticleToken(id){
+  const hex=String(id||"").replace(/-/g,"").toLowerCase();
+  if(!/^[0-9a-f]{32}$/.test(hex))return "";
+  const bytes=new Uint8Array(hex.match(/../g).map(pair=>parseInt(pair,16)));
+  let binary="";bytes.forEach(byte=>binary+=String.fromCharCode(byte));
+  return btoa(binary).replace(/\\+/g,"-").replace(/\\//g,"_").replace(/=+$/,"");
+}
+function articleUrl(article){
+  const token=shortArticleToken(article&&article.id);
+  return token?"a.html?i="+token:"articles/plantilla-articulo.html?slug="+encodeURIComponent(article&&article.slug||"");
 }
 function articleImage(a,cls="") {
   const slug=String(a.slug||"");
@@ -80,10 +87,10 @@ async function loadPublishedArticles() {
   const container = document.getElementById("publishedArticles");
   if (!container || !window.supabase) return;
   const client = window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-  let {data,error} = await client.from("articles").select("title,title_en,slug,category,author,summary,summary_en,image_url,created_at,country,region")
+  let {data,error} = await client.from("articles").select("id,title,title_en,slug,category,author,summary,summary_en,image_url,created_at,country,region")
     .eq("status","published").order("updated_at",{ascending:false}).limit(30);
   if(error && String(error.message||"").includes("title_en")){
-    ({data,error}=await client.from("articles").select("title,slug,category,author,summary,image_url,created_at,country,region")
+    ({data,error}=await client.from("articles").select("id,title,slug,category,author,summary,image_url,created_at,country,region")
       .eq("status","published").order("updated_at",{ascending:false}).limit(30));
   }
   if (error) {
@@ -100,7 +107,7 @@ async function loadPublishedArticles() {
     const label=currentLanguage==="en"?"LATEST OPINION ARTICLE":"ÚLTIMO ARTÍCULO DE OPINIÓN";
     const readLabel=currentLanguage==="en"?"READ ARTICLE":"LEER ARTÍCULO";
     if(opinionArticle){
-      opinionRoot.innerHTML='<span class="kicker">'+label+'</span><a class="opinion-article-link" href="'+articleUrl(opinionArticle.slug||"")+'"><h3>'+escapeHtml(currentLanguage==="en"?(opinionArticle.title_en||opinionArticle.title):opinionArticle.title)+'</h3><p>'+escapeHtml(currentLanguage==="en"?(opinionArticle.summary_en||opinionArticle.summary||""):(opinionArticle.summary||""))+'</p><span class="read-link">'+readLabel+' ↗</span></a>';
+      opinionRoot.innerHTML='<span class="kicker">'+label+'</span><a class="opinion-article-link" href="'+articleUrl(opinionArticle)+'"><h3>'+escapeHtml(currentLanguage==="en"?(opinionArticle.title_en||opinionArticle.title):opinionArticle.title)+'</h3><p>'+escapeHtml(currentLanguage==="en"?(opinionArticle.summary_en||opinionArticle.summary||""):(opinionArticle.summary||""))+'</p><span class="read-link">'+readLabel+' ↗</span></a>';
     }else{
       opinionRoot.innerHTML='<span class="kicker">'+label+'</span><p class="muted">'+(currentLanguage==="en"?"No opinion articles have been published yet.":"Todavía no hay artículos de opinión publicados.")+'</p>';
     }
@@ -117,14 +124,14 @@ async function loadPublishedArticles() {
       const title=currentLanguage==="en"?(a.title_en||a.title):a.title;
       const summary=currentLanguage==="en"?(a.summary_en||a.summary||""):(a.summary||"");
       const isBriefing=String(a.category||"").toLowerCase()==="evoford briefing" || String(a.slug||"").includes("evoford-briefing");
-      return '<article class="feature-card'+(i===0?' feature-card-lead':'')+(isBriefing?' feature-card-briefing':'')+'"><a class="feature-card-image" href="'+articleUrl(a.slug||"")+'">'+articleImage(a,"feature-image")+(!isBriefing&&i===0?'<span class="image-stamp">EVOFORD<br>NEWS</span>':'')+'</a><div class="feature-copy"><div class="kicker">'+escapeHtml(categoryLabel(a.category||"INTERNACIONAL"))+'</div>'+(i===0?'<h1>':'<h2>')+'<a href="'+articleUrl(a.slug||"")+'">'+escapeHtml(title)+'</a>'+(i===0?'</h1>':'</h2>')+'<p class="dek">'+escapeHtml(summary)+'</p><div class="feature-meta"><span>'+tr("author")+' '+escapeHtml(a.author||"EVOFORD NEWS")+'</span><span>'+tr("source")+'</span></div><a class="feature-cta" href="'+articleUrl(a.slug||"")+'">'+tr("readFeature")+' <b>↗</b></a></div></article>';
+      return '<article class="feature-card'+(i===0?' feature-card-lead':'')+(isBriefing?' feature-card-briefing':'')+'"><a class="feature-card-image" href="'+articleUrl(a)+'">'+articleImage(a,"feature-image")+(!isBriefing&&i===0?'<span class="image-stamp">EVOFORD<br>NEWS</span>':'')+'</a><div class="feature-copy"><div class="kicker">'+escapeHtml(categoryLabel(a.category||"INTERNACIONAL"))+'</div>'+(i===0?'<h1>':'<h2>')+'<a href="'+articleUrl(a)+'">'+escapeHtml(title)+'</a>'+(i===0?'</h1>':'</h2>')+'<p class="dek">'+escapeHtml(summary)+'</p><div class="feature-meta"><span>'+tr("author")+' '+escapeHtml(a.author||"EVOFORD NEWS")+'</span><span>'+tr("source")+'</span></div><a class="feature-cta" href="'+articleUrl(a)+'">'+tr("readFeature")+' <b>↗</b></a></div></article>';
     }).join("")+'</div>';
   }
   const briefs=document.getElementById("latestBriefs");
-  if(briefs) briefs.innerHTML=briefItems.map((a,i)=>'<a class="brief brief-link" href="'+articleUrl(a.slug||"")+'"><span class="number">'+String(i+1).padStart(2,"0")+'</span><div><span class="brief-category">'+escapeHtml(categoryLabel(a.category||"INTERNACIONAL"))+'</span><b>'+escapeHtml(currentLanguage==="en"?(a.title_en||a.title):a.title)+'</b><p>'+escapeHtml(currentLanguage==="en"?(a.summary_en||a.summary||""):(a.summary||""))+'</p></div><span class="brief-arrow">↗</span></a>').join("")||'<p class="muted">'+(currentLanguage==="en"?"More stories coming soon.":"Más noticias próximamente.")+'</p>';
-  container.innerHTML=publicationItems.map((a,i)=>'<article class="story reveal" style="--delay:'+i*70+'ms"><a class="story-link" href="'+articleUrl(a.slug||"")+'">'+articleImage(a,"story-image")+
+  if(briefs) briefs.innerHTML=briefItems.map((a,i)=>'<a class="brief brief-link" href="'+articleUrl(a)+'"><span class="number">'+String(i+1).padStart(2,"0")+'</span><div><span class="brief-category">'+escapeHtml(categoryLabel(a.category||"INTERNACIONAL"))+'</span><b>'+escapeHtml(currentLanguage==="en"?(a.title_en||a.title):a.title)+'</b><p>'+escapeHtml(currentLanguage==="en"?(a.summary_en||a.summary||""):(a.summary||""))+'</p></div><span class="brief-arrow">↗</span></a>').join("")||'<p class="muted">'+(currentLanguage==="en"?"More stories coming soon.":"Más noticias próximamente.")+'</p>';
+  container.innerHTML=publicationItems.map((a,i)=>'<article class="story reveal" style="--delay:'+i*70+'ms"><a class="story-link" href="'+articleUrl(a)+'">'+articleImage(a,"story-image")+
     '<div class="story-copy"><div class="kicker">'+escapeHtml(categoryLabel(a.category||"INTERNACIONAL"))+'</div><h3>'+escapeHtml(currentLanguage==="en"?(a.title_en||a.title):a.title)+'</h3><p>'+escapeHtml(currentLanguage==="en"?(a.summary_en||a.summary||""):(a.summary||""))+'</p></div></a>'+
-    '<div class="lead-meta">'+escapeHtml(a.author||"EVOFORD NEWS")+'</div><a href="'+articleUrl(a.slug||"")+'" class="read-link">'+tr("readArticle")+' <span>↗</span></a></article>').join("");
+    '<div class="lead-meta">'+escapeHtml(a.author||"EVOFORD NEWS")+'</div><a href="'+articleUrl(a)+'" class="read-link">'+tr("readArticle")+' <span>↗</span></a></article>').join("");
   const countryRoot=document.getElementById("countryCoverage");
   if(countryRoot){
     const editions=[
@@ -134,7 +141,7 @@ async function loadPublishedArticles() {
     ];
     countryRoot.innerHTML=editions.map(country=>{
       const matches=data.filter(a=>country.terms.includes(normalize(a.country))).slice(0,3);
-      const liveStories=matches.map(a=>'<a class="country-story" href="'+articleUrl(a.slug||"")+'"><span class="kicker">'+escapeHtml(categoryLabel(a.category||"ACTUALIDAD"))+'</span><b>'+escapeHtml(currentLanguage==="en"?(a.title_en||a.title):a.title)+'</b><span class="country-read">'+tr("read")+'</span></a>').join("");
+      const liveStories=matches.map(a=>'<a class="country-story" href="'+articleUrl(a)+'"><span class="kicker">'+escapeHtml(categoryLabel(a.category||"ACTUALIDAD"))+'</span><b>'+escapeHtml(currentLanguage==="en"?(a.title_en||a.title):a.title)+'</b><span class="country-read">'+tr("read")+'</span></a>').join("");
       const stories=liveStories||'<p class="country-empty">'+tr("noCountry")+'</p>';
       return '<section class="country-card" id="country-'+country.id+'"><div class="country-title"><span class="country-flag" aria-hidden="true">'+country.flag+'</span><h3>'+country.name+'</h3></div>'+stories+'</section>';
     }).join("");
@@ -155,7 +162,7 @@ async function loadPublishedArticles() {
       if(!matches.length)return "";
       const cards=matches.map((a,i)=>{
         const dateText=a.created_at?new Date(a.created_at).toLocaleDateString(currentLanguage==="en"?"en-GB":"es-ES",{day:"numeric",month:"short",year:"numeric"}):"";
-        return '<article class="story reveal" style="--delay:'+i*60+'ms"><a class="story-link" href="'+articleUrl(a.slug||"")+'">'+articleImage(a,"story-image")+'<div class="story-copy"><div class="kicker">'+escapeHtml(categoryLabel(section.name))+'</div><h3>'+escapeHtml(currentLanguage==="en"?(a.title_en||a.title):a.title)+'</h3><p>'+escapeHtml(currentLanguage==="en"?(a.summary_en||a.summary||""):(a.summary||""))+'</p></div></a><div class="lead-meta">'+escapeHtml(a.author||"EVOFORD NEWS")+(dateText?" · "+escapeHtml(dateText):"")+'</div><a href="'+articleUrl(a.slug||"")+'" class="read-link">'+tr("readArticle")+' <span>↗</span></a></article>';
+        return '<article class="story reveal" style="--delay:'+i*60+'ms"><a class="story-link" href="'+articleUrl(a)+'">'+articleImage(a,"story-image")+'<div class="story-copy"><div class="kicker">'+escapeHtml(categoryLabel(section.name))+'</div><h3>'+escapeHtml(currentLanguage==="en"?(a.title_en||a.title):a.title)+'</h3><p>'+escapeHtml(currentLanguage==="en"?(a.summary_en||a.summary||""):(a.summary||""))+'</p></div></a><div class="lead-meta">'+escapeHtml(a.author||"EVOFORD NEWS")+(dateText?" · "+escapeHtml(dateText):"")+'</div><a href="'+articleUrl(a)+'" class="read-link">'+tr("readArticle")+' <span>↗</span></a></article>';
       }).join("");
       return '<section class="section category-section" id="section-'+section.id+'"><div class="section-head"><h2>'+section.name+'</h2><span>'+(currentLanguage==="en"?"LATEST STORIES":"ÚLTIMAS PUBLICACIONES")+'</span></div><div class="cards">'+cards+'</div></section>';
     }).join("");

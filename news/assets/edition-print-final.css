@@ -431,3 +431,28 @@
     break-before:auto!important;page-break-before:auto!important;
   }
 }
+
+/* v8: misma separación editorial en Chrome y Edge; publicidad y otras noticias en página nueva */
+@media print {
+  body.print-edition #printAdSlot:not([hidden]) {
+    display:block!important;
+    break-before:page!important;
+    page-break-before:always!important;
+    break-after:auto!important;
+    page-break-after:auto!important;
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+  body.print-edition #printAdSlot[hidden] + .secondary-area {
+    break-before:page!important;
+    page-break-before:always!important;
+  }
+  body.print-edition #printAdSlot:not([hidden]) + .secondary-area {
+    break-before:auto!important;
+    page-break-before:auto!important;
+  }
+  body.print-edition .secondary-area {
+    break-inside:auto!important;
+    page-break-inside:auto!important;
+  }
+}

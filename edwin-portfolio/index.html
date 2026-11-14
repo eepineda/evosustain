@@ -1,7 +1,47 @@
 <!doctype html>
 <html lang="es">
 <head>
-<script>document.documentElement.classList.add('evo-maintenance-checking')</script><style>.evo-maintenance-checking body{visibility:hidden}</style><script src="/maintenance.js"></script>
+<script>document.documentElement.classList.add('evo-maintenance-checking')</script><style>.evo-maintenance-checking body{visibility:hidden}
+/* Executive portfolio refresh */
+:root{--max:1180px}
+body{font-size:15px;line-height:1.7}
+.header{background:color-mix(in srgb,var(--bg) 92%,transparent)}
+.nav{min-height:62px}
+.hero{min-height:590px;padding:74px 0 66px;grid-template-columns:1.18fr .82fr;gap:64px}
+.hero h1{font-size:clamp(3.5rem,7.3vw,6.3rem);max-width:760px}
+.hero-role{font-size:1.12rem;font-weight:600;color:var(--accent)}
+.hero-copy{font-size:1.04rem;max-width:610px}
+.portrait{min-height:470px;border-radius:18px;box-shadow:0 24px 70px #14283a20}
+.meta-pill{border-radius:7px;box-shadow:0 5px 20px #0000000b}
+.section{padding:58px 0}
+.section-head{align-items:flex-start;margin-bottom:12px}
+.section-head h2{font-size:clamp(1.8rem,3vw,2.5rem)}
+.section-lead{max-width:760px;color:var(--muted);margin:0 0 24px}
+.panel,.card,.blog-card{border-radius:13px;padding:24px;box-shadow:0 8px 28px #10243a08}
+.btn,.btn-primary{border-radius:8px;padding:10px 15px}
+.ecosystem-inner{min-height:36px}
+.career-legend{display:flex;gap:18px;flex-wrap:wrap;margin:0 0 25px;color:var(--muted);font-size:.78rem}
+.career-legend span{display:inline-flex;align-items:center;gap:7px}
+.legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block;background:#8b9aaa}
+.legend-dot.current{background:#19a37a}.legend-dot.tech{background:#3676ad}.legend-dot.leadership{background:#bd8a36}.legend-dot.public{background:#8b6bb2}
+.career-timeline{position:relative;display:grid;gap:13px;padding-left:32px}
+.career-timeline:before{content:"";position:absolute;left:10px;top:12px;bottom:12px;width:2px;background:linear-gradient(#19a37a,#3676ad 40%,#8b6bb2 75%,#bd8a36)}
+.career-item{position:relative;display:grid;grid-template-columns:145px 1fr;gap:20px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:19px 22px;transition:transform .2s,border-color .2s;box-shadow:0 7px 24px #10243a08}
+.career-item:hover{transform:translateY(-2px);border-color:var(--accent)}
+.career-item:before{content:"";position:absolute;left:-28px;top:27px;width:10px;height:10px;border:3px solid var(--bg);border-radius:50%;background:#3676ad;box-shadow:0 0 0 1px #3676ad}
+.career-item.current:before{background:#19a37a;box-shadow:0 0 0 1px #19a37a}
+.career-item.leadership:before{background:#bd8a36;box-shadow:0 0 0 1px #bd8a36}
+.career-item.public:before{background:#8b6bb2;box-shadow:0 0 0 1px #8b6bb2}
+.career-date{font-size:.8rem;font-weight:750;color:var(--accent);letter-spacing:.02em;padding-top:3px}
+.career-company{font-weight:750;font-size:1.08rem;line-height:1.35}
+.career-role{font-weight:600;margin-top:3px}
+.career-meta{font-size:.78rem;color:var(--muted);margin-top:5px}
+.career-desc{color:var(--muted);font-size:.9rem;margin:9px 0 0;max-width:850px}
+.career-tag{display:inline-flex;margin-top:10px;padding:3px 8px;border-radius:20px;background:color-mix(in srgb,var(--accent) 10%,var(--panel));color:var(--accent);font-size:.7rem;font-weight:700}
+@media(max-width:700px){.hero{min-height:0;padding:48px 0;grid-template-columns:1fr;gap:28px}.hero h1{font-size:clamp(3rem,13vw,4.5rem)}.portrait{min-height:340px;max-width:440px}.section{padding:38px 0}.career-item{grid-template-columns:1fr;gap:4px;padding:16px}.career-date{font-size:.76rem}.career-timeline{padding-left:27px}.career-timeline:before{left:8px}.career-item:before{left:-25px;top:22px}}
+@media(prefers-reduced-motion:reduce){.career-item{transition:none}}
+
+</style><script src="/maintenance.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Edwin Pineda Carrasco | Portfolio personal</title>
@@ -80,8 +120,10 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
     </section>
 
     <section class="container section reveal" id="timeline">
-      <div class="section-head"><div class="section-icon">◎</div><h2 data-i18n="timeline.title">Timeline visual</h2></div>
-      <div class="timeline" id="timelineBox"></div>
+      <div class="section-head"><div class="section-icon">⌁</div><div><div class="eyebrow">2006 — 2026</div><h2 data-i18n="timeline.title">Trayectoria profesional</h2></div></div>
+      <p class="section-lead" data-i18n="timeline.intro">Veinte años de evolución profesional entre República Dominicana, España y Reino Unido.</p>
+      <div class="career-legend"><span><i class="legend-dot current"></i> Actual</span><span><i class="legend-dot tech"></i> Tecnología e infraestructura</span><span><i class="legend-dot leadership"></i> Dirección y emprendimiento</span><span><i class="legend-dot public"></i> Sector público y salud</span></div>
+      <div class="career-timeline" id="careerTimeline"></div>
     </section>
 <section class="container section reveal" id="startup">
   <div class="section-head">
@@ -159,7 +201,7 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
         hero: {
           badge: 'Portfolio ejecutivo internacional',
           name: 'Edwin Pineda',
-          role: 'Cloud, Data & Technology Professional',
+          role: 'Cloud Platform & Infrastructure Engineer | Azure & AWS | Enterprise Architecture | Cybersecurity',
           copy: 'Una trayectoria internacional construida entre República Dominicana, España y Reino Unido, uniendo tecnología, migración, educación y transformación profesional.',
           cta1: 'Explorar trayectoria',
           cta2: 'Leer artículos en Evoford News',
@@ -183,7 +225,8 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
           cta: 'Ver aplicación y demo'
         },
         timeline: {
-          title: 'Timeline visual',
+          title: 'Trayectoria profesional',
+          intro: 'Veinte años de evolución profesional entre República Dominicana, España y Reino Unido.',
           items: [
             { period: '1987 – 2007', title: 'Raíces y formación inicial', desc: 'Infancia y juventud en Arroyo Dulce y Enriquillo. Estudios primarios y secundarios. Inicio de estudios universitarios en Barahona y primera experiencia profesional en gestión de datos.' },
             { period: '2007', title: 'Migración a España', desc: 'Llegada a España por reagrupación familiar, convalidación de estudios y continuidad académica hasta completar un grado universitario en el sistema educativo español.' },
@@ -256,7 +299,7 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
         hero: {
           badge: 'International executive portfolio',
           name: 'Edwin Pineda',
-          role: 'Cloud, Data & Technology Professional',
+          role: 'Cloud Platform & Infrastructure Engineer | Azure & AWS | Enterprise Architecture | Cybersecurity',
           copy: 'An international career built across the Dominican Republic, Spain and the United Kingdom, connecting technology, migration, education and professional transformation.',
           cta1: 'Explore journey',
           cta2: 'Read articles on Evoford News',
@@ -280,7 +323,8 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
           cta: 'View app and demo'
         },
         timeline: {
-          title: 'Visual timeline',
+          title: 'Professional experience',
+          intro: 'Twenty years of professional growth across the Dominican Republic, Spain and the United Kingdom.',
           items: [
             { period: '1987 – 2007', title: 'Roots and early education', desc: 'Childhood and youth in Arroyo Dulce and Enriquillo. Primary and secondary education, university beginnings in Barahona, and early experience in data-related work.' },
             { period: '2007', title: 'Migration to Spain', desc: 'Arrival in Spain through family reunification, validation of prior studies, and academic progression leading to a university degree in Spain.' },
@@ -348,6 +392,53 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
       }
     };
 
+
+    const career = [
+      {date:'Abr 2026 — Actualidad',enDate:'Apr 2026 — Present',company:'Synnovis',role:'Senior Cloud Database Administrator · Infrastructure & Technical Architecture',meta:'Londres, Reino Unido · Jornada completa · Híbrido',enMeta:'London, UK · Full-time · Hybrid',desc:'Administración cloud de bases de datos y arquitectura técnica de infraestructura.',enDesc:'Cloud database administration and technical infrastructure architecture.',kind:'current',tag:'Cloud · Architecture'},
+      {date:'Nov 2024 — Actualidad',enDate:'Nov 2024 — Present',company:'EvoSustain',role:'Fundador',enRole:'Founder',meta:'Greater London · Parcial · Remoto',enMeta:'Greater London · Part-time · Remote',desc:'Desarrollo de infraestructura digital para sistemas sostenibles: arquitectura cloud-native, plataformas de datos y tecnologías de optimización.',enDesc:'Building digital infrastructure for sustainable resource systems through cloud-native architecture, data platforms and optimisation technologies.',kind:'leadership',tag:'Entrepreneurship'},
+      {date:'Jun 2025 — Actualidad',enDate:'Jun 2025 — Present',company:'The Open University',role:'Estudiante · BSc (Hons) Cyber Security',enRole:'Student · BSc (Hons) Cyber Security',meta:'Reino Unido · Estudios a tiempo parcial',enMeta:'United Kingdom · Part-time study',desc:'Distinciones en TM111, TM129 y MU123; aprobado TM112.',enDesc:'Distinctions in TM111, TM129 and MU123; passed TM112.',kind:'public',tag:'Cybersecurity'},
+      {date:'Ene 2025 — Ene 2026',enDate:'Jan 2025 — Jan 2026',company:'Synnovis',role:'Cloud Database Administrator (Contract)',meta:'Londres, Reino Unido · Contrato a través de Keystream · Híbrido',enMeta:'London, UK · Contract through Keystream · Hybrid',desc:'Administración de bases de datos cloud en un entorno sanitario.',enDesc:'Cloud database administration in a healthcare environment.',kind:'public',tag:'Healthcare · Cloud'},
+      {date:'Oct 2024 — Feb 2025',enDate:'Oct 2024 — Feb 2025',company:'Indra',role:'IT Database Administrator',meta:'Remoto',enMeta:'Remote',desc:'Soluciones de bases de datos en Azure y AWS, optimización de rendimiento y costes, automatización y arquitecturas resilientes.',enDesc:'Azure and AWS database solutions focused on performance and cost optimisation, automation and resilient architectures.',kind:'tech',tag:'Azure · AWS'},
+      {date:'Nov 2021 — Ene 2025',enDate:'Nov 2021 — Jan 2025',company:'Always On The Services Ltd',role:'CEO & Founder',meta:'Remoto · Jornada completa',enMeta:'Remote · Full-time',desc:'Dirección y desarrollo de servicios tecnológicos, cloud computing y data warehousing.',enDesc:'Led and developed technology services across cloud computing and data warehousing.',kind:'leadership',tag:'Leadership'},
+      {date:'Sep 2023 — Abr 2024',enDate:'Sep 2023 — Apr 2024',company:'Consultoría independiente',role:'IT DBA & Architect',enRole:'IT DBA & Architect',meta:'Freelance · Remoto',enMeta:'Freelance · Remote',desc:'Plataformas SQL de alta disponibilidad, pipelines de data warehouse, optimización y fiabilidad de infraestructura en producción.',enDesc:'High-availability SQL platforms, data warehouse pipelines, performance tuning and production infrastructure reliability.',kind:'tech',tag:'Database Architecture'},
+      {date:'Jun 2022 — Ago 2023',enDate:'Jun 2022 — Aug 2023',company:"Guy’s and St Thomas’ NHS Foundation Trust",role:'IT SQL DBA & Data Warehouse',meta:'Londres, Reino Unido · Contrato Venn Group · Híbrido',enMeta:'London, UK · Venn Group contract · Hybrid',desc:'Plataformas clínicas y analíticas del NHS, migraciones cloud, procesos ETL, reporting y acceso seguro a datos.',enDesc:'NHS clinical and analytics platforms, cloud migrations, ETL pipelines, reporting and secure data access.',kind:'public',tag:'NHS · Data Platforms'},
+      {date:'Sep 2021 — May 2022',enDate:'Sep 2021 — May 2022',company:'Telefónica Tech',role:'Senior SQL Server DBA & Infrastructure Engineer',meta:'Comunidad de Madrid · Remoto',enMeta:'Community of Madrid · Remote',desc:'Gestión de plataformas de bases de datos empresariales, rendimiento, disponibilidad, seguridad y estabilidad operativa.',enDesc:'Managed enterprise database platforms with focus on performance, availability, security and operational stability.',kind:'tech',tag:'Enterprise Infrastructure'},
+      {date:'May 2021 — Sep 2021',enDate:'May 2021 — Sep 2021',company:'Pausa profesional',enCompany:'Career break',role:'Objetivos personales',enRole:'Personal goal pursuit',meta:'Reino Unido',enMeta:'United Kingdom',desc:'Periodo dedicado a objetivos personales.',enDesc:'A period dedicated to personal goals.',kind:'public',tag:'Career break'},
+      {date:'Jun 2019 — Abr 2021',enDate:'Jun 2019 — Apr 2021',company:'TSB Bank',role:'IT Project Manager · Data Platform / IT Service Operation Manager',enRole:'IT Project Manager · Data Platform / IT Service Operation Manager',meta:'España · Híbrido',enMeta:'Spain · Hybrid',desc:'Gestión de proyectos de transición de plataformas de datos y operaciones de servicios tecnológicos bancarios, continuidad e incidencias.',enDesc:'Managed data platform transition projects and banking technology service operations, service continuity and incident coordination.',kind:'tech',tag:'Banking · Data'},
+      {date:'Oct 2018 — May 2019',enDate:'Oct 2018 — May 2019',company:'Websure (Sheraton Systems Ltd)',role:'Senior DBA & Data Services',meta:'Greater London · Presencial',enMeta:'Greater London · On-site',desc:'Administración de SQL Server de alta disponibilidad, optimización y fiabilidad de bases de datos en servicios financieros.',enDesc:'High-availability SQL Server administration, performance tuning and database reliability in financial services.',kind:'tech',tag:'Financial Services'},
+      {date:'Oct 2015 — Sep 2018',enDate:'Oct 2015 — Sep 2018',company:'Telefónica',role:'Senior SQL Server DBA',meta:'Comunidad de Madrid · Presencial',enMeta:'Community of Madrid · On-site',desc:'Soporte a plataformas de datos de telecomunicaciones a gran escala, rendimiento, disponibilidad y automatización.',enDesc:'Supported large-scale telecom data platforms, performance, availability and automation.',kind:'tech',tag:'Telecommunications'},
+      {date:'Ago 2014 — Oct 2015',enDate:'Aug 2014 — Oct 2015',company:'IBM (Tuyú Technology)',role:'System & SQL Server DBA',meta:'Comunidad de Madrid · Presencial',enMeta:'Community of Madrid · On-site',desc:'Servicios de administración de bases de datos empresariales, monitorización, optimización e incidencias en sistemas críticos.',enDesc:'Enterprise database administration, monitoring, optimisation and incident resolution across critical systems.',kind:'tech',tag:'Enterprise IT'},
+      {date:'Jun 2011 — Jul 2014',enDate:'Jun 2011 — Jul 2014',company:'Hewlett-Packard (Tenea Tecnologías · Ministerio de Asuntos Exteriores)',role:'System & SQL Server DBA',enRole:'System & SQL Server DBA',meta:'Comunidad de Madrid · Presencial',enMeta:'Community of Madrid · On-site',desc:'Operaciones de bases de datos, estrategias de backup, rendimiento y soporte de producción para sistemas empresariales.',enDesc:'Database operations, backup strategies, performance tuning and production support for enterprise systems.',kind:'tech',tag:'Public Sector'},
+      {date:'Ene 2009 — Jun 2011',enDate:'Jan 2009 — Jun 2011',company:'Cospa & Agilmic',role:'System & SQL Server DBA',meta:'Comunidad de Madrid · Jornada completa',enMeta:'Community of Madrid · Full-time',desc:'Administración, mantenimiento y soporte de bases de datos SQL para distintos entornos de clientes.',enDesc:'SQL database administration, maintenance and support across client environments.',kind:'tech',tag:'SQL Server'},
+      {date:'Sep 2008 — Dic 2008',enDate:'Sep 2008 — Dec 2008',company:'INFORMA D&B (CTI Tecnología y Gestión)',role:'Digitalización · Data Recorder',enRole:'Digitisation · Data Recorder',meta:'Comunidad de Madrid · Jornada parcial',enMeta:'Community of Madrid · Part-time',desc:'Registro y tratamiento de información empresarial.',enDesc:'Business information recording and processing.',kind:'tech',tag:'Data'},
+      {date:'Nov 2007 — Sep 2008',enDate:'Nov 2007 — Sep 2008',company:'Comunidad de Madrid',role:'Profesor de informática',enRole:'Computer Teacher',meta:'Comunidad de Madrid · Jornada parcial',enMeta:'Community of Madrid · Part-time',desc:'Formación en informática y aplicaciones digitales.',enDesc:'Training in computing and digital applications.',kind:'public',tag:'Education'},
+      {date:'Nov 2006 — Ago 2007',enDate:'Nov 2006 — Aug 2007',company:'Plan International',role:'Departamento de Datos',enRole:'Data Department',meta:'Barahona, República Dominicana',enMeta:'Barahona, Dominican Republic',desc:'Primera experiencia profesional en el área de datos.',enDesc:'First professional experience in the data field.',kind:'public',tag:'Career beginnings'}
+    ];
+
+    function renderCareerTimeline(){
+      const box=document.getElementById('careerTimeline');
+      if(!box)return;
+      box.innerHTML='';
+      career.forEach(item=>{
+        const en=lang==='en';
+        const el=document.createElement('article');
+        el.className='career-item '+item.kind;
+        const date=en?item.enDate:item.date;
+        const company=en?(item.enCompany||item.company):item.company;
+        const role=en?(item.enRole||item.role):item.role;
+        const meta=en?(item.enMeta||item.meta):item.meta;
+        const desc=en?item.enDesc:item.desc;
+        el.innerHTML='<div class="career-date"></div><div><div class="career-company"></div><div class="career-role"></div><div class="career-meta"></div><p class="career-desc"></p><span class="career-tag"></span></div>';
+        el.querySelector('.career-date').textContent=date;
+        el.querySelector('.career-company').textContent=company;
+        el.querySelector('.career-role').textContent=role;
+        el.querySelector('.career-meta').textContent=meta;
+        el.querySelector('.career-desc').textContent=desc;
+        el.querySelector('.career-tag').textContent=item.tag;
+        box.appendChild(el);
+      });
+    }
+
     let lang = 'es';
     let theme = localStorage.getItem('theme') || 'auto';
 
@@ -396,6 +487,7 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
       setI18n('startup.p3', d.startup.p3);
       setI18n('startup.cta', d.startup.cta);
       setI18n('timeline.title', d.timeline.title);
+      setI18n('timeline.intro', d.timeline.intro);
       setI18n('logos.title', d.logos.title);
       setI18n('experience.title', d.experience.title);
       setI18n('education.title', d.education.title);
@@ -492,7 +584,7 @@ function renderBlog() {
     function renderAll() {
       renderText();
       renderChips();
-      renderTimeline();
+      renderCareerTimeline();
       renderLogos();
       renderExperience();
       renderEducation();

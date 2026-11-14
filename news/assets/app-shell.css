@@ -115,3 +115,51 @@ html.evo-pwa .app-bottom-nav .nav-icon svg{width:21px;height:21px;fill:none;stro
 html.evo-pwa .app-bottom-nav a[aria-current=page]{color:#102b4e}
 html.evo-pwa .app-bottom-nav a[aria-current=page] .nav-icon{color:#b32635}
 @media(min-width:700px){html.evo-pwa .app-bottom-nav{max-width:700px;left:50%;right:auto;width:100%;transform:translateX(-50%);border:1px solid #dfe5ec;border-bottom:0;border-radius:18px 18px 0 0}}
+
+
+/* EVOFORD NEWS READER APP — focused reading experience */
+html.evo-pwa body{background:#f5f6f8!important;color:#142235!important;padding-bottom:calc(88px + env(safe-area-inset-bottom))!important}
+html.evo-pwa .ecosystem-nav,html.evo-pwa .ecosystem-bar{display:none!important}
+html.evo-pwa .masthead{position:sticky!important;top:0!important;z-index:90!important;display:grid!important;grid-template-columns:1fr auto!important;align-items:center!important;gap:4px 12px!important;padding:9px 16px!important;background:rgba(255,255,255,.96)!important;border-bottom:1px solid #e3e7ec!important;box-shadow:0 4px 18px rgba(16,35,58,.06)!important}
+html.evo-pwa .masthead .topline{grid-column:1/-1!important;display:flex!important;padding:0!important;border:0!important;font:700 8px/1.2 Arial,sans-serif!important;letter-spacing:.13em!important;color:#758195!important}
+html.evo-pwa .masthead .topline span:last-child{display:none!important}
+html.evo-pwa .masthead .brand{padding:0!important;text-align:left!important;font:900 25px/1 Arial,sans-serif!important;letter-spacing:-.07em!important;color:#102b4e!important}
+html.evo-pwa .masthead .brand em{color:#a9232d!important;font-style:normal!important}
+html.evo-pwa .masthead .nav{display:none!important}
+html.evo-pwa .edition{margin:10px 0 16px!important;padding:0 0 9px!important;font-size:8px!important}
+html.evo-pwa .edition-actions{display:none!important}
+html.evo-pwa .app-install{display:none!important}
+html.evo-pwa .market-strip,html.evo-pwa .country-desk{display:none!important}
+html.evo-pwa .wrap{width:auto!important;max-width:780px!important;margin:0 auto!important;padding-left:16px!important;padding-right:16px!important}
+html.evo-pwa .frontpage{margin:12px 0 25px!important}
+html.evo-pwa .frontpage-top{display:flex!important;align-items:center!important;justify-content:space-between!important;margin:0 0 11px!important}
+html.evo-pwa .frontpage-top .kicker{font-size:9px!important;letter-spacing:.16em!important;color:#a9232d!important}
+html.evo-pwa .featured-story{display:flex!important;flex-direction:column!important;overflow:hidden!important;border:0!important;border-radius:18px!important;background:#fff!important;box-shadow:0 7px 24px rgba(18,38,61,.08)!important}
+html.evo-pwa .featured-story .feature-visual{min-height:190px!important;border-radius:0!important}
+html.evo-pwa .featured-story .feature-copy{padding:18px!important}
+html.evo-pwa .featured-story h1{margin:7px 0 10px!important;color:#102b4e!important;font-size:clamp(27px,7vw,35px)!important;line-height:1.1!important;letter-spacing:-.04em!important}
+html.evo-pwa .featured-story .dek{font-size:15px!important;line-height:1.6!important;color:#526174!important}
+html.evo-pwa .frontpage-aside{margin-top:12px!important;padding:14px 16px!important;border:1px solid #e4e8ed!important;border-radius:15px!important;background:#fff!important}
+html.evo-pwa .section{margin:26px 0!important}
+html.evo-pwa .section-head{align-items:baseline!important;margin-bottom:12px!important}
+html.evo-pwa .section-head h2{font-size:22px!important;letter-spacing:-.03em!important;color:#102b4e!important}
+html.evo-pwa .section-head>span{font-size:8px!important;letter-spacing:.1em!important}
+html.evo-pwa .cards{display:grid!important;grid-template-columns:1fr!important;gap:11px!important}
+html.evo-pwa .cards article,html.evo-pwa .cards .card,html.evo-pwa .opinion-latest{padding:14px!important;border:1px solid #e3e8ee!important;border-radius:15px!important;background:#fff!important;box-shadow:0 3px 12px rgba(18,38,61,.035)!important}
+html.evo-pwa .topics{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+html.evo-pwa .topics a{display:flex!important;align-items:center!important;min-height:64px!important;padding:12px!important;border:1px solid #e3e8ee!important;border-radius:13px!important;background:#fff!important;font-size:12px!important}
+html.evo-pwa .ad-slot-homepage,html.evo-pwa .ad-slot-sponsored{margin:16px 0!important}
+html.evo-pwa footer{padding:20px 16px!important}
+html.evo-pwa #articleView{padding:22px 17px 42px!important}
+html.evo-pwa #articleView h1{font-size:clamp(31px,8.8vw,42px)!important;line-height:1.08!important}
+html.evo-pwa #articleView .dek{font-size:17px!important;line-height:1.65!important}
+html.evo-pwa #articleView .article-body p{font-size:18px!important;line-height:1.85!important}
+html.evo-pwa #articleView .article-actions{gap:8px!important}
+html.evo-pwa .app-bottom-nav{position:fixed!important;z-index:1000!important;inset:auto 0 0!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;padding:8px 5px calc(8px + env(safe-area-inset-bottom))!important;background:rgba(255,255,255,.97)!important;border-top:1px solid #e1e6ed!important;box-shadow:0 -5px 20px rgba(16,35,58,.08)!important;backdrop-filter:blur(18px)!important}
+html.evo-pwa .app-bottom-nav a{display:flex!important;min-width:0!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;color:#718095!important;text-decoration:none!important;font:700 9px/1.1 Arial,sans-serif!important}
+html.evo-pwa .app-bottom-nav .nav-icon svg{width:22px!important;height:22px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+html.evo-pwa .app-bottom-nav a[aria-current=page]{color:#a9232d!important}
+html.evo-pwa .app-bottom-nav a[aria-current=page] .nav-icon{color:#a9232d!important}
+html.evo-pwa a[href*="ZWRpdGlvbi5odG1s"]{display:none!important}
+@media(min-width:700px){html.evo-pwa .app-bottom-nav{max-width:700px!important;left:50%!important;right:auto!important;width:100%!important;transform:translateX(-50%)!important;border:1px solid #e1e6ed!important;border-bottom:0!important;border-radius:18px 18px 0 0!important}}
+@media print{html.evo-pwa .app-bottom-nav{display:none!important}}

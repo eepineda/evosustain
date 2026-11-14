@@ -1,5 +1,5 @@
 (function(g){"use strict";
-function esc(s){return String(s||"").replace(/[\\\\()]/g,"\\\\$&").replace(/[^\x20-\x7e]/g,function(c){var n=c.charCodeAt(0);return n>=160?"\\\\"+n.toString(8).padStart(3,"0"):"?";});}
+function esc(s){return String(s||"").replace(/[\\()]/g,"\\$&").replace(/[^\x20-\x7e]/g,function(c){var n=c.charCodeAt(0);return n>=160&&n<=255?"\\"+n.toString(8).padStart(3,"0"):"?";});}
 function b64(s){var z=atob(s.split(",")[1]||""),a=new Uint8Array(z.length);for(var i=0;i<z.length;i++)a[i]=z.charCodeAt(i);return a;}
 function jpeg(a){for(var i=2;i<a.length-9;){if(a[i]!==255){i++;continue;}var m=a[i+1],l=(a[i+2]<<8)|a[i+3];if([192,193,194,195,197,198,199,201,202,203,205,206,207].indexOf(m)>=0)return{width:(a[i+7]<<8)|a[i+8],height:(a[i+5]<<8)|a[i+6]};i+=2+(l||2);}throw Error("JPEG inválido");}
 function PDF(o){var a=(o.format||"a4")==="a3";this.w=(a?297:210)*72/25.4;this.h=(a?420:297)*72/25.4;if(o.orientation==="landscape"){var t=this.w;this.w=this.h;this.h=t;}this.pages=[];this.images=[];this.page=-1;this.font="F1";this.pt=12;this.color=[0,0,0];this.stroke=[0,0,0];this.lw=.25;this.dash=[];this.addPage();this.internal={pageSize:{getWidth:()=>this.w*25.4/72,getHeight:()=>this.h*25.4/72}};}

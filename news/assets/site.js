@@ -68,7 +68,7 @@ function shortArticleToken(id){
   if(!/^[0-9a-f]{32}$/.test(hex))return "";
   const bytes=new Uint8Array(hex.match(/../g).map(pair=>parseInt(pair,16)));
   let binary="";bytes.forEach(byte=>binary+=String.fromCharCode(byte));
-  return btoa(binary).replace(/\\+/g,"-").replace(/\\//g,"_").replace(/=+$/,"");
+  return btoa(binary).replace(/[+]/g,"-").replace(/[/]/g,"_").replace(/=+$/,"");
 }
 function articleUrl(article){
   const token=shortArticleToken(article&&article.id);

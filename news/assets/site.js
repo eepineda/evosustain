@@ -54,7 +54,7 @@ function renderStaticLanguage(){
  set("#secciones .section-head h2",tr("sections"));set("#secciones .section-head span",tr("explore"));
  const keys=["politics","security","economy","technology","aula","world","analysis"];
  document.querySelectorAll(".topics a").forEach((el,i)=>{const arrow=el.querySelector("span");el.firstChild.textContent=tr(keys[i])+" ";if(arrow)arrow.textContent="→";});
- const author=document.querySelector(".author");if(author){const spans=author.querySelectorAll("span");const labels= en?["Columnist · Entrepreneur","University studies in Spain · BSc (Hons) Cyber Security in progress at The Open University, England"]:["Articulista · Emprendedor","Formación universitaria en España · BSc (Hons) Cyber Security en curso en The Open University, Inglaterra"];spans.forEach((el,i)=>{if(i<labels.length)el.textContent=labels[i];});}
+ const author=document.querySelector(".author");if(author){const spans=author.querySelectorAll("span");const labels= en?["Columnist · Entrepreneur · Information Technology Professional","University education in Spain · BSc (Hons) Cyber Security in progress · London, England"]:["Articulista · Emprendedor · Profesional de Tecnologías de la Información","Formación universitaria en España · BSc (Hons) Cyber Security en curso · Londres, Inglaterra"];spans.forEach((el,i)=>{if(i<labels.length)el.textContent=labels[i];});}
  const footer=document.querySelector("body > footer");
  if(footer){
   const footerLinks=Array.from(footer.querySelectorAll("a"));

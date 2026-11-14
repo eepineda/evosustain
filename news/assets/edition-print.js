@@ -10,7 +10,7 @@ function plain(n){return (n&&n.innerText||"").replace(/\u00a0/g," ").replace(/[\
 function clean(s){return String(s||"").replace(/[\u2010-\u2015]/g,"-").replace(/[\u2018\u2019]/g,"'").replace(/[\u201c\u201d]/g,'"').replace(/\u2026/g,"...");}
 function getImage(url){
  if(!url||!/^https:\/\//i.test(url))return Promise.resolve(null);
- return fetch(url,{mode:"cors",credentials:"omit"}).then(function(r){if(!r.ok)throw Error("image");return r.blob();}).then(function(b){return new Promise(function(resolve){var rd=new FileReader();rd.onload=function(){resolve({data:rd.result,type:b.type||"image/jpeg"});};rd.onerror=function(){resolve(null);};rd.readAsDataURL(b);});}).catch(function(){return null;});
+ return fetch(url,{mode:"cors",credentials:"omit"}).then(function(r){if(!r.ok)throw Error("image");return r.blob();}).then(function(b){return new Promise(function(resolve){var objectUrl=URL.createObjectURL(b),img=new Image();img.onload=function(){try{var canvas=document.createElement("canvas");canvas.width=img.naturalWidth||img.width;canvas.height=img.naturalHeight||img.height;var ctx=canvas.getContext("2d");ctx.fillStyle="#ffffff";ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0);var data=canvas.toDataURL("image/jpeg",0.9);URL.revokeObjectURL(objectUrl);resolve({data:data,type:"image/jpeg"});}catch(e){URL.revokeObjectURL(objectUrl);resolve(null);}};img.onerror=function(){URL.revokeObjectURL(objectUrl);resolve(null);};img.src=objectUrl;});}).catch(function(){return null;});
 }
 function generate(){
  var en=lang()==="en",a3=paper()==="a3";

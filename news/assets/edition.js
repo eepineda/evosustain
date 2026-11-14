@@ -29,9 +29,13 @@ function render(){
  const side=articles.slice(1,4);
  $("lead").innerHTML='<div class="lead-headline"><div class="category">'+category(lead)+'</div><h1>'+esc(title)+'</h1><p class="summary">'+esc(summary)+'</p><div class="byline">'+ui[language].by+' '+esc(lead.author||"Evoford News")+' · '+esc(lead.country||"Evoford News")+'</div></div><div class="lead-content"><div class="lead-photo">'+(lead.image_url&&/^https:\/\//i.test(lead.image_url)?'<img src="'+esc(lead.image_url)+'" alt="'+esc(title)+'">':'<div class="lead-placeholder">EVOFORD NEWS</div>')+'</div><aside class="lead-sidebar"><div class="sidebar-heading">'+(language==="en"?"MORE HEADLINES":"OTROS TITULARES")+'</div>'+side.map((a,i)=>'<article class="side-story"><span class="side-number">0'+(i+1)+'</span><div><div class="category">'+category(a)+'</div><h2><a href="'+url(a)+'">'+esc(pick(a,"title","title_en"))+'</a></h2><p>'+esc(pick(a,"summary","summary_en"))+'</p></div></article>').join("")+'</aside></div>';
  const fullText=language==="en"?(lead.content_en||lead.content||""):(lead.content_es||lead.content||"");
- let normalized=String(fullText).replace(/\\\\\\\\n/g,"\\n").replace(/\\\\n/g,"\\n").replace(/\\r/g,"");
- if(/&lt;|&#0*60;|&#x0*3c;/i.test(normalized)){const decoder=document.createElement("textarea");decoder.innerHTML=normalized;normalized=decoder.value;}
- const hasMarkup=/<\\/?[a-z][^>]*>/i.test(normalized);
+ let normalized=String(fullText).replace(/\\n/g,"\n").replace(/\r/g,"");
+ if(/&lt;|&#0*60;|&#x0*3c;/i.test(normalized)){
+  const decoder=document.createElement("textarea");
+  decoder.innerHTML=normalized;
+  normalized=decoder.value;
+ }
+ const hasMarkup=/<\/?[a-z][^>]*>/i.test(normalized);
  let bodyHtml="";
  if(hasMarkup){
   const parsed=new DOMParser().parseFromString(normalized,"text/html");
@@ -48,18 +52,30 @@ function render(){
    const clean=document.createElement(tag.toLowerCase());
    if(tag==="A"){
     const href=node.getAttribute("href")||"";
-    if(/^https:\\/\\//i.test(href)){clean.setAttribute("href",href);clean.setAttribute("target","_blank");clean.setAttribute("rel","noopener noreferrer");}
+    if(/^https:\/\//i.test(href)){
+     clean.setAttribute("href",href);
+     clean.setAttribute("target","_blank");
+     clean.setAttribute("rel","noopener noreferrer");
+    }
    }
    Array.from(node.childNodes).forEach(child=>clean.appendChild(cleanNode(child)));
    return clean;
   };
-  Array.from(parsed.body.childNodes).forEach(node=>{const clean=cleanNode(node);if(clean.nodeType===Node.DOCUMENT_FRAGMENT_NODE)bodyHtml+=Array.from(clean.childNodes).map(n=>n.outerHTML||esc(n.textContent)).join("");else bodyHtml+=clean.outerHTML||esc(clean.textContent);});
+  Array.from(parsed.body.childNodes).forEach(node=>{
+   const clean=cleanNode(node);
+   if(clean.nodeType===Node.DOCUMENT_FRAGMENT_NODE){
+    bodyHtml+=Array.from(clean.childNodes).map(n=>n.outerHTML||esc(n.textContent)).join("");
+   }else{
+    bodyHtml+=clean.outerHTML||esc(clean.textContent);
+   }
+  });
  }else{
-  const blocks=normalized.split(/\\n\\s*\\n/).map(x=>x.trim()).filter(Boolean).filter((x,i)=>!(i===0&&x===String(title).trim()));
-  bodyHtml=blocks.map(x=>"<p>"+esc(x).replace(/\\n/g,"<br>")+"</p>").join("");
+  const blocks=normalized.split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean).filter((x,i)=>!(i===0&&x===String(title).trim()));
+  bodyHtml=blocks.map(x=>"<p>"+esc(x).replace(/\n/g,"<br>")+"</p>").join("");
  }
- if(!bodyHtml)bodyHtml="<p class=\\"empty\\">"+(language==="en"?"The full article text is not available in this language.":"El texto completo de este artículo no está disponible.")+"</p>";
- $("fullArticle").classList.add("embedded-lead-story"); $("fullArticle").innerHTML="<div class=\\"full-article-heading\\"><span>"+(language==="en"?"FULL STORY":"ARTÍCULO COMPLETO")+"</span><h2>"+esc(title)+"</h2><div class=\\"byline\\">"+ui[language].by+" "+esc(lead.author||"Evoford News")+"</div></div><div class=\\"full-article-body\\">"+bodyHtml+"</div>";
+ if(!bodyHtml)bodyHtml='<p class="empty">'+(language==="en"?"The full article text is not available in this language.":"El texto completo de este artículo no está disponible.")+'</p>';
+ $("fullArticle").classList.add("embedded-lead-story");
+ $("fullArticle").innerHTML='<div class="full-article-heading"><span>'+(language==="en"?"FULL STORY":"ARTÍCULO COMPLETO")+'</span><h2>'+esc(title)+'</h2><div class="byline">'+ui[language].by+" "+esc(lead.author||"Evoford News")+'</div></div><div class="full-article-body">'+bodyHtml+'</div>';
  const rest=articles.slice(4,13);
  $("storyGrid").innerHTML=rest.map(a=>'<article class="story">'+(a.image_url&&/^https:\/\//i.test(a.image_url)?'<img loading="lazy" src="'+esc(a.image_url)+'" alt="'+esc(pick(a,"title","title_en"))+'">':'')+'<div class="category">'+category(a)+'</div><h2><a href="'+url(a)+'">'+esc(pick(a,"title","title_en"))+'</a></h2><p>'+esc(pick(a,"summary","summary_en"))+'</p><div class="byline">'+esc(a.author||"Evoford News")+'</div></article>').join("")||'<p class="empty">'+ui[language].noMore+'</p>';
  $("storyCount").textContent=rest.length+" "+ui[language].stories;

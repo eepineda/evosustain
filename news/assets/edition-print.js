@@ -34,7 +34,7 @@
       var part=side.querySelector(selector);
       if(part)card.appendChild(part.cloneNode(true));
      });
-     if(grid)grid.insertBefore(card,grid.firstChild);
+     if(grid)grid.insertBefore(card,firstStory);
     });
     sidebar.remove();
    }

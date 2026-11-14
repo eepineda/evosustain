@@ -99,7 +99,7 @@ async function showApp(user){
   }
   currentUser=user; $("loginView").hidden=true; $("appView").hidden=false;
   $("signedInAs").textContent=user.email;
-  await Promise.all([loadArticles(),loadInbox(),loadSources(),loadSubmissions(),loadCourses(),loadMaintenanceControl()]);
+  await Promise.all([loadArticles(),loadInbox(),loadSources(),loadSubmissions(),loadCourses(),loadMaintenanceControl(),loadAds()]);
 }
 async function login(e){
   e.preventDefault();
@@ -527,7 +527,29 @@ async function handleDirectoryAction(e){
  }
 }
 
-function wire(){
+
+let adCampaigns=[];
+function adStatusText(s){return ({draft:"Borrador",pending:"Pendiente",active:"Activa",paused:"Pausada",completed:"Finalizada",cancelled:"Cancelada",unpaid:"Sin pagar",paid:"Pagado",overdue:"Vencido",waived:"Exento"})[s]||s;}
+function editAd(a){
+ $("adForm").hidden=false;$("adId").value=a?.id||"";$("adAdvertiser").value=a?.advertiser_name||"";$("adContact").value=a?.contact_name||"";$("adEmail").value=a?.contact_email||"";$("adPhone").value=a?.contact_phone||"";$("adTitle").value=a?.campaign_title||"";$("adPlacement").value=a?.placement||"banner";$("adStatus").value=a?.status||"draft";$("adCreative").value=a?.creative_url||"";$("adTarget").value=a?.target_url||"";$("adStart").value=a?.start_date||"";$("adEnd").value=a?.end_date||"";$("adAmount").value=a?.amount??0;$("adCurrency").value=a?.currency||"GBP";$("adPayment").value=a?.payment_status||"unpaid";$("adInvoice").value=a?.invoice_reference||"";$("adNotes").value=a?.internal_notes||"";$("adForm").scrollIntoView({behavior:"smooth",block:"start"});
+}
+async function loadAds(){
+ const results=await Promise.all([client.from("ad_campaigns").select("*").order("created_at",{ascending:false}),client.from("ad_enquiries").select("*").order("created_at",{ascending:false})]);const c=results[0],e=results[1];
+ if(c.error){$("adCampaignList").textContent="Error: "+c.error.message;return;}if(e.error){$("adEnquiryList").textContent="Error: "+e.error.message;return;}adCampaigns=c.data||[];
+ const stats=[["Campañas",adCampaigns.length],["Activas",adCampaigns.filter(x=>x.status==="active").length],["Pagadas",adCampaigns.filter(x=>x.payment_status==="paid").length],["Por cobrar",adCampaigns.filter(x=>["unpaid","pending","overdue"].includes(x.payment_status)).length]];
+ $("adStats").innerHTML=stats.map(([t,n])=>'<div class="course-stat"><strong>'+n+'</strong><span>'+t+'</span></div>').join("");
+ $("adCampaignList").innerHTML=adCampaigns.length?adCampaigns.map(a=>'<article class="item ad-item"><div><h3>'+safe(a.campaign_title)+'</h3><p>'+safe(a.advertiser_name)+' · '+safe(a.placement)+' · '+safe(adStatusText(a.status))+'</p><p>'+safe(a.amount)+' '+safe(a.currency)+' · Pago: '+safe(adStatusText(a.payment_status))+(a.invoice_reference?' · Factura: '+safe(a.invoice_reference):'')+'</p><p>'+safe(a.start_date||"Sin inicio")+' → '+safe(a.end_date||"Sin fin")+'</p></div><div class="item-actions"><button class="secondary" data-ad-edit="'+a.id+'">Editar</button><button class="secondary" data-ad-delete="'+a.id+'">Eliminar</button></div></article>').join(""):'<p class="muted">Todavía no hay campañas.</p>';
+ $("adEnquiryList").innerHTML=e.data.length?e.data.map(x=>'<article class="item"><div><h3>'+safe(x.company_name)+'</h3><p>'+safe(x.contact_name)+' · '+safe(x.email)+' · '+safe(x.placement_interest||"Formato no indicado")+'</p><p>'+safe(x.message)+'</p><p>Estado: '+safe(x.status)+' · '+new Date(x.created_at).toLocaleDateString("es-GB")+'</p></div></article>').join(""):'<p class="muted">No hay solicitudes comerciales.</p>';
+ $("adCampaignList").querySelectorAll("[data-ad-edit]").forEach(b=>b.addEventListener("click",()=>editAd(adCampaigns.find(a=>a.id===b.dataset.adEdit))));
+ $("adCampaignList").querySelectorAll("[data-ad-delete]").forEach(b=>b.addEventListener("click",async()=>{const a=adCampaigns.find(x=>x.id===b.dataset.adDelete);if(!a||!confirm("¿Eliminar esta campaña?"))return;const r=await client.from("ad_campaigns").delete().eq("id",a.id);if(r.error){say("globalMessage",r.error.message);return;}await loadAds();}));
+}
+async function saveAd(event){
+ event.preventDefault();const id=$("adId").value,amount=Number($("adAmount").value);
+ const p={advertiser_name:$("adAdvertiser").value.trim(),contact_name:$("adContact").value.trim()||null,contact_email:$("adEmail").value.trim(),contact_phone:$("adPhone").value.trim()||null,campaign_title:$("adTitle").value.trim(),placement:$("adPlacement").value,status:$("adStatus").value,creative_url:$("adCreative").value.trim()||null,target_url:$("adTarget").value.trim()||null,start_date:$("adStart").value||null,end_date:$("adEnd").value||null,amount,currency:$("adCurrency").value,payment_status:$("adPayment").value,invoice_reference:$("adInvoice").value.trim()||null,internal_notes:$("adNotes").value.trim()||null,updated_at:new Date().toISOString()};
+ if(!p.advertiser_name||!p.contact_email||!p.campaign_title||!Number.isFinite(amount)||amount<0){say("adMessage","Revisa los campos obligatorios y el importe.");return;}if(p.start_date&&p.end_date&&p.end_date<p.start_date){say("adMessage","La fecha final no puede ser anterior al inicio.");return;}
+ const r=id?await client.from("ad_campaigns").update(p).eq("id",id):await client.from("ad_campaigns").insert(p);if(r.error){say("adMessage",r.error.message);return;}say("adMessage","Campaña guardada.");$("adForm").hidden=true;$("adForm").reset();$("adId").value="";await loadAds();
+}
+\nfunction wire(){
   $("maintenanceToggleBtn").addEventListener("click",toggleMaintenance);
   $("loginForm").addEventListener("submit",login);
   $("logoutBtn").addEventListener("click",()=>client.auth.signOut());
@@ -604,12 +626,12 @@ function wire(){
       await loadInbox();
     }
   });
-  $("runRssBtn").addEventListener("click",runRssImport);
+  $("runRssBtn").addEventListener("click",runRssImport);$("newAdBtn").addEventListener("click",()=>editAd(null));$("cancelAdBtn").addEventListener("click",()=>{$("adForm").hidden=true;});$("cancelAdBtn2").addEventListener("click",()=>{$("adForm").hidden=true;});$("adForm").addEventListener("submit",saveAd);
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
-    ["articles","inbox","sources","submissions","directory","courses"].forEach(k=>$(k+"Tab").hidden=k!==b.dataset.tab);
+    ["articles","inbox","sources","submissions","directory","courses","ads"].forEach(k=>$(k+"Tab").hidden=k!==b.dataset.tab);
     if(b.dataset.tab==="directory")loadDirectoryAdmin();
-    if(b.dataset.tab==="courses")loadCourses();
+    if(b.dataset.tab==="courses")loadCourses();if(b.dataset.tab==="ads")loadAds();
   }));
 }
 window.addEventListener("error",event=>{

@@ -4,7 +4,21 @@ const now=new Date();document.getElementById("today").textContent=now.toLocaleDa
 function esc(v=""){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function url(slug){return "articles/plantilla-articulo.html?slug="+encodeURIComponent(slug||"");}
 function image(a){return a.image_url&&/^https:\/\//i.test(a.image_url)?'<img class="story-image" src="'+esc(a.image_url)+'" alt="'+esc(a.title||"")+'" loading="lazy">':'<div class="story-art art-blue"><span>POLÍTICA</span></div>';}
-async function load(){const root=document.getElementById("politicsArticles");if(!window.supabase){root.innerHTML='<p class="empty-politics">No se pudo conectar con el servicio de noticias.</p>';return;}const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);const {data,error}=await client.from("articles").select("title,slug,category,author,summary,image_url,created_at").eq("status","published").eq("category","Política").order("updated_at",{ascending:false}).limit(9);if(error){root.innerHTML='<p class="empty-politics">No se pudieron cargar las noticias políticas en este momento.</p>';console.error(error);return;}if(!data||!data.length){root.innerHTML='<p class="empty-politics">'+(localStorage.getItem("evoford-news-language")==="en"?"There are no political stories published yet. Stories will appear here when the newsroom adds them.":"Todavía no hay noticias políticas publicadas. Las publicaciones de esta sección aparecerán aquí cuando la redacción las incorpore.")+'</p>';return;}root.innerHTML=data.map(a=>'<article class="story"><a class="story-link" href="'+url(a.slug)+'">'+image(a)+'<div class="story-copy"><div class="kicker">POLÍTICA</div><h3>'+esc(a.title)+'</h3><p>'+esc(a.summary||"")+'</p></div></a><div class="lead-meta">'+esc(a.author||"EVOFORD NEWS")+(a.created_at?" · "+new Date(a.created_at).toLocaleDateString("es-ES",{day:"numeric",month:"short",year:"numeric"}):"")+'</div><a class="read-link" href="'+url(a.slug)+'">'+(localStorage.getItem("evoford-news-language")==="en"?"Read story ↗":"Leer noticia ↗")+'</a></article>').join("");}
+async function load(){
+ const root=document.getElementById("politicsArticles"),lang=localStorage.getItem("evoford-news-language")==="en"?"en":"es";
+ if(!window.supabase){root.innerHTML='<p class="empty-politics">'+(lang==="en"?"The news service is unavailable.":"No se pudo conectar con el servicio de noticias.")+'</p>';return;}
+ const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+ const {data,error}=await client.from("articles").select("title,title_en,slug,category,author,summary,summary_en,image_url,created_at").eq("status","published").eq("category","Política").order("updated_at",{ascending:false}).limit(9);
+ if(error){root.innerHTML='<p class="empty-politics">'+(lang==="en"?"Political stories could not be loaded at this time.":"No se pudieron cargar las noticias políticas en este momento.")+'</p>';console.error(error);return;}
+ if(!data||!data.length){root.innerHTML='<p class="empty-politics">'+(lang==="en"?"There are no political stories published yet.":"Todavía no hay noticias políticas publicadas.")+'</p>';return;}
+ const dateLocale=lang==="en"?"en-GB":"es-ES";
+ root.innerHTML=data.map(a=>{
+  const title=lang==="en"?(a.title_en||a.title):(a.title||"");
+  const summary=lang==="en"?(a.summary_en||a.summary):(a.summary||"");
+  const date=a.created_at?new Date(a.created_at).toLocaleDateString(dateLocale,{day:"numeric",month:"short",year:"numeric"}):"";
+  return '<article class="story"><a class="story-link" href="'+url(a.slug)+'">'+image({...a,title})+'<div class="story-copy"><div class="kicker">'+(lang==="en"?"POLITICS":"POLÍTICA")+'</div><h3>'+esc(title)+'</h3><p>'+esc(summary)+'</p></div></a><div class="lead-meta">'+esc(a.author||"EVOFORD NEWS")+(date?" · "+date:"")+'</div><a class="read-link" href="'+url(a.slug)+'">'+(lang==="en"?"Read story ↗":"Leer noticia ↗")+'</a></article>';
+ }).join("");
+}
 
 const en={
 edition:"SPECIAL SECTION · DOMINICAN REPUBLIC",top:["London · United Kingdom","NEWS · OPINION · ANALYSIS"],

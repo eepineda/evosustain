@@ -167,7 +167,7 @@ async function loadPublishedArticles() {
       const sectionContent=cards||'<p class="muted">'+(currentLanguage==="en"?"No stories in this section yet.":"Todavía no hay noticias en esta sección.")+'</p>';
       return '<section class="section category-section" id="section-'+section.id+'"><div class="section-head"><h2>'+section.name+'</h2><span>'+(currentLanguage==="en"?"LATEST STORIES":"ÚLTIMAS PUBLICACIONES")+'</span></div><div class="cards">'+sectionContent+'</div></section>';
     }).join("");
-    if(location.hash){const target=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(target)requestAnimationFrame(()=>target.scrollIntoView({behavior:"smooth",block:"start"}));}
+    if(location.hash){const anchorId=decodeURIComponent(location.hash.slice(1));const scrollToSection=()=>{const target=document.getElementById(anchorId);if(!target)return false;const top=target.getBoundingClientRect().top+window.scrollY-88;window.scrollTo({top:Math.max(0,top),behavior:"auto"});return true;};const waitForImages=Array.from(document.images).filter(img=>!img.complete&&sectionRoot.compareDocumentPosition(img)&Node.DOCUMENT_POSITION_PRECEDING).map(img=>new Promise(resolve=>{img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true});}));Promise.all(waitForImages).then(()=>{requestAnimationFrame(()=>requestAnimationFrame(()=>{if(!scrollToSection())setTimeout(scrollToSection,250);}));});}
   }
 }
 const printEditionButton=document.getElementById("printEditionBtn");

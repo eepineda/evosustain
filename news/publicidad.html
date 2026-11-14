@@ -53,7 +53,8 @@ function setLanguage(lang){
  document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===currentLanguage)));
  msg.textContent="";
 }
-document.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",()=>setLanguage(b.dataset.lang)));\nlet savedLanguage="es";try{savedLanguage=localStorage.getItem("evoford-news-language")==="en"?"en":"es"}catch(e){}setLanguage(savedLanguage);
+document.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",()=>setLanguage(b.dataset.lang)));
+let savedLanguage="es";try{savedLanguage=localStorage.getItem("evoford-news-language")==="en"?"en":"es"}catch(e){}setLanguage(savedLanguage);
 form.addEventListener("submit",async event=>{
  event.preventDefault();const t=translations[currentLanguage];
  if(!form.reportValidity()){msg.textContent=t.required;return;}

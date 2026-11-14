@@ -262,3 +262,48 @@
   .print-ad-pdf { font-size: 7pt !important; }
   html[data-print-size="a3"] .print-ad-link img { max-height: 34mm !important; }
 }
+
+/* Correcciones de prioridad: neutralizan reglas heredadas de edition.css */
+@media print {
+  #fullArticle.embedded-lead-story {
+    display:block!important;position:static!important;float:none!important;clear:both!important;
+    width:100%!important;height:auto!important;max-height:none!important;overflow:visible!important;
+    break-before:auto!important;page-break-before:auto!important;break-after:auto!important;page-break-after:auto!important;
+    break-inside:auto!important;page-break-inside:auto!important;
+  }
+  #fullArticle .full-article-heading {
+    display:block!important;break-before:auto!important;page-break-before:auto!important;
+    break-after:avoid-page!important;page-break-after:avoid!important;
+    break-inside:avoid!important;page-break-inside:avoid!important;
+  }
+  #fullArticle .full-article-body {
+    display:block!important;position:static!important;float:none!important;width:auto!important;
+    height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;
+    column-count:2!important;column-width:auto!important;column-gap:6mm!important;
+    column-rule:.35pt solid #c4cbd2!important;column-fill:balance!important;
+    font:8.4pt/1.34 Georgia,serif!important;orphans:3!important;widows:3!important;
+  }
+  #fullArticle .full-article-body p:first-child:first-letter {
+    float:none!important;font:inherit!important;line-height:inherit!important;
+    margin:0!important;padding:0!important;color:inherit!important;
+  }
+  #fullArticle .full-article-body p,
+  #fullArticle .full-article-body h2,
+  #fullArticle .full-article-body h3,
+  #fullArticle .full-article-body h4,
+  #fullArticle .full-article-body li { orphans:3!important;widows:3!important; }
+  #fullArticle .full-article-body h2,
+  #fullArticle .full-article-body h3,
+  #fullArticle .full-article-body h4 { break-after:avoid-page!important;page-break-after:avoid!important; }
+  .print-edition .secondary-area {
+    break-before:auto!important;page-break-before:auto!important;
+    break-after:auto!important;page-break-after:auto!important;
+  }
+  .print-edition .lead-content { align-items:start!important; }
+  html[data-print-size="a3"] #fullArticle .full-article-body {
+    column-count:3!important;column-gap:7mm!important;font-size:9.4pt!important;line-height:1.4!important;
+  }
+  html[data-print-size="a4"] #fullArticle .full-article-body {
+    column-count:2!important;column-gap:6mm!important;font-size:8.4pt!important;line-height:1.34!important;
+  }
+}

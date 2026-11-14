@@ -534,14 +534,31 @@ function editAd(a){
  $("adForm").hidden=false;$("adId").value=a?.id||"";$("adAdvertiser").value=a?.advertiser_name||"";$("adContact").value=a?.contact_name||"";$("adEmail").value=a?.contact_email||"";$("adPhone").value=a?.contact_phone||"";$("adTitle").value=a?.campaign_title||"";$("adPlacement").value=a?.placement||"banner";$("adStatus").value=a?.status||"draft";$("adCreative").value=a?.creative_url||"";$("adTarget").value=a?.target_url||"";$("adStart").value=a?.start_date||"";$("adEnd").value=a?.end_date||"";$("adAmount").value=a?.amount??0;$("adCurrency").value=a?.currency||"GBP";$("adPayment").value=a?.payment_status||"unpaid";$("adInvoice").value=a?.invoice_reference||"";$("adNotes").value=a?.internal_notes||"";$("adForm").scrollIntoView({behavior:"smooth",block:"start"});
 }
 async function loadAds(){
- const results=await Promise.all([client.from("ad_campaigns").select("*").order("created_at",{ascending:false}),client.from("ad_enquiries").select("*").order("created_at",{ascending:false})]);const c=results[0],e=results[1];
- if(c.error){$("adCampaignList").textContent="Error: "+c.error.message;return;}if(e.error){$("adEnquiryList").textContent="Error: "+e.error.message;return;}adCampaigns=c.data||[];
- const stats=[["Campañas",adCampaigns.length],["Activas",adCampaigns.filter(x=>x.status==="active").length],["Pagadas",adCampaigns.filter(x=>x.payment_status==="paid").length],["Por cobrar",adCampaigns.filter(x=>["unpaid","pending","overdue"].includes(x.payment_status)).length]];
- $("adStats").innerHTML=stats.map(([t,n])=>'<div class="course-stat"><strong>'+n+'</strong><span>'+t+'</span></div>').join("");
- $("adCampaignList").innerHTML=adCampaigns.length?adCampaigns.map(a=>'<article class="item ad-item"><div><h3>'+safe(a.campaign_title)+'</h3><p>'+safe(a.advertiser_name)+' · '+safe(a.placement)+' · '+safe(adStatusText(a.status))+'</p><p>'+safe(a.amount)+' '+safe(a.currency)+' · Pago: '+safe(adStatusText(a.payment_status))+(a.invoice_reference?' · Factura: '+safe(a.invoice_reference):'')+'</p><p>'+safe(a.start_date||"Sin inicio")+' → '+safe(a.end_date||"Sin fin")+'</p></div><div class="item-actions"><button class="secondary" data-ad-edit="'+a.id+'">Editar</button><button class="secondary" data-ad-delete="'+a.id+'">Eliminar</button></div></article>').join(""):'<p class="muted">Todavía no hay campañas.</p>';
- $("adEnquiryList").innerHTML=e.data.length?e.data.map(x=>'<article class="item"><div><h3>'+safe(x.company_name)+'</h3><p>'+safe(x.contact_name)+' · '+safe(x.email)+' · '+safe(x.placement_interest||"Formato no indicado")+'</p><p>'+safe(x.message)+'</p><p>Estado: '+safe(x.status)+' · '+new Date(x.created_at).toLocaleDateString("es-GB")+'</p></div></article>').join(""):'<p class="muted">No hay solicitudes comerciales.</p>';
- $("adCampaignList").querySelectorAll("[data-ad-edit]").forEach(b=>b.addEventListener("click",()=>editAd(adCampaigns.find(a=>a.id===b.dataset.adEdit))));
- $("adCampaignList").querySelectorAll("[data-ad-delete]").forEach(b=>b.addEventListener("click",async()=>{const a=adCampaigns.find(x=>x.id===b.dataset.adDelete);if(!a||!confirm("¿Eliminar esta campaña?"))return;const r=await client.from("ad_campaigns").delete().eq("id",a.id);if(r.error){say("globalMessage",r.error.message);return;}await loadAds();}));
+ const campaignRoot=$("adCampaignList"),enquiryRoot=$("adEnquiryList"),statsRoot=$("adStats");
+ if(!campaignRoot||!enquiryRoot||!statsRoot)return;
+ campaignRoot.innerHTML='<p class="muted">Cargando campañas…</p>';
+ enquiryRoot.innerHTML='<p class="muted">Cargando solicitudes comerciales…</p>';
+ const [c,e]=await Promise.all([
+  client.from("ad_campaigns").select("*").order("created_at",{ascending:false}),
+  client.from("ad_enquiries").select("*").order("created_at",{ascending:false})
+ ]);
+ adCampaigns=c.data||[];
+ if(c.error){
+  campaignRoot.innerHTML='<p class="muted">No se pudieron cargar las campañas: '+safe(c.error.message)+'</p>';
+  statsRoot.innerHTML="";
+ }else{
+  const stats=[["Campañas",adCampaigns.length],["Activas",adCampaigns.filter(x=>x.status==="active").length],["Pagadas",adCampaigns.filter(x=>x.payment_status==="paid").length],["Por cobrar",adCampaigns.filter(x=>["unpaid","pending","overdue"].includes(x.payment_status)).length]];
+  statsRoot.innerHTML=stats.map(([t,n])=>'<div class="course-stat"><strong>'+n+'</strong><span>'+t+'</span></div>').join("");
+  campaignRoot.innerHTML=adCampaigns.length?adCampaigns.map(a=>'<article class="item ad-item"><div><h3>'+safe(a.campaign_title)+'</h3><p>'+safe(a.advertiser_name)+' · '+safe(a.placement)+' · '+safe(adStatusText(a.status))+'</p><p>'+safe(a.amount)+' '+safe(a.currency)+' · Pago: '+safe(adStatusText(a.payment_status))+(a.invoice_reference?' · Factura: '+safe(a.invoice_reference):'')+'</p><p>'+safe(a.start_date||"Sin inicio")+' → '+safe(a.end_date||"Sin fin")+'</p></div><div class="item-actions"><button class="secondary" data-ad-edit="'+a.id+'">Editar</button><button class="secondary" data-ad-delete="'+a.id+'">Eliminar</button></div></article>').join(""):'<p class="muted">Todavía no hay campañas.</p>';
+  campaignRoot.querySelectorAll("[data-ad-edit]").forEach(b=>b.addEventListener("click",()=>editAd(adCampaigns.find(a=>a.id===b.dataset.adEdit))));
+  campaignRoot.querySelectorAll("[data-ad-delete]").forEach(b=>b.addEventListener("click",async()=>{const a=adCampaigns.find(x=>x.id===b.dataset.adDelete);if(!a||!confirm("¿Eliminar esta campaña?"))return;const r=await client.from("ad_campaigns").delete().eq("id",a.id);if(r.error){say("globalMessage",r.error.message);return;}await loadAds();}));
+ }
+ if(e.error){
+  enquiryRoot.innerHTML='<p class="muted">No se pudieron cargar las solicitudes: '+safe(e.error.message)+'</p>';
+ }else{
+  const enquiries=e.data||[];
+  enquiryRoot.innerHTML=enquiries.length?enquiries.map(x=>'<article class="item"><div><h3>'+safe(x.company_name)+'</h3><p>'+safe(x.contact_name)+' · '+safe(x.email)+' · '+safe(x.placement_interest||"Formato no indicado")+'</p><p>'+safe(x.message)+'</p><p>Estado: '+safe(x.status)+' · '+new Date(x.created_at).toLocaleString("es-GB")+'</p></div></article>').join(""):'<p class="muted">No hay solicitudes comerciales.</p>';
+ }
 }
 async function saveAd(event){
  event.preventDefault();const id=$("adId").value,amount=Number($("adAmount").value);

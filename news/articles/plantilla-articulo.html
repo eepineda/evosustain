@@ -118,7 +118,7 @@ async function loadArticle(){
      if(!allowed.has(tag))return children;
      if(tag==="A"){
        const href=node.getAttribute("href")||"";
-       if(!/^https?:\\/\\//i.test(href))return children;
+       if(!/^https?:\/\//i.test(href))return children;
        return "<a href='"+esc(href)+"' target='_blank' rel='noopener noreferrer'>"+children+"</a>";
      }
      if(tag==="BR"||tag==="HR")return "<"+tag.toLowerCase()+">";

@@ -507,3 +507,78 @@
   a { color: inherit !important; text-decoration: none !important; }
   img { max-width: 100% !important; }
 }
+
+
+/* Corrección definitiva de la edición: artículo semántico y paginación estable */
+@media print {
+  .embedded-lead-story {
+    display: block !important;
+    clear: both !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 8pt 0 12pt !important;
+    border-top: 1.5px solid #222 !important;
+    break-before: page !important;
+    page-break-before: always !important;
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+  .embedded-lead-story .full-article-heading {
+    display: block !important;
+    margin: 0 0 9pt !important;
+    padding: 0 0 6pt !important;
+    border-bottom: 1px solid #aaa !important;
+    break-after: avoid-page !important;
+    page-break-after: avoid !important;
+  }
+  .embedded-lead-story .full-article-heading h2 {
+    font: 700 16pt/1.12 Georgia, "Times New Roman", serif !important;
+    margin: 4pt 0 !important;
+  }
+  .embedded-lead-story .full-article-body {
+    display: block !important;
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    column-count: 2 !important;
+    column-width: auto !important;
+    column-fill: auto !important;
+    column-gap: 18pt !important;
+    column-rule: .4pt solid #ccc !important;
+    font: 9.5pt/1.42 Georgia, "Times New Roman", serif !important;
+    text-align: justify !important;
+    hyphens: auto !important;
+  }
+  .embedded-lead-story .full-article-body p,
+  .embedded-lead-story .full-article-body h2,
+  .embedded-lead-story .full-article-body h3,
+  .embedded-lead-story .full-article-body h4,
+  .embedded-lead-story .full-article-body ul,
+  .embedded-lead-story .full-article-body ol,
+  .embedded-lead-story .full-article-body blockquote {
+    break-inside: avoid-column !important;
+    page-break-inside: avoid !important;
+    margin-top: 0 !important;
+    margin-bottom: 6pt !important;
+  }
+  .embedded-lead-story .full-article-body h2,
+  .embedded-lead-story .full-article-body h3,
+  .embedded-lead-story .full-article-body h4 {
+    font-weight: 700 !important;
+    text-align: left !important;
+  }
+  .embedded-lead-story .full-article-body a {
+    color: inherit !important;
+    text-decoration: underline !important;
+  }
+  .secondary-area {
+    break-before: page !important;
+    page-break-before: always !important;
+  }
+  .section-label {
+    break-after: avoid-page !important;
+    page-break-after: avoid !important;
+  }
+}

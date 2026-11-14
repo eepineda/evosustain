@@ -96,3 +96,5 @@
 .overview-rank b{text-align:right}
 .overview-deep-panels{margin-top:0}
 @media(max-width:650px){.overview-controls{align-items:flex-start;flex-direction:column}.overview-controls label{width:100%}}
+
+.ad-item{align-items:flex-start}.ad-item>div:first-child{flex:1}.ad-item p{margin:4px 0;line-height:1.45}#adForm{margin:18px 0 26px;padding:22px;scroll-margin-top:20px}@media(max-width:650px){.ad-item{flex-direction:column}}

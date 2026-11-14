@@ -1,5 +1,6 @@
 /* Evoford News App — native-feeling presentation, isolated from the desktop website.
    Only applies when the site is installed as a PWA. */
+.app-bottom-nav { display:none; }
 @media (display-mode: standalone), (display-mode: fullscreen) {
   :root { color-scheme: light; --app-navy:#102b4e; --app-red:#b32635; --app-paper:#f5f6f8; --app-ink:#172435; --app-muted:#718092; }
   html { scroll-padding-top:76px; }

@@ -572,6 +572,7 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
 
     function renderChips() {
       const box = document.getElementById('chips');
+      if (!box) return;
       box.innerHTML = '';
       content[lang].about.chips.forEach(item => {
         const span = document.createElement('span');
@@ -609,6 +610,7 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
 
     function renderExperience() {
       const box = document.getElementById('experienceBox');
+      if (!box) return;
       box.innerHTML = '';
       content[lang].experience.items.forEach(item => {
         const el = document.createElement('article');
@@ -630,6 +632,7 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
 
 function renderBlog() {
       const box = document.getElementById('blogBox');
+      if (!box) return;
       box.innerHTML = '';
 
       content[lang].blog.items.forEach(item => {

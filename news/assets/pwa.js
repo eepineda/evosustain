@@ -1,5 +1,15 @@
 (function () {
   "use strict";
+  // Register/update the service worker on every News route, including installed
+  // standalone pages that do not contain the installation banner.
+  if ("serviceWorker" in navigator && window.isSecureContext) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/news/sw.js", { scope: "/news/", updateViaCache: "none" })
+        .then(registration => registration.update())
+        .catch(error => console.warn("Evoford News service worker update failed.", error));
+    }, { once: true });
+  }
+
   const banner = document.getElementById("appInstall");
   if (!banner) return;
   const installButton = document.getElementById("installAppBtn");
@@ -19,24 +29,13 @@
     helpButton.hidden = true;
     show();
   });
-  window.addEventListener("appinstalled", () => {
-    banner.hidden = true;
-    installPrompt = null;
-  });
+  window.addEventListener("appinstalled", () => { banner.hidden = true; installPrompt = null; });
   installButton.addEventListener("click", async () => {
     if (!installPrompt) return;
     installButton.disabled = true;
-    try {
-      installPrompt.prompt();
-      await installPrompt.userChoice;
-    } catch (_) {
-      // Keep the manual installation instructions available if the prompt fails.
-    } finally {
-      installPrompt = null;
-      installButton.disabled = false;
-      installButton.hidden = true;
-      helpButton.hidden = false;
-    }
+    try { installPrompt.prompt(); await installPrompt.userChoice; }
+    catch (_) {}
+    finally { installPrompt = null; installButton.disabled = false; installButton.hidden = true; helpButton.hidden = false; }
   });
   helpButton.addEventListener("click", () => {
     const message = isIOS
@@ -48,24 +47,11 @@
     banner.hidden = true;
     try { localStorage.setItem("evoford-news-install-dismissed", "1"); } catch (_) {}
   });
-  if (isIOS) {
-    installButton.hidden = true;
-    helpButton.hidden = false;
-    show();
-  } else {
+  if (isIOS) { installButton.hidden = true; helpButton.hidden = false; show(); }
+  else {
     window.setTimeout(() => {
-      if (!banner.hidden || installPrompt) return;
-      if (window.matchMedia("(display-mode: standalone)").matches) return;
-      show();
-      installButton.hidden = true;
-      helpButton.hidden = false;
+      if (!banner.hidden || installPrompt || window.matchMedia("(display-mode: standalone)").matches) return;
+      show(); installButton.hidden = true; helpButton.hidden = false;
     }, 1800);
-  }
-  if ("serviceWorker" in navigator && window.isSecureContext) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("/news/sw.js", { scope: "/news/" }).catch(error => {
-        console.warn("Evoford News offline support could not be enabled.", error);
-      });
-    }, { once: true });
   }
 })();

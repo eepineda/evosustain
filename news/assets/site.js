@@ -159,13 +159,15 @@ async function loadPublishedArticles() {
     const normalize=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
     sectionRoot.innerHTML=sections.map(section=>{
       const matches=data.filter(a=>section.terms.includes(normalize(a.category))).slice(0,3);
-      if(!matches.length)return "";
+
       const cards=matches.map((a,i)=>{
         const dateText=a.created_at?new Date(a.created_at).toLocaleDateString(currentLanguage==="en"?"en-GB":"es-ES",{day:"numeric",month:"short",year:"numeric"}):"";
         return '<article class="story reveal" style="--delay:'+i*60+'ms"><a class="story-link" href="'+articleUrl(a)+'">'+articleImage(a,"story-image")+'<div class="story-copy"><div class="kicker">'+escapeHtml(categoryLabel(section.name))+'</div><h3>'+escapeHtml(currentLanguage==="en"?(a.title_en||a.title):a.title)+'</h3><p>'+escapeHtml(currentLanguage==="en"?(a.summary_en||a.summary||""):(a.summary||""))+'</p></div></a><div class="lead-meta">'+escapeHtml(a.author||"EVOFORD NEWS")+(dateText?" · "+escapeHtml(dateText):"")+'</div><a href="'+articleUrl(a)+'" class="read-link">'+tr("readArticle")+' <span>↗</span></a></article>';
       }).join("");
-      return '<section class="section category-section" id="section-'+section.id+'"><div class="section-head"><h2>'+section.name+'</h2><span>'+(currentLanguage==="en"?"LATEST STORIES":"ÚLTIMAS PUBLICACIONES")+'</span></div><div class="cards">'+cards+'</div></section>';
+      const sectionContent=cards||'<p class="muted">'+(currentLanguage==="en"?"No stories in this section yet.":"Todavía no hay noticias en esta sección.")+'</p>';
+      return '<section class="section category-section" id="section-'+section.id+'"><div class="section-head"><h2>'+section.name+'</h2><span>'+(currentLanguage==="en"?"LATEST STORIES":"ÚLTIMAS PUBLICACIONES")+'</span></div><div class="cards">'+sectionContent+'</div></section>';
     }).join("");
+    if(location.hash){const target=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(target)requestAnimationFrame(()=>target.scrollIntoView({behavior:"smooth",block:"start"}));}
   }
 }
 const printEditionButton=document.getElementById("printEditionBtn");

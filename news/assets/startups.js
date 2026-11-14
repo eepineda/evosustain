@@ -33,7 +33,7 @@ function setLanguage(lang){
  const today=document.getElementById("today");if(today)today.textContent=now.toLocaleDateString(currentLanguage==="en"?"en-GB":"es-ES",{day:"numeric",month:"long",year:"numeric"});
  const year=document.getElementById("year");if(year)year.textContent=now.getFullYear();
 }
-document.querySelectorAll("[data-language]").forEach(b=>b.addEventListener("click",()=>setLanguage(b.dataset.language)));
+document.querySelectorAll("[data-language]").forEach(b=>b.addEventListener("click",()=>{setLanguage(b.dataset.language);load();}));
 
 
 /* Expert collaboration section */

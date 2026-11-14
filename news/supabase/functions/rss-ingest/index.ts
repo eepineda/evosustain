@@ -198,11 +198,12 @@ Deno.serve(async (req) => {
       }
 
       if (rows.length) {
-        // One database request per feed; the unique key prevents re-importing existing items.
+        // article_url has a UNIQUE constraint in the live database.
+        // Use that existing key for idempotent imports; source_id,feed_guid is not unique there.
         const { data: inserted, error: insertError } = await admin
           .from("imported_items")
           .upsert(rows, {
-            onConflict: "source_id,feed_guid",
+            onConflict: "article_url",
             ignoreDuplicates: true,
           })
           .select("id");

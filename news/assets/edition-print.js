@@ -48,7 +48,11 @@ function generate(){
   if(!str)return;var lines=doc.splitTextToSize(clean(str),width),step=pt*.39;
   lines.forEach(function(ln){ensure(step+1);font(style,pt,color);doc.text(ln,x,y);y+=step;});y+=gap===undefined?1.5:gap;
  }
- function imageReady(url){return getImage(url);}
+ function imageUrl(node){
+ if(!node)return "";
+ return node.currentSrc||node.src||node.getAttribute("data-src")||node.getAttribute("data-lazy-src")||node.getAttribute("data-original")||"";
+}
+function imageReady(url){return getImage(url);}
  function leadBlock(image){
   var gap=7,sideW=U*.31,photoW=U-sideW-gap,top=y,photoH=0;
   if(image&&image.data){try{var p=doc.getImageProperties(image.data);photoH=Math.min(a3?100:72,photoW/(p.width/p.height));doc.addImage(image.data,image.type.indexOf("png")>=0?"PNG":"JPEG",m,top,photoW,photoH,undefined,"FAST");}catch(e){photoH=0;}}
@@ -82,42 +86,46 @@ function generate(){
   y=Math.max(colBottom,y);
   articleFlow=false;
  }
- function drawStories(images){
-  var cols=3,gap=a3?6:5,cw=(U-gap*(cols-1))/cols,idx=0;
-  while(idx<stories.length){
+ function prepareStories(images){
+  var cols=3,gap=a3?6:5,cw=(U-gap*(cols-1))/cols,rows=[];
+  for(var idx=0;idx<stories.length;idx+=cols){
    var row=stories.slice(idx,idx+cols),cards=[],rowHeight=0;
    row.forEach(function(node,j){
     var im=images[idx+j],ih=0;
     if(im&&im.data){
-     try{var p=doc.getImageProperties(im.data);ih=Math.min(a3?20:8,cw/(p.width/p.height));}catch(e){}
+     try{var p=doc.getImageProperties(im.data);ih=Math.min(a3?20:6.5,cw/(p.width/p.height));}catch(e){}
     }
-    var titleSize=a3?8.2:6.8,titleStep=a3?3.15:2.7,summarySize=a3?6.2:5.2,summaryStep=a3?2.5:2.1;
+    var titleSize=a3?8.2:6.6,titleStep=a3?3.15:2.55,summarySize=a3?6.2:5.0,summaryStep=a3?2.5:1.95;
     doc.setFont("times","bold");doc.setFontSize(titleSize);
     var titleLines=doc.splitTextToSize(clean(plain($("h2",node))),cw).slice(0,a3?3:2);
     doc.setFont("times","normal");doc.setFontSize(summarySize);
     var summaryLines=doc.splitTextToSize(clean(plain($("p",node))),cw).slice(0,a3?3:1);
-    var height=(ih?ih+1.5:0)+2.6+titleLines.length*titleStep+.5+summaryLines.length*summaryStep+1.5;
-    cards.push({node:node,image:im,x:m+j*(cw+gap),imageHeight:ih,titleLines:titleLines,summaryLines:summaryLines,titleSize:titleSize,titleStep:titleStep,summarySize:summarySize,summaryStep:summaryStep,height:height});
+    var height=(ih?ih+1:0)+2.5+titleLines.length*titleStep+.4+summaryLines.length*summaryStep+1.2;
+    cards.push({node:node,image:im,x:m+j*(cw+gap),imageHeight:ih,titleLines:titleLines,summaryLines:summaryLines,titleSize:titleSize,titleStep:titleStep,summarySize:summarySize,summaryStep:summaryStep});
     rowHeight=Math.max(rowHeight,height);
    });
-   var available=H-m-12-y;
-   if(rowHeight>available&&y>m+30){nextPage();continue;}
-   cards.forEach(function(card){
+   rows.push({cards:cards,height:rowHeight});
+  }
+  return {rows:rows,total:rows.reduce(function(sum,row){return sum+row.height;},0)+Math.max(0,rows.length-1)*(a3?4:2.5)};
+ }
+ function drawStories(layout){
+  layout.rows.forEach(function(row){
+   row.cards.forEach(function(card){
     var cy=0;
     if(card.image&&card.image.data&&card.imageHeight){
-     try{doc.addImage(card.image.data,card.image.type.indexOf("png")>=0?"PNG":"JPEG",card.x,y,cw,card.imageHeight,undefined,"FAST");cy=card.imageHeight+1.5;}catch(e){}
+     try{doc.addImage(card.image.data,"JPEG",card.x,y,U/3-(a3?4:3),card.imageHeight,undefined,"FAST");cy=card.imageHeight+1;}catch(e){}
     }
-    font("bold",5.3,red);doc.text(clean(plain($(".category",card.node))).slice(0,35),card.x,y+cy);cy+=2.8;
+    font("bold",a3?5.3:4.9,red);doc.text(clean(plain($(".category",card.node))).slice(0,35),card.x,y+cy);cy+=2.5;
     font("bold",card.titleSize,ink);
     card.titleLines.forEach(function(line){doc.text(line,card.x,y+cy);cy+=card.titleStep;});
-    cy+=.5;font("normal",card.summarySize,grey);
+    cy+=.4;font("normal",card.summarySize,grey);
     card.summaryLines.forEach(function(line){doc.text(line,card.x,y+cy);cy+=card.summaryStep;});
-    ruleLine(card.x,y+rowHeight,card.x+cw,y+rowHeight,rule,.2);
+    ruleLine(card.x,y+row.height,card.x+U/3-(a3?4:3),y+row.height,rule,.2);
    });
-   y+=rowHeight+(a3?4:3);idx+=cols;
-  }
+   y+=row.height+(a3?4:2.5);
+  });
  }
- Promise.all([imageReady(leadImg&&leadImg.src),Promise.all(stories.map(function(n){var im=$("img",n);return imageReady(im&&im.src);}))]).then(function(images){
+ Promise.all([imageReady(imageUrl(leadImg)),Promise.all(stories.map(function(n){return imageReady(imageUrl($("img",n)));}))]).then(function(images){
   header();font("bold",6.5,red);doc.text(category.toUpperCase(),m,y);y+=5;
   var titlePt=a3?25:21;font("bold",titlePt,ink);
   doc.splitTextToSize(title,U).forEach(function(v){ensure(titlePt*.42+1);doc.text(v,m,y);y+=titlePt*.42;});
@@ -125,13 +133,15 @@ function generate(){
   leadBlock(images[0]);var articleTitle=clean(plain($(".full-article-heading h2",article)))||title;
   font("bold",6.5,red);doc.text(en?"FULL STORY":"ARTÍCULO COMPLETO",m,y);y+=4;
   font("bold",a3?15:12,ink);doc.splitTextToSize(articleTitle,U).forEach(function(v){ensure(5);doc.text(v,m,y);y+=5;});
-  y+=3;ruleLine(m,y,W-m,y,rule,.3);y+=5;articleColumns(bodyNodes,3,a3?9:7.1);y+=4;
-  var newsReserve=a3?Math.ceil(stories.length/3)*16+35:Math.ceil(stories.length/3)*25+24;
+  y+=3;ruleLine(m,y,W-m,y,rule,.3);y+=5;articleColumns(bodyNodes,3,a3?9:6.8);y+=4;
+  var storyLayout=prepareStories(images[1]);
+  var adHeight=a3?17:10,sectionHead=11,newsGap=6;
+  var newsReserve=adHeight+sectionHead+newsGap+storyLayout.total;
   if(y+newsReserve>H-m-12)nextPage();
-  doc.setDrawColor(190,198,205);doc.setLineDash([1,1],0);doc.rect(m,y,U,a3?11:7);doc.setLineDash([]);font("bold",6,grey);doc.text(en?"ADVERTISING SPACE":"ESPACIO PUBLICITARIO",W/2,y+(a3?6.5:4.5),{align:"center"});y+=a3?17:11;
-  ruleLine(m,y,W-m,y,navy,.7);y+=5;font("bold",7,navy);doc.text(en?"MORE STORIES":"OTRAS NOTICIAS",m,y);
-  font("normal",6,grey);doc.text(stories.length+" "+(en?"stories":"noticias"),W-m,y,{align:"right"});y+=6;
-  drawStories(images[1]);footer();
+  doc.setDrawColor(190,198,205);doc.setLineDash([1,1],0);doc.rect(m,y,U,a3?11:6);doc.setLineDash([]);font("bold",6,grey);doc.text(en?"ADVERTISING SPACE":"ESPACIO PUBLICITARIO",W/2,y+(a3?6.5:4),{align:"center"});y+=adHeight;
+  ruleLine(m,y,W-m,y,navy,.7);y+=4;font("bold",7,navy);doc.text(en?"MORE STORIES":"OTRAS NOTICIAS",m,y);
+  font("normal",6,grey);doc.text(stories.length+" "+(en?"stories":"noticias"),W-m,y,{align:"right"});y+=newsGap;
+  drawStories(storyLayout);footer();
   doc.save("Evoford-News-"+(a3?"A3":"A4")+"-"+(en?"EN":"ES")+"-"+new Date().toISOString().slice(0,10)+".pdf");
  }).catch(function(err){console.error("Evoford PDF",err);alert(en?"Could not generate the PDF. Please retry.":"No se pudo generar el PDF. Inténtalo de nuevo.");});
 }

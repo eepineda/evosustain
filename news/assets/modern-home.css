@@ -1,0 +1,81 @@
+/* Evoford News — modern homepage refresh
+   Additive presentation layer. Does not change content, data, routes or interactions. */
+:root{
+  --modern-bg:#f4f6f8;
+  --modern-surface:#fff;
+  --modern-ink:#142334;
+  --modern-muted:#627184;
+  --modern-line:#e1e7ed;
+  --modern-blue:#12385d;
+  --modern-accent:#b52b37;
+}
+body{background:var(--modern-bg);color:var(--modern-ink);font-family:Inter,"DM Sans",Arial,sans-serif}
+.ecosystem-nav{background:#0c2035}
+.masthead{padding-top:20px}
+.topline{border-bottom:0;color:var(--modern-muted);font-weight:700}
+.brand{padding:10px 0 18px;font-family:Inter,"DM Sans",Arial,sans-serif;font-size:clamp(34px,5vw,58px);font-weight:800;letter-spacing:-.065em}
+.brand em{color:var(--modern-accent)}
+.masthead .nav{justify-content:flex-start;gap:7px;padding:10px 0 13px;border-top:1px solid var(--modern-line);border-bottom:1px solid var(--modern-line)}
+.masthead .nav a{padding:9px 11px;border-radius:7px;color:#31445a;font-size:10px;letter-spacing:0;font-weight:700}
+.masthead .nav a:hover,.masthead .nav a[aria-current=page]{background:#e8eef4;color:var(--modern-blue)}
+.wrap{max-width:1280px}
+.edition{padding:14px 0;color:var(--modern-muted);letter-spacing:.07em}
+.edition-actions{gap:8px}
+.language-switch,.print-edition-btn{border-radius:8px}
+.language-switch button[aria-pressed=true],.print-edition-btn{border-radius:6px}
+.market-strip{overflow:hidden;border:1px solid var(--modern-line);border-radius:12px;background:#fff;padding:13px 16px 9px}
+.market-heading .kicker{color:var(--modern-blue)}
+.country-desk{padding:20px;border:1px solid var(--modern-line);border-top:3px solid var(--modern-blue);border-radius:12px;background:#edf2f6}
+.country-links a{border-color:var(--modern-line);border-radius:7px}
+.country-card{border:1px solid var(--modern-line);border-top:3px solid var(--modern-blue);border-radius:10px;box-shadow:0 3px 12px rgba(17,42,67,.035)}
+.country-title h3{font-family:Inter,"DM Sans",Arial,sans-serif;font-size:17px}
+.country-story b{font-family:Inter,"DM Sans",Arial,sans-serif;font-size:14px;line-height:1.4}
+.frontpage{margin-top:12px;padding:18px 20px 20px;border:1px solid var(--modern-line);border-top:3px solid var(--modern-blue);border-radius:12px;background:#fff;box-shadow:0 5px 22px rgba(17,42,67,.04)}
+.frontpage-top{align-items:center}
+.frontpage-top .kicker{color:var(--modern-blue)}
+.live-mark{border-radius:99px;background:#fbecef;padding:6px 9px;color:#9d2530}
+.feature-card{border-color:var(--modern-line)}
+.feature-card-image{border-radius:9px;background:#e8edf2}
+.feature-card .feature-copy h1,.feature-card .feature-copy h2{font-family:Inter,"DM Sans",Arial,sans-serif;color:var(--modern-ink);font-weight:800;letter-spacing:-.04em}
+.feature-card .feature-copy .dek{font-family:Inter,"DM Sans",Arial,sans-serif;color:var(--modern-muted);font-size:13px}
+.feature-card .feature-meta{color:var(--modern-muted)}
+.feature-card .feature-cta{border-radius:7px;background:var(--modern-blue);letter-spacing:.025em}
+.feature-card .feature-cta:hover{background:var(--modern-accent)}
+.frontpage-aside{border-color:var(--modern-line)}
+.aside-heading{border-color:var(--modern-line);color:var(--modern-muted)}
+.brief-link{border-color:var(--modern-line)}
+.brief-link b{font-family:Inter,"DM Sans",Arial,sans-serif;font-size:14px;line-height:1.4}
+.brief-link p{color:var(--modern-muted)}
+.section{padding:30px 0}
+.section-head{border-bottom:1px solid var(--modern-line)}
+.section-head h2{font-family:Inter,"DM Sans",Arial,sans-serif;color:var(--modern-ink);font-size:24px;font-weight:800;letter-spacing:-.035em}
+.cards{gap:16px}
+.story{padding:0 0 18px;border:0}
+.story img.story-image{border-radius:9px;background:#e8edf2}
+.story-copy h3{font-family:Inter,"DM Sans",Arial,sans-serif;font-size:19px;line-height:1.25;color:var(--modern-ink)}
+.story-copy p{color:var(--modern-muted)}
+.category-section{border-color:var(--modern-line)}
+.opinion{border:1px solid var(--modern-line);border-top:3px solid var(--modern-accent);border-radius:12px;background:#fff}
+.opinion h2{font-family:Inter,"DM Sans",Arial,sans-serif;color:var(--modern-ink)}
+.opinion-latest{padding:16px;border-radius:9px;background:#f5f7f9}
+.opinion-article-link h3{font-family:Inter,"DM Sans",Arial,sans-serif}
+.topics a{border:1px solid var(--modern-line);border-radius:8px;background:#fff;color:var(--modern-ink)}
+.topics a:hover{border-color:#b7c7d8;background:#f8fafc}
+.ad-slot{border-radius:8px}
+footer{margin-top:28px;background:#0c2035}
+footer .footer-brand{letter-spacing:-.03em}
+@media(max-width:760px){
+ .masthead .nav{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:thin;padding-bottom:10px}
+ .masthead .nav a{flex:0 0 auto}
+ .brand{padding:8px 0 14px}
+ .frontpage{padding:15px 13px}
+ .country-desk{padding:14px}
+ .section{padding:24px 0}
+ .section-head h2{font-size:21px}
+ .opinion{padding:18px;align-items:stretch}
+}
+@media(max-width:420px){
+ .edition-actions{gap:6px}
+ .print-edition-btn{font-size:8px;padding:8px}
+ .language-switch button{min-width:30px}
+}

@@ -2,41 +2,64 @@
 <html lang="es">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#102b4e"><title>Anúnciate en Evoford News</title>
-<meta name="description" content="Conoce las opciones de publicidad y colaboración comercial de Evoford News.">
+<meta name="theme-color" content="#102b4e">
+<title>Anúnciate en Evoford News | Advertising</title>
+<meta name="description" content="Solicita información sobre publicidad y colaboraciones comerciales en Evoford News.">
 <link rel="stylesheet" href="assets/news-core.css?v=1">
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f5f6f8;color:#202936;font:16px/1.6 Arial,sans-serif}header{background:#102b4e;color:#fff;padding:18px 24px}header a{color:#fff;text-decoration:none;font-weight:bold}main{max-width:850px;margin:42px auto;padding:0 18px}article{background:#fff;border:1px solid #dce1e8;padding:clamp(22px,5vw,42px)}.eyebrow{color:#a9232d;font-size:12px;font-weight:bold;letter-spacing:.12em}h1{font:700 clamp(32px,5vw,48px)/1.1 Georgia,serif;margin:12px 0}p{color:#586474}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:25px}.field.full{grid-column:1/-1}label{display:block;font-weight:bold;font-size:13px;margin-bottom:6px}input,select,textarea{width:100%;padding:12px;border:1px solid #cbd2dc;border-radius:3px;font:16px Arial;background:white}textarea{min-height:140px}button{background:#102b4e;color:white;border:0;padding:14px 22px;font-weight:bold;cursor:pointer}button:disabled{opacity:.6}#adMsg{min-height:24px;font-weight:bold}.fine{font-size:12px}footer{text-align:center;padding:25px;color:#657080;font-size:12px}@media(max-width:600px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}main{margin:20px auto}}
+*{box-sizing:border-box}body{margin:0;background:#f5f6f8;color:#202936;font:16px/1.6 Arial,sans-serif}header{background:#102b4e;color:#fff;padding:15px 24px;display:flex;justify-content:space-between;align-items:center;gap:18px}header a{color:#fff;text-decoration:none;font-weight:bold}.language-switch{display:flex;gap:6px}.language-switch button{background:transparent;border:1px solid #9aabc0;color:#fff;padding:7px 11px;font-size:12px}.language-switch button[aria-pressed="true"]{background:#fff;color:#102b4e}main{max-width:850px;margin:42px auto;padding:0 18px}article{background:#fff;border:1px solid #dce1e8;padding:clamp(22px,5vw,42px)}.eyebrow{color:#a9232d;font-size:12px;font-weight:bold;letter-spacing:.12em}h1{font:700 clamp(32px,5vw,48px)/1.1 Georgia,serif;margin:12px 0}p{color:#586474}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:25px}.field.full{grid-column:1/-1}label{display:block;font-weight:bold;font-size:13px;margin-bottom:6px}input,select,textarea{width:100%;padding:12px;border:1px solid #cbd2dc;border-radius:3px;font:16px Arial;background:white}textarea{min-height:140px}button.submit{background:#102b4e;color:white;border:0;padding:14px 22px;font-weight:bold;cursor:pointer}button:disabled{opacity:.6;cursor:wait}#adMsg{min-height:24px;font-weight:bold}.fine{font-size:12px}footer{text-align:center;padding:25px;color:#657080;font-size:12px}@media(max-width:600px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}main{margin:20px auto}header{padding:13px 16px}}
 </style>
 </head>
-<body><header><a href="./">EVOFORD NEWS</a></header>
-<main><article><p class="eyebrow">PUBLICIDAD Y COLABORACIONES</p><h1>Anúnciate en Evoford News</h1>
-<p>Presenta tu empresa, producto o servicio a través de nuestros espacios publicitarios. Cuéntanos qué necesitas y el equipo editorial se pondrá en contacto para valorar formatos, disponibilidad y presupuesto.</p>
-<h2>Solicita información comercial</h2>
+<body>
+<header><a href="./">EVOFORD NEWS</a><div class="language-switch" aria-label="Language"><button type="button" data-lang="es" aria-pressed="true">ES</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div></header>
+<main><article>
+<p class="eyebrow" data-i18n="eyebrow">PUBLICIDAD Y COLABORACIONES</p>
+<h1 data-i18n="title">Anúnciate en Evoford News</h1>
+<p data-i18n="intro">Presenta tu empresa, producto o servicio a través de nuestros espacios publicitarios. Cuéntanos qué necesitas y el equipo editorial se pondrá en contacto para valorar formatos, disponibilidad y presupuesto.</p>
+<h2 data-i18n="formTitle">Solicita información comercial</h2>
 <form id="adEnquiryForm"><div class="grid">
-<div class="field"><label for="company">Empresa</label><input id="company" maxlength="180" required></div>
-<div class="field"><label for="contact">Persona de contacto</label><input id="contact" maxlength="120" required></div>
-<div class="field"><label for="email">Correo electrónico</label><input id="email" type="email" maxlength="254" required></div>
-<div class="field"><label for="phone">Teléfono</label><input id="phone" type="tel"></div>
-<div class="field"><label for="website">Web de la empresa</label><input id="website" type="url" placeholder="https://"></div>
-<div class="field"><label for="budget">Presupuesto aproximado</label><select id="budget"><option value="">Prefiero comentarlo</option><option>Menos de £250</option><option>£250–£500</option><option>£500–£1,000</option><option>Más de £1,000</option></select></div>
-<div class="field full"><label for="placement">Formato de interés</label><select id="placement"><option value="">Aún no lo sé</option><option>Banner web</option><option>Portada</option><option>Columna lateral</option><option>Publicidad en artículos</option><option>Edición impresa</option><option>Artículo patrocinado</option><option>Otros formatos</option></select></div>
-<div class="field full"><label for="message">Cuéntanos tu propuesta</label><textarea id="message" minlength="10" maxlength="3000" required></textarea></div>
-</div><p class="fine">Al enviar esta solicitud, autorizas a Evoford News a utilizar estos datos para responder a tu consulta comercial.</p><p id="adMsg" role="status"></p><button id="adSubmit" type="submit">Enviar solicitud</button></form>
-</article></main><footer><a href="./">Volver a Evoford News</a> · © Evoford News</footer>
+<div class="field"><label for="company" data-i18n="company">Empresa</label><input id="company" maxlength="180" autocomplete="organization" required></div>
+<div class="field"><label for="contact" data-i18n="contact">Persona de contacto</label><input id="contact" maxlength="120" autocomplete="name" required></div>
+<div class="field"><label for="email" data-i18n="email">Correo electrónico</label><input id="email" type="email" maxlength="254" autocomplete="email" required></div>
+<div class="field"><label for="phone" data-i18n="phone">Teléfono</label><input id="phone" type="tel" autocomplete="tel"></div>
+<div class="field"><label for="website" data-i18n="website">Web de la empresa</label><input id="website" type="url" placeholder="https://"></div>
+<div class="field"><label for="budget" data-i18n="budget">Presupuesto aproximado</label><select id="budget"><option value="" data-i18n="budgetDiscuss">Prefiero comentarlo</option><option value="under_250" data-i18n="budget1">Menos de £250</option><option value="250_500">£250–£500</option><option value="500_1000">£500–£1,000</option><option value="over_1000" data-i18n="budget4">Más de £1,000</option></select></div>
+<div class="field full"><label for="placement" data-i18n="placement">Formato de interés</label><select id="placement"><option value="" data-i18n="placementUnknown">Aún no lo sé</option><option value="banner" data-i18n="placement1">Banner web</option><option value="homepage" data-i18n="placement2">Portada</option><option value="sidebar" data-i18n="placement3">Columna lateral</option><option value="article_ads" data-i18n="placement4">Publicidad en artículos</option><option value="print" data-i18n="placement5">Edición impresa</option><option value="sponsored" data-i18n="placement6">Artículo patrocinado</option><option value="other" data-i18n="placement7">Otros formatos</option></select></div>
+<div class="field full"><label for="message" data-i18n="message">Cuéntanos tu propuesta</label><textarea id="message" minlength="10" maxlength="3000" required></textarea></div>
+</div>
+<p class="fine" data-i18n="consent">Al enviar esta solicitud, autorizas a Evoford News a utilizar estos datos para responder a tu consulta comercial.</p>
+<p id="adMsg" role="status" aria-live="polite"></p><button class="submit" id="adSubmit" type="submit" data-i18n="submit">Enviar solicitud</button></form>
+</article></main>
+<footer><a href="./" data-i18n="back">Volver a Evoford News</a> · © Evoford News</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const AD_SUPABASE_URL="https://poywsdigujbarvnzbfnz.supabase.co";
 const AD_SUPABASE_KEY="sb_publishable_1t7gv1Y9-6HHwMqW5E343A_51GH_L7f";
+const translations={
+es:{eyebrow:"PUBLICIDAD Y COLABORACIONES",title:"Anúnciate en Evoford News",intro:"Presenta tu empresa, producto o servicio a través de nuestros espacios publicitarios. Cuéntanos qué necesitas y el equipo editorial se pondrá en contacto para valorar formatos, disponibilidad y presupuesto.",formTitle:"Solicita información comercial",company:"Empresa",contact:"Persona de contacto",email:"Correo electrónico",phone:"Teléfono",website:"Web de la empresa",budget:"Presupuesto aproximado",budgetDiscuss:"Prefiero comentarlo",budget1:"Menos de £250",budget4:"Más de £1,000",placement:"Formato de interés",placementUnknown:"Aún no lo sé",placement1:"Banner web",placement2:"Portada",placement3:"Columna lateral",placement4:"Publicidad en artículos",placement5:"Edición impresa",placement6:"Artículo patrocinado",placement7:"Otros formatos",message:"Cuéntanos tu propuesta",consent:"Al enviar esta solicitud, autorizas a Evoford News a utilizar estos datos para responder a tu consulta comercial.",submit:"Enviar solicitud",back:"Volver a Evoford News",sending:"Enviando solicitud…",success:"Solicitud recibida. El equipo de Evoford News se pondrá en contacto contigo.",failure:"No se pudo enviar la solicitud. Comprueba tu conexión e inténtalo de nuevo.",required:"Completa los campos obligatorios antes de enviar."},
+en:{eyebrow:"ADVERTISING & PARTNERSHIPS",title:"Advertise with Evoford News",intro:"Promote your company, product or service through our advertising spaces. Tell us what you are looking for and our editorial team will contact you to discuss formats, availability and pricing.",formTitle:"Request advertising information",company:"Company",contact:"Contact person",email:"Email address",phone:"Phone",website:"Company website",budget:"Approximate budget",budgetDiscuss:"I would prefer to discuss this",budget1:"Under £250",budget4:"Over £1,000",placement:"Preferred advertising format",placementUnknown:"Not sure yet",placement1:"Website banner",placement2:"Homepage",placement3:"Sidebar",placement4:"In-article advertising",placement5:"Print edition",placement6:"Sponsored article",placement7:"Other formats",message:"Tell us about your proposal",consent:"By submitting this enquiry, you authorise Evoford News to use these details to respond to your commercial enquiry.",submit:"Submit enquiry",back:"Back to Evoford News",sending:"Sending your enquiry…",success:"Thank you. Your enquiry has been received and the Evoford News team will contact you.",failure:"Your enquiry could not be sent. Please check your connection and try again.",required:"Please complete the required fields before submitting."}
+};
+let currentLanguage="es";
 const form=document.getElementById("adEnquiryForm"),msg=document.getElementById("adMsg"),btn=document.getElementById("adSubmit");
+function setLanguage(lang){
+ currentLanguage=lang==="en"?"en":"es";const t=translations[currentLanguage];
+ document.documentElement.lang=currentLanguage;document.title=currentLanguage==="en"?"Advertise with Evoford News":"Anúnciate en Evoford News";
+ document.querySelectorAll("[data-i18n]").forEach(el=>{const key=el.dataset.i18n;if(t[key])el.textContent=t[key];});
+ document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===currentLanguage)));
+ msg.textContent="";
+}
+document.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",()=>setLanguage(b.dataset.lang)));
 form.addEventListener("submit",async event=>{
- event.preventDefault();btn.disabled=true;msg.textContent="Enviando solicitud…";
+ event.preventDefault();const t=translations[currentLanguage];
+ if(!form.reportValidity()){msg.textContent=t.required;return;}
+ btn.disabled=true;msg.textContent=t.sending;
  try{
+  if(!window.supabase)throw new Error("Form service unavailable");
   const client=window.supabase.createClient(AD_SUPABASE_URL,AD_SUPABASE_KEY);
   const payload={company_name:document.getElementById("company").value.trim(),contact_name:document.getElementById("contact").value.trim(),email:document.getElementById("email").value.trim(),phone:document.getElementById("phone").value.trim()||null,website:document.getElementById("website").value.trim()||null,budget:document.getElementById("budget").value||null,placement_interest:document.getElementById("placement").value||null,message:document.getElementById("message").value.trim(),status:"received"};
   const {error}=await client.from("ad_enquiries").insert(payload);if(error)throw error;
-  form.reset();msg.textContent="Solicitud recibida. El equipo de Evoford News se pondrá en contacto contigo.";
- }catch(error){msg.textContent="No se pudo enviar la solicitud. Inténtalo de nuevo más tarde.";}
+  form.reset();msg.textContent=t.success;
+ }catch(error){console.error("Advertising enquiry submission failed:",error);msg.textContent=t.failure;}
  finally{btn.disabled=false;}
 });
 </script></body></html>

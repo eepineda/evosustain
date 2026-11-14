@@ -69,22 +69,23 @@ function imageReady(url){return getImage(url);}
  }
  function articleColumns(nodes,cols,pt){
   articleFlow=true;
-  var gap=a3?7:5.5,cw=(U-gap*(cols-1))/cols,col=0,x=m,top=y,colBottom=top;
+  var gap=a3?7:5.5,cw=(U-gap*(cols-1))/cols,col=0,x=m,top=y,bottom=H-m-12;
+  var bottoms=new Array(cols);for(var bi=0;bi<cols;bi++)bottoms[bi]=top;
   function advance(){
-   colBottom=Math.max(colBottom,y);col++;
-   if(col>=cols){nextPage();col=0;top=y;colBottom=top;}
+   bottoms[col]=Math.max(bottoms[col],y);col++;
+   if(col>=cols){nextPage();col=0;top=y;bottoms=new Array(cols);for(var ri=0;ri<cols;ri++)bottoms[ri]=top;}
    x=m+col*(cw+gap);y=top;
   }
   nodes.forEach(function(node){
    var str=clean(plain(node));if(!str)return;
    var heading=/^H[1-6]$/.test(node.tagName),fs=heading?(a3?10:9):pt,style=heading?"bold":"normal",step=fs*.4;
-   var lines=doc.splitTextToSize(str,cw);if(y+lines.length*step+3>H-m-12)advance();
+   var lines=doc.splitTextToSize(str,cw);
+   if(heading&&y+step*2>bottom)advance();
    if(heading)y+=1;
-   lines.forEach(function(ln){if(y+step>H-m-12)advance();font(style,fs,heading?navy:ink);doc.text(ln,x,y);y+=step;});
-   y+=heading?1.5:1.2;
+   lines.forEach(function(ln){if(y+step>bottom)advance();font(style,fs,heading?navy:ink);doc.text(ln,x,y);y+=step;});
+   y+=heading?1.5:1.2;bottoms[col]=Math.max(bottoms[col],y);
   });
-  y=Math.max(colBottom,y);
-  articleFlow=false;
+  y=Math.max.apply(Math,bottoms);articleFlow=false;
  }
  function prepareStories(images){
   var cols=3,gap=a3?6:5,cw=(U-gap*(cols-1))/cols,rows=[];

@@ -4,7 +4,8 @@
 <script>document.documentElement.classList.add('evo-maintenance-checking')</script><style>.evo-maintenance-checking body{visibility:hidden}</style><script src="/maintenance.js"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <script>if(window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches||navigator.standalone)document.documentElement.classList.add("evo-pwa");</script>
+  <script id="evo-pwa-mode-detect">(()=>{const m=window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches; if(m||navigator.standalone===true)document.documentElement.classList.add("evo-pwa");})();</script>
+<script>if(window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches||navigator.standalone)document.documentElement.classList.add("evo-pwa");</script>
   <link rel="icon" type="image/svg+xml" href="/news/favicon.svg?v=2">
   <link rel="manifest" href="/news/manifest.webmanifest">
   <meta name="theme-color" content="#102b4e">
@@ -20,7 +21,7 @@
 <link rel="stylesheet" href="assets/editorial-premium.css?v=20261114-premium5">
 <link rel="stylesheet" href="assets/modern-home.css?v=5">
 <link rel="stylesheet" href="assets/home-print.css?v=1">
-<link rel="stylesheet" href="assets/app-shell.css?v=6">
+<link rel="stylesheet" href="assets/app-shell.css?v=7">
 <script src="assets/news-core.js?v=1"></script>
 <script>/* Canonical compact URL: direct visits and short-link redirects stay on the same public code. */(function(){try{var q=new URLSearchParams(location.search),t=q.get("__short"),p=location.pathname.split("/").pop()||"index.html",h=location.hash;var map={"index.html":{"":"aW5kZXguaHRtbA","#section-internacional":"aW5kZXguaHRtbCNzZWN0aW9uLWludGVybmFjaW9uYWw","#section-politica":"aW5kZXguaHRtbCNzZWN0aW9uLXBvbGl0aWNh","#section-economia":"aW5kZXguaHRtbCNzZWN0aW9uLWVjb25vbWlh","#section-seguridad":"aW5kZXguaHRtbCNzZWN0aW9uLXNlZ3VyaWRhZA","#section-opinion-analisis":"aW5kZXguaHRtbCNzZWN0aW9uLW9waW5pb24tYW5hbGlzaXM"},"startups.html":{"":"c3RhcnR1cHMuaHRtbA"},"briefing.html":{"":"YnJpZWZpbmcuaHRtbA"},"politica.html":{"":"cG9saXRpY2EuaHRtbA"},"directory.html":{"":"ZGlyZWN0b3J5Lmh0bWw"},"enviar.html":{"":"ZW52aWFyLmh0bWw"},"edicion.html":{"":"ZWRpY2lvbi5odG1s"},"aula-innovacion.html":{"":"YXVsYS1pbm5vdmFjaW9uLmh0bWw"},"sobre-evoford.html":{"":"c29icmUtZXZvZm9yZC5odG1s"},"publicidad.html":{"":"cHVibGljaWRhZC5odG1s"}};var code=t||(map[p]&&map[p][h]);if(!code)return;var lang=q.get("lang");history.replaceState(null,"","/news/a.html?i="+encodeURIComponent(code)+(lang?"&lang="+encodeURIComponent(lang):"")+h);}catch(e){}})();</script>
 
@@ -115,23 +116,16 @@
 </main>
 <footer><a class="footer-brand" href="./">EVOFORD NEWS</a><span>Noticias · Opinión · Análisis</span><a href="a.html?i=cHVibGljaWRhZC5odG1s">Anúnciate</a><a href="https://evoford.com/news/admin/#" target="_blank" rel="noopener noreferrer">Acceso editorial</a><span>© <span id="year"></span> Evoford</span><a href="a.html?i=c29icmUtZXZvZm9yZC5odG1s">Sobre / About Evoford News</a></footer>
 <nav class="app-bottom-nav" aria-label="Navegación de la aplicación">
-  <a href="./" aria-current="page"><span class="nav-icon" aria-hidden="true">⌂</span><span>Portada</span></a>
-  <a href="a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLWludGVybmFjaW9uYWw"><span class="nav-icon" aria-hidden="true">◎</span><span>Internacional</span></a>
-  <a href="a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLWVjb25vbWlh"><span class="nav-icon" aria-hidden="true">▤</span><span>Economía</span></a>
-  <a href="a.html?i=c3RhcnR1c3MuaHRtbA"><span class="nav-icon" aria-hidden="true">✳</span><span>Startups</span></a>
-  <a href="#secciones"><span class="nav-icon" aria-hidden="true">☰</span><span>Secciones</span></a>
-</nav>
-
-<nav class="app-bottom-nav" aria-label="Navegación de la aplicación">
-  <a href="./" aria-current="page"><span class="nav-icon" aria-hidden="true">⌂</span><span>Portada</span></a>
-  <a href="a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLWludGVybmFjaW9uYWw"><span class="nav-icon" aria-hidden="true">◎</span><span>Internacional</span></a>
-  <a href="a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLWVjb25vbWlh"><span class="nav-icon" aria-hidden="true">▤</span><span>Economía</span></a>
-  <a href="a.html?i=c3RhcnR1cHMuaHRtbA"><span class="nav-icon" aria-hidden="true">✳</span><span>Startups</span></a>
-  <a href="#secciones"><span class="nav-icon" aria-hidden="true">☰</span><span>Secciones</span></a>
+<a href="./" aria-current="page"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></span><span>Portada</span></a>
+<a href="a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLWludGVybmFjaW9uYWw" ><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><span>Internacional</span></a>
+<a href="a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLWVjb25vbWlh" ><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h17M7 15l4-4 3 2 6-7"/></svg></span><span>Economía</span></a>
+<a href="a.html?i=c3RhcnR1c3MuaHRtbA" ><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9 4.9 19.1"/></svg></span><span>Startups</span></a>
+<a href="a.html?i=ZGlyZWN0b3J5Lmh0bWw" ><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span><span>Secciones</span></a>
 </nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/site.js?v=20261114-bio1"></script>
 <script src="assets/ads.js?v=20261114-i18n3"></script>
-<script src="assets/pwa.js?v=2" defer></script>
 
+
+<script src="assets/pwa.js?v=3" defer></script>
 </body></html>

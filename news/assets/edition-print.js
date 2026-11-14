@@ -111,12 +111,12 @@ img{max-width:100%}
  .lead{break-inside:auto}
  #fullArticle,.secondary-area{break-before:auto!important;page-break-before:auto!important}
 }
-@media print{html[data-paper-size="A3"] .lead-photo img{max-height:115mm}html[data-paper-size="A3"] .full-article-body{column-count:3;columns:3}html[data-paper-size="A3"] .story-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}}\n@media screen{
+@media print{html[data-paper-size="A3"] .lead-photo img{max-height:115mm}html[data-paper-size="A3"] .full-article-body{column-count:3;columns:3}html[data-paper-size="A3"] .story-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}\n@media screen{
  body{background:#e7e9ec;padding:24px}
  .sheet{max-width:${size==="A3"?"297mm":"210mm"};min-height:${size==="A3"?"420mm":"297mm"};padding:${pageMargin};background:white;box-shadow:0 4px 22px #0002}
 }
 `;
-  return "<!doctype html><html lang=\""+lang+"\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>"+title+"</title><style>"+css+"</style></head><body><main class=\"sheet\"><div class=\"topline\">"+blocks.topline+"</div><header class=\"masthead\">"+blocks.masthead+"</header><div class=\"paper-rule\"></div><div class=\"paper-sections\">"+blocks.sections+"</div>"+blocks.lead+blocks.article+blocks.secondary+blocks.footer+"</main></body></html>";
+  return "<!doctype html><html lang=\""+lang+"\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>"+title+"</title><style>"+css+"</style></head><body><main class=\"sheet\"><div class=\"topline\">"+blocks.topline+"</div><header class=\"masthead\">"+blocks.masthead+"</header><div class=\"paper-rule\"></div><div class=\"paper-sections\">"+blocks.sections+"</div>"+blocks.lead+blocks.article+'<aside class="ad-slot">ESPACIO PUBLICITARIO · EVOFORD NEWS</aside>'+blocks.secondary+blocks.footer+"</main></body></html>";
  }
  function print(){
   var size=getSize();

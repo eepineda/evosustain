@@ -34,3 +34,20 @@ node --test news/assets/news-core.test.js
 ```
 
 Las pruebas no requieren dependencias externas.
+
+
+## Aplicación móvil web (PWA)
+
+La portada de Evoford News incorpora una PWA bajo el alcance `/news/`.
+
+- `manifest.webmanifest`: nombre, identidad, pantalla de inicio y accesos directos.
+- `sw.js`: precarga la carcasa pública, prioriza la red para las páginas y ofrece una página offline si no hay conexión.
+- `assets/pwa.js`: registra el service worker y gestiona la instalación en navegadores compatibles, además de las instrucciones para iOS.
+- `offline.html`: mensaje de recuperación cuando no hay conexión.
+
+### Límites de caché y seguridad
+
+- No se cachean peticiones POST, Supabase, autenticación, panel editorial ni rutas administrativas.
+- Los artículos y datos editoriales siguen dependiendo de la conexión; no se promete lectura offline de contenido dinámico.
+- El service worker solo controla `/news/`, no el resto del ecosistema Evoford.
+- Al publicar cambios importantes de la carcasa, incrementar la versión de caché en `sw.js` para forzar una instalación limpia de los recursos estáticos.

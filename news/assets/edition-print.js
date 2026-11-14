@@ -9,7 +9,7 @@
   var node=document.querySelector(selector);
   return node?node.innerHTML:"";
  }
- function makeDocument(size){
+ function cloneElement(selector){\n  var node=document.querySelector(selector);\n  return node?node.outerHTML:"";\n }\n function makeDocument(size){
   var lang=document.documentElement.lang==="en"?"en":"es";
   var pageMargin=size==="A3"?"13mm":"11mm";
   var title="Evoford News — "+(lang==="en"?"Print edition":"Edición impresa");
@@ -18,9 +18,9 @@
    masthead:cloneMarkup(".paper-masthead"),
    rule:cloneMarkup(".paper-rule"),
    sections:cloneMarkup(".paper-sections"),
-   lead:cloneMarkup("#lead"),
-   article:cloneMarkup("#fullArticle"),
-   secondary:cloneMarkup(".secondary-area"),
+   lead:cloneElement("#lead"),
+   article:cloneElement("#fullArticle"),
+   secondary:cloneElement(".secondary-area"),
    footer:cloneMarkup(".paper-footer")
   };
   var css=`

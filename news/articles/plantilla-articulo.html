@@ -46,10 +46,10 @@
 <script src="../assets/news-core.js?v=20261114-print2"></script>
 </head>
 <body class="article-page">
-<header class="masthead"><div class="topline"><span id="articleLocation">Londres · Reino Unido</span><span id="articleDescriptor">INFORMACIÓN · OPINIÓN · ANÁLISIS</span></div><a class="brand" href="../">EVOFORD <em>NEWS</em></a><nav class="nav"><a id="navHome" href="../">Portada</a><a id="navInternational" href="../#section-internacional">Internacional</a><a id="navPolitics" href="../#section-politica">Política</a><a id="navEconomy" href="../#section-economia">Economía</a><a id="navSecurity" href="../#section-seguridad">Seguridad</a><a id="navTechnology" href="../startups.html">Startups e innovación</a><a id="navAcademy" href="../aula-innovacion.html">Aula de Innovación</a><a id="navOpinion" href="../#espacio-opinion">Opinión</a></nav></header>
+<header class="masthead"><div class="topline"><span id="articleLocation">Londres · Reino Unido</span><span id="articleDescriptor">INFORMACIÓN · OPINIÓN · ANÁLISIS</span></div><a class="brand" href="../">EVOFORD <em>NEWS</em></a><nav class="nav"><a id="navHome" href="../">Portada</a><a id="navInternational" href="../a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLWludGVybmFjaW9uYWw">Internacional</a><a id="navPolitics" href="../a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLXBvbGl0aWNh">Política</a><a id="navEconomy" href="../a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLWVjb25vbWlh">Economía</a><a id="navSecurity" href="../a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLXNlZ3VyaWRhZA">Seguridad</a><a id="navTechnology" href="../a.html?i=c3RhcnR1cHMuaHRtbA">Startups e innovación</a><a id="navAcademy" href="../a.html?i=YXVsYS1pbm5vdmFjaW9uLmh0bWw">Aula de Innovación</a><a id="navOpinion" href="../a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLW9waW5pb24tYW5hbGlzaXM">Opinión</a></nav></header>
 <div class="ad-slot ad-slot-banner" data-ad-slot="banner" hidden aria-label="Publicidad" style="width:min(814px,calc(100% - 36px));max-width:814px;margin:18px auto;padding:0;box-sizing:border-box"></div>
 <main id="articleView" class="wrap" style="max-width:850px;padding-top:40px;padding-bottom:70px"><p class="muted">Cargando artículo…</p></main>
-<footer><a class="footer-brand" href="../">EVOFORD NEWS</a><span id="articleFooter">Noticias · Opinión · Análisis</span><span>© <span id="year"></span> Evoford</span><a href="../sobre-evoford.html">Sobre / About Evoford News</a></footer>
+<footer><a class="footer-brand" href="../">EVOFORD NEWS</a><span id="articleFooter">Noticias · Opinión · Análisis</span><span>© <span id="year"></span> Evoford</span><a href="../a.html?i=c29icmUtZXZvZm9yZC5odG1s">Sobre / About Evoford News</a></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = "https://poywsdigujbarvnzbfnz.supabase.co";
@@ -82,6 +82,8 @@ async function loadArticle(){
    ({data:a,error}=await client.from("articles").select("*").eq("slug",slug).eq("status","published").maybeSingle());
  }
  if(error||!a){root.innerHTML="<h1>Artículo no disponible</h1><p>La publicación no existe o no está disponible.</p><a class='read-link' href='../'>Volver a portada →</a>";return;}
+ const hex=String(a.id||"").replace(/-/g,"").toLowerCase();
+ if(/^[0-9a-f]{32}$/.test(hex)){const bytes=new Uint8Array(hex.match(/../g).map(pair=>parseInt(pair,16)));let binary="";bytes.forEach(byte=>binary+=String.fromCharCode(byte));const shortToken=btoa(binary).replace(/[+]/g,"-").replace(/[/]/g,"_").replace(/=+$/,"");const lang=new URLSearchParams(location.search).get("lang")||"es";location.replace("../a.html?i="+shortToken+"&lang="+encodeURIComponent(lang));return;}
  const languageParam=new URLSearchParams(location.search).get("lang");
  const storedLanguage=(()=>{try{return localStorage.getItem("evoford-news-language")==="en"?"en":"es"}catch(_e){return "es"}})();
  const requestedLanguage=languageParam==="en"?"en":languageParam==="es"?"es":storedLanguage;

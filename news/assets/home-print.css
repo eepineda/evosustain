@@ -1,0 +1,69 @@
+/* Evoford News homepage print edition — stable newspaper pagination */
+@page{size:A4 portrait;margin:12mm}
+@media print{
+  html,body{width:auto!important;min-width:0!important;background:#fff!important;color:#171d26!important;font-family:Georgia,"Times New Roman",serif!important;font-size:9.5pt!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{margin:0!important}
+  .ecosystem-nav,.masthead .nav,.edition-actions,.market-strip,.country-links,.feature-cta,.read-link,.ad-slot,.share-panel,.comments-panel,footer{display:none!important}
+  .masthead,.wrap{width:100%!important;max-width:none!important;margin:0!important;padding-left:0!important;padding-right:0!important}
+  .masthead{padding-top:0!important;border-top:0!important}
+  .topline{padding:0 0 3mm!important;font:7pt Arial,sans-serif!important;letter-spacing:.12em!important}
+  .brand{padding:4mm 0!important;font:700 31pt Georgia,"Times New Roman",serif!important;letter-spacing:-1pt!important}
+  .brand em{color:#a9232d!important}
+  .edition{padding:2.5mm 0!important;border-top:1px solid #222!important;border-bottom:1px solid #222!important;font:7pt Arial,sans-serif!important}
+  .country-desk{margin:4mm 0 0!important;padding:4mm 0!important;border:0!important;border-top:2.5pt solid #102b4e!important;border-radius:0!important;background:#fff!important;break-inside:avoid!important}
+  .country-desk>.section-head{margin:0 0 3mm!important;padding-bottom:2mm!important;break-after:avoid!important}
+  .country-desk>.section-head h2{font:700 17pt Georgia,serif!important}
+  .country-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4mm!important}
+  .country-card{min-width:0!important;padding:3mm!important;border:1px solid #d8d5ce!important;border-top:2pt solid #102b4e!important;border-radius:0!important;background:#fff!important;box-shadow:none!important;break-inside:avoid!important}
+  .country-title{display:flex!important;align-items:center!important;gap:2mm!important;padding-bottom:2mm!important}
+  .country-title h3{font:700 11pt Georgia,serif!important}
+  .country-story{display:block!important;padding:2mm 0!important;border-bottom:1px solid #e5e2dc!important;break-inside:avoid!important}
+  .country-story b{font:700 9pt/1.2 Georgia,serif!important}
+  .country-story .kicker,.country-read{font:6.5pt Arial,sans-serif!important}
+  .frontpage{margin:5mm 0 0!important;padding:4mm 0!important;border:0!important;border-top:2.5pt solid #102b4e!important;border-bottom:1px solid #bbb!important;border-radius:0!important;background:#fff!important;box-shadow:none!important;break-inside:auto!important}
+  .frontpage-top{padding:0 0 2mm!important;border-bottom:1px solid #ccc!important}
+  .frontpage-grid{display:block!important;width:100%!important;margin:0!important;padding:3mm 0 0!important}
+  #featuredStory.featured-story,#featuredStory.feature-pair-shell{display:block!important;width:100%!important;min-width:0!important;max-width:none!important;border:0!important;padding:0!important;margin:0!important}
+  #featuredStory .feature-pair{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6mm!important;width:100%!important}
+  #featuredStory .feature-card{display:grid!important;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr)!important;align-content:start!important;align-items:start!important;gap:3mm!important;min-width:0!important;width:100%!important;padding:0 0 3mm!important;margin:0!important;border:0!important;border-bottom:1px solid #ddd!important;background:#fff!important;break-inside:avoid!important}
+  #featuredStory .feature-card-image{display:block!important;min-width:0!important;width:100%!important;height:35mm!important;min-height:35mm!important;max-height:35mm!important;overflow:hidden!important}
+  #featuredStory .feature-card-image img,#featuredStory .feature-card-image .feature-image{display:block!important;width:100%!important;height:35mm!important;min-height:35mm!important;max-height:35mm!important;object-fit:cover!important}
+  #featuredStory .feature-copy{min-width:0!important;padding:0!important}
+  #featuredStory .feature-copy h1,#featuredStory .feature-copy h2{font:700 15pt/1.08 Georgia,serif!important;letter-spacing:-.2pt!important;margin:1mm 0 2mm!important;overflow-wrap:break-word!important}
+  #featuredStory .feature-copy .dek{font:8pt/1.35 Georgia,serif!important;margin:0!important}
+  #featuredStory .feature-meta{margin-top:2mm!important;font:6pt Arial,sans-serif!important}
+  .frontpage-aside{display:block!important;width:100%!important;margin:4mm 0 0!important;padding:3mm 0 0!important;border:0!important;border-top:1px solid #bbb!important}
+  .frontpage-aside .aside-heading{padding:0 0 2mm!important}
+  .frontpage-aside #latestBriefs{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:3mm!important}
+  .frontpage-aside .brief-link{display:flex!important;min-width:0!important;gap:2mm!important;padding:2mm!important;border:1px solid #ddd!important;break-inside:avoid!important}
+  .frontpage-aside .brief-link b{font:700 9pt/1.2 Georgia,serif!important}
+  .frontpage-aside .brief-link p{display:block!important;font:7pt/1.3 Georgia,serif!important;white-space:normal!important;overflow:visible!important;-webkit-line-clamp:unset!important}
+  .frontpage-aside .brief-arrow{display:none!important}
+  #latest-publications{padding:5mm 0!important;break-inside:auto!important}
+  #latest-publications>.section-head,.category-section>.section-head,#secciones>.section-head{margin:0 0 3mm!important;padding:0 0 2mm!important;break-after:avoid!important;page-break-after:avoid!important}
+  #latest-publications>.section-head h2,.category-section>.section-head h2,#secciones>.section-head h2{font:700 17pt Georgia,serif!important}
+  #publishedArticles.cards,.category-section .cards{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:start!important;gap:4mm!important}
+  #publishedArticles .story,.category-section .story{display:block!important;min-width:0!important;padding:0 0 3mm!important;margin:0!important;border:0!important;border-bottom:1px solid #ddd!important;background:#fff!important;box-shadow:none!important;break-inside:avoid!important;page-break-inside:avoid!important}
+  .story-link{display:block!important;min-width:0!important}
+  .story img.story-image,.story-link .story-art{display:block!important;width:100%!important;height:29mm!important;min-height:29mm!important;max-height:29mm!important;object-fit:cover!important;margin:0 0 2mm!important}
+  .story-copy{padding:0!important}
+  .story-copy .kicker{font:6.5pt Arial,sans-serif!important}
+  .story-copy h3{font:700 12pt/1.13 Georgia,serif!important;margin:1.5mm 0!important;overflow-wrap:break-word!important}
+  .story-copy p{font:7.5pt/1.35 Georgia,serif!important;margin:1mm 0!important}
+  .lead-meta{margin-top:1.5mm!important;font:6pt Arial,sans-serif!important}
+  #sectionFeeds{display:block!important}
+  .category-section{display:block!important;width:100%!important;margin:0!important;padding:5mm 0!important;border-bottom:1px solid #ccc!important;break-inside:auto!important;page-break-inside:auto!important}
+  .category-section>.section-head{break-after:avoid!important;page-break-after:avoid!important}
+  .category-section .cards{break-before:avoid!important;page-break-before:avoid!important}
+  .category-section .story{break-inside:avoid!important;page-break-inside:avoid!important}
+  .opinion{display:grid!important;grid-template-columns:1fr 1fr!important;gap:5mm!important;margin:5mm 0!important;padding:5mm!important;border:1px solid #ddd!important;border-top:2.5pt solid #a9232d!important;border-radius:0!important;background:#f7f6f2!important;break-inside:avoid!important}
+  .opinion h2{font:700 17pt Georgia,serif!important}
+  .opinion .author{break-inside:avoid!important}
+  .opinion-latest{min-width:0!important;padding:3mm!important;background:#fff!important}
+  #secciones{padding:4mm 0!important;break-inside:avoid!important}
+  .topics{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:2mm!important}
+  .topics a{padding:2mm!important;border:1px solid #ddd!important;font:700 9pt Georgia,serif!important}
+  .reveal{opacity:1!important;transform:none!important;animation:none!important}
+  a{color:inherit!important;text-decoration:none!important}
+  img{max-width:100%!important}
+}

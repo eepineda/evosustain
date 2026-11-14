@@ -62,3 +62,11 @@
 .evo-pwa .app-bottom-nav a[aria-current=page] .nav-icon{color:#b32635}
 @media(min-width:700px){.evo-pwa .wrap{max-width:920px!important;margin:0 auto!important}.evo-pwa .app-bottom-nav{max-width:700px;left:50%;right:auto;width:100%;transform:translateX(-50%);border:1px solid #dfe5ec;border-bottom:0;border-radius:18px 18px 0 0}.evo-pwa .cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media print{.evo-pwa .app-bottom-nav{display:none!important}}
+
+
+/* Safety net: hide the ecosystem switcher on every installed-app route. */
+@media (display-mode: standalone), (display-mode: fullscreen) {
+  .ecosystem-nav,
+  .ecosystem-nav-inner,
+  .ecosystem-bar { display:none!important; }
+}

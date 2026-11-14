@@ -12,9 +12,37 @@ function getImage(url){
  if(!url||!/^https:\/\//i.test(url))return Promise.resolve(null);
  return fetch(url,{mode:"cors",credentials:"omit"}).then(function(r){if(!r.ok)throw Error("image");return r.blob();}).then(function(b){return new Promise(function(resolve){var objectUrl=URL.createObjectURL(b),img=new Image();img.onload=function(){try{var canvas=document.createElement("canvas");canvas.width=img.naturalWidth||img.width;canvas.height=img.naturalHeight||img.height;var ctx=canvas.getContext("2d");ctx.fillStyle="#ffffff";ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0);var data=canvas.toDataURL("image/jpeg",0.9);URL.revokeObjectURL(objectUrl);resolve({data:data,type:"image/jpeg"});}catch(e){URL.revokeObjectURL(objectUrl);resolve(null);}};img.onerror=function(){URL.revokeObjectURL(objectUrl);resolve(null);};img.src=objectUrl;});}).catch(function(){return null;});
 }
+var pdfLibraryPromise=null;
+function loadPdfLibrary(){
+ if(window.jspdf&&window.jspdf.jsPDF)return Promise.resolve();
+ if(pdfLibraryPromise)return pdfLibraryPromise;
+ var sources=[
+  "https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js",
+  "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js",
+  "https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js"
+ ];
+ pdfLibraryPromise=new Promise(function(resolve,reject){
+  var index=0;
+  function attempt(){
+   if(window.jspdf&&window.jspdf.jsPDF){resolve();return;}
+   if(index>=sources.length){reject(new Error("No se pudo descargar jsPDF desde los servidores disponibles."));return;}
+   var script=document.createElement("script");script.src=sources[index++];script.async=true;script.crossOrigin="anonymous";
+   script.onload=function(){if(window.jspdf&&window.jspdf.jsPDF)resolve();else attempt();};
+   script.onerror=attempt;document.head.appendChild(script);
+  }
+  attempt();
+ });
+ return pdfLibraryPromise;
+}
 function generate(){
  var en=lang()==="en",a3=paper()==="a3";
- if(!window.jspdf||!window.jspdf.jsPDF){alert(en?"PDF engine unavailable. Check your connection and retry.":"No se pudo cargar el motor PDF. Comprueba la conexión e inténtalo de nuevo.");return;}
+ if(!window.jspdf||!window.jspdf.jsPDF){
+  loadPdfLibrary().then(function(){pdfLibraryPromise=null;generate();}).catch(function(error){
+   console.error("Evoford PDF library:",error);
+   alert(en?"The PDF library could not be downloaded. Check your connection, disable any content blocker for this site, and retry.":"No se pudo descargar la biblioteca PDF. Comprueba la conexión, permite los recursos externos para este sitio e inténtalo de nuevo.");
+  });
+  return;
+ }
  var lead=$("#lead"),article=$("#fullArticle"),secondary=$(".secondary-area");
  if(!lead||!$(".lead-headline h1",lead)){alert(en?"The edition is still loading.":"La edición todavía se está cargando.");return;}
  var JsPDF=window.jspdf.jsPDF,doc=new JsPDF({orientation:"portrait",unit:"mm",format:a3?"a3":"a4",compress:true});

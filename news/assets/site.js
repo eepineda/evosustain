@@ -18,7 +18,7 @@ function renderStaticLanguage(){
  const mainNavLabels=en
   ? ["International","Politics","Economy","Security","Startups & innovation","Evoford Briefing","Opinion","Directory","Submit a story","Print edition"]
   : ["Internacional","Política","Economía","Seguridad","Startups e innovación","Evoford Briefing","Opinión","Directorio","Envía tu noticia","Edición impresa"];
- const mainNav=document.querySelector("header nav");
+ const mainNav=document.querySelector(".masthead .nav");
  if(mainNav){
   Array.from(mainNav.querySelectorAll("a")).forEach((el,i)=>{
    if(mainNavLabels[i])el.textContent=mainNavLabels[i];

@@ -122,7 +122,7 @@ img{max-width:100%}
   var popup=window.open("","_blank");
   if(!popup){window.alert("Permite las ventanas emergentes para imprimir la edición de Evoford News.");return;}
   popup.document.open();
-  popup.document.write(makeDocument(size));
+  popup.document.write(makeDocument(size));\n  popup.document.documentElement.setAttribute("data-paper-size",size);
   popup.document.close();
   var images=Array.prototype.slice.call(popup.document.images);
   images.forEach(function(img){img.loading="eager";});

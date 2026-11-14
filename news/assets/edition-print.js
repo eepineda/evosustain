@@ -64,8 +64,12 @@ function generate(){
   y=top+Math.max(photoH,sy-top)+5;ruleLine(m,y,W-m,y,navy,.65);y+=6;
  }
  function articleColumns(nodes,cols,pt){
-  var gap=a3?7:5.5,cw=(U-gap*(cols-1))/cols,col=0,x=m,top=y;
-  function advance(){col++;if(col>=cols){nextPage();col=0;top=y;}x=m+col*(cw+gap);y=top;}
+  var gap=a3?7:5.5,cw=(U-gap*(cols-1))/cols,col=0,x=m,top=y,colBottom=top;
+  function advance(){
+   colBottom=Math.max(colBottom,y);col++;
+   if(col>=cols){nextPage();col=0;top=y;colBottom=top;}
+   x=m+col*(cw+gap);y=top;
+  }
   nodes.forEach(function(node){
    var str=clean(plain(node));if(!str)return;
    var heading=/^H[1-6]$/.test(node.tagName),fs=heading?(a3?10:9):pt,style=heading?"bold":"normal",step=fs*.4;
@@ -74,6 +78,7 @@ function generate(){
    lines.forEach(function(ln){if(y+step>H-m-12)advance();font(style,fs,heading?navy:ink);doc.text(ln,x,y);y+=step;});
    y+=heading?1.5:1.2;
   });
+  y=Math.max(colBottom,y);
  }
  function drawStories(images){
   var cols=a3?4:3,gap=5,cw=(U-gap*(cols-1))/cols,idx=0;
@@ -99,8 +104,8 @@ function generate(){
   font("bold",6.5,red);doc.text(en?"FULL STORY":"ARTÍCULO COMPLETO",m,y);y+=4;
   font("bold",a3?15:12,ink);doc.splitTextToSize(articleTitle,U).forEach(function(v){ensure(5);doc.text(v,m,y);y+=5;});
   y+=3;ruleLine(m,y,W-m,y,rule,.3);y+=5;articleColumns(bodyNodes,a3?3:2,a3?9:7.6);y+=5;
-  ensure(15);doc.setDrawColor(190,198,205);doc.setLineDash([1,1],0);doc.rect(m,y,U,11);doc.setLineDash([]);font("bold",6,grey);doc.text(en?"ADVERTISING SPACE":"ESPACIO PUBLICITARIO",W/2,y+6.5,{align:"center"});y+=15;
-  if(y>H-m-30)nextPage();
+  if(y+15>H-m-11)nextPage();doc.setDrawColor(190,198,205);doc.setLineDash([1,1],0);doc.rect(m,y,U,11);doc.setLineDash([]);font("bold",6,grey);doc.text(en?"ADVERTISING SPACE":"ESPACIO PUBLICITARIO",W/2,y+6.5,{align:"center"});y+=15;
+  if(y+38>H-m-11)nextPage();
   ruleLine(m,y,W-m,y,navy,.7);y+=5;font("bold",7,navy);doc.text(en?"MORE STORIES":"OTRAS NOTICIAS",m,y);
   font("normal",6,grey);doc.text(stories.length+" "+(en?"stories":"noticias"),W-m,y,{align:"right"});y+=6;
   drawStories(images[1]);footer();

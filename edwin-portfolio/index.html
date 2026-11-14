@@ -41,7 +41,21 @@ body{font-size:15px;line-height:1.7}
 @media(max-width:700px){.hero{min-height:0;padding:48px 0;grid-template-columns:1fr;gap:28px}.hero h1{font-size:clamp(3rem,13vw,4.5rem)}.portrait{min-height:340px;max-width:440px}.section{padding:38px 0}.career-item{grid-template-columns:1fr;gap:4px;padding:16px}.career-date{font-size:.76rem}.career-timeline{padding-left:27px}.career-timeline:before{left:8px}.career-item:before{left:-25px;top:22px}}
 @media(prefers-reduced-motion:reduce){.career-item{transition:none}}
 
-.cert-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.cert-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;min-width:0}.cert-card h3{font-size:.94rem;line-height:1.4;margin:0 0 7px}.cert-provider{font-size:.82rem;font-weight:700;color:var(--accent)}.cert-meta{font-size:.76rem;color:var(--muted);margin-top:4px}.cert-id{font-size:.72rem;color:var(--muted);overflow-wrap:anywhere;margin-top:6px}.cert-group{grid-column:1/-1;margin:12px 0 0;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:800}.cert-note{font-size:.8rem;color:var(--muted);margin-top:5px}@media(max-width:640px){.cert-grid{grid-template-columns:1fr}}.career-education-heading{position:relative;margin:22px 0 4px -32px;padding:12px 18px;background:var(--accent);color:#fff;border-radius:8px;font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.career-item.education:before{background:#8b6bb2;box-shadow:0 0 0 1px #8b6bb2}.career-item.education .career-meta{font-size:.78rem;color:var(--muted);margin-top:5px}@media(max-width:700px){.career-education-heading{margin-left:-27px}}</style><script src="/maintenance.js"></script>
+.cert-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.cert-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;min-width:0}.cert-card h3{font-size:.94rem;line-height:1.4;margin:0 0 7px}.cert-provider{font-size:.82rem;font-weight:700;color:var(--accent)}.cert-meta{font-size:.76rem;color:var(--muted);margin-top:4px}.cert-id{font-size:.72rem;color:var(--muted);overflow-wrap:anywhere;margin-top:6px}.cert-group{grid-column:1/-1;margin:12px 0 0;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:800}.cert-note{font-size:.8rem;color:var(--muted);margin-top:5px}@media(max-width:640px){.cert-grid{grid-template-columns:1fr}}.career-education-heading{position:relative;margin:22px 0 4px -32px;padding:12px 18px;background:var(--accent);color:#fff;border-radius:8px;font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.career-item.education:before{background:#8b6bb2;box-shadow:0 0 0 1px #8b6bb2}.career-item.education .career-meta{font-size:.78rem;color:var(--muted);margin-top:5px}@media(max-width:700px){.career-education-heading{margin-left:-27px}}
+/* Strategic ventures */
+.project-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.project-card{display:flex;flex-direction:column;min-height:310px;padding:26px;background:var(--panel);border:1px solid var(--line);border-radius:15px;box-shadow:0 12px 34px #10243a0a}
+.project-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+.project-symbol{display:grid;place-items:center;width:42px;height:42px;border:1px solid var(--line);border-radius:10px;font-size:1.25rem;color:var(--accent)}
+.project-type{font-size:.68rem;font-weight:800;letter-spacing:.09em;color:var(--muted)}
+.project-card h3{font-size:1.55rem;line-height:1.2;margin:0 0 10px}
+.project-card p{color:var(--muted);margin:0 0 20px;max-width:560px}
+.project-focus{display:grid;gap:3px;padding:13px 15px;margin-top:auto;background:color-mix(in srgb,var(--accent) 6%,var(--panel));border:1px solid var(--line);border-radius:9px;font-size:.83rem}
+.project-focus strong{font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;color:var(--accent)}
+.project-link{display:inline-flex;align-items:center;gap:8px;margin-top:18px;color:var(--accent);font-weight:800;text-decoration:none}
+.project-link:hover{text-decoration:underline}
+@media(max-width:700px){.project-grid{grid-template-columns:1fr}.project-card{min-height:0}}
+</style><script src="/maintenance.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Edwin Pineda Carrasco | Portfolio personal</title>
@@ -109,26 +123,30 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
       <div class="career-legend"><span><i class="legend-dot current"></i> Actual</span><span><i class="legend-dot tech"></i> Tecnología e infraestructura</span><span><i class="legend-dot leadership"></i> Dirección y emprendimiento</span><span><i class="legend-dot public"></i> Sector público y salud</span></div>
       <div class="career-timeline" id="careerTimeline"></div>
     </section>
-<section class="container section reveal" id="startup">
+<section class="container section reveal" id="projects">
   <div class="section-head">
-    <div class="section-icon">♻</div>
-    <h2 data-i18n="startup.title">EvoSustain · Innovación en logística sostenible</h2>
+    <div class="section-icon">✦</div>
+    <div>
+      <div class="eyebrow" data-i18n="projects.eyebrow">INICIATIVAS PROPIAS</div>
+      <h2 data-i18n="projects.title">Emprendimiento e impacto digital</h2>
+    </div>
   </div>
-  <div class="panel">
-    <p data-i18n="startup.p1">
-      Actualmente participo en el desarrollo de EvoSustain, una iniciativa tecnológica orientada a mejorar la eficiencia en la logística de recolección de residuos en Londres. El proyecto busca reducir contaminación, evitar rutas innecesarias y aumentar la eficiencia operativa de las organizaciones.
-    </p>
-    <p data-i18n="startup.p2">
-      A través de una aplicación digital, EvoSustain ayuda a las empresas a planificar mejor sus operaciones, optimizar recorridos, mejorar la trazabilidad y apoyar modelos de sostenibilidad corporativa basados en datos.
-    </p>
-    <p data-i18n="startup.p3">
-      Esta iniciativa conecta tecnología, sostenibilidad y eficiencia empresarial mediante una plataforma pensada para una logística más inteligente, responsable y escalable.
-    </p>
-    <p>
-      <a class="btn-primary" href="https://www.evoford.com" target="_blank" rel="noopener noreferrer">
-        ↗ <span data-i18n="startup.cta">Ver aplicación y demo</span>
-      </a>
-    </p>
+  <p class="section-lead" data-i18n="projects.intro">Dos iniciativas que conectan tecnología aplicada, sostenibilidad, información y desarrollo empresarial.</p>
+  <div class="project-grid">
+    <article class="project-card">
+      <div class="project-top"><span class="project-symbol">♻</span><span class="project-type" data-i18n="projects.evo.type">TECNOLOGÍA · SOSTENIBILIDAD</span></div>
+      <h3 data-i18n="projects.evo.title">EvoSustain</h3>
+      <p data-i18n="projects.evo.summary">Plataforma digital orientada a mejorar la eficiencia de la logística de recogida de residuos en Londres mediante planificación, optimización de rutas y trazabilidad.</p>
+      <div class="project-focus"><strong data-i18n="projects.focus">Enfoque estratégico</strong><span data-i18n="projects.evo.focus">Operaciones inteligentes · Datos · Eficiencia ambiental</span></div>
+      <a class="project-link" href="https://evoford.com/" target="_blank" rel="noopener noreferrer"><span data-i18n="projects.evo.cta">Explorar EvoSustain</span> ↗</a>
+    </article>
+    <article class="project-card">
+      <div class="project-top"><span class="project-symbol">◈</span><span class="project-type" data-i18n="projects.news.type">MEDIOS · ANÁLISIS · ACTUALIDAD</span></div>
+      <h3 data-i18n="projects.news.title">Evoford News</h3>
+      <p data-i18n="projects.news.summary">Publicación digital centrada en información, análisis y opinión sobre asuntos internacionales, economía, política, seguridad e innovación.</p>
+      <div class="project-focus"><strong data-i18n="projects.focus">Enfoque estratégico</strong><span data-i18n="projects.news.focus">Periodismo digital · Contexto · Criterio editorial</span></div>
+      <a class="project-link" href="https://evoford.com/news/" target="_blank" rel="noopener noreferrer"><span data-i18n="projects.news.cta">Visitar Evoford News</span> ↗</a>
+    </article>
   </div>
 </section>
     <section class="container section reveal" id="logos">
@@ -171,10 +189,10 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
         newsLink: 'Evoford News ↗',
         theme: 'Modo automático',
         hero: {
-          badge: 'Tecnología empresarial · Cloud · Data',
+          badge: 'Tecnología · Infraestructura · Emprendimiento digital',
           name: 'Edwin Pineda',
-          role: 'Senior Cloud & Infrastructure Engineer | Database Engineering | Azure & AWS | Data Platforms | Cybersecurity',
-          copy: 'Profesional senior de tecnología especializado en plataformas de datos, infraestructura cloud y arquitectura de bases de datos. Mi trayectoria abarca entornos empresariales de alta exigencia en banca, sanidad, telecomunicaciones y servicios, contribuyendo a la modernización, resiliencia y continuidad de sistemas y servicios tecnológicos críticos.',
+          role: 'Senior Cloud & Infrastructure Engineer | Data Platforms | Azure & AWS | Founder, EvoSustain & Evoford News',
+          copy: 'Profesional senior de tecnología con experiencia en arquitectura de datos, infraestructura cloud y servicios críticos en banca, sanidad y telecomunicaciones. Combino esta trayectoria con el desarrollo de iniciativas propias: EvoSustain, enfocada en logística sostenible basada en datos, y Evoford News, una publicación digital de información y análisis. Mi trabajo conecta ingeniería, innovación y visión empresarial.',
           cta1: 'Explorar trayectoria',
           cta2: 'Leer artículos en Evoford News',
           stat1: '+15 años de trayectoria tecnológica',
@@ -189,12 +207,25 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
           p2: 'Mi perfil combina experiencia en plataformas de datos, bases de datos, cloud, sector público, banca, salud, educación y seguros. También mantengo un fuerte interés por la formación continua, el impacto social y la transmisión de conocimiento.',
           chips: []
         },
-        startup: {
-          title: 'EvoSustain · Innovación en logística sostenible',
-          p1: 'Actualmente participo en el desarrollo de EvoSustain, una iniciativa tecnológica orientada a mejorar la eficiencia en la logística de recolección de residuos en Londres. El proyecto busca reducir contaminación, evitar rutas innecesarias y aumentar la eficiencia operativa de las organizaciones.',
-          p2: 'A través de una aplicación digital, EvoSustain ayuda a las empresas a planificar mejor sus operaciones, optimizar recorridos, mejorar la trazabilidad y apoyar modelos de sostenibilidad corporativa basados en datos.',
-          p3: 'Esta iniciativa conecta tecnología, sostenibilidad y eficiencia empresarial mediante una plataforma pensada para una logística más inteligente, responsable y escalable.',
-          cta: 'Ver aplicación y demo'
+        projects: {
+          eyebrow: 'INICIATIVAS PROPIAS',
+          title: 'Emprendimiento e impacto digital',
+          intro: 'Dos iniciativas que conectan tecnología aplicada, sostenibilidad, información y desarrollo empresarial.',
+          focus: 'Enfoque estratégico',
+          evo: {
+            type: 'TECNOLOGÍA · SOSTENIBILIDAD',
+            title: 'EvoSustain',
+            summary: 'Plataforma digital orientada a mejorar la eficiencia de la logística de recogida de residuos en Londres mediante planificación, optimización de rutas y trazabilidad.',
+            focus: 'Operaciones inteligentes · Datos · Eficiencia ambiental',
+            cta: 'Explorar EvoSustain'
+          },
+          news: {
+            type: 'MEDIOS · ANÁLISIS · ACTUALIDAD',
+            title: 'Evoford News',
+            summary: 'Publicación digital centrada en información, análisis y opinión sobre asuntos internacionales, economía, política, seguridad e innovación.',
+            focus: 'Periodismo digital · Contexto · Criterio editorial',
+            cta: 'Visitar Evoford News'
+          }
         },
         timeline: {
           title: 'Trayectoria profesional',
@@ -269,10 +300,10 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
         newsLink: 'Evoford News ↗',
         theme: 'Auto mode',
         hero: {
-          badge: 'Enterprise Technology · Cloud · Data',
+          badge: 'Technology · Infrastructure · Digital Ventures',
           name: 'Edwin Pineda',
-          role: 'Senior Cloud & Infrastructure Engineer | Database Engineering | Azure & AWS | Data Platforms | Cybersecurity',
-          copy: 'Senior technology professional specialising in data platforms, cloud infrastructure and database architecture. My career spans demanding enterprise environments across banking, healthcare, telecommunications and services, contributing to the modernisation, resilience and continuity of critical technology systems and services.',
+          role: 'Senior Cloud & Infrastructure Engineer | Data Platforms | Azure & AWS | Founder, EvoSustain & Evoford News',
+          copy: 'Senior technology professional experienced in data architecture, cloud infrastructure and critical services across banking, healthcare and telecommunications. Alongside this career, I develop two independent initiatives: EvoSustain, focused on data-led sustainable logistics, and Evoford News, a digital publication for news and analysis. My work brings together engineering, innovation and business perspective.',
           cta1: 'Explore journey',
           cta2: 'Read articles on Evoford News',
           stat1: '15+ years in technology',
@@ -287,12 +318,25 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
           p2: 'My profile combines experience in data platforms, databases, cloud, public sector, banking, healthcare, education and insurance. I also maintain a strong commitment to lifelong learning, social impact and knowledge sharing.',
           chips: ['Dominican Republic','Spain','United Kingdom','Cloud','Data','Public sector','Healthcare','Insurance']
         },
-        startup: {
-          title: 'EvoSustain · Sustainable logistics innovation',
-          p1: 'I am currently involved in the development of EvoSustain, a technology initiative focused on improving waste collection logistics in London. The project aims to reduce pollution, eliminate unnecessary routes and increase operational efficiency for organizations.',
-          p2: 'Through a digital application, EvoSustain helps companies plan operations more effectively, optimize routes, improve traceability and support corporate sustainability models driven by data.',
-          p3: 'This initiative connects technology, sustainability and business efficiency through a platform designed for smarter, more responsible and scalable logistics.',
-          cta: 'View app and demo'
+        projects: {
+          eyebrow: 'INDEPENDENT VENTURES',
+          title: 'Entrepreneurship and digital impact',
+          intro: 'Two initiatives connecting applied technology, sustainability, information and business development.',
+          focus: 'Strategic focus',
+          evo: {
+            type: 'TECHNOLOGY · SUSTAINABILITY',
+            title: 'EvoSustain',
+            summary: 'A digital platform designed to improve waste collection logistics in London through planning, route optimisation and operational traceability.',
+            focus: 'Intelligent operations · Data · Environmental efficiency',
+            cta: 'Explore EvoSustain'
+          },
+          news: {
+            type: 'MEDIA · ANALYSIS · CURRENT AFFAIRS',
+            title: 'Evoford News',
+            summary: 'A digital publication covering news, analysis and opinion on international affairs, economics, politics, security and innovation.',
+            focus: 'Digital journalism · Context · Editorial judgement',
+            cta: 'Visit Evoford News'
+          }
         },
         timeline: {
           title: 'Professional experience',

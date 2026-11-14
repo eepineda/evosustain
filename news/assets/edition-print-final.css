@@ -1,6 +1,4 @@
 /* EVOFORD NEWS — impresión nativa estable para Chrome y Edge */
-@page { size: A4 portrait; margin: 10mm; }
-
 @media print {
   :root { color-scheme: light; }
   html, body {

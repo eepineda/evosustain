@@ -132,7 +132,7 @@ async function loadOverview(){
   ["Solicitudes en el periodo",val("submissionsPeriod")+val("coursesPeriod")+val("directoryPeriod"),"Últimos "+range+" días"],
   ["Campañas publicitarias",adVal("adCampaignsTotal"),adVal("adCampaignsActive")+" activas"],
   ["Solicitudes comerciales",adVal("adEnquiriesTotal"),adVal("adEnquiriesReceived")+" recibidas"],
-  ["Ingresos publicitarios",adVal("adCampaignsPaid"),"campañas pagadas · "+adVal("adCampaignsUnpaid")+" por cobrar"]
+  ["Campañas pagadas",adVal("adCampaignsPaid"),adVal("adCampaignsUnpaid")+" sin pagar"]
  ];
  kpis.innerHTML=cards.map(([label,value,note])=>'<article class="overview-kpi"><span>'+safe(label)+'</span><strong>'+value+'</strong><small>'+safe(note)+'</small></article>').join("");
  const bins=range===7?7:range===30?10:12;

@@ -46,6 +46,12 @@
 .language-switch{display:flex;gap:4px;margin-left:12px}.language-switch button{border:1px solid #bbb;background:#fff;color:#333;padding:5px 9px;font:700 10px Arial,sans-serif;cursor:pointer}.language-switch button[aria-pressed="true"]{background:#202020;color:#fff;border-color:#202020}.edition{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.edition #today{margin-left:auto}@media(max-width:500px){.edition #today{margin-left:0}.language-switch{margin-left:auto}}\n
  
 
+
+#historia-rd .history-map{display:block;width:100%;max-width:360px;height:auto;max-height:245px;object-fit:contain;filter:drop-shadow(0 8px 12px rgba(0,0,0,.18));border-radius:3px;background:#f7f4ed}
+#historia-rd .history-map-credit{margin:8px 0 12px;text-align:right;color:#777;font:10px/1.5 Arial,sans-serif}
+#historia-rd .history-map-credit a{color:#e5bd79;text-decoration:underline}
+@media(max-width:760px){#historia-rd .history-map{max-width:290px;max-height:220px;margin:auto}}
+
 /* Infografía horizontal inspirada en la referencia adjunta */
 #historia-rd .history-infographic{margin:20px 0 24px;background:#fff;border-bottom:1px solid #d8d8d8;overflow-x:auto;scrollbar-color:#b7b7b7 #eee}
 #historia-rd .timeline-top,#historia-rd .timeline-decade-bar,#historia-rd .timeline-lower{display:grid;grid-template-columns:repeat(10,minmax(105px,1fr));min-width:1050px}
@@ -154,8 +160,9 @@
 <div class="history-section-head"><h2>República Dominicana · 1844-2026</h2><span>HISTORIA PRESIDENCIAL Y CAMBIOS DE GOBIERNO</span></div>
 <div class="history-hero">
 <div class="history-hero-copy"><span class="history-kicker">CRONOLOGÍA NACIONAL · 182 AÑOS</span><h2>De la Independencia a la República actual</h2><p>Una mirada visual a los gobiernos, presidentes y acontecimientos que han marcado la vida política dominicana.</p><div class="history-years"><b>1844</b><span></span><b>2026</b></div></div>
-<svg class="history-map" viewBox="0 0 420 260" role="img" aria-label="Silueta ilustrada de la isla La Española"><path d="M22 129 48 112 72 112 94 97 121 101 145 87 172 94 193 82 219 92 241 84 265 96 286 91 306 106 328 108 344 126 367 130 389 146 376 160 355 159 341 175 321 173 304 190 280 187 265 202 241 196 222 207 198 198 177 210 157 199 137 204 119 188 98 191 82 174 61 174 47 157 28 153Z" fill="#f4f0e8" stroke="#202020" stroke-width="2.2"/><path d="M22 129 48 112 72 112 94 97 121 101 145 87 172 94 193 82 219 92 241 84 265 96 286 91 306 106 328 108 344 126 367 130 389 146 376 160 355 159 341 175 321 173 304 190 280 187 265 202 241 196 222 207 198 198 177 210 157 199 137 204 119 188 98 191 82 174 61 174 47 157 28 153Z" fill="none" stroke="#9f1d20" stroke-width="2"/><path class="dr-region" d="M220 92 241 84 265 96 286 91 306 106 328 108 344 126 367 130 389 146 376 160 355 159 341 175 321 173 304 190 280 187 265 202 241 196 222 207 220 188 231 171 226 154 235 139 225 122Z"/><path class="border-line" d="M220 92 225 122 235 139 226 154 231 171 220 188 222 207"/><path d="M30 140 389 146" stroke="#1d4775" stroke-width="3" stroke-dasharray="5 7"/><text class="map-label" x="205" y="238" text-anchor="middle">LA ESPAÑOLA · CARIBE</text><text class="map-label" x="305" y="145" text-anchor="middle">REP. DOMINICANA</text><path d="M204 28v35m-12-12 12 12 12-12" stroke="#9f1d20" stroke-width="2" fill="none"/><text x="204" y="18" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#202020">REPÚBLICA DOMINICANA</text></svg>
+<img class="history-map" src="https://commons.wikimedia.org/wiki/Special:FilePath/Rep%C3%BAblica_Dominicana_pol%C3%ADtico_2023.jpg" alt="Mapa político de la República Dominicana con sus divisiones provinciales" loading="lazy">
 </div>
+<div class="history-map-credit">Mapa político: Instituto Geográfico Nacional José Joaquín Hungría Morell, 2023 · <a href="https://commons.wikimedia.org/wiki/File:Rep%C3%BAblica_Dominicana_pol%C3%ADtico_2023.jpg" target="_blank" rel="noopener">Fuente y licencia</a>.</div>
 <div class="history-infographic" aria-label="Línea de tiempo de la historia dominicana">
  <div class="timeline-top">
   <div><b>1844</b><span>Independencia</span></div><div><b>1861</b><span>Anexión</span></div><div><b>1863</b><span>Restauración</span></div><div><b>1916</b><span>Ocupación</span></div><div><b>1930</b><span>Trujillo</span></div><div><b>1961</b><span>Transición</span></div><div><b>1965</b><span>Guerra de Abril</span></div><div><b>1978</b><span>Democracia</span></div><div><b>1996</b><span>Alternancia</span></div><div><b>2020</b><span>Actualidad</span></div>
@@ -209,6 +216,6 @@
 <div class="editorial-note"><b>Criterio editorial:</b> Evoford News tratará a las organizaciones con neutralidad, identificará las fuentes, distinguirá información de opinión y actualizará los datos de representación y reconocimiento con documentación oficial.</div>
 </main>
 <footer><a class="footer-brand" href="./">EVOFORD NEWS</a><span>Noticias · Opinión · Análisis</span><a href="https://jce.gob.do/partidos-politicos" target="_blank" rel="noopener noreferrer">Junta Central Electoral</a><span>© <span id="year"></span> Evoford</span><a href="a.html?i=c29icmUtZXZvZm9yZC5odG1s">Sobre / About Evoford News</a></footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/politica.js?v=20261114-hyphen-clean1"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/politica.js?v=20261114-dr-map-current1"></script>
 
 </body></html>

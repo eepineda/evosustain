@@ -65,7 +65,7 @@ form.addEventListener("submit",async event=>{
   const payload={advertiser_type:document.getElementById("advertiserType").value,company_name:document.getElementById("company").value.trim(),contact_name:document.getElementById("contact").value.trim(),email:document.getElementById("email").value.trim(),phone:document.getElementById("phone").value.trim()||null,website:document.getElementById("website").value.trim()||null,budget:document.getElementById("budget").value||null,placement_interest:document.getElementById("placement").value||null,message:document.getElementById("message").value.trim(),attachment_path:attachmentPath,attachment_name:artwork?.name||null,attachment_mime:artwork?.type||null,status:"received"};
   const {error}=await client.from("ad_enquiries").insert(payload);if(error)throw error;
   form.reset();msg.textContent=t.success;
- }catch(error){console.error("Advertising enquiry submission failed:",error);msg.textContent=t.failure;}
+ }catch(error){console.error("Advertising enquiry submission failed:",error);const detail=error?.message||error?.error_description||error?.details||"";msg.textContent=t.failure+(detail?" ("+detail+")":"");}
  finally{btn.disabled=false;}
 });
 </script></body></html>

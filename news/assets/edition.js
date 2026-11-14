@@ -2,7 +2,7 @@
 "use strict";
 const URL="https://poywsdigujbarvnzbfnz.supabase.co";
 const KEY="sb_publishable_1t7gv1Y9-6HHwMqW5E343A_51GH_L7f";
-const $=id=>document.getElementById(id);let language=localStorage.getItem("evoford-news-language")==="en"?"en":"es",articles=[],printAdCampaign=null;
+const $=id=>document.getElementById(id);let language=localStorage.getItem("evoford-news-language")==="en"?"en":"es",articles=[],printAdCampaign=null,editionLoadPromise=Promise.resolve();
 const ui={
 es:{back:"← Volver a Evoford News",format:"Formato",a4:"A4 · Estándar",a3:"A3 · Periódico",refresh:"Actualizar edición",print:"Imprimir / Guardar PDF",other:"English",date:"EDICIÓN DEL",descriptor:"INFORMACIÓN · OPINIÓN · ANÁLISIS",kicker:"EL PERIÓDICO GLOBAL · INFORMACIÓN CON CONTEXTO",motto:"Noticias para entender el mundo",sections:"INTERNACIONAL · ECONOMÍA · SOCIEDAD · TECNOLOGÍA · OPINIÓN",otherNews:"OTRAS NOTICIAS",paperFooter:"Edición digital preparada para impresión",empty:"Todavía no hay artículos publicados para esta edición.",noMore:"No hay más noticias en esta edición.",stories:"noticias",by:"POR"},
 en:{back:"← Back to Evoford News",format:"Paper size",a4:"A4 · Standard",a3:"A3 · Newspaper",refresh:"Refresh edition",print:"Print / Save PDF",other:"Español",date:"EDITION OF",descriptor:"INFORMATION · OPINION · ANALYSIS",kicker:"THE GLOBAL NEWSPAPER · INFORMATION WITH CONTEXT",motto:"News to understand the world",sections:"INTERNATIONAL · ECONOMY · SOCIETY · TECHNOLOGY · OPINION",otherNews:"MORE STORIES",paperFooter:"Digital edition prepared for print",empty:"There are no published articles in this edition yet.",noMore:"There are no more stories in this edition.",stories:"stories",by:"BY"}};
@@ -107,7 +107,7 @@ async function load(){
  const client=window.supabase.createClient(URL,KEY);
  const request=client.from("articles").select("title,title_en,title_es,slug,category,author,summary,summary_en,summary_es,image_url,created_at,updated_at,country,content,content_es,content_en").eq("status","published").order("updated_at",{ascending:false}).limit(40);
  const result=await Promise.race([request,new Promise((_,reject)=>setTimeout(()=>reject(new Error("La conexión con Supabase no respondió en 12 segundos.")),12000))]);
- if(result.error)throw result.error;articles=result.data||[];render();loadPrintAd();
+ if(result.error)throw result.error;articles=result.data||[];render();await loadPrintAd();
  }catch(error){$("lead").innerHTML='<p class="empty">No se pudo cargar la edición. '+esc(error.message||"Comprueba la conexión.")+'</p>';console.error("Evoford print edition:",error);}
 }
 function syncPrintPaper(){
@@ -122,15 +122,19 @@ function syncPrintPaper(){
   document.head.appendChild(rule);
  }
  rule.textContent=isA3
-  ? "@page { size: 297mm 420mm !important; margin: 12mm !important; }"
-  : "@page { size: 210mm 297mm !important; margin: 10mm !important; }";
+  ? "@page { size: 297mm 420mm; margin: 12mm; }"
+  : "@page { size: 210mm 297mm; margin: 10mm; }";
  return raw;
 }
 $("paperSize").addEventListener("change",syncPrintPaper);
 window.addEventListener("beforeprint",syncPrintPaper);
 async function printEdition(){
- syncPrintPaper();
- await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+ const button=$("printBtn");button.disabled=true;
+ try{
+  await editionLoadPromise;
+  if($("lead").querySelector(".loading"))throw new Error("La edición todavía se está cargando. Inténtalo de nuevo en unos segundos.");
+  syncPrintPaper();
+  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
  const images=Array.from(document.querySelectorAll(".newspaper img"));
  images.forEach(img=>{img.loading="eager";});
  await Promise.all(images.map(img=>{
@@ -139,11 +143,13 @@ async function printEdition(){
   return new Promise(resolve=>{img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true});});
  }));
  if(document.fonts&&document.fonts.ready)await document.fonts.ready;
- window.print();
+  window.print();
+ }catch(error){alert(error.message||"No se pudo preparar la edición para imprimir.");}
+ finally{button.disabled=false;}
 }
 $("printBtn").addEventListener("click",printEdition);
 $("languageToggle").addEventListener("click",()=>{language=language==="es"?"en":"es";try{localStorage.setItem("evoford-news-language",language)}catch(e){}applyLanguage();render();});
-$("refreshBtn").addEventListener("click",()=>{$("lead").innerHTML='<p class="loading">'+(language==="en"?"Refreshing edition…":"Actualizando edición…")+'</p>';load();});
+$("refreshBtn").addEventListener("click",()=>{$("lead").innerHTML='<p class="loading">'+(language==="en"?"Refreshing edition…":"Actualizando edición…")+'</p>';editionLoadPromise=load();});
 syncPrintPaper();
-applyLanguage();load();
+applyLanguage();editionLoadPromise=load();
 })();

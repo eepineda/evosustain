@@ -454,3 +454,6 @@
     page-break-inside:auto!important;
   }
 }
+
+/* v12: impresión nativa, colores exactos */
+@media print { html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }

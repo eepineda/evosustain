@@ -163,3 +163,7 @@ html.evo-pwa .app-bottom-nav a[aria-current=page] .nav-icon{color:#a9232d!import
 html.evo-pwa a[href*="ZWRpdGlvbi5odG1s"]{display:none!important}
 @media(min-width:700px){html.evo-pwa .app-bottom-nav{max-width:700px!important;left:50%!important;right:auto!important;width:100%!important;transform:translateX(-50%)!important;border:1px solid #e1e6ed!important;border-bottom:0!important;border-radius:18px 18px 0 0!important}}
 @media print{html.evo-pwa .app-bottom-nav{display:none!important}}
+
+/* Reader app: keep section navigation in the bottom bar; remove the duplicate topic panel and website footer. */
+html.evo-pwa #secciones,
+html.evo-pwa footer { display:none!important; }

@@ -1,50 +1,55 @@
-/* Evoford News — controlador de impresión independiente del navegador */
+/* Evoford News — motor de impresión A4/A3 para Chrome y Edge */
 (function(){
  "use strict";
  var select=document.getElementById("paperSize");
- var style=document.getElementById("evoPrintPageRule");
- if(!style){style=document.createElement("style");style.id="evoPrintPageRule";document.head.appendChild(style);}
- function size(){
+ var pageStyle=document.getElementById("evoPrintPageRule");
+ if(!pageStyle){pageStyle=document.createElement("style");pageStyle.id="evoPrintPageRule";document.head.appendChild(pageStyle);}
+ function setSize(){
   var value=select&&select.value==="A3"?"A3":"A4";
   document.documentElement.setAttribute("data-print-size",value.toLowerCase());
-  style.textContent="@page{size:"+value+" portrait;margin:"+(value==="A3"?"12mm":"11mm")+"}";
+  pageStyle.textContent="@page{size:"+value+" portrait;margin:"+(value==="A3"?"12mm":"11mm")+"}";
   return value;
  }
- function readyImages(){
+ function waitForImages(){
   var images=Array.prototype.slice.call(document.querySelectorAll("#newspaper img"));
+  images.forEach(function(img){img.loading="eager";});
   return Promise.all(images.map(function(img){
    if(img.complete){
-    if(img.decode)return img.decode().catch(function(){});
-    return Promise.resolve();
+    return img.decode?img.decode().catch(function(){}):Promise.resolve();
    }
    return new Promise(function(resolve){
-    img.addEventListener("load",resolve,{once:true});
-    img.addEventListener("error",resolve,{once:true});
+    var done=function(){resolve();};
+    img.addEventListener("load",done,{once:true});
+    img.addEventListener("error",done,{once:true});
    });
   }));
  }
- function print(){
-  size();
+ function printEdition(){
+  setSize();
   var button=document.getElementById("printBtn");
   if(button){button.disabled=true;button.setAttribute("aria-busy","true");}
   var fonts=document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve();
-  Promise.all([fonts,readyImages()]).then(function(){
-   window.setTimeout(function(){
-    window.print();
-    if(button){button.disabled=false;button.removeAttribute("aria-busy");}
-   },120);
+  var assets=Promise.all([fonts,waitForImages()]);
+  var limit=new Promise(function(resolve){window.setTimeout(resolve,10000);});
+  Promise.race([assets,limit]).then(function(){
+   setSize();
+   window.requestAnimationFrame(function(){
+    window.requestAnimationFrame(function(){
+     window.print();
+     if(button){button.disabled=false;button.removeAttribute("aria-busy");}
+    });
+   });
   }).catch(function(){
    window.print();
    if(button){button.disabled=false;button.removeAttribute("aria-busy");}
   });
  }
- window.EvoPrintController={setSize:size,print:print};
- if(select){
-  select.addEventListener("change",size);
-  size();
- }
- window.addEventListener("beforeprint",size);
+ if(select){select.addEventListener("change",setSize);setSize();}
+ window.addEventListener("beforeprint",setSize);
  window.addEventListener("afterprint",function(){
-  if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+  if(select)select.disabled=false;
+  var button=document.getElementById("printBtn");
+  if(button){button.disabled=false;button.removeAttribute("aria-busy");}
  });
+ window.EvoPrintController={setSize:setSize,print:printEdition};
 })();

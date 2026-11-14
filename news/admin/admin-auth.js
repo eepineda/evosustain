@@ -747,7 +747,7 @@ async function saveAd(event){
  const id=$("adId").value,amount=Number($("adAmount").value),mode=$("adPublicationMode").value;
  const status=$("adStatus").value;
  let startDate=$("adStart").value||null;
- if(status==="active"&&mode==="manual"&&!startDate)startDate=new Date().toLocaleDateString("en-CA");
+ if(status==="active"&&mode==="manual"){const now=new Date();startDate=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");}
  if(status==="active"&&mode==="scheduled"&&!startDate){say("adMessage","Indica la fecha de inicio para programar la campaña.");return;}
  if(startDate&&$("adEnd").value&&$("adEnd").value<startDate){say("adMessage","La fecha final no puede ser anterior al inicio.");return;}
  if(!$("adAdvertiser").value.trim()||!$("adEmail").value.trim()||!$("adTitle").value.trim()||!Number.isFinite(amount)||amount<0){say("adMessage","Revisa los campos obligatorios y el importe.");return;}

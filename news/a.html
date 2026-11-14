@@ -2,11 +2,13 @@
 <html lang="es">
 <head>
 <script>document.documentElement.classList.add('evo-maintenance-checking')</script><style>.evo-maintenance-checking body{visibility:hidden}</style><script src="/maintenance.js"></script>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script>if(window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches||navigator.standalone)document.documentElement.classList.add("evo-pwa");</script>
 <link rel="icon" type="image/svg+xml" href="favicon.svg"><meta name="theme-color" content="#102b4e">
 <meta name="description" content="Artículo publicado en Evoford News.">
 <title>Artículo | Evoford News</title><link rel="stylesheet" href="assets/style.css?v=20261114-ads2">
 <link rel="stylesheet" href="assets/modern-pages.css?v=1">
+<link rel="stylesheet" href="assets/app-shell.css?v=3">
 <style>
 .ecosystem-bar{display:none!important;min-height:34px;padding:0 5.5%;display:flex;align-items:center;justify-content:space-between;gap:18px;background:#071b2b;color:#fff;font:700 10px/1.2 Arial,sans-serif;letter-spacing:.08em}
 .ecosystem-brand,.ecosystem-links a{color:#fff;text-decoration:none}
@@ -50,6 +52,13 @@
 <div class="ad-slot ad-slot-banner" data-ad-slot="banner" hidden aria-label="Publicidad" style="width:min(814px,calc(100% - 36px));max-width:814px;margin:18px auto;padding:0;box-sizing:border-box"></div>
 <main id="articleView" class="wrap" style="max-width:850px;padding-top:40px;padding-bottom:70px"><p class="muted">Cargando artículo…</p></main>
 <footer><a class="footer-brand" href="./">EVOFORD NEWS</a><span id="articleFooter">Noticias · Opinión · Análisis</span><span>© <span id="year"></span> Evoford</span><a href="a.html?i=c29icmUtZXZvZm9yZC5odG1s">Sobre / About Evoford News</a></footer>
+<nav class="app-bottom-nav" aria-label="Navegación de la aplicación">
+<a href="./"><span class="nav-icon" aria-hidden="true">⌂</span><span>Portada</span></a>
+<a href="a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLWludGVybmFjaW9uYWw"><span class="nav-icon" aria-hidden="true">◎</span><span>Internacional</span></a>
+<a href="a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLWVjb25vbWlh"><span class="nav-icon" aria-hidden="true">▤</span><span>Economía</span></a>
+<a href="a.html?i=c3RhcnR1c3MuaHRtbA"><span class="nav-icon" aria-hidden="true">✳</span><span>Startups</span></a>
+<a href="a.html?i=ZGlyZWN0b3J5Lmh0bWw"><span class="nav-icon" aria-hidden="true">☰</span><span>Secciones</span></a>
+</nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = "https://poywsdigujbarvnzbfnz.supabase.co";

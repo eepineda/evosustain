@@ -24,11 +24,21 @@
     const isPdf = /[.]pdf(?:$|[?#])/i.test(creative);
     const label = placement === "sponsored" ? "CONTENIDO PATROCINADO" : "PUBLICIDAD";
     const title = escapeHtml(campaign.campaign_title || "Publicidad");
+    const horizontal = ["banner", "homepage", "article", "sponsored"].includes(placement);
+    const cardStyle = horizontal
+      ? "display:flex;align-items:center;gap:18px;width:100%;max-width:814px;box-sizing:border-box;margin:0 auto;padding:12px;background:#fff;border:1px solid #d7dee7;color:#102b4e;text-decoration:none;overflow:hidden;"
+      : "display:block;width:100%;box-sizing:border-box;margin:0 auto;padding:10px;background:#fff;border:1px solid #d7dee7;color:#102b4e;text-decoration:none;overflow:hidden;";
+    const imageStyle = horizontal
+      ? "display:block;flex:0 0 200px;width:200px;height:120px;max-width:38%;object-fit:contain;background:#f3f5f7;"
+      : "display:block;width:100%;height:auto;max-height:180px;object-fit:contain;background:#f3f5f7;";
     const media = isPdf
-      ? '<span class="ad-slot-pdf">Ver material publicitario (PDF) ↗</span>'
-      : '<img src="' + escapeHtml(creative) + '" alt="' + title + '" loading="lazy">';
-    return '<a class="ad-slot-card" href="' + escapeHtml(target) + '" target="_blank" rel="sponsored noopener noreferrer" aria-label="' + label + ': ' + title + '">' +
-      media + '<span class="ad-slot-label">' + label + '</span><span class="ad-slot-title">' + title + '</span></a>';
+      ? '<span style="display:flex;align-items:center;justify-content:center;min-height:90px;padding:14px;background:#f3f5f7;">Ver material publicitario (PDF) ↗</span>'
+      : '<img src="' + escapeHtml(creative) + '" alt="' + title + '" loading="lazy" style="' + imageStyle + '">';
+    const copy = '<span style="display:flex;flex:1;min-width:0;flex-direction:column;gap:7px;padding:4px 8px;">' +
+      '<span style="display:block;color:#9a2630;font:800 10px/1.4 Arial,sans-serif;letter-spacing:.15em;">' + label + '</span>' +
+      '<span style="display:block;color:#102b4e;font:700 17px/1.35 Georgia,serif;">' + title + '</span></span>';
+    return '<a class="ad-slot-card" href="' + escapeHtml(target) + '" target="_blank" rel="sponsored noopener noreferrer" aria-label="' + label + ': ' + title + '" style="' + cardStyle + '">' +
+      (horizontal ? media + copy : media + copy) + '</a>';
   }
 
   async function loadCampaignSlots() {

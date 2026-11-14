@@ -101,7 +101,19 @@ function syncPrintPaper(){
 }
 $("paperSize").addEventListener("change",syncPrintPaper);
 window.addEventListener("beforeprint",syncPrintPaper);
-$("printBtn").addEventListener("click",()=>{syncPrintPaper();window.print();});
+async function printEdition(){
+ syncPrintPaper();
+ const images=Array.from(document.querySelectorAll(".newspaper img"));
+ images.forEach(img=>{img.loading="eager";});
+ await Promise.all(images.map(img=>{
+  if(img.complete&&img.naturalWidth)return Promise.resolve();
+  if(typeof img.decode==="function")return img.decode().catch(()=>{});
+  return new Promise(resolve=>{img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true});});
+ }));
+ if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+ window.print();
+}
+$("printBtn").addEventListener("click",printEdition);
 $("languageToggle").addEventListener("click",()=>{language=language==="es"?"en":"es";try{localStorage.setItem("evoford-news-language",language)}catch(e){}applyLanguage();render();});
 $("refreshBtn").addEventListener("click",()=>{$("lead").innerHTML='<p class="loading">'+(language==="en"?"Refreshing edition…":"Actualizando edición…")+'</p>';load();});
 syncPrintPaper();

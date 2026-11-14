@@ -244,3 +244,21 @@
   html[data-print-size="a3"] .story p { font-size: 7.2pt !important; }
   html[data-print-size="a4"] .full-article-body { column-count: 2 !important; }
 }
+
+/* Banner de campañas aprobadas para edición impresa */
+.print-ad-slot { margin: 14px 0; padding: 8px; border: 1px dashed #aab4c0; background: #fff; }
+.print-ad-slot[hidden] { display: none !important; }
+.print-ad-label { margin: 0 0 5px; color: #9d2635; font: 700 9px/1.2 Arial,sans-serif; letter-spacing: .14em; }
+.print-ad-link { display: flex; align-items: center; gap: 12px; color: #102b4e; text-decoration: none; }
+.print-ad-link img { display: block; width: 100%; max-height: 110px; object-fit: contain; }
+.print-ad-title { font: 700 12px/1.25 Georgia,serif; }
+.print-ad-pdf { display: block; padding: 10px; border: 1px solid #c4cbd2; font: 700 10px Arial,sans-serif; }
+@media print {
+  .print-ad-slot { display: block !important; margin: 3mm 0 !important; padding: 2mm !important; border: .5pt solid #c4cbd2 !important; break-inside: avoid !important; page-break-inside: avoid !important; }
+  .print-ad-label { font-size: 5.8pt !important; margin-bottom: 1mm !important; }
+  .print-ad-link { display: block !important; text-align: center !important; }
+  .print-ad-link img { width: 100% !important; max-height: 24mm !important; object-fit: contain !important; }
+  .print-ad-title { display: block !important; margin-top: 1mm !important; font: 700 7pt/1.2 Georgia,serif !important; }
+  .print-ad-pdf { font-size: 7pt !important; }
+  html[data-print-size="a3"] .print-ad-link img { max-height: 34mm !important; }
+}

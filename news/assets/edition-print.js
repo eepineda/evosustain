@@ -20,7 +20,7 @@ function generate(){
  var JsPDF=window.jspdf.jsPDF,doc=new JsPDF({orientation:"portrait",unit:"mm",format:a3?"a3":"a4",compress:true});
  var W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight(),m=a3?14:11,U=W-2*m;
  var navy=[16,43,78],red=[157,38,53],ink=[23,33,43],grey=[91,101,112],rule=[190,198,205];
- var y=m,page=1;
+ var y=m,page=1,articleFlow=false;
  var title=clean(plain($(".lead-headline h1",lead))),summary=clean(plain($(".lead-headline .summary",lead))),category=clean(plain($(".lead-headline .category",lead))),by=clean(plain($(".lead-headline .byline",lead)));
  var leadImg=$(".lead-photo img",lead),side=$$(".side-story",lead).map(function(n){return {cat:clean(plain($(".category",n))),title:clean(plain($("h2",n))),summary:clean(plain($("p",n)))};});
  var body=$(".full-article-body",article),bodyNodes=body?Array.prototype.slice.call(body.children):[];
@@ -42,7 +42,7 @@ function generate(){
   doc.text(en?"EVOFORD NEWS · PRINT EDITION":"EVOFORD NEWS · EDICIÓN IMPRESA",m,H-m-3);
   doc.text(String(page),W-m,H-m-3,{align:"right"});
  }
- function nextPage(){footer();doc.addPage();page++;y=m;header();}
+ function nextPage(){footer();doc.addPage();page++;y=m;header();if(articleFlow){font("bold",6.5,red);doc.text(en?"FULL STORY · CONTINUED":"ARTÍCULO COMPLETO · CONTINUACIÓN",m,y);y+=4;ruleLine(m,y,W-m,y,rule,.25);y+=5;}}
  function ensure(h){if(y+h>H-m-11)nextPage();}
  function paragraph(str,x,width,pt,style,color,gap){
   if(!str)return;var lines=doc.splitTextToSize(clean(str),width),step=pt*.39;
@@ -64,6 +64,7 @@ function generate(){
   y=top+Math.max(photoH,sy-top)+5;ruleLine(m,y,W-m,y,navy,.65);y+=6;
  }
  function articleColumns(nodes,cols,pt){
+  articleFlow=true;
   var gap=a3?7:5.5,cw=(U-gap*(cols-1))/cols,col=0,x=m,top=y,colBottom=top;
   function advance(){
    colBottom=Math.max(colBottom,y);col++;
@@ -79,6 +80,7 @@ function generate(){
    y+=heading?1.5:1.2;
   });
   y=Math.max(colBottom,y);
+  articleFlow=false;
  }
  function drawStories(images){
   var cols=3,gap=a3?6:5,cw=(U-gap*(cols-1))/cols,idx=0;
@@ -87,13 +89,13 @@ function generate(){
    row.forEach(function(node,j){
     var im=images[idx+j],ih=0;
     if(im&&im.data){
-     try{var p=doc.getImageProperties(im.data);ih=Math.min(a3?16:7,cw/(p.width/p.height));}catch(e){}
+     try{var p=doc.getImageProperties(im.data);ih=Math.min(a3?20:12,cw/(p.width/p.height));}catch(e){}
     }
-    var titleSize=a3?8:6.6,titleStep=a3?3.1:2.65,summarySize=a3?6:5.2,summaryStep=a3?2.45:2.1;
+    var titleSize=a3?8.2:7,titleStep=a3?3.15:2.8,summarySize=a3?6.2:5.5,summaryStep=a3?2.5:2.25;
     doc.setFont("times","bold");doc.setFontSize(titleSize);
     var titleLines=doc.splitTextToSize(clean(plain($("h2",node))),cw).slice(0,a3?3:2);
     doc.setFont("times","normal");doc.setFontSize(summarySize);
-    var summaryLines=doc.splitTextToSize(clean(plain($("p",node))),cw).slice(0,a3?2:1);
+    var summaryLines=doc.splitTextToSize(clean(plain($("p",node))),cw).slice(0,a3?3:2);
     var height=(ih?ih+1.5:0)+2.6+titleLines.length*titleStep+.5+summaryLines.length*summaryStep+1.5;
     cards.push({node:node,image:im,x:m+j*(cw+gap),imageHeight:ih,titleLines:titleLines,summaryLines:summaryLines,titleSize:titleSize,titleStep:titleStep,summarySize:summarySize,summaryStep:summaryStep,height:height});
     rowHeight=Math.max(rowHeight,height);
@@ -105,7 +107,7 @@ function generate(){
     if(card.image&&card.image.data&&card.imageHeight){
      try{doc.addImage(card.image.data,card.image.type.indexOf("png")>=0?"PNG":"JPEG",card.x,y,cw,card.imageHeight,undefined,"FAST");cy=card.imageHeight+1.5;}catch(e){}
     }
-    font("bold",5.1,red);doc.text(clean(plain($(".category",card.node))).slice(0,35),card.x,y+cy);cy+=2.6;
+    font("bold",5.3,red);doc.text(clean(plain($(".category",card.node))).slice(0,35),card.x,y+cy);cy+=2.8;
     font("bold",card.titleSize,ink);
     card.titleLines.forEach(function(line){doc.text(line,card.x,y+cy);cy+=card.titleStep;});
     cy+=.5;font("normal",card.summarySize,grey);

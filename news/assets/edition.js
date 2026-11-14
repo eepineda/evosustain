@@ -111,11 +111,8 @@ async function load(){
  }catch(error){$("lead").innerHTML='<p class="empty">No se pudo cargar la edición. '+esc(error.message||"Comprueba la conexión.")+'</p>';console.error("Evoford print edition:",error);}
 }
 function syncPrintPaper(){
- const size=$("paperSize").value==="A3"?"A3":"A4";
- document.documentElement.dataset.printSize=size.toLowerCase();
- let rule=document.getElementById("evoPrintPageRule");
- if(!rule){rule=document.createElement("style");rule.id="evoPrintPageRule";document.head.appendChild(rule);}
- rule.textContent="@page { size: "+size+" portrait; margin: "+(size==="A3"?"12mm":"10mm")+"; }";
+ const size=$("paperSize").value==="A3"?"a3":"a4";
+ document.documentElement.dataset.printSize=size;
 }
 $("paperSize").addEventListener("change",syncPrintPaper);
 window.addEventListener("beforeprint",syncPrintPaper);

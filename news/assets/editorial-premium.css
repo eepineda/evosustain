@@ -241,3 +241,11 @@ footer a:not(.footer-brand):hover{color:#fff;text-decoration:underline}
  .feature-card-image{aspect-ratio:16/9}
  .feature-card .feature-copy h1,.feature-card .feature-copy h2{font-size:30px}
 }
+
+
+/* Preserve complete editorial photographs instead of cropping their edges. */
+#articleView>img{width:100%;height:auto;max-height:620px;object-fit:contain!important;object-position:center;background:#eef1f4;}
+#articleView .article-body img{max-width:100%;height:auto;object-fit:contain;object-position:center;}
+.story img.story-image,.story img:not(.avatar){object-fit:contain;background:#eef1f4;}
+.feature-card-image img:not(.feature-image-keep-cover){object-fit:contain;background:#eef1f4;}
+@media(max-width:760px){#articleView>img{max-height:none;}}

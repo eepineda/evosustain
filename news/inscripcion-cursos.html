@@ -41,8 +41,8 @@
 <div class="ecosystem-nav"><div class="ecosystem-nav-inner"><a class="ecosystem-mark" href="../index.html">EVOFORD <span>ECOSYSTEM</span></a><nav aria-label="Evoford ecosystem"><a href="../index.html">Inicio</a><a href="index.html">Evoford News</a><a href="aula-innovacion.html">Aula de Innovación</a></nav></div></div>
 <main class="course-page">
 <div class="course-language" aria-label="Language"><button type="button" data-course-language="es">ES</button><button type="button" data-course-language="en">EN</button></div>
-<nav class="course-breadcrumb" aria-label="Migas de pan"><a href="index.html">Evoford News</a><span>·</span><a href="aula-innovacion.html">Aula de Innovación</a><span>·</span><span>Inscripción</span></nav>
-<p class="course-kicker">AULA DE INNOVACIÓN · FORMACIÓN</p>
+<nav class="course-breadcrumb" aria-label="Migas de pan"><a href="index.html">Evoford News</a><span>·</span><a href="aula-innovacion.html" id="crumbAcademy">Aula de Innovación</a><span>·</span><span id="crumbEnrol">Inscripción</span></nav>
+<p class="course-kicker" id="courseKicker">AULA DE INNOVACIÓN · FORMACIÓN</p>
 <h1 id="courseTitle">Solicita información e inscripción</h1>
 <p class="course-intro" id="courseIntro">Este formulario es exclusivo para las personas interesadas en los cursos del Aula de Innovación Evoford. No es el formulario de envío de noticias. Cuéntanos qué formación te interesa y el equipo se pondrá en contacto contigo por correo electrónico.</p>
 <section class="course-panel">
@@ -83,7 +83,7 @@ let lang=localStorage.getItem("evoford-news-language")==="en"?"en":"es";
 function render(){
 const t=T[lang];document.documentElement.lang=lang;
 $("crumbAcademy").textContent=t.academy;$("crumbEnrol").textContent=t.enrol;
-$("courseTitle").textContent=t.title;$("courseIntro").textContent=t.intro;
+$("courseKicker").textContent=lang==="en"?"INNOVATION ACADEMY · TRAINING":"AULA DE INNOVACIÓN · FORMACIÓN";$("courseTitle").textContent=t.title;$("courseIntro").textContent=t.intro;
 $("labelName").textContent=t.name;$("labelEmail").textContent=t.email;$("labelChoice").textContent=t.choice;$("labelMessage").textContent=t.message;
 $("courseMessage").placeholder=t.placeholder;$("courseSend").textContent=t.send;$("coursePrivacy").textContent=t.privacy;$("courseFooter").textContent=t.footer;
 const s=$("courseChoice");s.options[0].textContent=t.select;

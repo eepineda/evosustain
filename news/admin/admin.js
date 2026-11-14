@@ -99,7 +99,7 @@ async function showApp(user){
   }
   currentUser=user; $("loginView").hidden=true; $("appView").hidden=false;
   $("signedInAs").textContent=user.email;
-  await Promise.all([loadArticles(),loadInbox(),loadSources(),loadSubmissions(),loadCourses(),loadMaintenanceControl(),loadAds()]);
+  await Promise.all([loadArticles(),loadInbox(),loadSources(),loadSubmissions(),loadCourses(),loadMaintenanceControl(),loadAds(),loadBriefings()]);
 }
 async function login(e){
   e.preventDefault();
@@ -212,6 +212,30 @@ async function saveArticle(status,preserveStatus=false){
   const {error}=await query;
   say("editorMessage",error?error.message:(preserveStatus?"Cambios guardados sin modificar el estado de publicación.":({draft:"Borrador guardado.",pending:"Artículo enviado a revisión.",approved:"Artículo aprobado. Sigue sin publicarse.",published:"Artículo publicado y visible en la web."}[status]||"Artículo actualizado.")));
   if(!error){$("articleForm").hidden=true;await loadArticles();}
+}
+
+
+async function loadBriefings(){
+  const box=$("briefingList");if(!box)return;
+  const {data,error}=await client.from("articles").select("id,title,summary,status,author,created_at,updated_at").eq("category","Evoford Briefing").order("updated_at",{ascending:false});
+  if(error){box.innerHTML='<p class="muted">No se pudieron cargar las ediciones: '+safe(error.message)+'</p>';return;}
+  const labels={draft:"Borrador",pending:"En revisión",approved:"Aprobado",published:"Publicado",rejected:"Descartado"};
+  box.innerHTML=data?.length?data.map(item=>'<article class="item"><div><h3>'+safe(item.title)+'</h3><p>'+safe(item.author||"Evoford News")+' · '+new Date(item.updated_at||item.created_at).toLocaleDateString("es-GB")+' · <span class="pill">'+safe(labels[item.status]||item.status)+'</span></p>'+(item.summary?'<p>'+safe(item.summary)+'</p>':'')+'</div><div class="item-actions"><button type="button" class="secondary" data-briefing-edit="'+item.id+'">Editar edición</button></div></article>').join(""):'<p class="muted">Todavía no hay ediciones. Crea la primera cuando tengas el guion y los temas verificados.</p>';
+  box.querySelectorAll("[data-briefing-edit]").forEach(button=>button.addEventListener("click",async()=>{
+    const {data:article,error}=await client.from("articles").select("*").eq("id",button.dataset.briefingEdit).single();
+    if(error){say("globalMessage","No se pudo abrir la edición: "+error.message);return;}
+    document.querySelectorAll(".tab").forEach(tab=>tab.classList.toggle("active",tab.dataset.tab==="articles"));
+    ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(key=>{const panel=$(key+"Tab");if(panel)panel.hidden=key!=="articles";});
+    editArticle(article);say("formHeading","Editar Evoford Briefing");
+  }));
+}
+function openNewBriefing(){
+  document.querySelectorAll(".tab").forEach(tab=>tab.classList.toggle("active",tab.dataset.tab==="articles"));
+  ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(key=>{const panel=$(key+"Tab");if(panel)panel.hidden=key!=="articles";});
+  editArticle(null);$("category").value="Evoford Briefing";$("formHeading").textContent="Nueva edición · Evoford Briefing";$("author").value="Evoford News";
+  $("summary").placeholder="Resumen breve de la edición semanal…";
+  $("content").placeholder="Escribe aquí el guion y la transcripción de la edición. Incluye apertura, noticias seleccionadas, contexto, cierre y fuentes verificadas…";
+  $("title").placeholder="Evoford Briefing · Semana del…";
 }
 
 async function runRssImport(){
@@ -628,6 +652,7 @@ function wire(){
   $("loginForm").addEventListener("submit",login);
   $("logoutBtn").addEventListener("click",()=>client.auth.signOut());
   $("newArticleBtn").addEventListener("click",()=>editArticle(null));
+  $("newBriefingBtn")?.addEventListener("click",openNewBriefing);
   $("articleSearch").addEventListener("input",filterArticles);
   $("articleStatusFilter").addEventListener("change",filterArticles);
   $("cancelEdit").addEventListener("click",()=>$("articleForm").hidden=true);
@@ -745,7 +770,8 @@ function wire(){
   $("runRssBtn").addEventListener("click",runRssImport);$("newAdBtn").addEventListener("click",()=>editAd(null));$("cancelAdBtn").addEventListener("click",()=>{$("adForm").hidden=true;});$("cancelAdBtn2").addEventListener("click",()=>{$("adForm").hidden=true;});$("adForm").addEventListener("submit",saveAd);$("adPlacement").addEventListener("change",renderAdPlacementPreview);
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
-    ["articles","inbox","sources","submissions","directory","courses","ads"].forEach(k=>$(k+"Tab").hidden=k!==b.dataset.tab);
+    ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!==b.dataset.tab;});
+    if(b.dataset.tab==="briefing")loadBriefings();
     if(b.dataset.tab==="directory")loadDirectoryAdmin();
     if(b.dataset.tab==="courses")loadCourses();if(b.dataset.tab==="ads")loadAds();
   }));

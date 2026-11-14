@@ -2,7 +2,7 @@
 "use strict";
 const URL="https://poywsdigujbarvnzbfnz.supabase.co";
 const KEY="sb_publishable_1t7gv1Y9-6HHwMqW5E343A_51GH_L7f";
-const $=id=>document.getElementById(id);let language="es",articles=[];
+const $=id=>document.getElementById(id);let language=localStorage.getItem("evoford-news-language")==="en"?"en":"es",articles=[];
 const ui={
 es:{back:"← Volver a Evoford News",format:"Formato",a4:"A4 · Estándar",a3:"A3 · Periódico",refresh:"Actualizar edición",print:"Imprimir / Guardar PDF",other:"English",date:"EDICIÓN DEL",sections:"INTERNACIONAL · ECONOMÍA · SOCIEDAD · TECNOLOGÍA · OPINIÓN",otherNews:"OTRAS NOTICIAS",paperFooter:"Edición digital preparada para impresión",empty:"Todavía no hay artículos publicados para esta edición.",noMore:"No hay más noticias en esta edición.",stories:"noticias",by:"POR"},
 en:{back:"← Back to Evoford News",format:"Paper size",a4:"A4 · Standard",a3:"A3 · Newspaper",refresh:"Refresh edition",print:"Print / Save PDF",other:"Español",date:"EDITION OF",sections:"INTERNATIONAL · ECONOMY · SOCIETY · TECHNOLOGY · OPINION",otherNews:"MORE STORIES",paperFooter:"Digital edition prepared for print",empty:"There are no published articles in this edition yet.",noMore:"There are no more stories in this edition.",stories:"stories",by:"BY"}};
@@ -44,7 +44,7 @@ async function load(){
  }catch(error){$("lead").innerHTML='<p class="empty">No se pudo cargar la edición. '+esc(error.message||"Comprueba la conexión.")+'</p>';console.error("Evoford print edition:",error);}
 }
 $("printBtn").addEventListener("click",()=>window.print());
-$("languageToggle").addEventListener("click",()=>{language=language==="es"?"en":"es";applyLanguage();render();});
+$("languageToggle").addEventListener("click",()=>{language=language==="es"?"en":"es";try{localStorage.setItem("evoford-news-language",language)}catch(e){}applyLanguage();render();});
 $("refreshBtn").addEventListener("click",()=>{$("lead").innerHTML='<p class="loading">'+(language==="en"?"Refreshing edition…":"Actualizando edición…")+'</p>';load();});
 $("paperSize").addEventListener("change",e=>{const rule=document.getElementById("dynamicPageSize")||document.head.appendChild(document.createElement("style"));rule.id="dynamicPageSize";rule.textContent="@page{size:"+e.target.value+" portrait;margin:12mm}";});
 applyLanguage();load();

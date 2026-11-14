@@ -43,7 +43,6 @@ body.print-edition{background:#e7e9ec;color:var(--ei-ink)}
 .print-edition .paper-footer{display:flex;justify-content:space-between;gap:12px;margin-top:18px;padding-top:9px;border-top:2px solid var(--ei-navy);color:#4e5963;font:8px/1.4 Arial,sans-serif}
 .print-edition .paper-footer strong{color:var(--ei-navy);letter-spacing:.12em}
 @media(max-width:700px){.print-edition .newspaper{width:calc(100% - 16px);padding:22px 18px}.print-edition .lead-content{grid-template-columns:1fr}.print-edition .lead-sidebar{padding:12px 0 0;border-left:0;border-top:1px solid var(--ei-rule)}.print-edition .story-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@page{size:A4 portrait;margin:11mm}
 @media print{
  html,body.print-edition{margin:0!important;padding:0!important;background:#fff!important}
  .print-edition .toolbar{display:none!important}

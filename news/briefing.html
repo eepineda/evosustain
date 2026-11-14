@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
 <script>document.documentElement.classList.add('evo-maintenance-checking')</script><style>.evo-maintenance-checking body{visibility:hidden}</style><script src="/maintenance.js"></script>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script>(()=>{if((window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true)document.documentElement.classList.add("evo-pwa")})();</script>
 <meta name="theme-color" content="#102b4e">
 <meta name="description" content="Evoford Briefing: el resumen semanal de actualidad, contexto y análisis desde Londres.">
 <title>Evoford Briefing | Evoford News</title>
@@ -10,6 +11,7 @@
 <link rel="stylesheet" href="assets/style.css?v=20261114-briefing1">
 <link rel="stylesheet" href="assets/news-core.css?v=1">
 <link rel="stylesheet" href="assets/editorial-premium.css?v=20261114-premium4">
+<link rel="stylesheet" href="assets/app-shell.css?v=10">
 <style>
 .briefing-language{display:flex;justify-content:flex-end;gap:8px;margin:22px 0 -18px;position:relative;z-index:2}.briefing-language a{display:inline-block;padding:7px 12px;border:1px solid #102b4e;color:#102b4e;text-decoration:none;font:700 10px Arial,sans-serif;letter-spacing:.12em}.briefing-language a[aria-current=true]{background:#102b4e;color:#fff}.briefing-language{display:flex;justify-content:flex-end;gap:8px;margin:22px 0 -18px;position:relative;z-index:2}.briefing-language a{display:inline-block;padding:7px 12px;border:1px solid #102b4e;color:#102b4e;text-decoration:none;font:700 10px Arial,sans-serif;letter-spacing:.12em}.briefing-language a[aria-current=true]{background:#102b4e;color:#fff}
 .briefing-hero{display:block;margin:34px 0 30px;padding:clamp(26px,5vw,58px);background:#102b4e!important;color:#fff!important;border-top:5px solid #a9232d;box-sizing:border-box}.briefing-hero .kicker{color:#f0c5c8!important}.briefing-hero h1{color:#fff!important}.briefing-hero p{color:#e8edf4!important}
@@ -32,7 +34,7 @@
 <header class="masthead">
  <div class="topline"><span>Londres · Reino Unido</span><span>INFORMACIÓN · CONTEXTO · ANÁLISIS</span></div>
  <a class="brand" href="./">EVOFORD <em>NEWS</em></a>
- <nav class="nav" aria-label="Secciones"><a href="./">Portada</a><a href="a.html?i=cG9saXRpY2EuaHRtbA">Política</a><a href="a.html?i=c3RhcnR1cHMuaHRtbA">Startups e innovación</a><a href="a.html?i=YnJpZWZpbmcuaHRtbA" aria-current="page">Evoford Briefing</a><a href="a.html?i=ZGlyZWN0b3J5Lmh0bWw">Directorio</a></nav>
+ <nav class="nav" aria-label="Secciones"><a href="./">Portada</a><a href="politica.html">Política</a><a href="startups.html">Startups e innovación</a><a href="briefing.html" aria-current="page">Evoford Briefing</a><a href="directory.html">Directorio</a></nav>
 </header>
 <main class="wrap">
  <div class="briefing-language" aria-label="Language"><a href="?lang=es" data-lang="es">ES</a><a href="?lang=en" data-lang="en">EN</a></div>
@@ -40,6 +42,22 @@
  <section><div class="briefing-intro"><h2 data-i18n="latest">Últimas ediciones</h2><span data-i18n="descriptor">GUIONES Y TRANSCRIPCIONES · EDICIONES PUBLICADAS</span></div><div id="briefingList" class="briefing-list"><p class="briefing-empty">Cargando ediciones…</p></div></section>
 </main>
 <footer><a class="footer-brand" href="./">EVOFORD NEWS</a><span>Evoford Briefing · Noticias con contexto</span><a href="a.html?i=c29icmUtZXZvZm9yZC5odG1s">Sobre Evoford News</a><span>© <span id="year"></span> Evoford</span></footer>
+<nav class="app-bottom-nav" aria-label="Navegación de la aplicación">
+<a href="./"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></span><span>Portada</span></a>
+<a href="politica.html"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h5"/></svg></span><span>Política</span></a>
+<a href="briefing.html" aria-current="page"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h17M7 15l4-4 3 2 6-7"/></svg></span><span>Evoford Briefing</span></a>
+<a href="startups.html"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9 4.9 19.1"/></svg></span><span>Startups</span></a>
+<a href="directory.html"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span><span>Directorio</span></a>
+</nav>
+<style>
+html.evo-pwa .masthead .nav,html.evo-pwa body>footer{display:none!important}
+html.evo-pwa .wrap{width:auto!important;max-width:780px!important;margin:0 auto!important;padding:0 16px!important}
+html.evo-pwa .briefing-hero{margin:14px 0 24px!important;padding:24px 18px!important;border-radius:16px!important}
+html.evo-pwa .briefing-hero h1{font-size:clamp(38px,10vw,54px)!important}
+html.evo-pwa .briefing-list{grid-template-columns:1fr!important;gap:12px!important;margin-bottom:28px!important}
+html.evo-pwa .briefing-card{min-height:0!important;padding:18px!important;border-radius:14px!important}
+</style>
+<script src="assets/pwa.js?v=3" defer></script>
 <script>
 const SUPABASE_URL="https://poywsdigujbarvnzbfnz.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY="sb_publishable_1t7gv1Y9-6HHwMqW5E343A_51GH_L7f";

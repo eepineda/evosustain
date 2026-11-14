@@ -9,7 +9,7 @@ en:{back:"← Back to Evoford News",format:"Paper size",a4:"A4 · Standard",a3:"
 const esc=v=>String(v||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const pick=(a,es,en)=>language==="en"?(a[en]||a[es]||""):(a[es]||a.title||"");
 const url=a=>"articles/plantilla-articulo.html?slug="+encodeURIComponent(a.slug||"");
-const category=a=>esc(a.category||"ACTUALIDAD");
+const category=a=>{const value=a.category||"ACTUALIDAD";const labels={Internacional:"International",Política:"Politics",Economía:"Economy",Seguridad:"Security",Tecnología:"Technology",Startups:"Startups",Innovación:"Innovation",Opinión:"Opinion",Sociedad:"Society"};return esc(language==="en"?(labels[value]||value):value);};
 function applyLanguage(){
  const t=ui[language];
  $("backLink").textContent=t.back;$("formatLabel").textContent=t.format;

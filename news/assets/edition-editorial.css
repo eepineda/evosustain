@@ -69,3 +69,73 @@ body.print-edition{background:#e7e9ec;color:var(--ei-ink)}
  .print-edition .paper-footer{break-before:auto!important;page-break-before:auto!important}
  .print-edition a{color:inherit!important;text-decoration:none!important}
 }
+
+/* Motor de paginación común: Chrome y Edge usan el mismo flujo */
+@media print{
+  .print-edition #fullArticle{
+    break-before:page!important;
+    page-break-before:always!important;
+    break-inside:auto!important;
+    page-break-inside:auto!important;
+    overflow:visible!important;
+  }
+  .print-edition #fullArticle .full-article-heading{
+    break-after:avoid-page!important;
+    page-break-after:avoid!important;
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+  .print-edition #fullArticle .full-article-body{
+    display:block!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow:visible!important;
+    break-before:auto!important;
+    page-break-before:auto!important;
+    break-inside:auto!important;
+    page-break-inside:auto!important;
+    column-count:2!important;
+    column-width:auto!important;
+    column-fill:auto!important;
+    column-gap:7mm!important;
+    column-rule:.35pt solid #c4cbd2!important;
+    widows:2!important;
+    orphans:2!important;
+  }
+  .print-edition #fullArticle .full-article-body p,
+  .print-edition #fullArticle .full-article-body h2,
+  .print-edition #fullArticle .full-article-body h3,
+  .print-edition #fullArticle .full-article-body h4{
+    break-inside:avoid-column!important;
+    page-break-inside:avoid!important;
+  }
+  .print-edition .secondary-area{
+    break-before:auto!important;
+    page-break-before:auto!important;
+    break-inside:auto!important;
+    page-break-inside:auto!important;
+  }
+  .print-edition .story-grid{
+    break-inside:auto!important;
+    page-break-inside:auto!important;
+  }
+  .print-edition .story{
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+  .print-edition .paper-footer{break-before:auto!important;page-break-before:auto!important}
+}
+@media print{
+  html[data-print-size="a3"] .print-edition .newspaper{font-size:1.12em!important}
+  html[data-print-size="a3"] .print-edition .paper-brand{font-size:56pt!important}
+  html[data-print-size="a3"] .print-edition .lead-headline h1{font-size:34pt!important}
+  html[data-print-size="a3"] .print-edition .lead-photo img{max-height:95mm!important}
+  html[data-print-size="a3"] .print-edition .full-article-body{font-size:11pt!important;line-height:1.48!important;column-gap:9mm!important}
+  html[data-print-size="a3"] .print-edition .story img{height:36mm!important}
+  html[data-print-size="a4"] .print-edition .paper-brand{font-size:43pt!important}
+  html[data-print-size="a4"] .print-edition .lead-headline h1{font-size:26pt!important}
+  html[data-print-size="a4"] .print-edition .lead-photo img{max-height:66mm!important}
+  html[data-print-size="a4"] .print-edition .full-article-body{font-size:9pt!important;line-height:1.38!important;column-gap:6mm!important}
+  html[data-print-size="a4"] .print-edition .story img{height:25mm!important}
+}

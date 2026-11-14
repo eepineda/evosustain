@@ -110,7 +110,7 @@ img{max-width:100%}
  .lead{break-inside:auto}
  #fullArticle,.secondary-area{break-before:auto!important;page-break-before:auto!important}
 }
-@media screen{
+@media print{html[data-paper-size="A3"] .lead-photo img{max-height:135mm}}\n@media screen{
  body{background:#e7e9ec;padding:24px}
  .sheet{max-width:${size==="A3"?"297mm":"210mm"};min-height:${size==="A3"?"420mm":"297mm"};padding:${pageMargin};background:white;box-shadow:0 4px 22px #0002}
 }
@@ -122,7 +122,8 @@ img{max-width:100%}
   var popup=window.open("","_blank");
   if(!popup){window.alert("Permite las ventanas emergentes para imprimir la edición de Evoford News.");return;}
   popup.document.open();
-  popup.document.write(makeDocument(size));\n  popup.document.documentElement.setAttribute("data-paper-size",size);
+  popup.document.write(makeDocument(size));
+  popup.document.documentElement.setAttribute("data-paper-size",size);
   popup.document.close();
   var images=Array.prototype.slice.call(popup.document.images);
   images.forEach(function(img){img.loading="eager";});

@@ -196,7 +196,7 @@ async function showApp(user){
   }
   currentUser=user; $("loginView").hidden=true; $("appView").hidden=false;
   $("signedInAs").textContent=user.email;
-  await Promise.all([loadOverview(),loadArticles(),loadInbox(),loadSources(),loadSubmissions(),loadCourses(),loadMaintenanceControl(),loadAds()]);
+  await Promise.all([loadOverview(),loadArticles(),loadInbox(),loadSources(),loadSubmissions(),loadCourses(),loadMaintenanceControl(),loadAds(),loadBriefings()]);
 }
 async function login(e){
   e.preventDefault();
@@ -232,6 +232,30 @@ function filterArticles(){
   });
   const count=$("articleFilterCount");
   if(count)count.textContent=visible+" de "+items.length+" artículos";
+}
+
+
+async function loadBriefings(){
+ const box=$("briefingList");if(!box)return;
+ const {data,error}=await client.from("articles").select("id,title,summary,status,author,created_at,updated_at").eq("category","Evoford Briefing").order("updated_at",{ascending:false});
+ if(error){box.innerHTML='<p class="muted">No se pudieron cargar las ediciones: '+safe(error.message)+'</p>';return;}
+ const labels={draft:"Borrador",pending:"En revisión",approved:"Aprobado",published:"Publicado",rejected:"Descartado"};
+ box.innerHTML=data?.length?data.map(item=>'<article class="item"><div><h3>'+safe(item.title)+'</h3><p>'+safe(item.author||"Evoford News")+' · '+new Date(item.updated_at||item.created_at).toLocaleDateString("es-GB")+' · <span class="pill">'+safe(labels[item.status]||item.status)+'</span></p>'+(item.summary?'<p>'+safe(item.summary)+'</p>':'')+'</div><div class="item-actions"><button type="button" class="secondary" data-briefing-edit="'+item.id+'">Editar edición</button></div></article>').join(""):'<p class="muted">Todavía no hay ediciones. Crea la primera cuando tengas el guion y los temas verificados.</p>';
+ box.querySelectorAll("[data-briefing-edit]").forEach(button=>button.addEventListener("click",async()=>{
+  const {data:article,error}=await client.from("articles").select("*").eq("id",button.dataset.briefingEdit).single();
+  if(error){say("globalMessage","No se pudo abrir la edición: "+error.message);return;}
+  document.querySelectorAll(".tab").forEach(tab=>tab.classList.toggle("active",tab.dataset.tab==="articles"));
+  ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(key=>{const panel=$(key+"Tab");if(panel)panel.hidden=key!=="articles";});
+  editArticle(article);say("formHeading","Editar Evoford Briefing");
+ }));
+}
+function openNewBriefing(){
+ document.querySelectorAll(".tab").forEach(tab=>tab.classList.toggle("active",tab.dataset.tab==="articles"));
+ ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(key=>{const panel=$(key+"Tab");if(panel)panel.hidden=key!=="articles";});
+ editArticle(null);$("category").value="Evoford Briefing";$("formHeading").textContent="Nueva edición · Evoford Briefing";$("author").value="Evoford News";
+ $("summary").placeholder="Resumen breve de la edición semanal…";
+ $("content").placeholder="Escribe aquí el guion y la transcripción de la edición. Incluye apertura, noticias seleccionadas, contexto, cierre y fuentes verificadas…";
+ $("title").placeholder="Evoford Briefing · Semana del…";
 }
 
 async function loadArticles(){
@@ -780,6 +804,7 @@ function wire(){
   $("loginForm").addEventListener("submit",login);
   $("logoutBtn").addEventListener("click",()=>client.auth.signOut());
   $("newArticleBtn").addEventListener("click",()=>editArticle(null));
+  $("newBriefingBtn")?.addEventListener("click",openNewBriefing);
   $("articleSearch").addEventListener("input",filterArticles);
   $("articleStatusFilter").addEventListener("change",filterArticles);
   $("cancelEdit").addEventListener("click",()=>$("articleForm").hidden=true);
@@ -819,7 +844,7 @@ function wire(){
       if(error){say("globalMessage","No se pudo abrir el borrador: "+error.message);return;}
       editArticle(article);
       document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab==="articles"));
-      ["overview","articles","inbox","sources","submissions","directory","courses"].forEach(k=>$(k+"Tab").hidden=k!=="articles");
+      ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!=="articles";});
       return;
     }
     if(draftButton){
@@ -846,7 +871,7 @@ function wire(){
       $("content").value="NOTA DE FUENTE (EXTRACTO RSS; NO ES REDACCIÓN PROPIA):\\n"+(rssNote||"El feed RSS no incluye un resumen. Consulta la fuente original.")+"\\n\\nPENDIENTE DE REDACCIÓN: verifica los datos con la fuente original y redacta aquí una noticia propia. No copies literalmente el contenido de terceros.\\n\\nFuente consultada: "+(item.article_url||"");
       say("editorMessage",rssNote?"Borrador preparado con el titular y el extracto RSS en el campo Resumen. El texto se conserva como nota de consulta; redacta y revisa el artículo antes de enviarlo a aprobación.":"Borrador preparado. El feed no incluye extracto; consulta la fuente original y añade el resumen manualmente.");
       document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab==="articles"));
-      ["overview","articles","inbox","sources","submissions","directory","courses"].forEach(k=>$(k+"Tab").hidden=k!=="articles");
+      ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!=="articles";});
       $("articleForm").scrollIntoView({behavior:"smooth",block:"start"});
       return;
     }
@@ -859,7 +884,8 @@ function wire(){
   $("runRssBtn").addEventListener("click",runRssImport);
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
-    ["overview","articles","inbox","sources","submissions","directory","courses","ads"].forEach(k=>$(k+"Tab").hidden=k!==b.dataset.tab);
+    ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!==b.dataset.tab;});
+    if(b.dataset.tab==="briefing")loadBriefings();
     if(b.dataset.tab==="overview")loadOverview();
     if(b.dataset.tab==="directory")loadDirectoryAdmin();
     if(b.dataset.tab==="courses")loadCourses();

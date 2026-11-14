@@ -137,3 +137,23 @@
 .preview-sponsored .ad-preview-en,.preview-sponsored .ad-preview-copy small{color:#52657a}
 .preview-sponsored .ad-preview-cta{background:#0b4779}
 @media(max-width:650px){.ad-preview-card{padding:14px;gap:10px;min-height:150px}.ad-preview-art{flex-basis:30%;min-height:110px}.ad-preview-card.preview-sidebar{max-width:100%}.ad-preview-card.preview-print{min-height:260px;padding:12px}.preview-print .ad-preview-art{min-height:210px}.ad-preview-copy strong{font-size:16px}.ad-preview-en{font-size:11px}.ad-preview-heading{flex-direction:column}}
+
+/* RSS source activity and import metrics */
+.rss-source-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0 10px}
+.rss-source-stat{display:grid;gap:4px;padding:16px;border:1px solid #dce5ef;border-radius:12px;background:#f7f9fc}
+.rss-source-stat strong{font-size:25px;color:#102b4e;font-variant-numeric:tabular-nums}
+.rss-source-stat span{font-size:12px;color:#52657a}
+.rss-source-note{font-size:12px;line-height:1.5;margin:8px 0 18px}
+.rss-source-item{align-items:flex-start}
+.rss-source-main{min-width:0;flex:1}
+.rss-source-url{overflow-wrap:anywhere;font-size:12px;color:#64748b}
+.rss-source-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px}
+.rss-health{display:inline-flex;align-items:center;padding:4px 8px;border-radius:99px;font-size:11px;font-weight:700}
+.rss-health.recent{background:#e6f5eb;color:#17653a}
+.rss-health.quiet{background:#fff4df;color:#80520a}
+.rss-health.no-data{background:#fcebea;color:#923b35}
+.rss-source-metrics{display:flex;gap:10px 18px;flex-wrap:wrap;margin-top:12px;color:#64748b;font-size:12px}
+.rss-source-metrics span{display:inline-flex;gap:4px;align-items:baseline}
+.rss-source-metrics strong{color:#102b4e;font-size:13px;font-variant-numeric:tabular-nums}
+@media(max-width:760px){.rss-source-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.rss-source-item{display:block}.rss-source-item>.item-actions{margin-top:12px;justify-content:flex-start}}
+@media(max-width:380px){.rss-source-summary{gap:8px}.rss-source-stat{padding:12px}.rss-source-stat strong{font-size:21px}}

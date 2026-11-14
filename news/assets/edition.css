@@ -628,3 +628,23 @@
     page-break-before: always !important;
   }
 }
+
+/* Último ajuste: evitar que el salto de sección cree una hoja vacía */
+@media print {
+  #fullArticle.embedded-lead-story {
+    break-before: auto !important;
+    page-break-before: auto !important;
+    break-after: auto !important;
+    page-break-after: auto !important;
+  }
+  .secondary-area {
+    break-before: auto !important;
+    page-break-before: auto !important;
+    break-after: auto !important;
+    page-break-after: auto !important;
+  }
+  .paper-footer {
+    break-before: auto !important;
+    page-break-before: auto !important;
+  }
+}

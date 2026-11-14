@@ -41,7 +41,7 @@ body{font-size:15px;line-height:1.7}
 @media(max-width:700px){.hero{min-height:0;padding:48px 0;grid-template-columns:1fr;gap:28px}.hero h1{font-size:clamp(3rem,13vw,4.5rem)}.portrait{min-height:340px;max-width:440px}.section{padding:38px 0}.career-item{grid-template-columns:1fr;gap:4px;padding:16px}.career-date{font-size:.76rem}.career-timeline{padding-left:27px}.career-timeline:before{left:8px}.career-item:before{left:-25px;top:22px}}
 @media(prefers-reduced-motion:reduce){.career-item{transition:none}}
 
-</style><script src="/maintenance.js"></script>
+.career-education-heading{position:relative;margin:22px 0 4px -32px;padding:12px 18px;background:var(--accent);color:#fff;border-radius:8px;font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.career-item.education:before{background:#8b6bb2;box-shadow:0 0 0 1px #8b6bb2}.career-item.education .career-meta{font-size:.78rem;color:var(--muted);margin-top:5px}@media(max-width:700px){.career-education-heading{margin-left:-27px}}</style><script src="/maintenance.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Edwin Pineda Carrasco | Portfolio personal</title>
@@ -387,7 +387,6 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
     const career = [
       {date:'Abr 2026 - Actualidad',enDate:'Apr 2026 - Present',company:'Synnovis',role:'Senior Cloud Database Administrator · Infrastructure & Technical Architecture',meta:'Londres, Reino Unido · Jornada completa · Híbrido',enMeta:'London, UK · Full-time · Hybrid',desc:'Administración cloud de bases de datos y arquitectura técnica de infraestructura.',enDesc:'Cloud database administration and technical infrastructure architecture.',kind:'current',tag:'Cloud · Architecture'},
       {date:'Nov 2024 - Actualidad',enDate:'Nov 2024 - Present',company:'EvoSustain',role:'Fundador',enRole:'Founder',meta:'Greater London · Parcial · Remoto',enMeta:'Greater London · Part-time · Remote',desc:'Desarrollo de infraestructura digital para sistemas sostenibles: arquitectura cloud-native, plataformas de datos y tecnologías de optimización.',enDesc:'Building digital infrastructure for sustainable resource systems through cloud-native architecture, data platforms and optimisation technologies.',kind:'leadership',tag:'Entrepreneurship'},
-      {date:'Jun 2025 - Actualidad',enDate:'Jun 2025 - Present',company:'The Open University',role:'Estudiante · BSc (Hons) Cyber Security',enRole:'Student · BSc (Hons) Cyber Security',meta:'Reino Unido · Estudios a tiempo parcial',enMeta:'United Kingdom · Part-time study',desc:'Distinciones en TM111, TM129 y MU123; aprobado TM112.',enDesc:'Distinctions in TM111, TM129 and MU123; passed TM112.',kind:'public',tag:'Cybersecurity'},
       {date:'Ene 2025 - Ene 2026',enDate:'Jan 2025 - Jan 2026',company:'Synnovis',role:'Cloud Database Administrator (Contract)',meta:'Londres, Reino Unido · Contrato a través de Keystream · Híbrido',enMeta:'London, UK · Contract through Keystream · Hybrid',desc:'Administración de bases de datos cloud en un entorno sanitario.',enDesc:'Cloud database administration in a healthcare environment.',kind:'public',tag:'Healthcare · Cloud'},
       {date:'Oct 2024 - Feb 2025',enDate:'Oct 2024 - Feb 2025',company:'Indra',role:'IT Database Administrator',meta:'Remoto',enMeta:'Remote',desc:'Soluciones de bases de datos en Azure y AWS, optimización de rendimiento y costes, automatización y arquitecturas resilientes.',enDesc:'Azure and AWS database solutions focused on performance and cost optimisation, automation and resilient architectures.',kind:'tech',tag:'Azure · AWS'},
       {date:'Nov 2021 - Ene 2025',enDate:'Nov 2021 - Jan 2025',company:'Always On The Services Ltd',role:'CEO & Founder',meta:'Remoto · Jornada completa',enMeta:'Remote · Full-time',desc:'Dirección y desarrollo de servicios tecnológicos, cloud computing y data warehousing.',enDesc:'Led and developed technology services across cloud computing and data warehousing.',kind:'leadership',tag:'Leadership'},
@@ -406,6 +405,14 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
       {date:'Nov 2006 - Ago 2007',enDate:'Nov 2006 - Aug 2007',company:'Plan International',role:'Departamento de Datos',enRole:'Data Department',meta:'Barahona, República Dominicana',enMeta:'Barahona, Dominican Republic',desc:'Primera experiencia profesional en el área de datos.',enDesc:'First professional experience in the data field.',kind:'public',tag:'Career beginnings'}
     ];
 
+    const educationTimeline = [
+      {date:'Jun 2025 - Jun 2028',enDate:'Jun 2025 - Jun 2028',company:'The Open University',role:'Bachelor of Science, BSc (Hons) Cyber Security',enRole:'Bachelor of Science, BSc (Hons), Cyber Security',status:'En curso',enStatus:'In progress'},
+      {date:'Oct 2025 - Oct 2026',enDate:'Oct 2025 - Oct 2026',company:'The Open University',role:'Higher Education in Computing and IT',enRole:'Higher Education in Computing and IT',status:'Distinción en tres módulos · Nivel 4 · 120 créditos',enStatus:'Distinction in three modules · Level 4 · 120 credits'},
+      {date:'Abr 2024 - May 2024',enDate:'Apr 2024 - May 2024',company:'The Open University',role:'Managing Complexity: A Systems Approach',enRole:'Managing Complexity: A Systems Approach'},
+      {date:'Abr 2020 - Jun 2020',enDate:'Apr 2020 - Jun 2020',company:'Metropolitan School of Business & Management (UK)',role:'Professional Certificate in Database Management System Architecture',enRole:'Professional Certificate in Database Management System Architecture'},
+      {date:'Dic 2015',enDate:'Dec 2015',company:'Madrid, España',enCompany:'Madrid, Spain',role:'BSc (Eng) - Bachelor’s Degree, Computer Science Engineering',enRole:'BSc (Eng) - Bachelor’s Degree, Computer Science Engineering',status:'Nota: 3.4',enStatus:'Grade: 3.4'}
+    ];
+
     function renderCareerTimeline(){
       const box=document.getElementById('careerTimeline');
       if(!box)return;
@@ -421,6 +428,25 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
         el.querySelector('.career-date').textContent=date;
         el.querySelector('.career-company').textContent=company;
         el.querySelector('.career-role').textContent=role;
+        box.appendChild(el);
+      });
+      const divider=document.createElement('div');
+      divider.className='career-education-heading';
+      divider.textContent=lang==='en'?'Education':'Formación académica';
+      box.appendChild(divider);
+      educationTimeline.forEach(item=>{
+        const en=lang==='en';
+        const el=document.createElement('article');
+        el.className='career-item education';
+        const date=en?item.enDate:item.date;
+        const company=en?(item.enCompany||item.company):item.company;
+        const role=en?(item.enRole||item.role):item.role;
+        const status=en?item.enStatus:item.status;
+        el.innerHTML='<div class="career-date"></div><div><div class="career-company"></div><div class="career-role"></div><div class="career-meta"></div></div>';
+        el.querySelector('.career-date').textContent=date;
+        el.querySelector('.career-company').textContent=company;
+        el.querySelector('.career-role').textContent=role;
+        el.querySelector('.career-meta').textContent=status||'';
         box.appendChild(el);
       });
     }

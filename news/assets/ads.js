@@ -21,7 +21,7 @@
     const creative = safeHttps(campaign.creative_url);
     if (!creative) return "";
     const target = safeHttps(campaign.target_url) || creative;
-    const isPdf = /.pdf(?:$|[?#])/i.test(creative);
+    const isPdf = /[.]pdf(?:$|[?#])/i.test(creative);
     const label = placement === "sponsored" ? "CONTENIDO PATROCINADO" : "PUBLICIDAD";
     const title = escapeHtml(campaign.campaign_title || "Publicidad");
     const media = isPdf

@@ -17,9 +17,9 @@ function loadPdfLibrary(){
  if(window.jspdf&&window.jspdf.jsPDF)return Promise.resolve();
  if(pdfLibraryPromise)return pdfLibraryPromise;
  var sources=[
+  "https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js",
   "https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js",
-  "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js",
-  "https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js"
+  "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"
  ];
  pdfLibraryPromise=new Promise(function(resolve,reject){
   var index=0;

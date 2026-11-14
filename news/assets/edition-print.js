@@ -27,6 +27,7 @@
    if(sidebar){
     var grid=printSecondary&&printSecondary.querySelector(".story-grid");
     var sideStories=Array.prototype.slice.call(sidebar.querySelectorAll(".side-story"));
+    var firstStory=grid&&grid.firstChild;
     sideStories.forEach(function(side){
      var card=document.createElement("article");
      card.className="story story-from-headline";

@@ -106,7 +106,7 @@ async function loadArticle(){
  // Render the article's editorial HTML with a strict allow-list. Older code escaped
  // every tag and printed the markup to readers instead of rendering its structure.
  function renderArticleBody(raw){
-   const source=String(raw||"").replace(/\\(?=<\\/?[a-z])/gi,"").trim();
+   const source=String(raw||"").replace(/\\(?=<\/?[a-z])/gi,"").trim();
    const parsed=new DOMParser().parseFromString("<div>"+source+"</div>","text/html");
    const allowed=new Set(["P","H2","H3","UL","OL","LI","STRONG","B","EM","I","BLOCKQUOTE","A","BR","HR"]);
    function cleanNode(node){
@@ -126,8 +126,8 @@ async function loadArticle(){
    }
    const container=parsed.body.firstElementChild;
    let html=container?Array.from(container.childNodes).map(cleanNode).join(""):"";
-   if(!/<(p|h2|h3|ul|ol|blockquote|hr)\\b/i.test(html)){
-     html=html.split(/\\n[ \\t]*\\n+/).map(p=>p.trim()).filter(Boolean).map(p=>"<p>"+esc(p).replace(/\\n/g," ")+"</p>").join("");
+   if(!/<(p|h2|h3|ul|ol|blockquote|hr)\b/i.test(html)){
+     html=html.split(/\n[ \t]*\n+/).map(p=>p.trim()).filter(Boolean).map(p=>"<p>"+esc(p).replace(/\n/g," ")+"</p>").join("");
    }
    let firstParagraph=true;
    html=html.replace(/<p>/gi,()=>{if(firstParagraph){firstParagraph=false;return "<p class='article-opening'>";}return "<p>";});

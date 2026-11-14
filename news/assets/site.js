@@ -18,17 +18,25 @@ function renderStaticLanguage(){
  const mainNavLabels=en
   ? ["International","Politics","Economy","Security","Startups & innovation","Evoford Briefing","Opinion","Directory","Submit a story","Print edition"]
   : ["Internacional","Política","Economía","Seguridad","Startups e innovación","Evoford Briefing","Opinión","Directorio","Envía tu noticia","Edición impresa"];
- document.querySelectorAll(".masthead .nav a").forEach((el,i)=>{if(mainNavLabels[i])el.textContent=mainNavLabels[i];});
+ const mainNav=document.querySelector("header nav");
+ if(mainNav){
+  Array.from(mainNav.querySelectorAll("a")).forEach((el,i)=>{
+   if(mainNavLabels[i])el.textContent=mainNavLabels[i];
+  });
+ }
  const topicLabels=en
   ? ["Politics","Security & defence","Economy","Startups & innovation","Innovation Academy","International","Opinion & analysis"]
   : ["Política","Seguridad y defensa","Economía","Startups e innovación","Aula de Innovación","Internacional","Opinión y análisis"];
- document.querySelectorAll(".topics a").forEach((el,i)=>{
-  const current=el.textContent.trim().toLowerCase();
-  if(current.startsWith("aula de innovación")||current.startsWith("innovation academy"))el.setAttribute("href","aula-innovacion.html");
-  if(current.startsWith("startups"))el.setAttribute("href","startups.html");
-  const arrow=el.querySelector("span");
-  if(topicLabels[i]){el.firstChild.textContent=topicLabels[i]+" ";if(arrow)arrow.textContent="→";}
- });
+ const topics=document.querySelector(".topics");
+ if(topics){
+  Array.from(topics.querySelectorAll("a")).forEach((el,i)=>{
+   const current=(el.textContent||"").trim().toLowerCase();
+   if(current.startsWith("aula de innovación")||current.startsWith("innovation academy"))el.setAttribute("href","aula-innovacion.html");
+   if(current.startsWith("startups"))el.setAttribute("href","startups.html");
+   const arrow=el.querySelector("span");
+   if(topicLabels[i]){el.firstChild.textContent=topicLabels[i]+" ";if(arrow)arrow.textContent="→";}
+  });
+ }
  set("#editionLabel",tr("edition"));
  const print=document.getElementById("printEditionBtn");if(print)print.innerHTML=tr("print")+" <span aria-hidden='true'>↗</span>";
  set(".market-heading .kicker",tr("markets"));set(".market-heading span:last-child",tr("marketData"));set(".market-note",tr("marketNote"));
@@ -47,14 +55,22 @@ function renderStaticLanguage(){
  const keys=["politics","security","economy","technology","aula","world","analysis"];
  document.querySelectorAll(".topics a").forEach((el,i)=>{const arrow=el.querySelector("span");el.firstChild.textContent=tr(keys[i])+" ";if(arrow)arrow.textContent="→";});
  const author=document.querySelector(".author");if(author){const spans=author.querySelectorAll("span");const labels= en?["Columnist · Entrepreneur","University studies in Spain · BSc (Hons) Cyber Security in progress at The Open University, England"]:["Articulista · Emprendedor","Formación universitaria en España · BSc (Hons) Cyber Security en curso en The Open University, Inglaterra"];spans.forEach((el,i)=>{if(i<labels.length)el.textContent=labels[i];});}
- const footer=document.querySelector("footer");
+ const footer=document.querySelector("body > footer");
  if(footer){
-  const footerLinks=footer.querySelectorAll("a");
-  if(footerLinks[1])footerLinks[1].textContent=en?"Advertise":"Anúnciate";
-  if(footerLinks[2])footerLinks[2].textContent=en?"Editorial access":"Acceso editorial";
-  if(footerLinks[3])footerLinks[3].textContent=en?"About Evoford News":"Sobre / About Evoford News";
-  const foot=footer.querySelector(":scope > span");if(foot)foot.textContent=tr("footer");
-  const yearLabel=footer.querySelector("span:last-child");if(yearLabel)yearLabel.innerHTML="© <span id='year'>"+new Date().getFullYear()+"</span> Evoford";
+  const footerLinks=Array.from(footer.querySelectorAll("a"));
+  const hasAdvertise=footerLinks.some(a=>/publicidad|advertise|anúnciate/i.test(a.textContent));
+  const footerText=footer.querySelector(":scope > span");
+  if(footerText)footerText.textContent=tr("footer");
+  if(hasAdvertise){
+   const adLink=footerLinks.find(a=>/publicidad|advertise|anúnciate/i.test(a.textContent));
+   const accessLink=footerLinks.find(a=>/editorial access|acceso editorial/i.test(a.textContent));
+   const aboutLink=footerLinks.find(a=>/about evoford|sobre/i.test(a.textContent));
+   if(adLink)adLink.textContent=en?"Advertise":"Anúnciate";
+   if(accessLink)accessLink.textContent=en?"Editorial access":"Acceso editorial";
+   if(aboutLink)aboutLink.textContent=en?"About Evoford News":"Sobre / About Evoford News";
+  }
+  const yearLabel=footer.querySelector("span:last-child");
+  if(yearLabel && yearLabel.querySelector("#year"))yearLabel.innerHTML="© <span id='year'>"+new Date().getFullYear()+"</span> Evoford";
  }
 }
 

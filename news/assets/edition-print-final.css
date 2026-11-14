@@ -454,3 +454,21 @@
     page-break-inside:auto!important;
   }
 }
+
+/* v10: formatos de papel nombrados; evita @page insertado dinámicamente */
+@page evoford-a4 {
+  size: 210mm 297mm;
+  margin: 10mm;
+}
+@page evoford-a3 {
+  size: 297mm 420mm;
+  margin: 12mm;
+}
+@media print {
+  html[data-print-size="a4"] {
+    page: evoford-a4 !important;
+  }
+  html[data-print-size="a3"] {
+    page: evoford-a3 !important;
+  }
+}

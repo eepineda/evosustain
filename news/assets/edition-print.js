@@ -81,8 +81,9 @@ function generate(){
   y=Math.max(colBottom,y);
  }
  function drawStories(images){
-  var cols=a3?4:3,gap=5,cw=(U-gap*(cols-1))/cols,idx=0;
+  var cols=3,gap=5,cw=(U-gap*(cols-1))/cols,idx=0;
   while(idx<stories.length){
+   if(y+78>H-m-11)nextPage();
    var row=stories.slice(idx,idx+cols),top=y,max=top;
    row.forEach(function(node,j){
     var x=m+j*(cw+gap),cy=top,im=images[idx+j];

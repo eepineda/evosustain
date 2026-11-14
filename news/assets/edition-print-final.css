@@ -379,3 +379,55 @@
   }
   #fullArticle .full-article-body > * { break-inside:auto!important;page-break-inside:auto!important; }
 }
+
+/* v7: reglas de máxima prioridad para neutralizar estilos heredados de impresión */
+@media print {
+  body.print-edition #fullArticle.embedded-lead-story {
+    display:block!important;position:static!important;float:none!important;clear:both!important;
+    width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;
+    margin:0!important;padding:5mm 0!important;
+    break-before:page!important;page-break-before:always!important;
+    break-after:auto!important;page-break-after:auto!important;
+    break-inside:auto!important;page-break-inside:auto!important;
+  }
+  body.print-edition #fullArticle.embedded-lead-story .full-article-heading {
+    display:block!important;position:static!important;float:none!important;
+    margin:0 0 3mm!important;padding:0 0 2mm!important;
+    break-before:auto!important;page-break-before:auto!important;
+    break-after:avoid!important;page-break-after:avoid!important;
+    break-inside:avoid!important;page-break-inside:avoid!important;
+  }
+  body.print-edition #fullArticle.embedded-lead-story .full-article-body {
+    display:block!important;position:static!important;float:none!important;clear:none!important;
+    width:100%!important;max-width:none!important;height:auto!important;min-height:0!important;
+    max-height:none!important;overflow:visible!important;margin:0!important;padding:0!important;
+    columns:1!important;-webkit-columns:1!important;-webkit-column-count:1!important;
+    column-count:1!important;column-width:auto!important;column-gap:0!important;
+    column-rule:0!important;column-fill:auto!important;
+    break-before:avoid!important;page-break-before:avoid!important;
+    break-inside:auto!important;page-break-inside:auto!important;
+    font:9pt/1.42 Georgia,"Times New Roman",serif!important;
+    text-align:justify!important;hyphens:auto!important;orphans:3!important;widows:3!important;
+  }
+  body.print-edition #fullArticle.embedded-lead-story .full-article-body > p,
+  body.print-edition #fullArticle.embedded-lead-story .full-article-body > h2,
+  body.print-edition #fullArticle.embedded-lead-story .full-article-body > h3,
+  body.print-edition #fullArticle.embedded-lead-story .full-article-body > h4,
+  body.print-edition #fullArticle.embedded-lead-story .full-article-body > ul,
+  body.print-edition #fullArticle.embedded-lead-story .full-article-body > ol {
+    display:block!important;float:none!important;position:static!important;
+    break-inside:auto!important;page-break-inside:auto!important;
+    break-before:auto!important;page-break-before:auto!important;
+    margin-top:0!important;margin-bottom:3mm!important;
+  }
+  body.print-edition #fullArticle.embedded-lead-story .full-article-body > p:first-child {
+    break-before:avoid!important;page-break-before:avoid!important;
+  }
+  body.print-edition #fullArticle.embedded-lead-story .full-article-heading h2 {
+    font:700 16pt/1.1 Georgia,"Times New Roman",serif!important;
+    margin:1.5mm 0!important;
+  }
+  body.print-edition .secondary-area {
+    break-before:auto!important;page-break-before:auto!important;
+  }
+}

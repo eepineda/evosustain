@@ -670,3 +670,7 @@ footer a:not(.footer-brand){color:#e6c98b;border-bottom-color:rgba(230,201,139,.
 .ad-slot-pdf{display:flex;min-height:74px;align-items:center;justify-content:center;padding:18px;color:#102b4e;font:700 13px/1.5 Arial,sans-serif;text-decoration:underline}
 @media(max-width:600px){.ad-slot{width:calc(100% - 24px);margin:16px auto}.ad-slot-banner{width:100%;padding:0 12px}.ad-slot-sponsored .ad-slot-card{grid-template-columns:1fr;gap:8px}.ad-slot-sponsored .ad-slot-card img{max-height:190px}}
 @media print{.ad-slot{display:none!important}}
+
+#articleView>.ad-slot-sidebar{float:right;width:240px;max-width:34%;margin:8px 0 18px 24px}
+#articleView>.ad-slot-sidebar .ad-slot-card img{max-height:180px}
+@media(max-width:700px){#articleView>.ad-slot-sidebar{float:none;width:100%;max-width:100%;margin:18px auto}}

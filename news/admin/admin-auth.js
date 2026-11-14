@@ -620,7 +620,29 @@ async function handleDirectoryAction(e){
 let adCampaigns=[];
 function adStatusText(s){return ({draft:"Borrador",pending:"Pendiente",active:"Activa",paused:"Pausada",completed:"Finalizada",cancelled:"Cancelada",unpaid:"Sin pagar",paid:"Pagado",overdue:"Vencido",waived:"Exento"})[s]||s;}
 function editAd(a){
- $("adForm").hidden=false;$("adId").value=a?.id||"";$("adAdvertiser").value=a?.advertiser_name||"";$("adContact").value=a?.contact_name||"";$("adEmail").value=a?.contact_email||"";$("adPhone").value=a?.contact_phone||"";$("adTitle").value=a?.campaign_title||"";$("adPlacement").value=a?.placement||"banner";$("adStatus").value=a?.status||"draft";$("adCreative").value=a?.creative_url||"";$("adTarget").value=a?.target_url||"";$("adStart").value=a?.start_date||"";$("adEnd").value=a?.end_date||"";$("adAmount").value=a?.amount??0;$("adCurrency").value=a?.currency||"GBP";$("adPayment").value=a?.payment_status||"unpaid";$("adInvoice").value=a?.invoice_reference||"";$("adNotes").value=a?.internal_notes||"";$("adForm").scrollIntoView({behavior:"smooth",block:"start"});
+ $("adForm").hidden=false;
+ $("adForm").reset();
+ $("adId").value=a?.id||"";
+ $("adEnquiryId").value=a?.source_enquiry_id||"";
+ $("adAdvertiser").value=a?.advertiser_name||"";
+ $("adContact").value=a?.contact_name||"";
+ $("adEmail").value=a?.contact_email||"";
+ $("adPhone").value=a?.contact_phone||"";
+ $("adTitle").value=a?.campaign_title||"";
+ $("adPlacement").value=a?.placement||"banner";
+ $("adStatus").value=a?.status||"draft";
+ $("adPublicationMode").value=a?.publication_mode||"manual";
+ $("adCreative").value=a?.creative_url||"";
+ $("adCreativeFile").value="";
+ $("adTarget").value=a?.target_url||"";
+ $("adStart").value=a?.start_date||"";
+ $("adEnd").value=a?.end_date||"";
+ $("adAmount").value=a?.amount??0;
+ $("adCurrency").value=a?.currency||"GBP";
+ $("adPayment").value=a?.payment_status||"unpaid";
+ $("adInvoice").value=a?.invoice_reference||"";
+ $("adNotes").value=a?.internal_notes||"";
+ $("adForm").scrollIntoView({behavior:"smooth",block:"start"});
 }
 async function loadAds(){
  const campaignRoot=$("adCampaignList"),enquiryRoot=$("adEnquiryList"),statsRoot=$("adStats");
@@ -638,7 +660,7 @@ async function loadAds(){
  }else{
   const stats=[["Campañas",adCampaigns.length],["Activas",adCampaigns.filter(x=>x.status==="active").length],["Pagadas",adCampaigns.filter(x=>x.payment_status==="paid").length],["Por cobrar",adCampaigns.filter(x=>["unpaid","pending","overdue"].includes(x.payment_status)).length]];
   statsRoot.innerHTML=stats.map(([t,n])=>'<div class="course-stat"><strong>'+n+'</strong><span>'+t+'</span></div>').join("");
-  campaignRoot.innerHTML=adCampaigns.length?adCampaigns.map(a=>'<article class="item ad-item"><div><h3>'+safe(a.campaign_title)+'</h3><p>'+safe(a.advertiser_name)+' · '+safe(a.placement)+' · '+safe(adStatusText(a.status))+'</p><p>'+safe(a.amount)+' '+safe(a.currency)+' · Pago: '+safe(adStatusText(a.payment_status))+(a.invoice_reference?' · Factura: '+safe(a.invoice_reference):'')+'</p><p>'+safe(a.start_date||"Sin inicio")+' → '+safe(a.end_date||"Sin fin")+'</p></div><div class="item-actions"><button class="secondary" data-ad-edit="'+a.id+'">Editar</button><button class="secondary" data-ad-delete="'+a.id+'">Eliminar</button></div></article>').join(""):'<p class="muted">Todavía no hay campañas.</p>';
+  campaignRoot.innerHTML=adCampaigns.length?adCampaigns.map(a=>'<article class="item ad-item"><div><h3>'+safe(a.campaign_title)+'</h3><p>'+safe(a.advertiser_name)+' · '+safe(a.placement)+' · '+safe(adStatusText(a.status))+' · '+(a.publication_mode==='scheduled'?'Programada':'Manual')+'</p><p>'+safe(a.amount)+' '+safe(a.currency)+' · Pago: '+safe(adStatusText(a.payment_status))+(a.invoice_reference?' · Factura: '+safe(a.invoice_reference):'')+'</p><p>'+safe(a.start_date||"Sin inicio")+' → '+safe(a.end_date||"Sin fin")+'</p></div><div class="item-actions"><button class="secondary" data-ad-edit="'+a.id+'">Editar</button><button class="secondary" data-ad-delete="'+a.id+'">Eliminar</button></div></article>').join(""):'<p class="muted">Todavía no hay campañas.</p>';
   campaignRoot.querySelectorAll("[data-ad-edit]").forEach(b=>b.addEventListener("click",()=>editAd(adCampaigns.find(a=>a.id===b.dataset.adEdit))));
   campaignRoot.querySelectorAll("[data-ad-delete]").forEach(b=>b.addEventListener("click",async()=>{const a=adCampaigns.find(x=>x.id===b.dataset.adDelete);if(!a||!confirm("¿Eliminar esta campaña?"))return;const r=await client.from("ad_campaigns").delete().eq("id",a.id);if(r.error){say("globalMessage",r.error.message);return;}await loadAds();}));
  }
@@ -655,9 +677,10 @@ async function loadAds(){
  enquiryRoot.querySelectorAll("[data-enquiry-form]").forEach(form=>form.addEventListener("submit",saveAdEnquiry));
  enquiryRoot.querySelectorAll("[data-enquiry-delete]").forEach(b=>b.addEventListener("click",async()=>{if(!confirm("¿Eliminar definitivamente esta solicitud comercial? Esta acción no se puede deshacer."))return;const r=await client.from("ad_enquiries").delete().eq("id",b.dataset.enquiryDelete);if(r.error){say("globalMessage","No se pudo eliminar la solicitud: "+r.error.message);return;}say("globalMessage","Solicitud comercial eliminada.");await loadAds();}));
 }
-function prepareAdFromEnquiry(x){
+async function prepareAdFromEnquiry(x){
  if(!x)return;
  editAd(null);
+ $("adEnquiryId").value=x.id;
  $("adAdvertiser").value=x.company_name||"";
  $("adContact").value=x.contact_name||"";
  $("adEmail").value=x.email||"";
@@ -666,8 +689,24 @@ function prepareAdFromEnquiry(x){
  const placements={banner:"banner",homepage:"homepage",sidebar:"sidebar",article_ads:"article",print:"print",sponsored:"sponsored"};
  $("adPlacement").value=placements[x.placement_interest]||"banner";
  $("adStatus").value="draft";
- $("adNotes").value="Creada desde solicitud comercial. Revisar material adjunto y acordar fechas, importe y ubicación antes de activar.";
- say("adMessage","Datos del anunciante copiados. Revisa el diseño, ubicación, fechas e importe antes de guardar la campaña.");
+ $("adPublicationMode").value="manual";
+ $("adNotes").value="Creada desde solicitud comercial. Revisar diseño, ubicación, fechas e importe antes de activar.";
+ if(x.attachment_path){
+  say("adMessage","Copiando el material recibido al espacio público de campañas…");
+  try{
+   const {data,error}=await client.storage.from("news-submissions").createSignedUrl(x.attachment_path,300);
+   if(error)throw error;
+   const response=await fetch(data.signedUrl);
+   if(!response.ok)throw new Error("No se pudo descargar el archivo recibido.");
+   const blob=await response.blob();
+   const file=new File([blob],x.attachment_name||"material-publicitario",{type:x.attachment_mime||blob.type||"application/octet-stream"});
+   const publicUrl=await uploadAdCreative(file);
+   $("adCreative").value=publicUrl;
+   say("adMessage","Material copiado. Revisa la creatividad, elige ubicación, modalidad y fechas antes de activar.");
+  }catch(error){say("adMessage","No se pudo copiar el adjunto: "+(error.message||"Error desconocido")+". Puedes subirlo manualmente.");}
+ }else{
+  say("adMessage","Datos copiados. Sube el diseño, elige ubicación, modalidad y fechas antes de activar.");
+ }
 }
 function adEnquiryStatusText(status){
  return ({received:"Recibida",contacted:"Contactada",quoted:"Presupuesto enviado",converted:"Convertida",closed:"Cerrada",discarded:"Descartada"})[status]||status||"Recibida";
@@ -692,11 +731,35 @@ async function saveAdEnquiry(event){
  say("globalMessage","Solicitud comercial actualizada.");
  await loadAds();
 }
+async function uploadAdCreative(file){
+ if(!file)return $("adCreative").value.trim()||null;
+ const allowed=["image/jpeg","image/png","image/webp","application/pdf"];
+ if(!allowed.includes(file.type))throw new Error("Formato no admitido. Utiliza JPG, PNG, WebP o PDF.");
+ if(file.size>8*1024*1024)throw new Error("El archivo supera el límite de 8 MB.");
+ const ext=(file.name.split(".").pop()||"file").toLowerCase().replace(/[^a-z0-9]/g,"");
+ const path="ads/"+crypto.randomUUID()+"."+ext;
+ const {error}=await client.storage.from("news-images").upload(path,file,{contentType:file.type,upsert:false});
+ if(error)throw error;
+ return client.storage.from("news-images").getPublicUrl(path).data.publicUrl;
+}
 async function saveAd(event){
- event.preventDefault();const id=$("adId").value,amount=Number($("adAmount").value);
- const p={advertiser_name:$("adAdvertiser").value.trim(),contact_name:$("adContact").value.trim()||null,contact_email:$("adEmail").value.trim(),contact_phone:$("adPhone").value.trim()||null,campaign_title:$("adTitle").value.trim(),placement:$("adPlacement").value,status:$("adStatus").value,creative_url:$("adCreative").value.trim()||null,target_url:$("adTarget").value.trim()||null,start_date:$("adStart").value||null,end_date:$("adEnd").value||null,amount,currency:$("adCurrency").value,payment_status:$("adPayment").value,invoice_reference:$("adInvoice").value.trim()||null,internal_notes:$("adNotes").value.trim()||null,updated_at:new Date().toISOString()};
- if(!p.advertiser_name||!p.contact_email||!p.campaign_title||!Number.isFinite(amount)||amount<0){say("adMessage","Revisa los campos obligatorios y el importe.");return;}if(p.start_date&&p.end_date&&p.end_date<p.start_date){say("adMessage","La fecha final no puede ser anterior al inicio.");return;}
- const r=id?await client.from("ad_campaigns").update(p).eq("id",id):await client.from("ad_campaigns").insert(p);if(r.error){say("adMessage",r.error.message);return;}say("adMessage","Campaña guardada.");$("adForm").hidden=true;$("adForm").reset();$("adId").value="";await loadAds();
+ event.preventDefault();
+ const id=$("adId").value,amount=Number($("adAmount").value),mode=$("adPublicationMode").value;
+ const status=$("adStatus").value;
+ let startDate=$("adStart").value||null;
+ if(status==="active"&&mode==="manual"&&!startDate)startDate=new Date().toLocaleDateString("en-CA");
+ if(status==="active"&&mode==="scheduled"&&!startDate){say("adMessage","Indica la fecha de inicio para programar la campaña.");return;}
+ if(startDate&&$("adEnd").value&&$("adEnd").value<startDate){say("adMessage","La fecha final no puede ser anterior al inicio.");return;}
+ if(!$("adAdvertiser").value.trim()||!$("adEmail").value.trim()||!$("adTitle").value.trim()||!Number.isFinite(amount)||amount<0){say("adMessage","Revisa los campos obligatorios y el importe.");return;}
+ const submit=$("adForm").querySelector('button[type="submit"]');submit.disabled=true;say("adMessage","Guardando campaña y material gráfico…");
+ try{
+  const creative=await uploadAdCreative($("adCreativeFile").files[0]);
+  const p={advertiser_name:$("adAdvertiser").value.trim(),contact_name:$("adContact").value.trim()||null,contact_email:$("adEmail").value.trim(),contact_phone:$("adPhone").value.trim()||null,campaign_title:$("adTitle").value.trim(),placement:$("adPlacement").value,status,publication_mode:mode,source_enquiry_id:$("adEnquiryId").value||null,creative_url:creative,target_url:$("adTarget").value.trim()||null,start_date:startDate,end_date:$("adEnd").value||null,amount,currency:$("adCurrency").value,payment_status:$("adPayment").value,invoice_reference:$("adInvoice").value.trim()||null,internal_notes:$("adNotes").value.trim()||null,updated_at:new Date().toISOString()};
+  const r=id?await client.from("ad_campaigns").update(p).eq("id",id):await client.from("ad_campaigns").insert(p);
+  if(r.error)throw r.error;
+  say("adMessage",status==="active"?(mode==="scheduled"?"Campaña guardada y programada. Se mostrará automáticamente en sus fechas.":"Campaña activada. Ya puede aparecer en el espacio seleccionado."):"Campaña guardada como borrador o pendiente.");
+  $("adForm").hidden=true;$("adForm").reset();$("adId").value="";$("adEnquiryId").value="";await loadAds();
+ }catch(error){say("adMessage","No se pudo guardar la campaña: "+(error.message||"Error desconocido"));}finally{submit.disabled=false;}
 }
 
 

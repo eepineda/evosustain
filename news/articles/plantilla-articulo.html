@@ -82,8 +82,11 @@ async function loadArticle(){
    ({data:a,error}=await client.from("articles").select("*").eq("slug",slug).eq("status","published").maybeSingle());
  }
  if(error||!a){root.innerHTML="<h1>Artículo no disponible</h1><p>La publicación no existe o no está disponible.</p><a class='read-link' href='../'>Volver a portada →</a>";return;}
- const requestedLanguage=new URLSearchParams(location.search).get("lang")==="en"?"en":"es";
- try{localStorage.setItem("evoford-news-language",requestedLanguage)}catch(_e){}\n const english=requestedLanguage==="en";
+ const languageParam=new URLSearchParams(location.search).get("lang");
+ const storedLanguage=(()=>{try{return localStorage.getItem("evoford-news-language")==="en"?"en":"es"}catch(_e){return "es"}})();
+ const requestedLanguage=languageParam==="en"?"en":languageParam==="es"?"es":storedLanguage;
+ try{localStorage.setItem("evoford-news-language",requestedLanguage)}catch(_e){}
+ const english=requestedLanguage==="en";
  const originalLanguage=(a.language||"es").toLowerCase().startsWith("en")?"en":"es";
  // Use the original-language fields as the fallback and the matching translation fields when available.
  const title=english?(a.title_en||(originalLanguage==="en"?a.title:a.title)):(a.title_es||(originalLanguage==="es"?a.title:a.title));

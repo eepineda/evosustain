@@ -328,10 +328,49 @@ $("rssEditForm")?.addEventListener("submit",async event=>{
   $("sourceMessage").textContent="Fuente actualizada. La nueva dirección se utilizará en próximas importaciones.";
   closeRssEdit();await loadSources();
 });
+function formatRssDate(value){
+  if(!value)return "Nunca";
+  const date=new Date(value);
+  return Number.isNaN(date.getTime())?"Fecha no disponible":date.toLocaleString("es-GB",{dateStyle:"medium",timeStyle:"short",timeZone:"Europe/London"});
+}
 async function loadSources(){
-  const {data,error}=await client.from("rss_sources").select("*").order("created_at",{ascending:false});
+  const [sourcesResult,itemsResult]=await Promise.all([
+    client.from("rss_sources").select("*").order("created_at",{ascending:false}),
+    client.from("imported_items").select("source_id,imported_at,status").order("imported_at",{ascending:false})
+  ]);
+  const {data,error}=sourcesResult;
   if(error){$("sourceList").innerHTML=`<p class="muted">${safe(error.message)}</p>`;return;}
-  $("sourceList").innerHTML=data.length?data.map(s=>`<article class="item"><div><h3>${safe(s.name)}</h3><p>${safe(s.feed_url)} · ${safe(s.category||"General")} · ${s.active?"Activa":"Pausada"}</p></div><div class="item-actions"><button type="button" class="secondary" data-edit-source="${safe(s.id)}">Editar</button><button type="button" class="secondary" data-toggle-source="${safe(s.id)}">${s.active?"Pausar":"Activar"}</button><button type="button" class="secondary" data-delete-source="${safe(s.id)}">Eliminar fuente</button></div></article>`).join(""):'<p class="muted">Aún no hay fuentes RSS configuradas.</p>';
+  if(itemsResult.error){
+    $("sourceList").innerHTML='<p class="muted">No se pudieron consultar las métricas de noticias: '+safe(itemsResult.error.message)+'</p>';
+    return;
+  }
+  const now=Date.now(),stats=new Map();
+  (itemsResult.data||[]).forEach(item=>{
+    if(!item.source_id)return;
+    const entry=stats.get(item.source_id)||{total:0,last24h:0,pending:0,lastImported:null};
+    entry.total++;
+    const importedAt=item.imported_at?new Date(item.imported_at):null;
+    if(importedAt&&!Number.isNaN(importedAt.getTime())){
+      if(!entry.lastImported||importedAt>new Date(entry.lastImported))entry.lastImported=item.imported_at;
+      if(now-importedAt.getTime()<=24*60*60*1000)entry.last24h++;
+    }
+    if(item.status==="pending")entry.pending++;
+    stats.set(item.source_id,entry);
+  });
+  const activeCount=data.filter(s=>s.active).length;
+  const totalItems=(itemsResult.data||[]).length;
+  const sourcesWithItems=data.filter(s=>(stats.get(s.id)?.total||0)>0).length;
+  $("rssSourceSummary").innerHTML=[
+    ["Fuentes configuradas",data.length],
+    ["Activas",activeCount],
+    ["Con noticias guardadas",sourcesWithItems],
+    ["Noticias almacenadas",totalItems]
+  ].map(([label,value])=>'<div class="rss-source-stat"><strong>'+value+'</strong><span>'+label+'</span></div>').join("");
+  $("sourceList").innerHTML=data.length?data.map(s=>{
+    const m=stats.get(s.id)||{total:0,last24h:0,pending:0,lastImported:null};
+    const health=m.total===0?'<span class="rss-health no-data">Sin registros</span>':m.last24h>0?'<span class="rss-health recent">Actividad en 24 h</span>':'<span class="rss-health quiet">Sin novedades en 24 h</span>';
+    return '<article class="item rss-source-item"><div class="rss-source-main"><h3>'+safe(s.name)+'</h3><p class="rss-source-url">'+safe(s.feed_url)+'</p><p class="rss-source-meta">'+safe(s.category||"General")+' · '+(s.active?'<span class="pill">Activa</span>':'<span class="pill">Pausada</span>')+' · '+health+'</p><div class="rss-source-metrics"><span><strong>'+m.total+'</strong> total</span><span><strong>'+m.last24h+'</strong> últimas 24 h</span><span><strong>'+m.pending+'</strong> pendientes</span><span><strong>'+safe(formatRssDate(m.lastImported))+'</strong> última noticia</span></div></div><div class="item-actions"><button type="button" class="secondary" data-edit-source="'+safe(s.id)+'">Editar</button><button type="button" class="secondary" data-toggle-source="'+safe(s.id)+'">'+(s.active?"Pausar":"Activar")+'</button><button type="button" class="secondary" data-delete-source="'+safe(s.id)+'">Eliminar fuente</button></div></article>';
+  }).join(""):'<p class="muted">Aún no hay fuentes RSS configuradas.</p>';
   $("sourceList").querySelectorAll("[data-toggle-source]").forEach(button=>button.addEventListener("click",async()=>{
     const source=data.find(s=>String(s.id)===button.dataset.toggleSource);
     if(!source)return;
@@ -597,6 +636,7 @@ function wire(){
   $("approveArticleBtn").addEventListener("click",()=>saveArticle("approved"));
   $("publishArticleBtn").addEventListener("click",()=>saveArticle("published"));$("saveChangesBtn").addEventListener("click",()=>saveArticle(null,true));
   $("sourceForm").addEventListener("submit",addSource);
+  $("refreshSourcesBtn")?.addEventListener("click",loadSources);
   $("refreshSubmissionsBtn").addEventListener("click",loadSubmissions);
   $("refreshDirectoryBtn").addEventListener("click",loadDirectoryAdmin);
   $("refreshCoursesBtn").addEventListener("click",loadCourses);

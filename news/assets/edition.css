@@ -582,3 +582,49 @@
     page-break-after: avoid !important;
   }
 }
+
+
+/* Ajuste de estructura: el artículo completo es hermano de la portada */
+@media print {
+  #fullArticle.embedded-lead-story {
+    display: block !important;
+    position: static !important;
+    float: none !important;
+    clear: both !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 8pt 0 12pt !important;
+    padding: 7pt 0 10pt !important;
+    border-top: 1.5px solid #222 !important;
+    break-before: auto !important;
+    page-break-before: auto !important;
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+  #fullArticle .full-article-heading {
+    break-after: avoid-page !important;
+    page-break-after: avoid !important;
+  }
+  #fullArticle .full-article-body {
+    column-count: 2 !important;
+    column-fill: auto !important;
+    column-gap: 18pt !important;
+    column-rule: .4pt solid #ccc !important;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+  #fullArticle .full-article-body p,
+  #fullArticle .full-article-body h2,
+  #fullArticle .full-article-body h3,
+  #fullArticle .full-article-body h4,
+  #fullArticle .full-article-body li {
+    break-inside: avoid-column !important;
+    page-break-inside: avoid !important;
+  }
+  .secondary-area {
+    break-before: page !important;
+    page-break-before: always !important;
+  }
+}

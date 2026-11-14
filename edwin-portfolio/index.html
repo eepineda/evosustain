@@ -41,7 +41,7 @@ body{font-size:15px;line-height:1.7}
 @media(max-width:700px){.hero{min-height:0;padding:48px 0;grid-template-columns:1fr;gap:28px}.hero h1{font-size:clamp(3rem,13vw,4.5rem)}.portrait{min-height:340px;max-width:440px}.section{padding:38px 0}.career-item{grid-template-columns:1fr;gap:4px;padding:16px}.career-date{font-size:.76rem}.career-timeline{padding-left:27px}.career-timeline:before{left:8px}.career-item:before{left:-25px;top:22px}}
 @media(prefers-reduced-motion:reduce){.career-item{transition:none}}
 
-.career-education-heading{position:relative;margin:22px 0 4px -32px;padding:12px 18px;background:var(--accent);color:#fff;border-radius:8px;font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.career-item.education:before{background:#8b6bb2;box-shadow:0 0 0 1px #8b6bb2}.career-item.education .career-meta{font-size:.78rem;color:var(--muted);margin-top:5px}@media(max-width:700px){.career-education-heading{margin-left:-27px}}</style><script src="/maintenance.js"></script>
+.cert-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.cert-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;min-width:0}.cert-card h3{font-size:.94rem;line-height:1.4;margin:0 0 7px}.cert-provider{font-size:.82rem;font-weight:700;color:var(--accent)}.cert-meta{font-size:.76rem;color:var(--muted);margin-top:4px}.cert-id{font-size:.72rem;color:var(--muted);overflow-wrap:anywhere;margin-top:6px}.cert-group{grid-column:1/-1;margin:12px 0 0;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:800}.cert-note{font-size:.8rem;color:var(--muted);margin-top:5px}@media(max-width:640px){.cert-grid{grid-template-columns:1fr}}.career-education-heading{position:relative;margin:22px 0 4px -32px;padding:12px 18px;background:var(--accent);color:#fff;border-radius:8px;font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.career-item.education:before{background:#8b6bb2;box-shadow:0 0 0 1px #8b6bb2}.career-item.education .career-meta{font-size:.78rem;color:var(--muted);margin-top:5px}@media(max-width:700px){.career-education-heading{margin-left:-27px}}</style><script src="/maintenance.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Edwin Pineda Carrasco | Portfolio personal</title>
@@ -160,6 +160,12 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
 
 
 
+
+    <section class="container section reveal" id="certifications">
+      <div class="section-head"><div class="section-icon">✧</div><h2 data-i18n="certifications.title">Licencias y certificaciones</h2></div>
+      <p class="section-lead" data-i18n="certifications.intro">Formación profesional continua en cloud, datos, ciberseguridad, redes y gestión tecnológica.</p>
+      <div class="cert-grid" id="certificationsBox"></div>
+    </section>
 
     <section class="container section reveal" id="contact">
       <div class="cta">
@@ -413,6 +419,77 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
       {date:'Dic 2015',enDate:'Dec 2015',company:'Madrid, España',enCompany:'Madrid, Spain',role:'BSc (Eng) - Bachelor’s Degree, Computer Science Engineering',enRole:'BSc (Eng) - Bachelor’s Degree, Computer Science Engineering',status:'Nota: 3.4',enStatus:'Grade: 3.4'}
     ];
 
+
+    const certifications = [
+      {group:'Cybersecurity & Networking',esGroup:'Ciberseguridad y redes',title:'Data Science Essentials With Python',provider:'Cisco',date:'Aug 2026',esDate:'Ago 2026'},
+      {title:'Cybersecurity Defense Analyst Career Path',provider:'Cisco',date:'Jul 2026',esDate:'Jul 2026'},
+      {title:'Network Technician Career Path',provider:'Cisco',date:'Jun 2026',esDate:'Jun 2026'},
+      {title:'Introduction to Cybersecurity',provider:'Cisco',date:'Mar 2026',esDate:'Mar 2026'},
+      {group:'Cloud, Data & Platforms',esGroup:'Cloud, datos y plataformas',title:'Academy Accreditation - Azure Databricks Platform Architect',provider:'Databricks',date:'Jan 2026',esDate:'Ene 2026',id:'171452053'},
+      {title:'Academy Accreditation - Databricks Fundamentals',provider:'Databricks',date:'Jan 2026',esDate:'Ene 2026',id:'171451002'},
+      {title:'CompTIA Cloud+ Basic',provider:'Alison',date:'Jul 2024',esDate:'Jul 2024',id:'1945-41038023'},
+      {title:'AWS Cloud Practitioner Essentials',provider:'Amazon Web Services (AWS)',date:'Jun 2021',esDate:'Jun 2021',id:'BgV_irmJf0yINy1fl2VhNw2'},
+      {title:'Migrating from Microsoft SQL Server to Amazon RDS',provider:'Amazon Web Services (AWS)',date:'Jun 2021',esDate:'Jun 2021',id:'FY-ySO_40OicvXHxUN_Yg2'},
+      {title:'Amazon Aurora MySQL - Migration',provider:'Amazon Web Services (AWS)',date:'Jun 2021',esDate:'Jun 2021',id:'mu2OKdp2HkO9eT3wQ4zp0w2'},
+      {title:'Amazon DynamoDB for Serverless Architectures',provider:'Amazon Web Services (AWS)',date:'Feb 2019',esDate:'Feb 2019',id:'kbO0_D8G1EmSWeV8PHpF3Q2'},
+      {title:'Introduction to AWS Backup',provider:'Amazon Web Services (AWS)',date:'Feb 2019',esDate:'Feb 2019',id:'64Pj5oUTi0-MmX-KIJ4aLQ2'},
+      {title:'Google Cloud Platform Big Data and Machine Learning',provider:'Coursera',date:'Feb 2021',esDate:'Feb 2021',id:'5KKU5NJA75DM'},
+      {title:'Implementing a Data Warehouse SQL Server 2019',provider:'LinkedIn',date:'Jul 2021',esDate:'Jul 2021',id:'Aem5bsiASrFJENFG-DcnA2Rd7Ivb'},
+      {title:'Azure: Políticas para DevOps esencial',provider:'LinkedIn',date:'Jul 2020',esDate:'Jul 2020'},
+      {title:'AWS Certified Solutions Architect - Associate 2018',provider:'Udemy',date:'Feb 2018',esDate:'Feb 2018'},
+      {group:'Technology Management & Professional Development',esGroup:'Gestión tecnológica y desarrollo profesional',title:'IT Management',provider:'European Institute of Leadership and Management',id:'12274-169-768-7398',note:'Skills: IT Service Management, IT Governance, +3 skills',esNote:'Competencias: gestión de servicios TI, gobierno de TI y otras'},
+      {title:'Project governance and Project Management Office (PMO)',provider:'The Open University'},
+      {title:'Managing complexity: A systems approach',provider:'The Open University'},
+      {title:'OU Ready: Distance Learning Induction badge',provider:'Canvas Credentials (Badgr)',date:'Jun 2025',esDate:'Jun 2025',id:'6862ed3b9eec5952eb444753'},
+      {title:'Graded Examinations in Spoken English (GESE)',provider:'Trinity College London',date:'Jul 2023',esDate:'Jul 2023',id:'5271565'},
+      {title:'GL Programación con JavaScript - FT Ed 3',provider:'Fundación Telefónica',date:'Jun 2021',esDate:'Jun 2021'},
+      {title:'FULL UK Driving Licence',provider:'Driver and Vehicle Licensing Agency (DVLA)',date:'Aug 2018',esDate:'Ago 2018'},
+      {title:'PASS',provider:'National Police Chiefs’ Council',date:'May 2024',esDate:'May 2024',note:'Credential ID not displayed'},
+      {title:'Disclosure and Barring Service',provider:'UK Home Office',date:'May 2024',esDate:'May 2024',note:'Credential ID not displayed'}
+    ];
+
+    function renderCertifications(){
+      const box=document.getElementById('certificationsBox');
+      if(!box)return;
+      box.innerHTML='';
+      certifications.forEach(item=>{
+        if(item.group){
+          const heading=document.createElement('h3');
+          heading.className='cert-group';
+          heading.textContent=lang==='en'?item.group:item.esGroup;
+          box.appendChild(heading);
+        }
+        const card=document.createElement('article');
+        card.className='cert-card';
+        const title=document.createElement('h3');
+        title.textContent=item.title;
+        const provider=document.createElement('div');
+        provider.className='cert-provider';
+        provider.textContent=item.provider;
+        card.appendChild(title);
+        card.appendChild(provider);
+        if(item.date){
+          const date=document.createElement('div');
+          date.className='cert-meta';
+          date.textContent=(lang==='en'?'Issued ':'Emitido ')+(lang==='en'?item.date:item.esDate);
+          card.appendChild(date);
+        }
+        if(item.id){
+          const id=document.createElement('div');
+          id.className='cert-id';
+          id.textContent=(lang==='en'?'Credential ID: ':'ID de credencial: ')+item.id;
+          card.appendChild(id);
+        }
+        if(item.note){
+          const note=document.createElement('div');
+          note.className='cert-note';
+          note.textContent=lang==='en'?(item.note==='Credential ID not displayed'?item.note:item.note):(item.esNote||'Identificador no publicado');
+          card.appendChild(note);
+        }
+        box.appendChild(card);
+      });
+    }
+
     function renderCareerTimeline(){
       const box=document.getElementById('careerTimeline');
       if(!box)return;
@@ -493,6 +570,8 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
       setI18n('about.title', d.about.title);
       setI18n('about.p1', d.about.p1);
       setI18n('about.p2', d.about.p2);
+      setI18n('certifications.title', lang==='en'?'Licenses & certifications':'Licencias y certificaciones');
+      setI18n('certifications.intro', lang==='en'?'Professional development across cloud, data, cybersecurity, networking and technology management.':'Formación profesional continua en cloud, datos, ciberseguridad, redes y gestión tecnológica.');
       setI18n('startup.title', d.startup.title);
       setI18n('startup.p1', d.startup.p1);
       setI18n('startup.p2', d.startup.p2);
@@ -597,6 +676,7 @@ function renderBlog() {
       renderText();
       renderChips();
       renderCareerTimeline();
+      renderCertifications();
       renderLogos();
       renderExperience();
       renderBlog();

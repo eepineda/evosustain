@@ -82,8 +82,9 @@ async function loadArticle(){
    ({data:a,error}=await client.from("articles").select("*").eq("slug",slug).eq("status","published").maybeSingle());
  }
  if(error||!a){root.innerHTML="<h1>Artículo no disponible</h1><p>La publicación no existe o no está disponible.</p><a class='read-link' href='../'>Volver a portada →</a>";return;}
+ let shortToken="";
  const hex=String(a.id||"").replace(/-/g,"").toLowerCase();
- if(/^[0-9a-f]{32}$/.test(hex)){const bytes=new Uint8Array(hex.match(/../g).map(pair=>parseInt(pair,16)));let binary="";bytes.forEach(byte=>binary+=String.fromCharCode(byte));const shortToken=btoa(binary).replace(/[+]/g,"-").replace(/[/]/g,"_").replace(/=+$/,"");const lang=new URLSearchParams(location.search).get("lang")||"es";location.replace("../a.html?i="+shortToken+"&lang="+encodeURIComponent(lang));return;}
+ if(/^[0-9a-f]{32}$/.test(hex)){const bytes=new Uint8Array(hex.match(/../g).map(pair=>parseInt(pair,16)));let binary="";bytes.forEach(byte=>binary+=String.fromCharCode(byte));shortToken=btoa(binary).replace(/[+]/g,"-").replace(/[/]/g,"_").replace(/=+$/,"");const lang=new URLSearchParams(location.search).get("lang")||"es";location.replace("../a.html?i="+shortToken+"&lang="+encodeURIComponent(lang));return;}
  const languageParam=new URLSearchParams(location.search).get("lang");
  const storedLanguage=(()=>{try{return localStorage.getItem("evoford-news-language")==="en"?"en":"es"}catch(_e){return "es"}})();
  const requestedLanguage=languageParam==="en"?"en":languageParam==="es"?"es":storedLanguage;

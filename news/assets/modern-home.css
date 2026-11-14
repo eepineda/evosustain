@@ -195,3 +195,77 @@ footer .footer-brand{font-family:var(--modern-serif);font-size:19px}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
 }
+
+
+/* Distinct editorial art direction: broadsheet masthead, paper canvas, serif headlines */
+:root{
+ --modern-bg:#f8f6f1;
+ --modern-surface:#fff;
+ --modern-ink:#171d26;
+ --modern-muted:#68717c;
+ --modern-line:#d8d5ce;
+ --modern-blue:#102b4e;
+ --modern-accent:#b3212d;
+}
+body{background:var(--modern-bg)!important;color:var(--modern-ink)!important;font-family:Arial,Helvetica,sans-serif}
+.ecosystem-nav{background:#091b2d!important}
+.masthead{max-width:1400px!important;padding:0 clamp(20px,4vw,58px)!important}
+.masthead .topline{border-bottom:1px solid #c9c6bf!important;padding:12px 0 9px!important;font-size:9px!important;letter-spacing:.18em!important}
+.masthead .brand{font-family:"Playfair Display",Georgia,serif!important;font-size:clamp(48px,6.3vw,82px)!important;font-weight:800!important;letter-spacing:-.065em!important;padding:15px 0 19px!important;color:#102b4e!important;text-shadow:none!important}
+.masthead .brand em{color:#b3212d!important}
+.masthead .nav{justify-content:center!important;gap:0!important;border-top:3px solid #102b4e!important;border-bottom:1px solid #b8b5ad!important;padding:0!important;flex-wrap:wrap!important}
+.masthead .nav a{border-radius:0!important;padding:14px clamp(8px,1.2vw,17px)!important;color:#17212b!important;font-family:Arial,sans-serif!important;font-size:9px!important;font-weight:800!important;letter-spacing:.08em!important;text-transform:uppercase!important}
+.masthead .nav a:hover,.masthead .nav a[aria-current=page]{background:#102b4e!important;color:#fff!important}
+.wrap{max-width:1400px!important;padding-inline:clamp(20px,4vw,58px)!important}
+.edition{border-bottom:1px solid var(--modern-line);font-size:9px!important;letter-spacing:.15em!important}
+.market-strip{border:0!important;border-top:2px solid #102b4e!important;border-bottom:1px solid var(--modern-line)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;padding:14px 0 9px!important}
+.country-desk{background:transparent!important;border:0!important;border-top:4px solid #102b4e!important;border-radius:0!important;padding:20px 0 10px!important;margin-top:25px!important}
+.country-desk .section-head{border-bottom:1px solid var(--modern-line)!important}
+.country-desk .section-head h2,.section-head h2,.opinion h2{font-family:"Playfair Display",Georgia,serif!important;font-weight:700!important}
+.country-links a{border:1px solid var(--modern-line)!important;border-radius:0!important;background:#fff!important;box-shadow:none!important}
+.country-card{border:0!important;border-top:2px solid #102b4e!important;border-radius:0!important;background:#fff!important;box-shadow:none!important;padding:16px!important}
+.country-title{border-bottom:1px solid var(--modern-line)!important}
+.country-title h3{font-family:"Playfair Display",Georgia,serif!important}
+.country-story b{font-family:"Playfair Display",Georgia,serif!important;font-size:16px!important}
+.frontpage{border:0!important;border-top:4px solid #102b4e!important;border-bottom:1px solid var(--modern-line)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;padding:18px 0 22px!important;margin-top:26px!important}
+.frontpage-top{border-bottom:1px solid var(--modern-line)!important;padding-bottom:12px!important}
+.frontpage-grid{grid-template-columns:minmax(0,2fr) minmax(260px,.72fr)!important;gap:24px!important}
+.feature-pair{gap:22px!important}
+.feature-card{background:transparent!important;border:0!important;border-right:1px solid var(--modern-line)!important;border-radius:0!important;padding-right:18px!important}
+.feature-card:last-child{border-right:0!important;padding-right:0!important}
+.feature-card-image{border-radius:0!important;aspect-ratio:16/9!important;background:#e8e5df!important}
+.feature-card .feature-copy{padding:13px 0 0!important}
+.feature-card .feature-copy h1,.feature-card .feature-copy h2{font-family:"Playfair Display",Georgia,serif!important;font-weight:700!important;letter-spacing:-.025em!important;line-height:1.08!important}
+.feature-card .feature-copy h1{font-size:clamp(28px,3vw,43px)!important}
+.feature-card .feature-copy h2{font-size:clamp(23px,2.2vw,31px)!important}
+.feature-card .feature-copy .dek{font-size:13px!important;line-height:1.65!important}
+.feature-card .feature-cta{border-radius:0!important;background:#102b4e!important;text-transform:uppercase!important;font-size:9px!important;letter-spacing:.1em!important}
+.frontpage-aside{border-left:1px solid var(--modern-line)!important;padding-left:20px!important}
+.brief-link{border-bottom:1px solid var(--modern-line)!important}
+.brief-link .number{color:#b3212d!important;font-family:"Playfair Display",Georgia,serif!important}
+.brief-link b{font-family:"Playfair Display",Georgia,serif!important;font-size:16px!important}
+.section{padding:34px 0!important}
+.section-head{border-bottom:2px solid #102b4e!important}
+.section-head h2{font-size:clamp(25px,2.5vw,34px)!important}
+#publishedArticles .story,.category-section .story{background:#fff!important;padding:0 0 18px!important;border:0!important;border-bottom:1px solid var(--modern-line)!important}
+.story img.story-image{border-radius:0!important;aspect-ratio:16/10!important;max-height:250px!important}
+.story-copy h3{font-family:"Playfair Display",Georgia,serif!important;font-size:21px!important;line-height:1.18!important}
+.story-copy p{font-size:12px!important;line-height:1.6!important}
+.opinion{border:0!important;border-top:4px solid #b3212d!important;border-radius:0!important;background:#fff!important;box-shadow:none!important}
+.topics a{border-radius:0!important}
+footer{border-top:3px solid #b3212d!important}
+@media(max-width:850px){
+ .frontpage-grid{grid-template-columns:1fr!important}
+ .frontpage-aside{border-left:0!important;border-top:1px solid var(--modern-line)!important;padding:15px 0 0!important}
+ .feature-card{border-right:0!important;border-bottom:1px solid var(--modern-line)!important;padding:0 0 18px!important}
+ .feature-card .feature-copy h1{font-size:30px!important}
+}
+@media(max-width:600px){
+ .masthead .brand{font-size:43px!important}
+ .masthead .nav{justify-content:flex-start!important;flex-wrap:nowrap!important;overflow-x:auto!important}
+ .masthead .nav a{white-space:nowrap!important}
+ .wrap{padding-inline:15px!important}
+ .country-desk{padding-top:15px!important}
+ .country-grid{grid-template-columns:1fr!important}
+ .frontpage{padding-top:15px!important}
+}

@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#102b4e">
   <meta name="robots" content="noindex,nofollow">
   <title>Acceso editorial | Evoford News</title>
-  <link rel="stylesheet" href="./admin.css?v=20261114-crm1">
+  <link rel="stylesheet" href="./admin.css?v=20261114-ads2">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="/news/admin/admin-auth.js?v=20261114-authfix6"></script>
 </head>
@@ -39,7 +39,7 @@
         <button class="tab active" data-tab="overview">Resumen</button>
         <button class="tab" data-tab="articles">Artículos</button>
         <button class="tab" data-tab="inbox">Noticias RSS</button>
-        <button class="tab" data-tab="sources">Fuentes RSS</button><button class="tab" data-tab="submissions">Envíos recibidos</button><button class="tab" data-tab="directory">Directorio</button><button class="tab" data-tab="courses">Solicitudes de formación</button>
+        <button class="tab" data-tab="sources">Fuentes RSS</button><button class="tab" data-tab="submissions">Envíos recibidos</button><button class="tab" data-tab="directory">Directorio</button><button class="tab" data-tab="courses">Solicitudes de formación</button><button class="tab" data-tab="ads">Anuncios y publicidad</button>
       </nav>
 
       <section id="overviewTab" class="tabview">
@@ -133,7 +133,21 @@
         <div id="courseStats" class="course-stats" aria-live="polite"></div><div class="section-head course-tools"><span class="muted">Puedes descargar una copia para seguimiento interno.</span><button type="button" id="exportCoursesBtn" class="secondary">Exportar CSV</button></div><div class="article-filters"><label class="filter-search" for="courseSearch">Buscar solicitud<input id="courseSearch" type="search" placeholder="Nombre, correo o curso…"></label><label class="filter-status" for="courseStatusFilter">Estado<select id="courseStatusFilter"><option value="">Todos los estados</option><option value="received">Recibida</option><option value="contacted">Contactada</option><option value="enrolled">Matriculada</option><option value="closed">Cerrada</option><option value="discarded">Descartada</option></select></label><p id="courseCount" class="muted" aria-live="polite">Cargando solicitudes…</p></div>
         <div id="courseEnquiryList" class="list"><p class="muted">Cargando solicitudes…</p></div>
       </section>
-      <section id="sourcesTab" class="tabview" hidden>
+      <section id="adsTab" class="tabview" hidden>
+<div class="section-head"><div><p class="eyebrow">INGRESOS COMERCIALES</p><h2>Anuncios y publicidad</h2><p class="muted">Anunciantes, campañas, tarifas, facturas y pagos.</p></div><button type="button" id="newAdBtn">Nueva campaña</button></div>
+<div id="adStats" class="course-stats"></div>
+<form id="adForm" class="panel" hidden><div class="section-head"><h2>Campaña publicitaria</h2><button type="button" id="cancelAdBtn" class="secondary">Cerrar</button></div><input id="adId" type="hidden"><div class="form-grid">
+<div class="field"><label for="adAdvertiser">Empresa / anunciante</label><input id="adAdvertiser" required maxlength="180"></div><div class="field"><label for="adContact">Persona de contacto</label><input id="adContact" maxlength="120"></div>
+<div class="field"><label for="adEmail">Correo de contacto</label><input id="adEmail" type="email" required maxlength="254"></div><div class="field"><label for="adPhone">Teléfono</label><input id="adPhone" type="tel"></div>
+<div class="field full"><label for="adTitle">Nombre de campaña</label><input id="adTitle" required maxlength="180"></div>
+<div class="field"><label for="adPlacement">Ubicación</label><select id="adPlacement"><option value="banner">Banner web</option><option value="homepage">Portada</option><option value="sidebar">Columna lateral</option><option value="article">Artículo</option><option value="print">Edición impresa</option><option value="sponsored">Artículo patrocinado</option></select></div>
+<div class="field"><label for="adStatus">Estado de campaña</label><select id="adStatus"><option value="draft">Borrador</option><option value="pending">Pendiente</option><option value="active">Activa</option><option value="paused">Pausada</option><option value="completed">Finalizada</option><option value="cancelled">Cancelada</option></select></div>
+<div class="field full"><label for="adCreative">URL de imagen / creatividad</label><input id="adCreative" type="url"></div><div class="field full"><label for="adTarget">Enlace de destino</label><input id="adTarget" type="url"></div>
+<div class="field"><label for="adStart">Fecha de inicio</label><input id="adStart" type="date"></div><div class="field"><label for="adEnd">Fecha de finalización</label><input id="adEnd" type="date"></div>
+<div class="field"><label for="adAmount">Importe acordado</label><input id="adAmount" type="number" min="0" step="0.01" value="0"></div><div class="field"><label for="adCurrency">Moneda</label><select id="adCurrency"><option value="GBP">GBP · Libra</option><option value="EUR">EUR · Euro</option><option value="USD">USD · Dólar</option></select></div>
+<div class="field"><label for="adPayment">Estado de pago</label><select id="adPayment"><option value="unpaid">Sin pagar</option><option value="pending">Pendiente</option><option value="paid">Pagado</option><option value="overdue">Vencido</option><option value="waived">Exento</option></select></div><div class="field"><label for="adInvoice">Referencia de factura</label><input id="adInvoice" maxlength="100"></div>
+<div class="field full"><label for="adNotes">Notas internas</label><textarea id="adNotes" rows="3"></textarea></div></div><p id="adMessage" class="message" role="status"></p><div class="actions"><button type="submit">Guardar campaña</button><button type="button" id="cancelAdBtn2" class="secondary">Cancelar</button></div></form>
+<h3>Campañas registradas</h3><div id="adCampaignList" class="list"><p class="muted">Cargando…</p></div><h3>Solicitudes comerciales</h3><div id="adEnquiryList" class="list"><p class="muted">Cargando…</p></div></section>\n<section id="sourcesTab" class="tabview" hidden>
         <div class="section-head"><div><p class="eyebrow">AGREGADORES</p><h2>Fuentes RSS</h2></div></div>
         <form id="sourceForm" class="panel source-form">
           <div class="form-grid">

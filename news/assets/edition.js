@@ -111,13 +111,26 @@ async function load(){
  }catch(error){$("lead").innerHTML='<p class="empty">No se pudo cargar la edición. '+esc(error.message||"Comprueba la conexión.")+'</p>';console.error("Evoford print edition:",error);}
 }
 function syncPrintPaper(){
- const size=$("paperSize").value==="A3"?"a3":"a4";
- document.documentElement.dataset.printSize=size;
+ const raw=$("paperSize")?.value==="A3"?"A3":"A4";
+ const isA3=raw==="A3";
+ document.documentElement.dataset.printSize=raw.toLowerCase();
+ let rule=document.getElementById("evoPrintPageRule");
+ if(!rule){
+  rule=document.createElement("style");
+  rule.id="evoPrintPageRule";
+  rule.setAttribute("data-print-paper","true");
+  document.head.appendChild(rule);
+ }
+ rule.textContent=isA3
+  ? "@page { size: 297mm 420mm !important; margin: 12mm !important; }"
+  : "@page { size: 210mm 297mm !important; margin: 10mm !important; }";
+ return raw;
 }
 $("paperSize").addEventListener("change",syncPrintPaper);
 window.addEventListener("beforeprint",syncPrintPaper);
 async function printEdition(){
  syncPrintPaper();
+ await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
  const images=Array.from(document.querySelectorAll(".newspaper img"));
  images.forEach(img=>{img.loading="eager";});
  await Promise.all(images.map(img=>{

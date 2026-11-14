@@ -7,7 +7,8 @@
 <link rel="shortcut icon" href="/news/favicon.svg?v=2">
 <title>Anúnciate en Evoford News | Advertising</title>
 <meta name="description" content="Solicita información sobre publicidad y colaboraciones comerciales en Evoford News.">
-<link rel="stylesheet" href="assets/news-core.css?v=1">
+<link rel="stylesheet" href="assets/news-core.css?v=1"><link rel="stylesheet" href="assets/news-core.css?v=1">
+<link rel="stylesheet" href="assets/modern-pages.css?v=1">
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f5f6f8;color:#202936;font:16px/1.6 Arial,sans-serif}header{background:#102b4e;color:#fff;padding:15px 24px;display:flex;justify-content:space-between;align-items:center;gap:18px}header a{color:#fff;text-decoration:none;font-weight:bold}.language-switch{display:flex;gap:6px}.language-switch button{background:transparent;border:1px solid #9aabc0;color:#fff;padding:7px 11px;font-size:12px}.language-switch button[aria-pressed="true"]{background:#fff;color:#102b4e}main{max-width:850px;margin:42px auto;padding:0 18px}article{background:#fff;border:1px solid #dce1e8;padding:clamp(22px,5vw,42px)}.eyebrow{color:#a9232d;font-size:12px;font-weight:bold;letter-spacing:.12em}h1{font:700 clamp(32px,5vw,48px)/1.1 Georgia,serif;margin:12px 0}p{color:#586474}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:25px}.field.full{grid-column:1/-1}label{display:block;font-weight:bold;font-size:13px;margin-bottom:6px}input,select,textarea{width:100%;padding:12px;border:1px solid #cbd2dc;border-radius:3px;font:16px Arial;background:white}textarea{min-height:140px}button.submit{background:#102b4e;color:white;border:0;padding:14px 22px;font-weight:bold;cursor:pointer}button:disabled{opacity:.6;cursor:wait}#adMsg{min-height:24px;font-weight:bold}.fine{font-size:12px}footer{text-align:center;padding:25px;color:#657080;font-size:12px}@media(max-width:600px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}main{margin:20px auto}header{padding:13px 16px}}
 </style>
@@ -46,13 +47,14 @@ en:{eyebrow:"ADVERTISING & PARTNERSHIPS",title:"Advertise with Evoford News",int
 let currentLanguage="es";
 const form=document.getElementById("adEnquiryForm"),msg=document.getElementById("adMsg"),btn=document.getElementById("adSubmit");
 function setLanguage(lang){
- currentLanguage=lang==="en"?"en":"es";const t=translations[currentLanguage];
+ currentLanguage=lang==="en"?"en":"es";const t=translations[currentLanguage];try{localStorage.setItem("evoford-news-language",currentLanguage)}catch(e){}
  document.documentElement.lang=currentLanguage;document.title=currentLanguage==="en"?"Advertise with Evoford News":"Anúnciate en Evoford News";
  document.querySelectorAll("[data-i18n]").forEach(el=>{const key=el.dataset.i18n;if(t[key])el.textContent=t[key];});
  document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===currentLanguage)));
  msg.textContent="";
 }
 document.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",()=>setLanguage(b.dataset.lang)));
+let savedLanguage="es";try{savedLanguage=localStorage.getItem("evoford-news-language")==="en"?"en":"es"}catch(e){}setLanguage(savedLanguage);
 form.addEventListener("submit",async event=>{
  event.preventDefault();const t=translations[currentLanguage];
  if(!form.reportValidity()){msg.textContent=t.required;return;}

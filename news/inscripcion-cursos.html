@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="assets/style.css?v=20261114-courseform1">
 <link rel="stylesheet" href="assets/editorial-premium.css?v=20261114-courseform1">
 <style>
+.course-language{display:flex;justify-content:flex-end;gap:5px;margin:0 0 8px}.course-language button{padding:7px 10px;border:1px solid #ccd4dd;background:#fff;color:#102b4e;font:700 10px Arial,sans-serif;cursor:pointer}.course-language button[aria-pressed="true"]{background:#102b4e;color:#fff;border-color:#102b4e}
 .course-page{display:block;width:calc(100% - 48px);max-width:1120px;margin:0 auto;padding:30px 0 64px;box-sizing:border-box}
 .course-page>*{max-width:100%}
 .course-page .course-intro{max-width:760px}
@@ -39,15 +40,16 @@
 <body>
 <div class="ecosystem-nav"><div class="ecosystem-nav-inner"><a class="ecosystem-mark" href="../index.html">EVOFORD <span>ECOSYSTEM</span></a><nav aria-label="Evoford ecosystem"><a href="../index.html">Inicio</a><a href="index.html">Evoford News</a><a href="aula-innovacion.html">Aula de Innovación</a></nav></div></div>
 <main class="course-page">
-<nav class="course-breadcrumb" aria-label="Migas de pan"><a href="index.html">Evoford News</a><span>·</span><a href="aula-innovacion.html">Aula de Innovación</a><span>·</span><span>Inscripción</span></nav>
-<p class="course-kicker">AULA DE INNOVACIÓN · FORMACIÓN</p>
-<h1>Solicita información e inscripción</h1>
-<p class="course-intro">Este formulario es exclusivo para las personas interesadas en los cursos del Aula de Innovación Evoford. No es el formulario de envío de noticias. Cuéntanos qué formación te interesa y el equipo se pondrá en contacto contigo por correo electrónico.</p>
+<div class="course-language" aria-label="Language"><button type="button" data-course-language="es">ES</button><button type="button" data-course-language="en">EN</button></div>
+<nav class="course-breadcrumb" aria-label="Migas de pan"><a href="index.html">Evoford News</a><span>·</span><a href="aula-innovacion.html" id="crumbAcademy">Aula de Innovación</a><span>·</span><span id="crumbEnrol">Inscripción</span></nav>
+<p class="course-kicker" id="courseKicker">AULA DE INNOVACIÓN · FORMACIÓN</p>
+<h1 id="courseTitle">Solicita información e inscripción</h1>
+<p class="course-intro" id="courseIntro">Este formulario es exclusivo para las personas interesadas en los cursos del Aula de Innovación Evoford. No es el formulario de envío de noticias. Cuéntanos qué formación te interesa y el equipo se pondrá en contacto contigo por correo electrónico.</p>
 <section class="course-panel">
 <form id="courseForm" class="course-form">
-<div class="course-field"><label for="courseName">Nombre y apellidos</label><input id="courseName" name="name" autocomplete="name" minlength="2" maxlength="120" required></div>
-<div class="course-field"><label for="courseEmail">Correo electrónico</label><input id="courseEmail" name="email" type="email" autocomplete="email" maxlength="254" required></div>
-<div class="course-field full"><label for="courseChoice">¿Qué curso te interesa?</label><select id="courseChoice" name="course" required>
+<div class="course-field"><label for="courseName" id="labelName">Nombre y apellidos</label><input id="courseName" name="name" autocomplete="name" minlength="2" maxlength="120" required></div>
+<div class="course-field"><label for="courseEmail" id="labelEmail">Correo electrónico</label><input id="courseEmail" name="email" type="email" autocomplete="email" maxlength="254" required></div>
+<div class="course-field full"><label for="courseChoice" id="labelChoice">¿Qué curso te interesa?</label><select id="courseChoice" name="course" required>
 <option value="">Selecciona una formación</option>
 <option>Crear y desarrollar una startup</option>
 <option>Tecnología, IA y transformación digital</option>
@@ -61,14 +63,38 @@
 <option>Crédito, renegociación y respiro de deudas</option>
 <option>Varios cursos / todavía no lo he decidido</option>
 </select></div>
-<div class="course-field full"><label for="courseMessage">¿Qué información necesitas?</label><textarea id="courseMessage" name="message" minlength="10" maxlength="5000" placeholder="Por ejemplo: contenido, duración, modalidad, fechas, precio o requisitos…" required></textarea></div>
+<div class="course-field full"><label for="courseMessage" id="labelMessage">¿Qué información necesitas?</label><textarea id="courseMessage" name="message" minlength="10" maxlength="5000" placeholder="Por ejemplo: contenido, duración, modalidad, fechas, precio o requisitos…" required></textarea></div>
 <div class="course-trap" aria-hidden="true"><label for="courseWebsite">No rellenar</label><input id="courseWebsite" tabindex="-1" autocomplete="off"></div>
 <div class="course-submit"><button type="submit" id="courseSend">Enviar solicitud</button><p id="courseMsg" role="status" aria-live="polite"></p></div>
-<p class="course-privacy">Usaremos estos datos únicamente para responder a tu consulta sobre formación. Enviar la solicitud no supone una matrícula ni garantiza una plaza; el equipo te facilitará la información disponible.</p>
+<p class="course-privacy" id="coursePrivacy">Usaremos estos datos únicamente para responder a tu consulta sobre formación. Enviar la solicitud no supone una matrícula ni garantiza una plaza; el equipo te facilitará la información disponible.</p>
 </form>
 </section>
 </main>
-<footer class="site-footer" style="padding:22px 24px;text-align:center;border-top:1px solid #d9dde1;color:#687481;font:700 10px Arial,sans-serif;letter-spacing:.1em">EVOFORD · AULA DE INNOVACIÓN</footer>
+<footer class="site-footer" id="courseFooter" style="padding:22px 24px;text-align:center;border-top:1px solid #d9dde1;color:#687481;font:700 10px Arial,sans-serif;letter-spacing:.1em">EVOFORD · AULA DE INNOVACIÓN</footer>
+
+<script>
+(function(){
+const T={
+es:{academy:"Aula de Innovación",enrol:"Inscripción",title:"Solicita información e inscripción",intro:"Este formulario es exclusivo para las personas interesadas en los cursos del Aula de Innovación Evoford. No es el formulario de envío de noticias. Cuéntanos qué formación te interesa y el equipo se pondrá en contacto contigo por correo electrónico.",name:"Nombre y apellidos",email:"Correo electrónico",choice:"¿Qué curso te interesa?",message:"¿Qué información necesitas?",placeholder:"Por ejemplo: contenido, duración, modalidad, fechas, precio o requisitos…",select:"Selecciona una formación",options:["Crear y desarrollar una startup","Tecnología, IA y transformación digital","E-commerce y Amazon FBA","Crear tu propia página web","Aprender a utilizar la inteligencia artificial","Estudiar en una universidad del Reino Unido","Crear y registrar una empresa en Reino Unido","Registrar una marca y proteger un producto","Alquilar una vivienda con o sin garante","Crédito, renegociación y respiro de deudas","Varios cursos / todavía no lo he decidido"],send:"Enviar solicitud",privacy:"Usaremos estos datos únicamente para responder a tu consulta sobre formación. Enviar la solicitud no supone una matrícula ni garantiza una plaza; el equipo te facilitará la información disponible.",sending:"Enviando solicitud…",success:"Solicitud recibida. El equipo de Evoford se pondrá en contacto contigo por correo electrónico.",error:"No se pudo enviar la solicitud. Inténtalo de nuevo más tarde.",footer:"EVOFORD · AULA DE INNOVACIÓN"},
+en:{academy:"Innovation Academy",enrol:"Enrolment",title:"Request course information and enrolment",intro:"This form is for people interested in courses offered by the Evoford Innovation Academy. It is not the news submission form. Tell us which course interests you and the team will contact you by email.",name:"Full name",email:"Email address",choice:"Which course are you interested in?",message:"What information do you need?",placeholder:"For example: content, duration, format, dates, price or requirements…",select:"Select a course",options:["Create and develop a startup","Technology, AI and digital transformation","E-commerce and Amazon FBA","Create your own website","Learn how to use artificial intelligence","Study at a university in the United Kingdom","Set up and register a company in the UK","Register a trade mark and protect a product","Rent a home with or without a guarantor","Credit, debt negotiation and breathing space","Several courses / I have not decided yet"],send:"Send enquiry",privacy:"We will use these details only to respond to your training enquiry. Submitting this form does not enrol you or guarantee a place; the team will provide the information available.",sending:"Sending your enquiry…",success:"Enquiry received. The Evoford team will contact you by email.",error:"Your enquiry could not be sent. Please try again later.",footer:"EVOFORD · INNOVATION ACADEMY"}
+};
+const $=id=>document.getElementById(id);
+let lang=localStorage.getItem("evoford-news-language")==="en"?"en":"es";
+function render(){
+const t=T[lang];document.documentElement.lang=lang;
+$("crumbAcademy").textContent=t.academy;$("crumbEnrol").textContent=t.enrol;
+$("courseKicker").textContent=lang==="en"?"INNOVATION ACADEMY · TRAINING":"AULA DE INNOVACIÓN · FORMACIÓN";$("courseTitle").textContent=t.title;$("courseIntro").textContent=t.intro;
+$("labelName").textContent=t.name;$("labelEmail").textContent=t.email;$("labelChoice").textContent=t.choice;$("labelMessage").textContent=t.message;
+$("courseMessage").placeholder=t.placeholder;$("courseSend").textContent=t.send;$("coursePrivacy").textContent=t.privacy;$("courseFooter").textContent=t.footer;
+const s=$("courseChoice");s.options[0].textContent=t.select;
+for(let i=1;i<s.options.length;i++)s.options[i].textContent=t.options[i-1];
+document.querySelectorAll("[data-course-language]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.courseLanguage===lang)));
+}
+document.querySelectorAll("[data-course-language]").forEach(b=>b.addEventListener("click",()=>{lang=b.dataset.courseLanguage==="en"?"en":"es";localStorage.setItem("evoford-news-language",lang);render();}));
+window.evofordCourseCopy=()=>T[lang];render();
+})();
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (()=> {
@@ -77,13 +103,13 @@
  form.addEventListener("submit",async event=>{
   event.preventDefault();
   if(document.getElementById("courseWebsite").value)return;
-  button.disabled=true;msg.textContent="Enviando solicitud…";
+  button.disabled=true;msg.textContent=window.evofordCourseCopy().sending;
   try{
    const payload={full_name:document.getElementById("courseName").value.trim(),email:document.getElementById("courseEmail").value.trim(),course_interest:document.getElementById("courseChoice").value,message:document.getElementById("courseMessage").value.trim()};
    const {error}=await client.from("course_enquiries").insert(payload);
    if(error)throw error;
-   form.reset();msg.textContent="Solicitud recibida. El equipo de Evoford se pondrá en contacto contigo por correo electrónico.";
-  }catch(error){console.error("Course enquiry:",error);msg.textContent="No se pudo enviar la solicitud. Inténtalo de nuevo más tarde.";}
+   form.reset();msg.textContent=window.evofordCourseCopy().success;
+  }catch(error){console.error("Course enquiry:",error);msg.textContent=window.evofordCourseCopy().error;}
   finally{button.disabled=false;}
  });
 })();

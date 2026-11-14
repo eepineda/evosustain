@@ -41,6 +41,10 @@ function setHistoryLanguage(lang){
  root.querySelector(".history-kicker").textContent=t.kicker;
  root.querySelector(".history-hero-copy h2").textContent=t.title;
  root.querySelector(".history-hero-copy p").textContent=t.intro;
+ const ribbonEN=[["1844","Independence"],["1861–1865","Annexation and Restoration"],["1880–1899","State consolidation and caudillismo"],["1916–1924","US occupation"],["1930","Beginning of the Trujillo Era"],["1961","End of the dictatorship"],["1965","April War"],["1978","Democratic alternation"],["1996","New electoral period"],["2020–2026","Contemporary Republic"]];
+ root.querySelectorAll(".ribbon-events>div").forEach((el,i)=>{if(ribbonEN[i]){el.querySelector("b").textContent=ribbonEN[i][0];el.querySelector("span").textContent=ribbonEN[i][1];}});
+ root.querySelectorAll(".ribbon-track i").forEach((el,i)=>{const years=["1844","1861","1863","1916","1930","1961","1965","1978","1996","2020"];if(years[i])el.textContent=years[i];});
+ root.querySelector(".history-map").setAttribute("aria-label","Map of Hispaniola highlighting the Dominican Republic");
  root.querySelector(".history-section-head h2").textContent="Dominican Republic · 1844–2026";
  root.querySelector(".history-section-head span").textContent="PRESIDENTIAL HISTORY AND CHANGES OF GOVERNMENT";
  root.querySelectorAll(".history-legend span").forEach((e,i)=>{const dot=e.querySelector("i");e.textContent=t.legend[i];if(dot)e.prepend(dot);});

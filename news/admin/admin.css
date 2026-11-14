@@ -157,3 +157,5 @@
 .rss-source-metrics strong{color:#102b4e;font-size:13px;font-variant-numeric:tabular-nums}
 @media(max-width:760px){.rss-source-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.rss-source-item{display:block}.rss-source-item>.item-actions{margin-top:12px;justify-content:flex-start}}
 @media(max-width:380px){.rss-source-summary{gap:8px}.rss-source-stat{padding:12px}.rss-source-stat strong{font-size:21px}}
+
+.briefing-guidance{margin:18px 0;padding:18px 20px;background:#f7f9fc;border-left:3px solid #102b4e}.briefing-guidance p{margin:8px 0 0;line-height:1.55}.briefing-guidance strong{color:#102b4e}

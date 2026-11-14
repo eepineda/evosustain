@@ -67,9 +67,15 @@
   }
 
   document.addEventListener("evo:article-ready", refreshSlots);
-  const observer = new MutationObserver(() => {
-    if (document.querySelector('[data-ad-slot="article"]')) refreshSlots();
-  });
-  observer.observe(document.documentElement, { childList: true, subtree: true });
+  const articleSlotExists = () => Boolean(document.querySelector('[data-ad-slot="article"]'));
+  if (!articleSlotExists()) {
+    const observer = new MutationObserver(() => {
+      if (articleSlotExists()) {
+        observer.disconnect();
+        refreshSlots();
+      }
+    });
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+  }
   loadCampaignSlots();
 })();

@@ -25,6 +25,10 @@
 <style>
 /* PWA install prompt */
 .app-install{position:relative;display:flex;align-items:center;gap:12px;max-width:1100px;margin:12px auto 20px;padding:13px 16px;background:#f2f5f8;border:1px solid #dce2e8;border-radius:10px;color:#102b4e;font:14px/1.4 Arial,sans-serif}.app-install[hidden]{display:none}.app-install>div{display:grid;gap:3px;flex:1}.app-install>div span{color:#5d6875;font-size:12px}.app-install button{border:0;border-radius:6px;padding:10px 13px;background:#102b4e;color:#fff;font-weight:700;cursor:pointer}.app-install .install-help{background:#fff;color:#102b4e;border:1px solid #cbd4dd}.app-install .install-dismiss{background:transparent;color:#5d6875;font-size:20px;padding:4px 8px}@media(max-width:620px){.app-install{margin:10px 14px 16px;flex-wrap:wrap}.app-install>div{flex-basis:calc(100% - 20px)}.app-install button{flex:1}}
+
+/* In installed app mode, hide the ecosystem switcher and keep the newspaper masthead. */
+@media (display-mode: standalone){.ecosystem-nav{display:none!important}}
+@media (display-mode: fullscreen){.ecosystem-nav{display:none!important}}
 </style>
 </head>
 <body>

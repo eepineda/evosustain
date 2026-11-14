@@ -76,3 +76,42 @@
 
 /* App-mode route guard for standalone Android/iOS displays. */
 html.evo-pwa .ecosystem-nav,html.evo-pwa .ecosystem-bar{display:none!important}
+
+
+/* Dedicated PWA layouts for the standalone editorial sections. */
+html.evo-pwa .ecosystem-nav,html.evo-pwa .ecosystem-bar{display:none!important}
+html.evo-pwa body{padding-bottom:calc(84px + env(safe-area-inset-bottom))!important;background:#f4f6f8!important}
+html.evo-pwa .masthead .nav{display:none!important}
+html.evo-pwa .masthead{padding-bottom:8px!important}
+html.evo-pwa .edition{display:flex!important;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0 18px!important;padding:0 0 12px!important;border-bottom:1px solid #dfe5ec;font-size:9px!important}
+html.evo-pwa .edition-actions{margin-left:auto!important}
+html.evo-pwa .startup-intro,html.evo-pwa .politics-intro{padding:22px 0 20px!important;border-bottom:2px solid #102b4e!important}
+html.evo-pwa .startup-intro h1,html.evo-pwa .politics-intro h1{font-size:clamp(32px,9vw,43px)!important;line-height:1.07!important;letter-spacing:-.045em!important}
+html.evo-pwa .startup-intro p,html.evo-pwa .politics-intro p{font-size:16px!important;line-height:1.65!important}
+html.evo-pwa .startup-nav,html.evo-pwa .politics-nav{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;gap:18px!important;margin:0 -17px!important;padding:13px 17px!important;white-space:nowrap!important;scrollbar-width:none!important;font-size:9px!important}
+html.evo-pwa .startup-feature{display:flex!important;flex-direction:column!important;gap:17px!important;padding:20px 0 24px!important}
+html.evo-pwa .startup-art{width:100%;min-height:190px!important;border-radius:15px!important;padding:20px!important}
+html.evo-pwa .startup-copy h2{font-size:27px!important;line-height:1.12!important}
+html.evo-pwa .startup-copy p{font-size:15px!important;line-height:1.7!important}
+html.evo-pwa .startup-facts{display:grid!important;grid-template-columns:1fr!important;gap:0!important;margin:18px 0!important}
+html.evo-pwa .startup-fact{padding:13px 0!important}
+html.evo-pwa .startup-categories,html.evo-pwa .startup-stories{display:grid!important;grid-template-columns:1fr!important;gap:12px!important}
+html.evo-pwa .startup-category,html.evo-pwa .startup-stories .story{padding:15px!important;border:1px solid #e1e6ec!important;border-radius:14px!important;background:#fff!important}
+html.evo-pwa .learning-section,html.evo-pwa .expert-call{margin:22px 0!important;padding:20px 16px!important;border-radius:15px!important}
+html.evo-pwa .learning-grid{grid-template-columns:1fr!important}
+html.evo-pwa .learning-bottom{display:flex!important;flex-direction:column!important;align-items:flex-start!important}
+html.evo-pwa .expert-call-grid{grid-template-columns:1fr!important;gap:16px!important}
+html.evo-pwa .expert-topics{padding:16px!important;border-radius:12px!important}
+html.evo-pwa .politics-lead{padding:20px 0!important}
+html.evo-pwa .party-grid,html.evo-pwa .politics-topics,html.evo-pwa .politics-stories{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
+html.evo-pwa .party-card,html.evo-pwa .politics-topic,html.evo-pwa .politics-stories .story{padding:14px!important;border:1px solid #e1e6ec!important;border-radius:14px!important;background:#fff!important}
+html.evo-pwa .history-hero{grid-template-columns:1fr!important;padding:17px!important;border-radius:14px!important}
+html.evo-pwa .history-grid{grid-template-columns:1fr!important}
+html.evo-pwa .editorial-note{padding:14px 16px!important;border-radius:0 12px 12px 0!important}
+html.evo-pwa .app-bottom-nav{position:fixed;z-index:1000;inset:auto 0 0;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;padding:8px 6px calc(8px + env(safe-area-inset-bottom));background:rgba(255,255,255,.98);border-top:1px solid #dfe5ec;box-shadow:0 -7px 24px rgba(16,43,78,.08);backdrop-filter:blur(18px)}
+html.evo-pwa .app-bottom-nav a{display:flex;min-width:0;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#68778a;text-decoration:none;font:700 9px/1.2 Arial,sans-serif}
+html.evo-pwa .app-bottom-nav .nav-icon{display:grid;place-items:center;width:27px;height:25px}
+html.evo-pwa .app-bottom-nav .nav-icon svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+html.evo-pwa .app-bottom-nav a[aria-current=page]{color:#102b4e}
+html.evo-pwa .app-bottom-nav a[aria-current=page] .nav-icon{color:#b32635}
+@media(min-width:700px){html.evo-pwa .app-bottom-nav{max-width:700px;left:50%;right:auto;width:100%;transform:translateX(-50%);border:1px solid #dfe5ec;border-bottom:0;border-radius:18px 18px 0 0}}

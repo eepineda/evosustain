@@ -20,6 +20,41 @@ async function load(){
  }).join("");
 }
 
+
+const historyEN={
+ kicker:"NATIONAL TIMELINE · 182 YEARS",title:"From Independence to the modern Republic",intro:"A visual overview of the governments, presidents and events that have shaped Dominican political life.",
+ legend:["Constitutional government","Transition / provisional","Annexation / occupation / institutional rupture"],
+ periods:[
+ ["First Republic","Independence, the Central Governing Junta and the first constitutional governments.","Central Governing Junta · 1844","Pedro Santana · 1844–1848; 1849; 1853–1856; 1858–1861","Manuel Jimenes · 1848–1849","Buenaventura Báez · 1849–1853; 1856–1858","Manuel de Regla Mota · 1856","José Desiderio Valverde · Rival government in Santiago, 1857–1858","1861 · Annexation to Spain"],
+ ["Restoration and Second Republic","The Restoration War, changing governments and the consolidation of the State.","Restoration Government: José Antonio Salcedo, Gaspar Polanco and Pedro Antonio Pimentel · 1863–1865","José María Cabral · 1865–1866; 1867–1868","Buenaventura Báez · 1865–1866; 1868–1874; 1876–1878","Ignacio María González · 1873–1876; 1878","Ulises Francisco Espaillat · 1876","Cesáreo Guillermo · 1879","Gregorio Luperón · 1879–1880","Fernando Arturo de Meriño · 1880–1882","Ulises Heureaux (Lilís) · 1882–1884; 1887–1899","Francisco Gregorio Billini · 1884–1885","Alejandro Woss y Gil · 1885–1887; 1903","Wenceslao Figuereo · 1899","Horacio Vásquez · 1899–1902; 1924–1930","Juan Isidro Jimenes · 1902–1903; 1914–1916","Carlos Morales Languasco · 1903–1906","Ramón Cáceres · 1906–1911","Eladio Victoria · 1911–1912","Adolfo A. Nouel · 1912","José Bordas Valdez · 1912–1914","Francisco Henríquez y Carvajal · 1916","1916 · Beginning of the US military occupation"],
+ ["Occupation and the Trujillo Era","Foreign military administration, the return to national government and dictatorship.","US military occupation · 1916–1924","Juan Bautista Vicini Burgos · Provisional government, 1922–1924","Horacio Vásquez · 1924–1930","Rafael Estrella Ureña · 1930","Rafael Leónidas Trujillo · 1930–1938; 1942–1952","Jacinto B. Peynado · 1938–1940","Manuel de Jesús Troncoso · 1940–1942","Héctor Bienvenido Trujillo · 1952–1960","Joaquín Balaguer · 1960–1962","1961 · End of the Trujillo dictatorship"],
+ ["Transition and political crisis","Council of State, elections, coup, April War and provisional governments.","Council of State · 1962–1963","Juan Bosch · 1963","Triumvirate · 1963–1965","Francisco Alberto Caamaño · Constitutional government, 1965","Antonio Imbert Barreras · National Reconstruction Government, 1965","Héctor García Godoy · Provisional government, 1965–1966","Joaquín Balaguer · 1966–1978","1965 · April War and second US intervention"],
+ ["Contemporary democracy","Electoral alternation and the succession of constitutional governments.","Antonio Guzmán Fernández · 1978–1982","Jacobo Majluta · 1982","Salvador Jorge Blanco · 1982–1986","Joaquín Balaguer · 1986–1996","Leonel Fernández · 1996–2000; 2004–2012","Hipólito Mejía · 2000–2004","Danilo Medina · 2012–2020","Luis Abinader · 2020–2028","2024–2028 · Current constitutional term"]
+ ] ,
+ note:"Historical note: this timeline distinguishes constitutional presidencies, provisional governments, juntas, de facto authorities and occupation administrations. Rival governments or interim authorities sometimes overlapped; dates may therefore overlap. This is a synthesis of mandates, not an exhaustive list of every temporary succession.",
+ sources:"Research sources:"
+};
+function setHistoryLanguage(lang){
+ const root=document.getElementById("historia-rd");if(!root)return;
+ if(lang!=="en"){location.reload();return;}
+ const t=historyEN;
+ root.querySelector(".history-kicker").textContent=t.kicker;
+ root.querySelector(".history-hero-copy h2").textContent=t.title;
+ root.querySelector(".history-hero-copy p").textContent=t.intro;
+ root.querySelector(".history-section-head h2").textContent="Dominican Republic · 1844–2026";
+ root.querySelector(".history-section-head span").textContent="PRESIDENTIAL HISTORY AND CHANGES OF GOVERNMENT";
+ root.querySelectorAll(".history-legend span").forEach((e,i)=>{const dot=e.querySelector("i");e.textContent=t.legend[i];if(dot)e.prepend(dot);});
+ root.querySelectorAll(".history-period").forEach((card,i)=>{
+  const p=t.periods[i];if(!p)return;
+  card.querySelector("h3").textContent=p[0];card.querySelector(".period-note").textContent=p[1];
+  const paragraphs=Array.from(card.querySelectorAll("p:not(.period-note)"));
+  paragraphs.forEach((el,j)=>{const value=p[j+2];if(value)el.innerHTML=value.replace(/^([^·]+) ·/,"<b>$1</b> ·");});
+  const event=card.querySelector(".period-event");if(event)event.textContent=p[p.length-1];
+ });
+ const note=root.querySelector(".history-footnote");if(note)note.innerHTML="<b>Historical note:</b> "+t.note.replace("Historical note: ","");
+ const sources=root.querySelector(".history-sources");if(sources)sources.innerHTML="<b>Research sources:</b> "+sources.innerHTML.split("</b>")[1];
+}
+
 const en={
 edition:"SPECIAL SECTION · DOMINICAN REPUBLIC",top:["London · United Kingdom","NEWS · OPINION · ANALYSIS"],
 nav:["Home","International","Politics","Economy","Security","Startups & innovation","Opinion","Directory","Submit a story"],
@@ -66,7 +101,7 @@ window.setPoliticsLanguage=function(lang){
  if(!t){location.reload();return;}
  set("#editionLabel",t.edition);document.querySelectorAll(".topline span").forEach((e,i)=>e.textContent=t.top[i]||e.textContent);
  document.querySelectorAll(".masthead .nav a").forEach((e,i)=>e.textContent=t.nav[i]||e.textContent);
- set(".politics-intro .kicker",t.kicker);set(".politics-intro h1",t.title);set(".politics-intro p",t.intro);
+ set(".politics-intro .kicker",t.kicker);set(".politics-intro h1",t.title);set(".politics-intro p",t.intro);setHistoryLanguage("en");
  document.querySelectorAll(".politics-nav a").forEach((e,i)=>e.textContent=t.subnav[i]||e.textContent);
  document.querySelectorAll(".section-head").forEach((e,i)=>{if(t.heads[i])e.querySelector("h2").textContent=t.heads[i];if(t.metas[i])e.querySelector("span").textContent=t.metas[i];});
  const note=document.querySelector("#partidos .editorial-note");if(note)note.innerHTML="<b>How to read these profiles: </b>"+t.note.replace("How to read these profiles: ","");

@@ -581,7 +581,7 @@ $("directoryEditForm")?.addEventListener("submit",async event=>{
 let courseEnquiries=[];
 let courseEnquiryById=new Map();
 function courseStatusLabel(status){return ({received:"Recibida",contacted:"Contactada",enrolled:"Matriculada",closed:"Cerrada",discarded:"Descartada"})[status]||status;}
-function indexCourseSearch(item){item._searchText=[item.full_name,item.email,item.course_interest,item.message,item.internal_notes].map(v=>String(v||"").toLocaleLowerCase("es")).join(" ");return item;}
+function indexCourseSearch(item){let searchText="";for(const value of [item.full_name,item.email,item.course_interest,item.message,item.internal_notes]){if(searchText)searchText+=" ";searchText+=String(value||"").toLocaleLowerCase("es");}item._searchText=searchText;return item;}
 function filterCourses(){
  const q=($("courseSearch")?.value||"").trim().toLocaleLowerCase("es");
  const status=$("courseStatusFilter")?.value||"";

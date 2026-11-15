@@ -10,7 +10,7 @@
 </style></head>
 <body><main class="wrap">
 <a href="/news/admin/">← Panel editorial</a>
-<section id="login" class="panel"><h1>Acceso a Edición impresa</h1><p>Inicia sesión con el correo del administrador para aprobar o revocar lectores.</p><form id="loginForm"><label for="email">Correo autorizado</label><input id="email" type="email" autocomplete="email" required><p><button>Enviar enlace de acceso</button></p></form><p id="message" class="message" role="status"></p></section>
+<section id="login" class="panel"><h1>Acceso a Edición impresa</h1><p>Inicia sesión con el correo del administrador para gestionar la lista de correos.</p><form id="loginForm"><label for="email">Correo autorizado</label><input id="email" type="email" autocomplete="email" required><p><button>Enviar enlace de acceso</button></p></form><p id="message" class="message" role="status"></p></section>
 <section id="manager" hidden><div class="row"><div><h1>Gestión de lectores</h1><p>Solo el administrador puede abrir e imprimir la edición. Desde aquí puedes eliminar correos de la lista.</p></div><button id="logout" class="secondary">Cerrar sesión</button></div>
 <div class="panel"><h2>Aprobar un correo</h2><form id="addForm" class="row"><div style="flex:1;min-width:220px"><label for="newEmail">Correo electrónico</label><input id="newEmail" type="email" required maxlength="254" placeholder="lector@correo.com"></div><button type="submit">Aprobar acceso</button></form><p id="managerMessage" class="message" role="status"></p></div>
 <div class="panel"><div class="row"><h2 style="flex:1">Correos autorizados</h2><button id="refresh" class="secondary">Actualizar</button></div><div id="entries"></div></div></section>

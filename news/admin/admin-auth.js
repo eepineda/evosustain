@@ -421,7 +421,7 @@ async function loadInbox(){
   const [{data,error},{data:sources},{data:articles,error:articlesError}] = await Promise.all([
     client.from("imported_items").select("id,title,source_id,article_url,status,summary,suggested_category,country,region,created_at").order("created_at",{ascending:false}),
     client.from("rss_sources").select("id,name"),
-    client.from("articles").select("id,title,source_url,status")
+    client.from("articles").select("id,source_url,status")
   ]);
   if(error){$("inboxList").innerHTML=`<p class="muted">${safe(error.message)}</p>`;return;}
   if(articlesError){$("inboxList").innerHTML=`<p class="muted">No se pudo comprobar la relación con los borradores: ${safe(articlesError.message)}</p>`;return;}

@@ -697,8 +697,8 @@ async function loadAds(){
  campaignRoot.innerHTML='<p class="muted">Cargando campañas…</p>';
  enquiryRoot.innerHTML='<p class="muted">Cargando solicitudes comerciales…</p>';
  const [c,e]=await Promise.all([
-  client.from("ad_campaigns").select("*").order("created_at",{ascending:false}),
-  client.from("ad_enquiries").select("*").order("created_at",{ascending:false})
+  client.from("ad_campaigns").select("id,campaign_title,advertiser_name,placement,status,publication_mode,amount,currency,payment_status,invoice_reference,start_date,end_date,source_enquiry_id,contact_name,contact_email,contact_phone,creative_url,target_url,internal_notes,created_at").order("created_at",{ascending:false}),
+  client.from("ad_enquiries").select("id,company_name,advertiser_type,contact_name,email,phone,website,attachment_path,attachment_name,attachment_mime,budget,placement_interest,message,status,created_at,internal_notes").order("created_at",{ascending:false})
  ]);
  adCampaigns=c.data||[];
  if(c.error){

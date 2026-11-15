@@ -101,15 +101,51 @@ function render(){
  $("storyGrid").innerHTML=rest.map(a=>'<article class="story">'+(a.image_url&&/^https:\/\//i.test(a.image_url)?'<img loading="lazy" src="'+esc(a.image_url)+'" alt="'+esc(pick(a,"title","title_en"))+'">':'')+'<div class="category">'+category(a)+'</div><h2><a href="'+url(a)+'">'+esc(pick(a,"title","title_en"))+'</a></h2><p>'+esc(pick(a,"summary","summary_en"))+'</p><div class="byline">'+esc(a.author||"Evoford News")+'</div></article>').join("")||'<p class="empty">'+ui[language].noMore+'</p>';
  $("storyCount").textContent=rest.length+" "+ui[language].stories;
 }
+const authClient=window.supabase.createClient(URL,KEY);
+let accessPanel=null,accessInitialized=false;
+function showAccessPanel(message){
+ if(!accessPanel){
+  accessPanel=document.createElement("section");
+  accessPanel.id="editionAccess";
+  accessPanel.style.cssText="max-width:560px;margin:48px auto;padding:28px;background:#fff;border:1px solid #dbe2ea;border-radius:8px;color:#17283c;font:15px Arial,sans-serif;line-height:1.5";
+  accessPanel.innerHTML='<h1 style="color:#102b4e">Edición impresa privada</h1><p>Acceso reservado a los correos autorizados por Evoford News.</p><form id="editionLoginForm"><label for="editionEmail">Correo electrónico</label><input id="editionEmail" type="email" required autocomplete="email" style="display:block;width:100%;padding:12px;margin:8px 0 14px;border:1px solid #cbd5e1;border-radius:4px;box-sizing:border-box"><button type="submit" style="padding:11px 16px;background:#102b4e;color:#fff;border:0;border-radius:4px;font-weight:700">Enviar enlace de acceso</button></form><p id="editionAccessMessage" role="status"></p>';
+  document.body.insertBefore(accessPanel,document.body.firstChild);
+  accessPanel.querySelector("#editionLoginForm").addEventListener("submit",async event=>{
+   event.preventDefault();const button=event.currentTarget.querySelector("button");button.disabled=true;
+   const {error}=await authClient.auth.signInWithOtp({email:accessPanel.querySelector("#editionEmail").value.trim().toLowerCase(),options:{emailRedirectTo:location.href}});
+   accessPanel.querySelector("#editionAccessMessage").textContent=error?error.message:"Revisa tu correo para completar el acceso.";button.disabled=false;
+  });
+ }
+ accessPanel.hidden=false;
+ accessPanel.querySelector("#editionAccessMessage").textContent=message||"";
+ $("backLink").hidden=true;$("newspaper").hidden=true;document.querySelector(".toolbar").hidden=true;
+}
+function hideAccessPanel(){
+ if(accessPanel)accessPanel.hidden=true;
+ $("backLink").hidden=false;$("newspaper").hidden=false;document.querySelector(".toolbar").hidden=false;
+}
 async function load(){
  try{
- $("lead").innerHTML='<p class="loading">Conectando con la base de datos…</p>';
- const client=window.supabase.createClient(URL,KEY);
- const request=client.from("articles").select("title,title_en,title_es,slug,category,author,summary,summary_en,summary_es,image_url,created_at,updated_at,country,content,content_es,content_en").eq("status","published").order("updated_at",{ascending:false}).limit(40);
- const result=await Promise.race([request,new Promise((_,reject)=>setTimeout(()=>reject(new Error("La conexión con Supabase no respondió en 12 segundos.")),12000))]);
- if(result.error)throw result.error;articles=result.data||[];render();await loadPrintAd();
- }catch(error){$("lead").innerHTML='<p class="empty">No se pudo cargar la edición. '+esc(error.message||"Comprueba la conexión.")+'</p>';console.error("Evoford print edition:",error);}
+  showAccessPanel("Comprobando autorización…");
+  const {data:{session}}=await authClient.auth.getSession();
+  if(!session){showAccessPanel("Inicia sesión con tu correo autorizado.");return;}
+  const {data,error}=await authClient.functions.invoke("print-edition",{body:{action:"load"},headers:{Authorization:"Bearer "+session.access_token}});
+  if(error)throw error;
+  if(data&&data.error)throw new Error(data.error);
+  articles=data.articles||[];printAdCampaign=data.printAd||null;
+  hideAccessPanel();render();renderPrintAd();
+ }catch(error){
+  const message=error.message||"No se pudo comprobar el acceso.";
+  showAccessPanel(message+" Si necesitas autorización, contacta con el equipo editorial.");
+  console.error("Evoford print edition access:",error);
+ }
 }
+authClient.auth.onAuthStateChange((event,session)=>{
+ if(event==="SIGNED_IN"||event==="TOKEN_REFRESHED"||event==="SIGNED_OUT"){
+  if(!accessInitialized){accessInitialized=true;return;}
+  editionLoadPromise=load();
+ }
+});
 function syncPrintPaper(){
  const raw=$("paperSize").value==="A3"?"A3":"A4";
  const a3=document.getElementById("paperA3");

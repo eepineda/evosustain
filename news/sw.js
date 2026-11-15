@@ -30,7 +30,11 @@ self.addEventListener("install", event => {
 self.addEventListener("activate", event => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.filter(key => key.startsWith("evoford-news-pwa-") && key !== SHELL && key !== STATIC).map(key => caches.delete(key)));
+    const deletions = [];
+    for (const key of keys) {
+      if (key.startsWith("evoford-news-pwa-") && key !== SHELL && key !== STATIC) deletions.push(caches.delete(key));
+    }
+    await Promise.all(deletions);
     await self.clients.claim();
   })());
 });

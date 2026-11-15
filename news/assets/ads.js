@@ -75,9 +75,13 @@
         slot.innerHTML = "";
         continue;
       }
-      const visible = matches.slice(0, placement === "sponsored" ? 2 : 1);
-      slot.innerHTML = visible.map(item => renderCampaign(item, placement)).join("");
-      slot.hidden = !slot.innerHTML;
+      const limit = placement === "sponsored" ? 2 : 1;
+      let html = "";
+      for (let i = 0; i < matches.length && i < limit; i++) {
+        html += renderCampaign(matches[i], placement);
+      }
+      slot.innerHTML = html;
+      slot.hidden = !html;
     }
   }
 

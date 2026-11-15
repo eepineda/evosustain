@@ -1,6 +1,6 @@
-/* Evoford News service worker: conservative cache, network-first pages, no API caching. */
+/* Evoford News service worker: cache-first static assets, network-first pages, no API caching. */
 "use strict";
-const VERSION = "evoford-news-pwa-v14";
+const VERSION = "evoford-news-pwa-v15";
 const SHELL = VERSION + "-shell";
 const STATIC = VERSION + "-static";
 const PRECACHE = [
@@ -43,6 +43,7 @@ self.addEventListener("fetch", event => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin || !url.pathname.startsWith("/news/")) return;
   if (url.pathname.startsWith("/news/admin/") || url.pathname.includes("/api/")) return;
+
   if (request.mode === "navigate") {
     event.respondWith((async () => {
       try {
@@ -62,15 +63,31 @@ self.addEventListener("fetch", event => {
     })());
     return;
   }
+
   if (["style", "script", "image", "font"].includes(request.destination) || url.pathname.endsWith(".webmanifest") || url.pathname.endsWith(".svg")) {
     event.respondWith((async () => {
       const cache = await caches.open(STATIC);
+
+      // Static resources are versioned in their URLs (or use unique upload paths).
+      // Return a cached response immediately instead of downloading it again on
+      // every visit. Precached shell resources are reused as well.
       const cached = await cache.match(request);
-      const network = fetch(request).then(response => {
-        if (response && response.ok) cache.put(request, response.clone());
+      if (cached) return cached;
+
+      const shell = await caches.open(SHELL);
+      const precached = await shell.match(request);
+      if (precached) {
+        await cache.put(request, precached.clone());
+        return precached;
+      }
+
+      try {
+        const response = await fetch(request);
+        if (response && response.ok) await cache.put(request, response.clone());
         return response;
-      }).catch(() => null);
-      return cached || (await network) || Response.error();
+      } catch (_) {
+        return Response.error();
+      }
     })());
   }
 });

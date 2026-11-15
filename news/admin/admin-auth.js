@@ -244,6 +244,11 @@ async function login(e){
     if(button)button.disabled=false;
   }
 }
+async function invokePrintEdition(action,extra={}){const {data,error}=await client.functions.invoke("print-edition",{body:{action,...extra}});if(error)throw error;if(data?.error)throw new Error(data.error);return data;}
+function printAccessMessage(message){say("printAccessMessage",message);}
+async function loadPrintAccess(){const list=$("printAccessList");if(!list)return;list.innerHTML='<p class="muted">Cargando accesos…</p>';try{const data=await invokePrintEdition("list_access");const entries=data.access||[];list.innerHTML=entries.map(item=>'<div class="list-item" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #e5eaf0"><div><strong>'+safe(item.email)+'</strong><p class="muted">'+(item.approved?"APROBADO":"REVOCADO")+'</p></div>'+(item.email===ADMIN_EMAIL?'<span>Administrador</span>':'<button type="button" class="secondary" data-delete-print-access="'+safe(item.email)+'">Eliminar</button>')+'</div>').join("")||'<p class="muted">No hay correos registrados.</p>';}catch(error){list.textContent="No se pudo cargar la lista: "+(error.message||"error");}}
+async function addPrintAccess(event){event.preventDefault();const email=$("newPrintAccessEmail").value.trim().toLowerCase();try{await invokePrintEdition("add_access",{email});$("newPrintAccessEmail").value="";printAccessMessage("Correo aprobado.");await loadPrintAccess();}catch(error){printAccessMessage(error.message||"No se pudo aprobar el correo.");}}
+async function deletePrintAccess(email,button){if(!confirm("¿Eliminar "+email+" de la lista de correos autorizados?"))return;button.disabled=true;try{await invokePrintEdition("delete_access",{email});printAccessMessage("Correo eliminado.");await loadPrintAccess();}catch(error){printAccessMessage(error.message||"No se pudo eliminar el correo.");button.disabled=false;}}
 function filterArticles(){
   const query=($("articleSearch")?.value||"").trim().toLocaleLowerCase("es");
   const status=$("articleStatusFilter")?.value||"";
@@ -847,7 +852,7 @@ async function saveAd(event){
 
 
 function wire(){
-  $("maintenanceToggleBtn").addEventListener("click",toggleMaintenance);
+  $("maintenanceToggleBtn").addEventListener("click",toggleMaintenance);\n  $("refreshPrintAccessBtn")?.addEventListener("click",loadPrintAccess);\n  $("addPrintAccessForm")?.addEventListener("submit",addPrintAccess);\n  $("printAccessList")?.addEventListener("click",event=>{const button=event.target.closest("[data-delete-print-access]");if(button)deletePrintAccess(button.dataset.deletePrintAccess,button);});
   $("refreshOverviewBtn").addEventListener("click",()=>loadOverview(true));
   $("overviewRange").addEventListener("change",()=>loadOverview(true));
   $("loginForm").addEventListener("submit",login);
@@ -942,7 +947,7 @@ function wire(){
     if(b.dataset.tab==="overview")loadOverview();
     if(b.dataset.tab==="directory")loadDirectoryAdmin();
     if(b.dataset.tab==="courses")loadCourses();
-    if(b.dataset.tab==="ads")loadAds();
+    if(b.dataset.tab==="ads")loadAds();\n    if(b.dataset.tab==="printEdition")loadPrintAccess();
   }));
 }
 window.addEventListener("error",event=>{

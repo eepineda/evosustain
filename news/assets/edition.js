@@ -142,7 +142,7 @@ async function load(){
 }
 authClient.auth.onAuthStateChange((event,session)=>{
  if(event==="SIGNED_IN"||event==="TOKEN_REFRESHED"||event==="SIGNED_OUT"){
-  editionLoadPromise=load();
+  setTimeout(()=>{editionLoadPromise=load();},0);
  }
 });
 function syncPrintPaper(){

@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="./admin.css?v=20261114-briefing1">
   <link rel="stylesheet" href="./modern-admin.css?v=1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="/news/admin/admin-auth.js?v=20261115-authors1"></script>
+  <script defer src="/news/admin/admin-auth.js?v=20261115-featured1"></script>
 </head>
 <body>
   <header class="topbar">
@@ -101,7 +101,7 @@
             <div class="field full"><label for="titleEn">Headline in English</label><input id="titleEn" maxlength="180"></div>
             <div class="field full"><label for="titleEs">Titular en español</label><input id="titleEs" maxlength="180"></div>
             <div class="field"><label for="category">Sección</label><select id="category"><option>Internacional</option><option>Política</option><option>Economía</option><option>Seguridad</option><option>Tecnología</option><option>Opinión</option><option>Clima</option><option>Sociedad</option><option>Evoford Briefing</option></select></div>
-            <div class="field"><label for="author">Autor</label><input id="author" value="EDWIN PINEDA CARRASCO"></div>
+            <div class="field"><label for="author">Autor</label><input id="author" value="EDWIN PINEDA CARRASCO"></div><div class="field full"><label><input id="isFeatured" type="checkbox" style="width:auto;vertical-align:middle"> Destacar en portada</label><small class="muted">Si está marcado, el artículo podrá ocupar uno de los dos espacios principales de la portada. Si no, seguirá en su sección y en el listado de noticias.</small></div>
             <div class="field full"><label for="summary">Resumen</label><textarea id="summary" rows="2"></textarea></div>
             <div class="field full"><label for="content">Texto del artículo</label><textarea id="content" rows="12" required></textarea><small class="muted">Para aprobar y publicar: redacta al menos 500 caracteres propios, elimina las instrucciones del borrador e identifica al autor.</small></div>
             <div class="field"><label for="country">País principal</label><input id="country" placeholder="Por verificar"></div>

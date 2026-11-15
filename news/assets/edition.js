@@ -33,7 +33,7 @@ function applyLanguage(){
  $("backLink").textContent=t.back;$("formatLabel").textContent=t.format;
  $("paperSize").options[0].textContent=t.a4;$("paperSize").options[1].textContent=t.a3;
  $("refreshBtn").textContent=t.refresh;$("printBtn").textContent=t.print;
- $("languageToggle").textContent=t.other;$("languageToggle").setAttribute("aria-label",t.other);
+ $("languageToggle").textContent=t.other;$("languageToggle").setAttribute("aria-label",language==="es"?"Cambiar idioma a English":"Switch language to Spanish");$("languageToggle").title=language==="es"?"Cambiar a English":"Switch to Spanish";
  document.querySelector(".paper-topline span:nth-child(2)").textContent=t.descriptor;
  document.querySelector(".paper-kicker").textContent=t.kicker;
  document.querySelector(".paper-motto").textContent=t.motto;

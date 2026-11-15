@@ -57,18 +57,18 @@ function renderStaticLanguage(){
  const author=document.querySelector(".author");if(author){const spans=author.querySelectorAll("span");const labels= en?["Columnist · Entrepreneur · Information Technology Professional","University education in Spain · BSc (Hons) Cyber Security in progress · London, England"]:["Articulista · Emprendedor · Profesional de Tecnologías de la Información","Formación universitaria en España · BSc (Hons) Cyber Security en curso · Londres, Inglaterra"];spans.forEach((el,i)=>{if(i<labels.length)el.textContent=labels[i];});}
  const footer=document.querySelector("body > footer");
  if(footer){
-  const footerLinks=Array.from(footer.querySelectorAll("a"));
-  const hasAdvertise=footerLinks.some(a=>/publicidad|advertise|anúnciate/i.test(a.textContent));
+  let adLink=null,accessLink=null,aboutLink=null;
+  footer.querySelectorAll("a").forEach(link=>{
+   const label=link.textContent;
+   if(!adLink&&/publicidad|advertise|anúnciate/i.test(label))adLink=link;
+   if(!accessLink&&/editorial access|acceso editorial/i.test(label))accessLink=link;
+   if(!aboutLink&&/about evoford|sobre/i.test(label))aboutLink=link;
+  });
   const footerText=footer.querySelector(":scope > span");
   if(footerText)footerText.textContent=tr("footer");
-  if(hasAdvertise){
-   const adLink=footerLinks.find(a=>/publicidad|advertise|anúnciate/i.test(a.textContent));
-   const accessLink=footerLinks.find(a=>/editorial access|acceso editorial/i.test(a.textContent));
-   const aboutLink=footerLinks.find(a=>/about evoford|sobre/i.test(a.textContent));
-   if(adLink)adLink.textContent=en?"Advertise":"Anúnciate";
-   if(accessLink)accessLink.textContent=en?"Editorial access":"Acceso editorial";
-   if(aboutLink)aboutLink.textContent=en?"About Evoford News":"Sobre / About Evoford News";
-  }
+  if(adLink)adLink.textContent=en?"Advertise":"Anúnciate";
+  if(adLink&&accessLink)accessLink.textContent=en?"Editorial access":"Acceso editorial";
+  if(adLink&&aboutLink)aboutLink.textContent=en?"About Evoford News":"Sobre / About Evoford News";
   const yearLabel=footer.querySelector("span:last-child");
   if(yearLabel && yearLabel.querySelector("#year"))yearLabel.innerHTML="© <span id='year'>"+new Date().getFullYear()+"</span> Evoford";
  }

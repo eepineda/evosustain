@@ -43,10 +43,7 @@ Deno.serve(async (req: Request) => {
   const action = String(payload.action || "load");
 
   if (action === "load") {
-    const { data: access, error: accessError } = await db
-      .from("print_edition_access").select("approved").eq("email", email).maybeSingle();
-    if (accessError) return json({ error: "No se pudo comprobar el permiso." }, 500);
-    if (!access?.approved) return json({ error: "Este correo todavía no tiene acceso a la edición impresa." }, 403);
+    if (email !== adminEmail) return json({ error: "La edición impresa está reservada al administrador." }, 403);
 
     const [articlesResult, adsResult] = await Promise.all([
       db.from("articles")
@@ -83,12 +80,11 @@ Deno.serve(async (req: Request) => {
     return json({ ok: true });
   }
 
-  if (action === "set_access") {
+  if (action === "delete_access") {
     const target = String(payload.email || "").trim().toLowerCase();
-    if (target === adminEmail) return json({ error: "El acceso del administrador principal no se puede revocar aquí." }, 400);
-    const approved = payload.approved === true;
-    const { error } = await db.from("print_edition_access").update({ approved, updated_at: new Date().toISOString() }).eq("email", target);
-    if (error) return json({ error: "No se pudo actualizar el permiso." }, 500);
+    if (!target || target === adminEmail) return json({ error: "No se puede eliminar el correo del administrador." }, 400);
+    const { error } = await db.from("print_edition_access").delete().eq("email", target);
+    if (error) return json({ error: "No se pudo eliminar el correo autorizado." }, 500);
     return json({ ok: true });
   }
 

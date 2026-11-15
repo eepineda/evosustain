@@ -151,6 +151,24 @@ function renderPublishedArticles(articles) {
     if(category){if(!articlesByCategory.has(category))articlesByCategory.set(category,[]);articlesByCategory.get(category).push(article);}
     if(country){if(!articlesByCountry.has(country))articlesByCountry.set(country,[]);articlesByCountry.get(country).push(article);}
   }
+  const latestFromIndex=(index,terms,limit=3)=>{
+    const lists=terms.map(term=>index.get(term)||[]);
+    const positions=lists.map(()=>0),matches=[],seen=new Set();
+    while(matches.length<limit){
+      let selected=-1,selectedOrder=Infinity;
+      for(let i=0;i<lists.length;i++){
+        const candidate=lists[i][positions[i]];
+        if(candidate){
+          const order=articleOrder.get(candidate);
+          if(order<selectedOrder){selected=i;selectedOrder=order;}
+        }
+      }
+      if(selected<0)break;
+      const candidate=lists[selected][positions[selected]++];
+      if(!seen.has(candidate)){seen.add(candidate);matches.push(candidate);}
+    }
+    return matches;
+  };
   const opinionRoot=document.getElementById("latestOpinion");
   if(opinionRoot){
     const opinionArticle=articles.find(a=>normalize(a.category).includes("opinion"));
@@ -197,7 +215,7 @@ function renderPublishedArticles(articles) {
       {id:"es",name:tr("spain"),flag:"🇪🇸",terms:["espana","spain"]}
     ];
     countryRoot.innerHTML=editions.map(country=>{
-      const matches=country.terms.flatMap(term=>articlesByCountry.get(term)||[]).sort((a,b)=>articleOrder.get(a)-articleOrder.get(b)).slice(0,3);
+      const matches=latestFromIndex(articlesByCountry,country.terms);
       const liveStories=matches.map(a=>'<a class="country-story" href="'+articleUrl(a)+'"><span class="kicker">'+escapeHtml(categoryLabel(a.category||"ACTUALIDAD"))+'</span><b>'+escapeHtml(currentLanguage==="en"?(a.title_en||a.title):a.title)+'</b><span class="country-read">'+tr("read")+'</span></a>').join("");
       const stories=liveStories||'<p class="country-empty">'+tr("noCountry")+'</p>';
       return '<section class="country-card" id="country-'+country.id+'"><div class="country-title"><span class="country-flag" aria-hidden="true">'+country.flag+'</span><h3>'+country.name+'</h3></div>'+stories+'</section>';
@@ -215,7 +233,7 @@ function renderPublishedArticles(articles) {
     ];
     const normalize=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
     sectionRoot.innerHTML=sections.map(section=>{
-      const matches=section.terms.flatMap(term=>articlesByCategory.get(term)||[]).sort((a,b)=>articleOrder.get(a)-articleOrder.get(b)).slice(0,3);
+      const matches=latestFromIndex(articlesByCategory,section.terms);
 
       const cards=matches.map((a,i)=>{
         const dateText=a.created_at?new Date(a.created_at).toLocaleDateString(currentLanguage==="en"?"en-GB":"es-ES",{day:"numeric",month:"short",year:"numeric"}):"";

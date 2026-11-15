@@ -54,16 +54,12 @@
       (horizontal ? media + copy : media + copy) + '</a>';
   }
 
-  async function loadCampaignSlots() {
-    if (!window.supabase) return;
-    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-    const { data, error } = await client.from("published_ad_campaigns")
-      .select("id,campaign_title,placement,creative_url,target_url,start_date,end_date,publication_mode");
-    if (error) {
-      console.warn("Evoford News ads:", error.message);
-      return;
-    }
-    const campaigns = data || [];
+  const CAMPAIGNS_CACHE_TTL_MS = 60_000;
+  let campaignsCache = null;
+  let campaignsCacheAt = 0;
+  let campaignsLoadPromise = null;
+
+  function renderCampaignSlots(campaigns) {
     ["banner", "homepage", "sidebar", "article", "sponsored"].forEach(placement => {
       const slot = document.querySelector('[data-ad-slot="' + placement + '"]');
       if (!slot) return;
@@ -77,6 +73,39 @@
       slot.innerHTML = visible.map(item => renderCampaign(item, placement)).join("");
       slot.hidden = !slot.innerHTML;
     });
+  }
+
+  async function loadCampaignSlots() {
+    if (!window.supabase) return;
+    const cacheIsFresh = campaignsCache !== null && Date.now() - campaignsCacheAt < CAMPAIGNS_CACHE_TTL_MS;
+    if (cacheIsFresh) {
+      renderCampaignSlots(campaignsCache);
+      return;
+    }
+    if (campaignsLoadPromise) {
+      await campaignsLoadPromise;
+      if (campaignsCache !== null) renderCampaignSlots(campaignsCache);
+      return;
+    }
+
+    campaignsLoadPromise = (async () => {
+      const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+      const { data, error } = await client.from("published_ad_campaigns")
+        .select("id,campaign_title,placement,creative_url,target_url,start_date,end_date,publication_mode");
+      if (error) {
+        console.warn("Evoford News ads:", error.message);
+        return;
+      }
+      campaignsCache = data || [];
+      campaignsCacheAt = Date.now();
+      renderCampaignSlots(campaignsCache);
+    })();
+
+    try {
+      await campaignsLoadPromise;
+    } finally {
+      campaignsLoadPromise = null;
+    }
   }
 
   let scheduled = false;

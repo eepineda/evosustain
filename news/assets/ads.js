@@ -60,19 +60,25 @@
   let campaignsLoadPromise = null;
 
   function renderCampaignSlots(campaigns) {
-    ["banner", "homepage", "sidebar", "article", "sponsored"].forEach(placement => {
+    const byPlacement = new Map([
+      ["banner", []], ["homepage", []], ["sidebar", []], ["article", []], ["sponsored", []]
+    ]);
+    for (const campaign of campaigns) {
+      const matches = byPlacement.get(campaign.placement);
+      if (matches && safeHttps(campaign.creative_url)) matches.push(campaign);
+    }
+    for (const [placement, matches] of byPlacement) {
       const slot = document.querySelector('[data-ad-slot="' + placement + '"]');
-      if (!slot) return;
-      const matches = campaigns.filter(item => item.placement === placement && safeHttps(item.creative_url));
+      if (!slot) continue;
       if (!matches.length) {
         slot.hidden = true;
         slot.innerHTML = "";
-        return;
+        continue;
       }
-      const visible = placement === "sponsored" ? matches.slice(0, 2) : matches.slice(0, 1);
+      const visible = matches.slice(0, placement === "sponsored" ? 2 : 1);
       slot.innerHTML = visible.map(item => renderCampaign(item, placement)).join("");
       slot.hidden = !slot.innerHTML;
-    });
+    }
   }
 
   async function loadCampaignSlots() {

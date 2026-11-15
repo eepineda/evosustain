@@ -162,9 +162,16 @@ function renderPublishedArticles(articles) {
       opinionRoot.innerHTML='<span class="kicker">'+label+'</span><p class="muted">'+(currentLanguage==="en"?"No opinion articles have been published yet.":"Todavía no hay artículos de opinión publicados.")+'</p>';
     }
   }
-  const frontStories=articles.filter(a=>!normalize(a.category).includes("opinion")).slice(0,2);
+  const frontStories=[],remaining=[],frontStorySlugs=new Set();
+  for(const article of articles){
+    if(frontStories.length<2&&!normalize(article.category).includes("opinion")){
+      frontStories.push(article);
+      frontStorySlugs.add(article.slug);
+    }else if(!frontStorySlugs.has(article.slug)){
+      remaining.push(article);
+    }
+  }
   const featured=frontStories[0]||articles[0];
-  const remaining=articles.filter(a=>!frontStories.some(f=>f.slug===a.slug));
   const briefItems=remaining.slice(0,3);
   const publicationItems=remaining.slice(3,9);
   const feature=document.getElementById("featuredStory");

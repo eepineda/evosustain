@@ -172,3 +172,274 @@ html.evo-pwa footer { display:none!important; }
 html.evo-pwa .masthead .nav{display:none!important}
 html.evo-pwa .politics-nav{display:none!important}
 html.evo-pwa .app-bottom-nav a[aria-current="page"]{color:#a9232d!important}
+
+
+/* EVOFORD NEWS — polished mobile reader redesign (additive, PWA only) */
+html.evo-pwa{
+  --reader-ink:#14263d;
+  --reader-navy:#102b4e;
+  --reader-red:#a9232d;
+  --reader-muted:#718096;
+  --reader-line:#e7ebf0;
+  --reader-paper:#f5f7fa;
+  --reader-card:#fff;
+}
+html.evo-pwa body{
+  background:
+    radial-gradient(ellipse at 88% 0%,rgba(224,233,243,.72),transparent 34%),
+    var(--reader-paper)!important;
+  color:var(--reader-ink)!important;
+}
+html.evo-pwa .masthead{
+  padding:10px max(18px,env(safe-area-inset-left)) 11px!important;
+  background:rgba(255,255,255,.94)!important;
+  border-bottom:1px solid rgba(16,43,78,.09)!important;
+  box-shadow:0 8px 28px rgba(16,43,78,.055)!important;
+}
+html.evo-pwa .masthead .topline{
+  color:#8390a0!important;
+  font-size:8px!important;
+  letter-spacing:.17em!important;
+}
+html.evo-pwa .masthead .brand{
+  font-size:26px!important;
+  letter-spacing:-.075em!important;
+}
+html.evo-pwa .masthead .brand em{color:var(--reader-red)!important}
+html.evo-pwa .wrap{
+  max-width:820px!important;
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+html.evo-pwa .edition{
+  margin:13px 0 17px!important;
+  color:#8290a0!important;
+  font-size:8px!important;
+  letter-spacing:.14em!important;
+}
+html.evo-pwa .frontpage{margin:14px 0 27px!important}
+html.evo-pwa .frontpage-top{margin-bottom:13px!important}
+html.evo-pwa .frontpage-top .kicker{
+  color:var(--reader-red)!important;
+  font-size:9px!important;
+  font-weight:900!important;
+  letter-spacing:.18em!important;
+}
+html.evo-pwa .live-mark{
+  padding:6px 9px!important;
+  border-radius:999px!important;
+  background:#fff!important;
+  border:1px solid var(--reader-line)!important;
+  color:#69788a!important;
+  font-size:8px!important;
+}
+html.evo-pwa .featured-story{
+  border:1px solid rgba(16,43,78,.07)!important;
+  border-radius:21px!important;
+  box-shadow:0 12px 32px rgba(16,43,78,.09)!important;
+}
+html.evo-pwa .featured-story .feature-visual{
+  min-height:205px!important;
+  background-color:var(--reader-navy)!important;
+  background-image:linear-gradient(115deg,rgba(7,25,48,.08),rgba(7,25,48,.7))!important;
+}
+html.evo-pwa .featured-story .feature-copy{padding:20px!important}
+html.evo-pwa .featured-story .feature-copy .kicker{
+  color:var(--reader-red)!important;
+  font-size:9px!important;
+  font-weight:900!important;
+  letter-spacing:.16em!important;
+}
+html.evo-pwa .featured-story h1{
+  color:var(--reader-navy)!important;
+  font-size:clamp(28px,7.5vw,38px)!important;
+  line-height:1.06!important;
+  letter-spacing:-.055em!important;
+}
+html.evo-pwa .featured-story .dek{
+  color:#596a7d!important;
+  font-size:15px!important;
+  line-height:1.65!important;
+}
+html.evo-pwa .lead-meta{
+  color:#8a96a4!important;
+  font-size:8px!important;
+  letter-spacing:.13em!important;
+}
+html.evo-pwa .frontpage-aside{
+  border:1px solid var(--reader-line)!important;
+  border-radius:17px!important;
+  box-shadow:0 5px 18px rgba(16,43,78,.035)!important;
+}
+html.evo-pwa .frontpage-aside .aside-heading{
+  color:#8a96a4!important;
+  letter-spacing:.13em!important;
+}
+html.evo-pwa .frontpage-aside .brief{border-color:#edf0f4!important}
+html.evo-pwa .frontpage-aside .brief .number{
+  color:var(--reader-red)!important;
+  font-weight:900!important;
+}
+html.evo-pwa .section{margin:30px 0!important}
+html.evo-pwa .section-head{
+  margin-bottom:13px!important;
+  padding-bottom:10px!important;
+  border-bottom:1px solid #e3e8ee!important;
+}
+html.evo-pwa .section-head h2{
+  color:var(--reader-navy)!important;
+  font-size:23px!important;
+  font-weight:850!important;
+  letter-spacing:-.045em!important;
+}
+html.evo-pwa .section-head>span{
+  color:#96a0ac!important;
+  font-size:8px!important;
+  letter-spacing:.13em!important;
+}
+html.evo-pwa .cards article,
+html.evo-pwa .cards .card,
+html.evo-pwa .opinion-latest{
+  padding:0!important;
+  border:1px solid var(--reader-line)!important;
+  border-radius:17px!important;
+  background:var(--reader-card)!important;
+  box-shadow:0 5px 18px rgba(16,43,78,.045)!important;
+}
+html.evo-pwa .cards article img,
+html.evo-pwa .cards .card img{
+  display:block;
+  width:100%;
+  max-height:220px;
+  object-fit:cover;
+}
+html.evo-pwa .topics{gap:9px!important}
+html.evo-pwa .topics a{
+  position:relative;
+  min-height:72px!important;
+  border:1px solid var(--reader-line)!important;
+  border-radius:15px!important;
+  background:linear-gradient(145deg,#fff,#f9fafc)!important;
+  color:var(--reader-navy)!important;
+  font-weight:800!important;
+  box-shadow:0 4px 12px rgba(16,43,78,.035)!important;
+}
+html.evo-pwa .topics a span{color:var(--reader-red)!important}
+html.evo-pwa .opinion{
+  border:1px solid var(--reader-line)!important;
+  border-radius:19px!important;
+  box-shadow:0 6px 20px rgba(16,43,78,.04)!important;
+}
+html.evo-pwa #articleView{
+  max-width:760px!important;
+  padding:24px 19px 48px!important;
+}
+html.evo-pwa #articleView h1{
+  color:var(--reader-navy)!important;
+  font-size:clamp(32px,8.7vw,44px)!important;
+  line-height:1.04!important;
+  letter-spacing:-.055em!important;
+}
+html.evo-pwa #articleView .dek{
+  border-left:3px solid var(--reader-red)!important;
+  border-radius:0 12px 12px 0!important;
+  background:#fff!important;
+  color:#536579!important;
+}
+html.evo-pwa #articleView>img{
+  width:100%!important;
+  border-radius:17px!important;
+  box-shadow:0 8px 24px rgba(16,43,78,.09)!important;
+}
+html.evo-pwa #articleView .article-body p{
+  color:#26384c!important;
+  font-size:18px!important;
+  line-height:1.86!important;
+}
+html.evo-pwa .app-bottom-nav{
+  padding:9px 8px calc(9px + env(safe-area-inset-bottom))!important;
+  background:rgba(255,255,255,.96)!important;
+  border-top:1px solid rgba(16,43,78,.1)!important;
+  box-shadow:0 -8px 28px rgba(16,43,78,.09)!important;
+}
+html.evo-pwa .app-bottom-nav a{
+  gap:5px!important;
+  color:#8390a0!important;
+  font-size:9px!important;
+  font-weight:750!important;
+}
+html.evo-pwa .app-bottom-nav .nav-icon{
+  width:34px!important;
+  height:28px!important;
+  border-radius:10px!important;
+}
+html.evo-pwa .app-bottom-nav .nav-icon svg{
+  width:21px!important;
+  height:21px!important;
+}
+html.evo-pwa .app-bottom-nav a[aria-current=page]{
+  color:var(--reader-red)!important;
+}
+html.evo-pwa .app-bottom-nav a[aria-current=page] .nav-icon{
+  background:#f9ecee!important;
+}
+html.evo-pwa .startup-intro,
+html.evo-pwa .politics-intro{
+  border-bottom:1px solid var(--reader-line)!important;
+}
+html.evo-pwa .startup-intro h1,
+html.evo-pwa .politics-intro h1{
+  color:var(--reader-navy)!important;
+  letter-spacing:-.055em!important;
+}
+html.evo-pwa .startup-art{
+  border-radius:17px!important;
+  box-shadow:0 9px 24px rgba(16,43,78,.12)!important;
+}
+html.evo-pwa .startup-category,
+html.evo-pwa .startup-stories .story,
+html.evo-pwa .party-card,
+html.evo-pwa .politics-topic,
+html.evo-pwa .politics-stories .story{
+  border:1px solid var(--reader-line)!important;
+  border-radius:15px!important;
+  background:#fff!important;
+  box-shadow:0 4px 14px rgba(16,43,78,.035)!important;
+}
+html.evo-pwa .learning-section,
+html.evo-pwa .expert-call{
+  border:1px solid var(--reader-line)!important;
+  border-top:3px solid var(--reader-navy)!important;
+  border-radius:18px!important;
+  background:#fff!important;
+  box-shadow:0 6px 20px rgba(16,43,78,.04)!important;
+}
+html.evo-pwa .expert-cta{
+  border-radius:10px!important;
+  background:var(--reader-navy)!important;
+}
+html.evo-pwa .expert-cta:hover{background:var(--reader-red)!important}
+html.evo-pwa .history-hero{
+  border-radius:18px!important;
+  box-shadow:0 6px 20px rgba(16,43,78,.06)!important;
+}
+html.evo-pwa a,html.evo-pwa button{-webkit-tap-highlight-color:transparent}
+html.evo-pwa button:focus-visible,html.evo-pwa a:focus-visible{
+  outline:3px solid rgba(169,35,45,.35)!important;
+  outline-offset:3px!important;
+}
+@media(prefers-reduced-motion:no-preference){
+  html.evo-pwa .cards article,
+  html.evo-pwa .topics a,
+  html.evo-pwa .app-bottom-nav a .nav-icon{
+    transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease;
+  }
+  html.evo-pwa .topics a:active{transform:scale(.98)}
+}
+@media(min-width:700px){
+  html.evo-pwa .wrap{max-width:900px!important}
+  html.evo-pwa .featured-story .feature-visual{min-height:260px!important}
+}
+@media print{
+  html.evo-pwa body{background:#fff!important}
+}

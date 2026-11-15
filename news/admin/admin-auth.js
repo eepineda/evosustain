@@ -90,7 +90,7 @@ async function init(){
 }
 function showLogin(){ $("loginView").hidden=false; $("appView").hidden=true; }
 
-async function loadOverview(){
+async function renderOverview(){
  const $id=id=>$(id);
  const kpis=$id("overviewKpis"),activity=$id("overviewActivity"),statusRoot=$id("overviewStatus"),operations=$id("overviewOperations");
  if(!kpis)return;
@@ -186,6 +186,21 @@ async function loadOverview(){
  const errors=results.filter(x=>x.error);
  operations.innerHTML='<div class="overview-operation-row"><span>Artículos en total</span><b>'+val("articlesTotal")+'</b><span>Borradores</span><b>'+val("articlesDraft")+'</b></div><div class="overview-operation-row"><span>Artículos aprobados</span><b>'+val("articlesApproved")+'</b><span>Fichas en borrador</span><b>'+val("listingsDraft")+'</b></div><div class="overview-operation-row"><span>Noticias RSS registradas</span><b>'+val("rssTotal")+'</b><span>Fuentes RSS activas</span><b>'+val("sourcesActive")+'</b></div><div class="overview-operation-row"><span>Campañas publicitarias</span><b>'+adVal("adCampaignsTotal")+'</b><span>Solicitudes comerciales</span><b>'+adVal("adEnquiriesTotal")+'</b></div><div class="overview-operation-row"><span>Campañas pagadas</span><b>'+adVal("adCampaignsPaid")+'</b><span>Por cobrar</span><b>'+adVal("adCampaignsUnpaid")+'</b></div>'+(errors.length?'<p class="message">Algunos recuentos no se pudieron consultar: '+safe([...new Set(errors.map(x=>x.table))].join(", "))+'.</p>':'');
  if(updated)updated.textContent="Última actualización: "+new Date().toLocaleString("es-ES")+(errors.length?" · "+errors.length+" consultas con incidencias":"");
+}
+
+
+let overviewLoadedAt=0;
+let overviewLoadPromise=null;
+const OVERVIEW_CACHE_TTL_MS=30_000;
+async function loadOverview(force=false){
+ if(!force&&overviewLoadedAt&&Date.now()-overviewLoadedAt<OVERVIEW_CACHE_TTL_MS)return;
+ if(overviewLoadPromise)return overviewLoadPromise;
+ overviewLoadPromise=(async()=>{
+  await renderOverview();
+  overviewLoadedAt=Date.now();
+ })();
+ try{return await overviewLoadPromise;}
+ finally{overviewLoadPromise=null;}
 }
 
 async function showApp(user){
@@ -799,8 +814,8 @@ async function saveAd(event){
 
 function wire(){
   $("maintenanceToggleBtn").addEventListener("click",toggleMaintenance);
-  $("refreshOverviewBtn").addEventListener("click",loadOverview);
-  $("overviewRange").addEventListener("change",loadOverview);
+  $("refreshOverviewBtn").addEventListener("click",()=>loadOverview(true));
+  $("overviewRange").addEventListener("change",()=>loadOverview(true));
   $("loginForm").addEventListener("submit",login);
   $("logoutBtn").addEventListener("click",()=>client.auth.signOut());
   $("newArticleBtn").addEventListener("click",()=>editArticle(null));

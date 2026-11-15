@@ -227,7 +227,7 @@ body{background:var(--modern-bg)!important;color:var(--modern-ink)!important;fon
 .country-title{border-bottom:1px solid var(--modern-line)!important}
 .country-title h3{font-family:"Playfair Display",Georgia,serif!important}
 .country-story b{font-family:"Playfair Display",Georgia,serif!important;font-size:16px!important}
-.frontpage{border:0!important;border-top:4px solid #102b4e!important;border-bottom:1px solid var(--modern-line)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;padding:18px 0 22px!important;margin-top:26px!important}
+.frontpage{border:0!important;border-top:4px solid #102b4e!important;border-bottom:1px solid var(--modern-line)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;padding:18px 0 22px!important;margin-top:12px!important}
 .frontpage-top{border-bottom:1px solid var(--modern-line)!important;padding-bottom:12px!important}
 .frontpage-grid{grid-template-columns:minmax(0,2fr) minmax(260px,.72fr)!important;gap:24px!important}
 .feature-pair{gap:22px!important}

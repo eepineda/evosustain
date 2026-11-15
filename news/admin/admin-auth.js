@@ -162,7 +162,7 @@ async function renderOverview(){
   }));
   return {label,counts};
  }));
- const max=Math.max(1,...dailyResults.flatMap(x=>x.counts));
+  const max=dailyResults.reduce((current,result)=>result.counts.reduce((value,count)=>Math.max(value,count),current),1);
  activity.innerHTML='<div class="overview-legend"><span>Editorial</span><span>Formación</span><span>Directorio</span></div>'+binStarts.map((d,i)=>{
   const nums=dailyResults.map(x=>x.counts[i]),total=nums.reduce((a,b)=>a+b,0);
   const end=new Date(d.getTime()+unitDays*86400000);
@@ -184,14 +184,14 @@ async function renderOverview(){
  if(articleRows.error)categoryRoot.innerHTML='<p class="muted">No se pudieron consultar las secciones: '+safe(articleRows.error.message)+'</p>';
  else{
   const cats={};(articleRows.data||[]).forEach(x=>{const name=x.category||"Sin sección";cats[name]=(cats[name]||0)+1;});
-  const entries=Object.entries(cats).sort((a,b)=>b[1]-a[1]),maxCat=Math.max(1,...entries.map(x=>x[1]));
+  const entries=Object.entries(cats).sort((a,b)=>b[1]-a[1]);let maxCat=1;for(const [,count] of entries)if(count>maxCat)maxCat=count;
   categoryRoot.innerHTML=entries.length?entries.map(([name,n])=>'<div class="overview-rank"><span>'+safe(name)+'</span><div class="overview-bar"><i style="width:'+Math.round(n/maxCat*100)+'%"></i></div><b>'+n+'</b></div>').join(""):'<p class="muted">No hay artículos registrados.</p>';
  }
  const rssRoot=$id("overviewRss");
  if(rssRows.error)rssRoot.innerHTML='<p class="muted">No se pudo consultar RSS: '+safe(rssRows.error.message)+'</p>';
  else{
   const states={};(rssRows.data||[]).forEach(x=>states[x.status||"Sin estado"]=(states[x.status||"Sin estado"]||0)+1);
-  rssRoot.innerHTML=Object.entries(states).sort((a,b)=>b[1]-a[1]).map(([name,n])=>'<div class="overview-rank"><span>'+safe(name==="pending"?"Pendientes":name==="rejected"?"Descartadas":name)+'</span><div class="overview-bar"><i style="width:'+Math.round(n/Math.max(1,...Object.values(states))*100)+'%"></i></div><b>'+n+'</b></div>').join("")+'<p class="muted">'+val("sourcesActive")+' fuentes activas de '+val("sourcesTotal")+'</p>';
+  const rssEntries=Object.entries(states).sort((a,b)=>b[1]-a[1]);let maxRss=1;for(const [,count] of rssEntries)if(count>maxRss)maxRss=count;rssRoot.innerHTML=rssEntries.map(([name,n])=>'<div class="overview-rank"><span>'+safe(name==="pending"?"Pendientes":name==="rejected"?"Descartadas":name)+'</span><div class="overview-bar"><i style="width:'+Math.round(n/maxRss*100)+'%"></i></div><b>'+n+'</b></div>').join("")+'<p class="muted">'+val("sourcesActive")+' fuentes activas de '+val("sourcesTotal")+'</p>';
  }
  const errors=results.filter(x=>x.error);
  operations.innerHTML='<div class="overview-operation-row"><span>Artículos en total</span><b>'+val("articlesTotal")+'</b><span>Borradores</span><b>'+val("articlesDraft")+'</b></div><div class="overview-operation-row"><span>Artículos aprobados</span><b>'+val("articlesApproved")+'</b><span>Fichas en borrador</span><b>'+val("listingsDraft")+'</b></div><div class="overview-operation-row"><span>Noticias RSS registradas</span><b>'+val("rssTotal")+'</b><span>Fuentes RSS activas</span><b>'+val("sourcesActive")+'</b></div><div class="overview-operation-row"><span>Campañas publicitarias</span><b>'+adVal("adCampaignsTotal")+'</b><span>Solicitudes comerciales</span><b>'+adVal("adEnquiriesTotal")+'</b></div><div class="overview-operation-row"><span>Campañas pagadas</span><b>'+adVal("adCampaignsPaid")+'</b><span>Por cobrar</span><b>'+adVal("adCampaignsUnpaid")+'</b></div>'+(errors.length?'<p class="message">Algunos recuentos no se pudieron consultar: '+safe([...new Set(errors.map(x=>x.table))].join(", "))+'.</p>':'');

@@ -88,7 +88,7 @@ async function init(){
     say("loginMessage","Error al iniciar el panel: "+(error?.message||"comprueba la conexión y recarga."));
   }
 }
-function showLogin(){ $("loginView").hidden=false; $("appView").hidden=true; }
+function showLogin(){ currentUser=null; $("loginView").hidden=false; $("appView").hidden=true; }
 
 async function renderOverview(){
  const $id=id=>$(id);
@@ -209,6 +209,7 @@ async function showApp(user){
     say("loginMessage","Este correo no está autorizado para administrar Evoford News.");
     return;
   }
+  if(currentUser?.id===user.id&&!$("appView").hidden)return;
   currentUser=user; $("loginView").hidden=true; $("appView").hidden=false;
   $("signedInAs").textContent=user.email;
   await Promise.all([loadOverview(),loadMaintenanceControl()]);

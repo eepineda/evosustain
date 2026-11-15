@@ -1,6 +1,6 @@
-/* Evoford News service worker: conservative cache, network-first pages, no API caching. */
+/* Evoford News service worker: cache-first static assets, network-first pages, no API caching. */
 "use strict";
-const VERSION = "evoford-news-pwa-v14";
+const VERSION = "evoford-news-pwa-v15";
 const SHELL = VERSION + "-shell";
 const STATIC = VERSION + "-static";
 const PRECACHE = [
@@ -30,7 +30,11 @@ self.addEventListener("install", event => {
 self.addEventListener("activate", event => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.filter(key => key.startsWith("evoford-news-pwa-") && key !== SHELL && key !== STATIC).map(key => caches.delete(key)));
+    const deletions = [];
+    for (const key of keys) {
+      if (key.startsWith("evoford-news-pwa-") && key !== SHELL && key !== STATIC) deletions.push(caches.delete(key));
+    }
+    await Promise.all(deletions);
     await self.clients.claim();
   })());
 });
@@ -43,6 +47,7 @@ self.addEventListener("fetch", event => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin || !url.pathname.startsWith("/news/")) return;
   if (url.pathname.startsWith("/news/admin/") || url.pathname.includes("/api/")) return;
+
   if (request.mode === "navigate") {
     event.respondWith((async () => {
       try {
@@ -62,15 +67,30 @@ self.addEventListener("fetch", event => {
     })());
     return;
   }
+
   if (["style", "script", "image", "font"].includes(request.destination) || url.pathname.endsWith(".webmanifest") || url.pathname.endsWith(".svg")) {
     event.respondWith((async () => {
       const cache = await caches.open(STATIC);
+
+      // Only use cache-first for explicitly versioned assets. Unversioned
+      // resources (for example icons replaced at the same URL) are refreshed
+      // from the network and use the cache only as an offline fallback.
+      const isVersioned = url.searchParams.has("v") || /\.[a-f0-9]{8,}\./i.test(url.pathname);
       const cached = await cache.match(request);
-      const network = fetch(request).then(response => {
-        if (response && response.ok) cache.put(request, response.clone());
+      if (isVersioned && cached) return cached;
+
+      const shell = await caches.open(SHELL);
+      const precached = await shell.match(request);
+
+      try {
+        const response = await fetch(request);
+        if (response && response.ok) {
+          await cache.put(request, response.clone());
+        }
         return response;
-      }).catch(() => null);
-      return cached || (await network) || Response.error();
+      } catch (_) {
+        return cached || precached || Response.error();
+      }
     })());
   }
 });

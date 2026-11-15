@@ -15,6 +15,16 @@ const slugify = (s) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]
 function say(id, message){ $(id).textContent = message || ""; }
 function safe(value=""){ return String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 
+function withTimeout(promise, timeoutMs, fallback){
+  return new Promise((resolve,reject)=>{
+    const timer=setTimeout(()=>resolve(fallback),timeoutMs);
+    Promise.resolve(promise).then(
+      value=>{clearTimeout(timer);resolve(value);},
+      error=>{clearTimeout(timer);reject(error);}
+    );
+  });
+}
+
 function translationStatus(article){
   const baseLanguage=String(article.language||"es").toLowerCase().startsWith("en")?"en":"es";
   const hasSpanish=baseLanguage==="es"
@@ -88,9 +98,9 @@ async function init(){
     say("loginMessage","Error al iniciar el panel: "+(error?.message||"comprueba la conexión y recarga."));
   }
 }
-function showLogin(){ $("loginView").hidden=false; $("appView").hidden=true; }
+function showLogin(){ currentUser=null; $("loginView").hidden=false; $("appView").hidden=true; }
 
-async function loadOverview(){
+async function renderOverview(){
  const $id=id=>$(id);
  const kpis=$id("overviewKpis"),activity=$id("overviewActivity"),statusRoot=$id("overviewStatus"),operations=$id("overviewOperations");
  if(!kpis)return;
@@ -113,13 +123,13 @@ async function loadOverview(){
    if(table==="rss_sources"&&typeof status==="boolean")query=query.eq("active",status);
    else if(status)query=query.eq("status",status);
    if(since)query=query.gte("created_at",since);
-   const result=await Promise.race([query,new Promise(resolve=>setTimeout(()=>resolve({count:null,error:{message:"Tiempo de espera agotado"}}),12000))]);
+   const result=await withTimeout(query,12000,{count:null,error:{message:"Tiempo de espera agotado"}});
    return {key,table,count:result.count??0,error:result.error||null};
   }catch(error){return {key,table,count:0,error};}
  }));
  const by=Object.fromEntries(results.map(x=>[x.key,x])),val=key=>by[key]?.count??0;
  const adSpecs=[["adCampaignsTotal","ad_campaigns"],["adCampaignsActive","ad_campaigns","active"],["adCampaignsPaid","ad_campaigns",null,null,"paid"],["adCampaignsUnpaid","ad_campaigns",null,null,"unpaid"],["adEnquiriesTotal","ad_enquiries"],["adEnquiriesReceived","ad_enquiries","received"],["adEnquiriesPeriod","ad_enquiries",null,cutoff]];
- const adResults=await Promise.all(adSpecs.map(async ([key,table,status,since,payment])=>{try{let q=client.from(table).select("id",{count:"exact",head:true});if(status)q=q.eq("status",status);if(payment)q=q.eq("payment_status",payment);if(since)q=q.gte("created_at",since);const r=await Promise.race([q,new Promise(resolve=>setTimeout(()=>resolve({count:null,error:{message:"Tiempo de espera agotado"}}),12000))]);return {key,count:r.count??0,error:r.error||null};}catch(error){return {key,count:0,error};}}));
+ const adResults=await Promise.all(adSpecs.map(async ([key,table,status,since,payment])=>{try{let q=client.from(table).select("id",{count:"exact",head:true});if(status)q=q.eq("status",status);if(payment)q=q.eq("payment_status",payment);if(since)q=q.gte("created_at",since);const r=await withTimeout(q,12000,{count:null,error:{message:"Tiempo de espera agotado"}});return {key,count:r.count??0,error:r.error||null};}catch(error){return {key,count:0,error};}}));
  const adBy=Object.fromEntries(adResults.map(x=>[x.key,x])),adVal=key=>adBy[key]?.count??0;
  const cards=[
   ["Artículos publicados",val("articlesPublished"),"de "+val("articlesTotal")+" artículos"],
@@ -146,13 +156,13 @@ async function loadOverview(){
    to.setHours(0,0,0,0);
    try{
     const q=client.from(table).select("id",{count:"exact",head:true}).gte("created_at",from.toISOString()).lt("created_at",to.toISOString());
-    const r=await Promise.race([q,new Promise(resolve=>setTimeout(()=>resolve({count:0,error:true}),10000))]);
+    const r=await withTimeout(q,10000,{count:0,error:true});
     return r.count??0;
    }catch{return 0;}
   }));
   return {label,counts};
  }));
- const max=Math.max(1,...dailyResults.flatMap(x=>x.counts));
+  const max=dailyResults.reduce((current,result)=>result.counts.reduce((value,count)=>Math.max(value,count),current),1);
  activity.innerHTML='<div class="overview-legend"><span>Editorial</span><span>Formación</span><span>Directorio</span></div>'+binStarts.map((d,i)=>{
   const nums=dailyResults.map(x=>x.counts[i]),total=nums.reduce((a,b)=>a+b,0);
   const end=new Date(d.getTime()+unitDays*86400000);
@@ -174,18 +184,33 @@ async function loadOverview(){
  if(articleRows.error)categoryRoot.innerHTML='<p class="muted">No se pudieron consultar las secciones: '+safe(articleRows.error.message)+'</p>';
  else{
   const cats={};(articleRows.data||[]).forEach(x=>{const name=x.category||"Sin sección";cats[name]=(cats[name]||0)+1;});
-  const entries=Object.entries(cats).sort((a,b)=>b[1]-a[1]),maxCat=Math.max(1,...entries.map(x=>x[1]));
+  const entries=Object.entries(cats).sort((a,b)=>b[1]-a[1]);let maxCat=1;for(const [,count] of entries)if(count>maxCat)maxCat=count;
   categoryRoot.innerHTML=entries.length?entries.map(([name,n])=>'<div class="overview-rank"><span>'+safe(name)+'</span><div class="overview-bar"><i style="width:'+Math.round(n/maxCat*100)+'%"></i></div><b>'+n+'</b></div>').join(""):'<p class="muted">No hay artículos registrados.</p>';
  }
  const rssRoot=$id("overviewRss");
  if(rssRows.error)rssRoot.innerHTML='<p class="muted">No se pudo consultar RSS: '+safe(rssRows.error.message)+'</p>';
  else{
   const states={};(rssRows.data||[]).forEach(x=>states[x.status||"Sin estado"]=(states[x.status||"Sin estado"]||0)+1);
-  rssRoot.innerHTML=Object.entries(states).sort((a,b)=>b[1]-a[1]).map(([name,n])=>'<div class="overview-rank"><span>'+safe(name==="pending"?"Pendientes":name==="rejected"?"Descartadas":name)+'</span><div class="overview-bar"><i style="width:'+Math.round(n/Math.max(1,...Object.values(states))*100)+'%"></i></div><b>'+n+'</b></div>').join("")+'<p class="muted">'+val("sourcesActive")+' fuentes activas de '+val("sourcesTotal")+'</p>';
+  const rssEntries=Object.entries(states).sort((a,b)=>b[1]-a[1]);let maxRss=1;for(const [,count] of rssEntries)if(count>maxRss)maxRss=count;rssRoot.innerHTML=rssEntries.map(([name,n])=>'<div class="overview-rank"><span>'+safe(name==="pending"?"Pendientes":name==="rejected"?"Descartadas":name)+'</span><div class="overview-bar"><i style="width:'+Math.round(n/maxRss*100)+'%"></i></div><b>'+n+'</b></div>').join("")+'<p class="muted">'+val("sourcesActive")+' fuentes activas de '+val("sourcesTotal")+'</p>';
  }
- const errors=results.filter(x=>x.error);
- operations.innerHTML='<div class="overview-operation-row"><span>Artículos en total</span><b>'+val("articlesTotal")+'</b><span>Borradores</span><b>'+val("articlesDraft")+'</b></div><div class="overview-operation-row"><span>Artículos aprobados</span><b>'+val("articlesApproved")+'</b><span>Fichas en borrador</span><b>'+val("listingsDraft")+'</b></div><div class="overview-operation-row"><span>Noticias RSS registradas</span><b>'+val("rssTotal")+'</b><span>Fuentes RSS activas</span><b>'+val("sourcesActive")+'</b></div><div class="overview-operation-row"><span>Campañas publicitarias</span><b>'+adVal("adCampaignsTotal")+'</b><span>Solicitudes comerciales</span><b>'+adVal("adEnquiriesTotal")+'</b></div><div class="overview-operation-row"><span>Campañas pagadas</span><b>'+adVal("adCampaignsPaid")+'</b><span>Por cobrar</span><b>'+adVal("adCampaignsUnpaid")+'</b></div>'+(errors.length?'<p class="message">Algunos recuentos no se pudieron consultar: '+safe([...new Set(errors.map(x=>x.table))].join(", "))+'.</p>':'');
- if(updated)updated.textContent="Última actualización: "+new Date().toLocaleString("es-ES")+(errors.length?" · "+errors.length+" consultas con incidencias":"");
+  const errorTables=new Set();let errorCount=0;for(const result of results){if(result.error){errorCount++;errorTables.add(result.table);}}
+ operations.innerHTML='<div class="overview-operation-row"><span>Artículos en total</span><b>'+val("articlesTotal")+'</b><span>Borradores</span><b>'+val("articlesDraft")+'</b></div><div class="overview-operation-row"><span>Artículos aprobados</span><b>'+val("articlesApproved")+'</b><span>Fichas en borrador</span><b>'+val("listingsDraft")+'</b></div><div class="overview-operation-row"><span>Noticias RSS registradas</span><b>'+val("rssTotal")+'</b><span>Fuentes RSS activas</span><b>'+val("sourcesActive")+'</b></div><div class="overview-operation-row"><span>Campañas publicitarias</span><b>'+adVal("adCampaignsTotal")+'</b><span>Solicitudes comerciales</span><b>'+adVal("adEnquiriesTotal")+'</b></div><div class="overview-operation-row"><span>Campañas pagadas</span><b>'+adVal("adCampaignsPaid")+'</b><span>Por cobrar</span><b>'+adVal("adCampaignsUnpaid")+'</b></div>'+(errorCount?'<p class="message">Algunos recuentos no se pudieron consultar: '+safe([...errorTables].join(", "))+'.</p>':'');
+ if(updated)updated.textContent="Última actualización: "+new Date().toLocaleString("es-ES")+(errorCount?" · "+errorCount+" consultas con incidencias":"");
+}
+
+
+let overviewLoadedAt=0;
+let overviewLoadPromise=null;
+const OVERVIEW_CACHE_TTL_MS=30_000;
+async function loadOverview(force=false){
+ if(!force&&overviewLoadedAt&&Date.now()-overviewLoadedAt<OVERVIEW_CACHE_TTL_MS)return;
+ if(overviewLoadPromise)return overviewLoadPromise;
+ overviewLoadPromise=(async()=>{
+  await renderOverview();
+  overviewLoadedAt=Date.now();
+ })();
+ try{return await overviewLoadPromise;}
+ finally{overviewLoadPromise=null;}
 }
 
 async function showApp(user){
@@ -194,9 +219,10 @@ async function showApp(user){
     say("loginMessage","Este correo no está autorizado para administrar Evoford News.");
     return;
   }
+  if(currentUser?.id===user.id&&!$("appView").hidden)return;
   currentUser=user; $("loginView").hidden=true; $("appView").hidden=false;
   $("signedInAs").textContent=user.email;
-  await Promise.all([loadOverview(),loadArticles(),loadInbox(),loadSources(),loadSubmissions(),loadCourses(),loadMaintenanceControl(),loadAds(),loadBriefings()]);
+  await Promise.all([loadOverview(),loadMaintenanceControl()]);
 }
 async function login(e){
   e.preventDefault();
@@ -221,7 +247,7 @@ async function login(e){
 function filterArticles(){
   const query=($("articleSearch")?.value||"").trim().toLocaleLowerCase("es");
   const status=$("articleStatusFilter")?.value||"";
-  const items=[...$("articleList").querySelectorAll("[data-article-item]")];
+  const items=$("articleList").querySelectorAll("[data-article-item]");
   let visible=0;
   items.forEach(item=>{
     const matchesText=!query||(item.dataset.search||"").includes(query);
@@ -259,12 +285,13 @@ function openNewBriefing(){
 }
 
 async function loadArticles(){
-  const {data,error}=await client.from("articles").select("*").order("created_at",{ascending:false});
+  const {data,error}=await client.from("articles").select("id,title,title_en,title_es,content,content_en,content_es,language,category,author,status,created_at").order("created_at",{ascending:false});
   if(error){$("articleList").innerHTML=`<p class="muted">${safe(error.message)}</p>`;return;}
-  $("articleList").innerHTML=data.length?data.map(a=>`<article class="item" data-article-item data-status="${safe(a.status)}" data-search="${safe([a.title,a.category,a.author].filter(Boolean).join(" ").toLocaleLowerCase("es"))}"><div><h3>${safe(a.title)}</h3><p>${safe(a.category)} · ${safe(a.author)} · <span class="pill">${safe(({draft:"Borrador",pending:"En revisión",approved:"Aprobado",published:"Publicado",rejected:"Descartado"})[a.status]||a.status)}</span> · <span class="translation-pill ${translationStatus(a).kind}">${translationStatus(a).label}</span></p></div><div class="item-actions"><button class="secondary" data-edit="${a.id}">Editar</button>${a.status!=="published"?`<button class="secondary" data-discard="${a.id}">Descartar</button>`:""}<button class="secondary" data-delete="${a.id}">Eliminar</button></div></article>`).join(""):'<p class="muted">Todavía no hay artículos.</p>';
-  $("articleList").querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>editArticle(data.find(a=>a.id===b.dataset.edit))));
+  $("articleList").innerHTML=data.length?data.map(a=>{const translation=translationStatus(a);return `<article class="item" data-article-item data-status="${safe(a.status)}" data-search="${safe((String(a.title||"")+" "+String(a.category||"")+" "+String(a.author||"")).trim().toLocaleLowerCase("es"))}"><div><h3>${safe(a.title)}</h3><p>${safe(a.category)} · ${safe(a.author)} · <span class="pill">${safe(({draft:"Borrador",pending:"En revisión",approved:"Aprobado",published:"Publicado",rejected:"Descartado"})[a.status]||a.status)}</span> · <span class="translation-pill ${translation.kind}">${translation.label}</span></p></div><div class="item-actions"><button class="secondary" data-edit="${a.id}">Editar</button>${a.status!=="published"?`<button class="secondary" data-discard="${a.id}">Descartar</button>`:""}<button class="secondary" data-delete="${a.id}">Eliminar</button></div></article>`;}).join(""):'<p class="muted">Todavía no hay artículos.</p>';
+  const articleById=new Map(data.map(article=>[String(article.id),article]));
+  $("articleList").querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",async()=>{const id=b.dataset.edit;b.disabled=true;const {data:article,error}=await client.from("articles").select("*").eq("id",id).single();b.disabled=false;if(error){say("globalMessage","No se pudo abrir el artículo: "+error.message);return;}editArticle(article);}));
   $("articleList").querySelectorAll("[data-discard]").forEach(b=>b.addEventListener("click",async()=>{
-    const article=data.find(a=>a.id===b.dataset.discard);
+    const article=articleById.get(b.dataset.discard);
     if(!article||!window.confirm(`¿Descartar «${article.title}»? Seguirá guardado, pero dejará de estar en el flujo editorial.`))return;
     const {error}=await client.from("articles").update({status:"rejected",updated_at:new Date().toISOString()}).eq("id",article.id);
     if(error){say("globalMessage","No se pudo descartar: "+error.message);return;}
@@ -272,7 +299,7 @@ async function loadArticles(){
     await loadArticles();
   }));
   $("articleList").querySelectorAll("[data-delete]").forEach(b=>b.addEventListener("click",async()=>{
-    const article=data.find(a=>a.id===b.dataset.delete);
+    const article=articleById.get(b.dataset.delete);
     if(!article||!window.confirm(`¿Eliminar definitivamente «${article.title}»? Esta acción no se puede deshacer.${article.status==="published"?" También desaparecerá de la web pública.":""}`))return;
     const {error}=await client.from("articles").delete().eq("id",article.id);
     if(error){say("globalMessage","No se pudo eliminar: "+error.message);return;}
@@ -345,16 +372,18 @@ async function runRssImport(){
     const imported=Number(data?.imported||0);
     const checked=Number(data?.checked_sources||0);
     const results=Array.isArray(data?.results)?data.results:[];
-    const failed=results.filter(x=>x.error);
-    const invalid=results.reduce((n,x)=>n+Number(x.invalid||0),0);
-    const duplicates=results.reduce((n,x)=>n+Number(x.duplicates||0),0);
-    const duration=Math.max(0,...results.map(x=>Number(x.duration_ms||0)));
-    const details=results.map(x=>{
-      const time=(Number(x.duration_ms||0)/1000).toFixed(1)+" s";
-      return "• "+x.source+": "+(x.error?"ERROR · "+x.error:Number(x.imported||0)+" nuevas · "+Number(x.duplicates||0)+" repetidas · "+Number(x.invalid||0)+" inválidas")+" · "+time;
-    }).join("\n");
+    let failed=0,invalid=0,duplicates=0;
+    const detailLines=[];
+    for(const item of results){
+      if(item.error)failed++;
+      invalid+=Number(item.invalid||0);
+      duplicates+=Number(item.duplicates||0);
+      const time=(Number(item.duration_ms||0)/1000).toFixed(1)+" s";
+      detailLines.push("• "+item.source+": "+(item.error?"ERROR · "+item.error:Number(item.imported||0)+" nuevas · "+Number(item.duplicates||0)+" repetidas · "+Number(item.invalid||0)+" inválidas")+" · "+time);
+    }
+    const details=detailLines.join("\n");
     const summary="Proceso terminado: "+imported+" noticias nuevas de "+checked+" fuentes. Repetidas: "+duplicates+". Inválidas: "+invalid+".";
-    say("rssRunMessage",summary+"\n"+(failed.length?"Fuentes con errores:":"Detalle por fuente:")+"\n"+details);
+    say("rssRunMessage",summary+"\n"+(failed?"Fuentes con errores:":"Detalle por fuente:")+"\n"+details);
     await loadInbox();
   }catch(error){
     say("rssRunMessage","No se pudo importar: "+(error.message||"Error desconocido")+". Comprueba el despliegue de rss-ingest.");
@@ -374,7 +403,7 @@ function editorialSuggestion(item){
     ["Opinión",["opinion","columna","editorial","debate |"]]
   ];
   let category="Internacional";
-  for(const [name,words] of rules){if(words.some(word=>text.includes(word))){category=name;break;}}
+  for(const [name,words] of rules){let matched=false;for(const word of words){if(text.includes(word)){matched=true;break;}}if(matched){category=name;break;}}
   const countries=[
     ["España",["espana","madrid","barcelona","oviedo","el hierro","valladolid","andalucia","cataluna"]],
     ["Estados Unidos",["estados unidos","ee uu","misisipi","mississippi","brooklyn","nueva york","washington","nasdaq"]],
@@ -390,7 +419,8 @@ function editorialSuggestion(item){
     ["Chile",["chile","chileno","chilena"]],
     ["Colombia",["colombia","colombiano","colombiana"]]
   ];
-  const country=countries.find(([name,terms])=>terms.some(term=>text.includes(term)))?.[0]||"";
+  let country="";
+  for(const [name,terms] of countries){let matched=false;for(const term of terms){if(text.includes(term)){matched=true;break;}}if(matched){country=name;break;}}
   let region="";
   if(["España","Italia","Reino Unido","Francia","Alemania","Ucrania","Rusia"].includes(country)) region="Europa";
   else if(country==="Estados Unidos"||country==="México") region="América del Norte";
@@ -402,14 +432,16 @@ function editorialSuggestion(item){
 
 async function loadInbox(){
   const [{data,error},{data:sources},{data:articles,error:articlesError}] = await Promise.all([
-    client.from("imported_items").select("*").order("created_at",{ascending:false}),
-    client.from("rss_sources").select("id,name,category"),
-    client.from("articles").select("id,title,source_url,status")
+    client.from("imported_items").select("id,title,source_id,article_url,status,summary,suggested_category,country,region,created_at").order("created_at",{ascending:false}),
+    client.from("rss_sources").select("id,name"),
+    client.from("articles").select("id,source_url,status")
   ]);
   if(error){$("inboxList").innerHTML=`<p class="muted">${safe(error.message)}</p>`;return;}
   if(articlesError){$("inboxList").innerHTML=`<p class="muted">No se pudo comprobar la relación con los borradores: ${safe(articlesError.message)}</p>`;return;}
-  const sourceMap=new Map((sources||[]).map(source=>[String(source.id),source]));
-  const articleBySource=new Map((articles||[]).filter(a=>a.source_url).map(a=>[a.source_url,a]));
+  const sourceMap=new Map();
+  for(const source of sources||[])sourceMap.set(String(source.id),source);
+  const articleBySource=new Map();
+  for(const article of articles||[])if(article.source_url)articleBySource.set(article.source_url,article);
   $("inboxList").innerHTML=data.length?data.map(n=>{
     const source=sourceMap.get(String(n.source_id));
     const linkedArticle=articleBySource.get(n.article_url);
@@ -425,8 +457,8 @@ async function loadInbox(){
   }).join(""):'<p class="muted">No hay noticias importadas. Añade fuentes RSS activas e inicia una importación.</p>';
 }
 
-async function loadSubmissions(){const {data,error}=await client.from("article_submissions").select("*").order("created_at",{ascending:false});if(error){$("submissionsList").innerHTML='<p class="muted">No se pudieron cargar: '+safe(error.message)+'</p>';return;}$("submissionsList").innerHTML=data.length?data.map(s=>'<article class="item"><div><h3>'+safe(s.title)+'</h3><p>'+safe(s.sender_name)+' · '+safe(s.sender_email)+' · '+safe(s.submission_type)+' · '+new Date(s.created_at).toLocaleString("es-ES")+' · <span class="pill">'+safe(s.status)+'</span></p><p>'+safe(s.body.slice(0,240))+(s.body.length>240?"…":"")+'</p><p class="muted">'+(s.attachment_paths||[]).length+' adjunto(s)</p></div><div class="item-actions">'+(s.status==="received"?'<button class="secondary" data-convert-sub="'+s.id+'">Convertir en borrador</button><button class="secondary" data-reject-sub="'+s.id+'">Descartar</button>':'')+((s.attachment_paths||[]).length?'<button class="secondary" data-files-sub="'+s.id+'">Ver adjuntos</button>':'')+'<button class="secondary danger" data-delete-sub="'+s.id+'">Eliminar</button></div></article>').join(""):'<p class="muted">No hay envíos recibidos.</p>';}
-async function handleSubmissionAction(e){const c=e.target.closest("[data-convert-sub]"),r=e.target.closest("[data-reject-sub]"),f=e.target.closest("[data-files-sub]"),d=e.target.closest("[data-delete-sub]");if(d){if(!window.confirm("¿Eliminar definitivamente este envío y sus archivos adjuntos? Esta acción no se puede deshacer."))return;d.disabled=true;const {data:record,error:readError}=await client.from("article_submissions").select("attachment_paths").eq("id",d.dataset.deleteSub).single();if(readError){say("globalMessage","No se pudo leer el envío: "+readError.message);d.disabled=false;return;}const paths=record.attachment_paths||[];if(paths.length){const {error:storageError}=await client.storage.from("news-submissions").remove(paths);if(storageError){say("globalMessage","No se pudieron eliminar los adjuntos: "+storageError.message);d.disabled=false;return;}}const {error:deleteError}=await client.from("article_submissions").delete().eq("id",d.dataset.deleteSub);if(deleteError){say("globalMessage","No se pudo eliminar el envío: "+deleteError.message);d.disabled=false;return;}say("globalMessage","Envío y adjuntos eliminados definitivamente.");await loadSubmissions();return;}if(c){const {data:s,error}=await client.from("article_submissions").select("*").eq("id",c.dataset.convertSub).single();if(error){say("globalMessage",error.message);return;}const {data:a,error:ie}=await client.from("articles").insert({title:s.title,slug:slugify(s.title)+"-"+s.id.slice(0,8),category:s.submission_type==="opinion"?"Opinión":"Internacional",author:s.sender_name,summary:"Envío recibido de "+s.sender_name+" ("+s.sender_email+"). Pendiente de edición y verificación.",content:s.body,language:"es",source_title:"Envío externo",status:"draft",updated_at:new Date().toISOString()}).select("id").single();if(ie){say("globalMessage","No se pudo crear el borrador: "+ie.message);return;}const {error:ue}=await client.from("article_submissions").update({status:"converted",article_id:a.id}).eq("id",s.id);if(ue){say("globalMessage","Borrador creado, pero no se pudo vincular: "+ue.message);return;}await Promise.all([loadSubmissions(),loadArticles()]);document.querySelector('[data-tab="articles"]').click();const {data:created}=await client.from("articles").select("*").eq("id",a.id).single();if(created)editArticle(created);say("globalMessage","Envío convertido en borrador. Revísalo antes de aprobarlo.");return;}if(r){if(!confirm("¿Descartar este envío?"))return;const {error}=await client.from("article_submissions").update({status:"rejected"}).eq("id",r.dataset.rejectSub);if(error)say("globalMessage",error.message);await loadSubmissions();return;}if(f){const {data:s}=await client.from("article_submissions").select("attachment_paths").eq("id",f.dataset.filesSub).single();let count=0;for(const path of s.attachment_paths||[]){const {data,error}=await client.storage.from("news-submissions").createSignedUrl(path,300);if(!error){window.open(data.signedUrl,"_blank","noopener");count++;}}if(!count)say("globalMessage","No se pudieron abrir los adjuntos.");}}
+async function loadSubmissions(){const {data,error}=await client.from("article_submissions").select("id,title,sender_name,sender_email,submission_type,created_at,status,body,attachment_paths").order("created_at",{ascending:false});if(error){$("submissionsList").innerHTML='<p class="muted">No se pudieron cargar: '+safe(error.message)+'</p>';return;}$("submissionsList").innerHTML=data.length?data.map(s=>'<article class="item"><div><h3>'+safe(s.title)+'</h3><p>'+safe(s.sender_name)+' · '+safe(s.sender_email)+' · '+safe(s.submission_type)+' · '+new Date(s.created_at).toLocaleString("es-ES")+' · <span class="pill">'+safe(s.status)+'</span></p><p>'+safe(s.body.slice(0,240))+(s.body.length>240?"…":"")+'</p><p class="muted">'+(s.attachment_paths||[]).length+' adjunto(s)</p></div><div class="item-actions">'+(s.status==="received"?'<button class="secondary" data-convert-sub="'+s.id+'">Convertir en borrador</button><button class="secondary" data-reject-sub="'+s.id+'">Descartar</button>':'')+((s.attachment_paths||[]).length?'<button class="secondary" data-files-sub="'+s.id+'">Ver adjuntos</button>':'')+'<button class="secondary danger" data-delete-sub="'+s.id+'">Eliminar</button></div></article>').join(""):'<p class="muted">No hay envíos recibidos.</p>';}
+async function handleSubmissionAction(e){const c=e.target.closest("[data-convert-sub]"),r=e.target.closest("[data-reject-sub]"),f=e.target.closest("[data-files-sub]"),d=e.target.closest("[data-delete-sub]");if(d){if(!window.confirm("¿Eliminar definitivamente este envío y sus archivos adjuntos? Esta acción no se puede deshacer."))return;d.disabled=true;const {data:record,error:readError}=await client.from("article_submissions").select("attachment_paths").eq("id",d.dataset.deleteSub).single();if(readError){say("globalMessage","No se pudo leer el envío: "+readError.message);d.disabled=false;return;}const paths=record.attachment_paths||[];if(paths.length){const {error:storageError}=await client.storage.from("news-submissions").remove(paths);if(storageError){say("globalMessage","No se pudieron eliminar los adjuntos: "+storageError.message);d.disabled=false;return;}}const {error:deleteError}=await client.from("article_submissions").delete().eq("id",d.dataset.deleteSub);if(deleteError){say("globalMessage","No se pudo eliminar el envío: "+deleteError.message);d.disabled=false;return;}say("globalMessage","Envío y adjuntos eliminados definitivamente.");await loadSubmissions();return;}if(c){const {data:s,error}=await client.from("article_submissions").select("id,title,sender_name,sender_email,submission_type,body").eq("id",c.dataset.convertSub).single();if(error){say("globalMessage",error.message);return;}const {data:a,error:ie}=await client.from("articles").insert({title:s.title,slug:slugify(s.title)+"-"+s.id.slice(0,8),category:s.submission_type==="opinion"?"Opinión":"Internacional",author:s.sender_name,summary:"Envío recibido de "+s.sender_name+" ("+s.sender_email+"). Pendiente de edición y verificación.",content:s.body,language:"es",source_title:"Envío externo",status:"draft",updated_at:new Date().toISOString()}).select("id").single();if(ie){say("globalMessage","No se pudo crear el borrador: "+ie.message);return;}const {error:ue}=await client.from("article_submissions").update({status:"converted",article_id:a.id}).eq("id",s.id);if(ue){say("globalMessage","Borrador creado, pero no se pudo vincular: "+ue.message);return;}await loadSubmissions();document.querySelector('[data-tab="articles"]').click();const {data:created}=await client.from("articles").select("*").eq("id",a.id).single();if(created)editArticle(created);say("globalMessage","Envío convertido en borrador. Revísalo antes de aprobarlo.");return;}if(r){if(!confirm("¿Descartar este envío?"))return;const {error}=await client.from("article_submissions").update({status:"rejected"}).eq("id",r.dataset.rejectSub);if(error)say("globalMessage",error.message);await loadSubmissions();return;}if(f){const {data:s}=await client.from("article_submissions").select("attachment_paths").eq("id",f.dataset.filesSub).single();let count=0;for(const path of s.attachment_paths||[]){const {data,error}=await client.storage.from("news-submissions").createSignedUrl(path,300);if(!error){window.open(data.signedUrl,"_blank","noopener");count++;}}if(!count)say("globalMessage","No se pudieron abrir los adjuntos.");}}
 
 function closeRssEdit(){ $("rssEditModal").hidden=true; $("rssEditForm").reset(); $("rssEditMessage").textContent=""; }
 $("closeRssEdit")?.addEventListener("click",closeRssEdit);
@@ -450,11 +482,12 @@ $("rssEditForm")?.addEventListener("submit",async event=>{
   closeRssEdit();await loadSources();
 });
 async function loadSources(){
-  const {data,error}=await client.from("rss_sources").select("*").order("created_at",{ascending:false});
+  const {data,error}=await client.from("rss_sources").select("id,name,feed_url,category,active").order("created_at",{ascending:false});
   if(error){$("sourceList").innerHTML=`<p class="muted">${safe(error.message)}</p>`;return;}
+  const sourceById=new Map(data.map(source=>[String(source.id),source]));
   $("sourceList").innerHTML=data.length?data.map(s=>`<article class="item"><div><h3>${safe(s.name)}</h3><p>${safe(s.feed_url)} · ${safe(s.category||"General")} · ${s.active?"Activa":"Pausada"}</p></div><div class="item-actions"><button type="button" class="secondary" data-edit-source="${safe(s.id)}">Editar</button><button type="button" class="secondary" data-toggle-source="${safe(s.id)}">${s.active?"Pausar":"Activar"}</button><button type="button" class="secondary" data-delete-source="${safe(s.id)}">Eliminar fuente</button></div></article>`).join(""):'<p class="muted">Aún no hay fuentes RSS configuradas.</p>';
   $("sourceList").querySelectorAll("[data-toggle-source]").forEach(button=>button.addEventListener("click",async()=>{
-    const source=data.find(s=>String(s.id)===button.dataset.toggleSource);
+    const source=sourceById.get(button.dataset.toggleSource);
     if(!source)return;
     button.disabled=true;
     const {error}=await client.from("rss_sources").update({active:!source.active}).eq("id",source.id);
@@ -463,7 +496,7 @@ async function loadSources(){
     await loadSources();
   }));
   $("sourceList").querySelectorAll("[data-edit-source]").forEach(button=>button.addEventListener("click",()=>{
-    const source=data.find(s=>String(s.id)===button.dataset.editSource);
+    const source=sourceById.get(button.dataset.editSource);
     if(!source)return;
     $("rssEditId").value=source.id;
     $("rssEditName").value=source.name||"";
@@ -475,7 +508,7 @@ async function loadSources(){
     $("rssEditName").focus();
   }));
   $("sourceList").querySelectorAll("[data-delete-source]").forEach(button=>button.addEventListener("click",async()=>{
-    const source=data.find(s=>String(s.id)===button.dataset.deleteSource);
+    const source=sourceById.get(button.dataset.deleteSource);
     if(!source||!window.confirm(`¿Eliminar la fuente RSS «${source.name}»? Dejará de importarse en futuras consultas. Las noticias que ya se importaron se conservarán en la bandeja.`))return;
     button.disabled=true;
     const {error}=await client.from("rss_sources").delete().eq("id",source.id);
@@ -529,12 +562,13 @@ $("directoryEditForm")?.addEventListener("submit",async event=>{
     if(value){try{const u=new URL(value);if(!["http:","https:"].includes(u.protocol))throw new Error();}catch{$("directoryEditMessage").textContent=label+" debe ser una URL válida.";return;}}
   }
   const status=$("directoryEditStatus").value;
+  const services=[];for(const line of $("directoryEditServices").value.split("\n")){const service=line.trim();if(service)services.push(service);}
   const payload={
     name,slug,category:$("directoryEditCategory").value,listing_type:$("directoryEditType").value,
     city:$("directoryEditCity").value.trim()||"London",postcode:$("directoryEditPostcode").value.trim()||null,
     address:$("directoryEditAddress").value.trim()||null,phone:$("directoryEditPhone").value.trim()||null,
     email:$("directoryEditEmail").value.trim()||null,website:website||null,
-    description:$("directoryEditDescription").value.trim(),services:$("directoryEditServices").value.split("\n").map(x=>x.trim()).filter(Boolean),
+    description:$("directoryEditDescription").value.trim(),services,
     opening_hours:$("directoryEditHours").value.trim()||null,image_url:imageUrl||null,
     status,sponsored:$("directoryEditSponsored").checked,
     verified_at:status==="published"?new Date().toISOString():null,updated_at:new Date().toISOString()
@@ -547,13 +581,19 @@ $("directoryEditForm")?.addEventListener("submit",async event=>{
 });
 
 let courseEnquiries=[];
+let courseEnquiryById=new Map();
 function courseStatusLabel(status){return ({received:"Recibida",contacted:"Contactada",enrolled:"Matriculada",closed:"Cerrada",discarded:"Descartada"})[status]||status;}
+function indexCourseSearch(item){item._searchText=String(item.full_name||"").toLocaleLowerCase("es")+" "+String(item.email||"").toLocaleLowerCase("es")+" "+String(item.course_interest||"").toLocaleLowerCase("es")+" "+String(item.message||"").toLocaleLowerCase("es")+" "+String(item.internal_notes||"").toLocaleLowerCase("es");return item;}
 function filterCourses(){
  const q=($("courseSearch")?.value||"").trim().toLocaleLowerCase("es");
  const status=$("courseStatusFilter")?.value||"";
- const filtered=courseEnquiries.filter(x=>(!status||x.status===status)&&[x.full_name,x.email,x.course_interest,x.message,x.internal_notes].some(v=>String(v||"").toLocaleLowerCase("es").includes(q)));
+ const filtered=[];
+ const counts={received:0,contacted:0,enrolled:0,closed:0,discarded:0};
+ for(const item of courseEnquiries){
+  if(counts[item.status]!==undefined)counts[item.status]++;
+  if((!status||item.status===status)&&(!q||(item._searchText||"").includes(q)))filtered.push(item);
+ }
  $("courseCount").textContent=filtered.length+" de "+courseEnquiries.length+" solicitudes";
- const counts={received:0,contacted:0,enrolled:0,closed:0,discarded:0};courseEnquiries.forEach(x=>{if(counts[x.status]!==undefined)counts[x.status]++;});
  $("courseStats").innerHTML=[["Recibidas",counts.received],["Contactadas",counts.contacted],["Matriculadas",counts.enrolled],["Cerradas",counts.closed],["Descartadas",counts.discarded]].map(([label,n])=>'<div class="course-stat"><strong>'+n+'</strong><span>'+label+'</span></div>').join("");
  $("courseEnquiryList").innerHTML=filtered.length?filtered.map(x=>{
   const date=x.created_at?new Date(x.created_at).toLocaleString("es-GB",{dateStyle:"medium",timeStyle:"short"}):"Fecha no disponible";
@@ -572,42 +612,42 @@ function exportCoursesCsv(){
 async function loadCourses(){
  const root=$("courseEnquiryList");if(!root)return;
  root.innerHTML='<p class="muted">Cargando solicitudes…</p>';
- const {data,error}=await client.from("course_enquiries").select("*").order("created_at",{ascending:false});
+ const {data,error}=await client.from("course_enquiries").select("id,full_name,email,course_interest,message,internal_notes,status,created_at").order("created_at",{ascending:false});
  if(error){root.innerHTML='<p class="muted">No se pudieron cargar las solicitudes: '+safe(error.message)+'</p>';return;}
- courseEnquiries=data||[];filterCourses();
+ courseEnquiries=(data||[]).map(indexCourseSearch);courseEnquiryById=new Map(courseEnquiries.map(item=>[String(item.id),item]));filterCourses();
 }
 async function updateCourseStatus(id,status){
  const {error}=await client.from("course_enquiries").update({status}).eq("id",id);
  if(error){say("globalMessage","No se pudo actualizar el estado: "+error.message);return;}
- const item=courseEnquiries.find(x=>x.id===id);if(item)item.status=status;
+ const item=courseEnquiryById.get(String(id));if(item)item.status=status;
  filterCourses();
 }
 async function discardCourse(id){
- const item=courseEnquiries.find(x=>x.id===id);if(!item)return;
+ const item=courseEnquiryById.get(String(id));if(!item)return;
  if(!confirm("¿Descartar la solicitud de "+item.full_name+"? Se conservará en el sistema con estado «Descartada» y podrás consultarla filtrando por ese estado."))return;
  const {error}=await client.from("course_enquiries").update({status:"discarded"}).eq("id",id);
  if(error){say("globalMessage","No se pudo descartar la solicitud: "+error.message);return;}
  item.status="discarded";filterCourses();say("globalMessage","Solicitud descartada. Se ha conservado en el registro.");
 }
 async function deleteCourse(id){
- const item=courseEnquiries.find(x=>x.id===id);if(!item)return;
+ const item=courseEnquiryById.get(String(id));if(!item)return;
  if(!confirm("¿Eliminar definitivamente la solicitud de "+item.full_name+"? Esta acción no se puede deshacer."))return;
  const {error}=await client.from("course_enquiries").delete().eq("id",id);
  if(error){say("globalMessage","No se pudo eliminar la solicitud: "+error.message);return;}
- courseEnquiries=courseEnquiries.filter(x=>x.id!==id);filterCourses();say("globalMessage","Solicitud eliminada definitivamente.");
+ courseEnquiries=courseEnquiries.filter(x=>x.id!==id);courseEnquiryById.delete(String(id));filterCourses();say("globalMessage","Solicitud eliminada definitivamente.");
 }
 async function saveCourseNotes(id){
  const field=document.querySelector('[data-course-notes="'+id+'"]');if(!field)return;
  const {error}=await client.from("course_enquiries").update({internal_notes:field.value}).eq("id",id);
  if(error){say("globalMessage","No se pudieron guardar las notas: "+error.message);return;}
- const item=courseEnquiries.find(x=>x.id===id);if(item)item.internal_notes=field.value;
+ const item=courseEnquiryById.get(String(id));if(item){item.internal_notes=field.value;indexCourseSearch(item);}
  say("globalMessage","Notas internas guardadas.");
 }
 
 async function loadDirectoryAdmin(){
   const [sub,items]=await Promise.all([
-    client.from("directory_submissions").select("*").order("created_at",{ascending:false}),
-    client.from("directory_listings").select("*").order("created_at",{ascending:false})
+    client.from("directory_submissions").select("id,listing_name,category,listing_type,contact_name,contact_email,status,description").order("created_at",{ascending:false}),
+    client.from("directory_listings").select("id,name,category,city,status,sponsored").order("created_at",{ascending:false})
   ]);
   const subRoot=$("directorySubmissionList"),listRoot=$("directoryAdminList");
   if(sub.error)subRoot.innerHTML='<p class="muted">'+safe(sub.error.message)+'</p>';
@@ -623,7 +663,7 @@ async function handleDirectoryAction(e){
   openDirectoryEdit(item);return;
  }
  if(b.dataset.directoryConvert){
-  const {data:s,error}=await client.from("directory_submissions").select("*").eq("id",b.dataset.directoryConvert).single();
+  const {data:s,error}=await client.from("directory_submissions").select("id,listing_name,category,listing_type,description,address,postcode,phone,contact_email,website").eq("id",b.dataset.directoryConvert).single();
   if(error){say("globalMessage",error.message);return;}
   const slug=slugify(s.listing_name)+"-"+Math.random().toString(36).slice(2,7);
   const payload={name:s.listing_name,slug,category:s.category,listing_type:s.listing_type,description:s.description,address:s.address,postcode:s.postcode,phone:s.phone,email:s.contact_email,website:s.website,status:"draft",city:"London"};
@@ -681,28 +721,37 @@ async function loadAds(){
  campaignRoot.innerHTML='<p class="muted">Cargando campañas…</p>';
  enquiryRoot.innerHTML='<p class="muted">Cargando solicitudes comerciales…</p>';
  const [c,e]=await Promise.all([
-  client.from("ad_campaigns").select("*").order("created_at",{ascending:false}),
-  client.from("ad_enquiries").select("*").order("created_at",{ascending:false})
+  client.from("ad_campaigns").select("id,campaign_title,advertiser_name,placement,status,publication_mode,amount,currency,payment_status,invoice_reference,start_date,end_date,source_enquiry_id,contact_name,contact_email,contact_phone,creative_url,target_url,internal_notes,created_at").order("created_at",{ascending:false}),
+  client.from("ad_enquiries").select("id,company_name,advertiser_type,contact_name,email,phone,website,attachment_path,attachment_name,attachment_mime,budget,placement_interest,message,status,created_at,internal_notes").order("created_at",{ascending:false})
  ]);
  adCampaigns=c.data||[];
  if(c.error){
   campaignRoot.innerHTML='<p class="muted">No se pudieron cargar las campañas: '+safe(c.error.message)+'</p>';
   statsRoot.innerHTML="";
  }else{
-  const stats=[["Campañas",adCampaigns.length],["Activas",adCampaigns.filter(x=>x.status==="active").length],["Pagadas",adCampaigns.filter(x=>x.payment_status==="paid").length],["Por cobrar",adCampaigns.filter(x=>["unpaid","pending","overdue"].includes(x.payment_status)).length]];
+  let activeCampaigns=0,paidCampaigns=0,pendingPaymentCampaigns=0;
+  const campaignById=new Map();
+  for(const item of adCampaigns){
+   campaignById.set(String(item.id),item);
+   if(item.status==="active")activeCampaigns++;
+   if(item.payment_status==="paid")paidCampaigns++;
+   if(["unpaid","pending","overdue"].includes(item.payment_status))pendingPaymentCampaigns++;
+  }
+  const stats=[["Campañas",adCampaigns.length],["Activas",activeCampaigns],["Pagadas",paidCampaigns],["Por cobrar",pendingPaymentCampaigns]];
   statsRoot.innerHTML=stats.map(([t,n])=>'<div class="course-stat"><strong>'+n+'</strong><span>'+t+'</span></div>').join("");
   campaignRoot.innerHTML=adCampaigns.length?adCampaigns.map(a=>'<article class="item ad-item"><div><h3>'+safe(a.campaign_title)+'</h3><p>'+safe(a.advertiser_name)+' · '+safe(adPlacementText(a.placement))+' · '+safe(adStatusText(a.status))+' · '+(a.publication_mode==='scheduled'?'Programada':'Manual')+'</p><p>'+safe(a.amount)+' '+safe(a.currency)+' · Pago: '+safe(adStatusText(a.payment_status))+(a.invoice_reference?' · Factura: '+safe(a.invoice_reference):'')+'</p><p>'+safe(a.start_date||"Sin inicio")+' → '+safe(a.end_date||"Sin fin")+'</p></div><div class="item-actions"><button class="secondary" data-ad-edit="'+a.id+'">Editar</button><button class="secondary" data-ad-delete="'+a.id+'">Eliminar</button></div></article>').join(""):'<p class="muted">Todavía no hay campañas.</p>';
-  campaignRoot.querySelectorAll("[data-ad-edit]").forEach(b=>b.addEventListener("click",()=>editAd(adCampaigns.find(a=>a.id===b.dataset.adEdit))));
-  campaignRoot.querySelectorAll("[data-ad-delete]").forEach(b=>b.addEventListener("click",async()=>{const a=adCampaigns.find(x=>x.id===b.dataset.adDelete);if(!a||!confirm("¿Eliminar esta campaña?"))return;const r=await client.from("ad_campaigns").delete().eq("id",a.id);if(r.error){say("globalMessage",r.error.message);return;}await loadAds();}));
+  campaignRoot.querySelectorAll("[data-ad-edit]").forEach(b=>b.addEventListener("click",()=>editAd(campaignById.get(b.dataset.adEdit))));
+  campaignRoot.querySelectorAll("[data-ad-delete]").forEach(b=>b.addEventListener("click",async()=>{const a=campaignById.get(b.dataset.adDelete);if(!a||!confirm("¿Eliminar esta campaña?"))return;const r=await client.from("ad_campaigns").delete().eq("id",a.id);if(r.error){say("globalMessage",r.error.message);return;}await loadAds();}));
  }
  if(e.error){
   enquiryRoot.innerHTML='<p class="muted">No se pudieron cargar las solicitudes: '+safe(e.error.message)+'</p>';
   return;
  }
  const enquiries=e.data||[];
+ const enquiryById=new Map(enquiries.map(item=>[String(item.id),item]));
  enquiryRoot.innerHTML=enquiries.length?enquiries.map(x=>'<article class="item ad-enquiry" data-enquiry-id="'+x.id+'"><div class="ad-enquiry-main"><h3>'+safe(x.company_name)+'</h3><p>'+(x.advertiser_type==="individual"?"Particular":"Empresa")+"</p><p>"+safe(x.contact_name)+' · <a href="mailto:'+encodeURIComponent(x.email)+'">'+safe(x.email)+'</a>'+(x.phone?' · '+safe(x.phone):'')+'</p>'+(x.website?'<p><a href="'+safe(x.website)+'" target="_blank" rel="noopener">Web de la empresa</a></p>':'')+(x.attachment_path?'<p class="ad-attachment" data-attachment="'+x.id+'">Adjunto: '+safe(x.attachment_name||"Ver archivo")+' · Preparando enlace seguro…</p>':'<p>Sin material adjunto</p>')+'<p>Presupuesto: '+safe(x.budget||"No indicado")+' · Formato: '+safe(x.placement_interest||"No indicado")+'</p><p class="ad-enquiry-message">'+safe(x.message)+'</p><p>Estado: <strong>'+safe(adEnquiryStatusText(x.status))+'</strong> · '+new Date(x.created_at).toLocaleString("es-GB")+'</p>'+(x.internal_notes?'<p><strong>Notas internas:</strong> '+safe(x.internal_notes)+'</p>':'')+'</div><div class="item-actions ad-enquiry-actions"><button type="button" class="secondary" data-enquiry-edit="'+x.id+'">Editar</button><button type="button" class="secondary" data-enquiry-campaign="'+x.id+'">Preparar campaña</button><a class="secondary" href="'+adReplyHref(x)+'">Responder por correo</a><button type="button" class="secondary" data-enquiry-delete="'+x.id+'">Eliminar</button></div><form class="panel ad-enquiry-edit" data-enquiry-form="'+x.id+'" hidden><div class="form-grid"><div class="field"><label>Empresa</label><input name="company_name" required maxlength="180" value="'+safe(x.company_name)+'"></div><div class="field"><label>Persona de contacto</label><input name="contact_name" required maxlength="120" value="'+safe(x.contact_name)+'"></div><div class="field"><label>Correo</label><input name="email" type="email" required maxlength="254" value="'+safe(x.email)+'"></div><div class="field"><label>Teléfono</label><input name="phone" value="'+safe(x.phone||"")+'"></div><div class="field"><label>Web</label><input name="website" type="url" value="'+safe(x.website||"")+'"></div><div class="field"><label>Presupuesto</label><input name="budget" value="'+safe(x.budget||"")+'"></div><div class="field"><label>Formato de interés</label><input name="placement_interest" value="'+safe(x.placement_interest||"")+'"></div><div class="field"><label>Estado</label><select name="status">'+adEnquiryStatusOptions(x.status)+'</select></div><div class="field full"><label>Mensaje recibido</label><textarea name="message" rows="4" required>'+safe(x.message)+'</textarea></div><div class="field full"><label>Notas internas (solo equipo editorial)</label><textarea name="internal_notes" rows="3">'+safe(x.internal_notes||"")+'</textarea></div></div><p class="message" data-enquiry-message></p><div class="actions"><button type="submit">Guardar cambios</button><button type="button" class="secondary" data-enquiry-cancel>Cancelar</button></div></form></article>').join(""):'<p class="muted">No hay solicitudes comerciales.</p>';
- enquiries.filter(x=>x.attachment_path).forEach(async x=>{const {data,error}=await client.storage.from("news-submissions").createSignedUrl(x.attachment_path,3600);const node=enquiryRoot.querySelector('[data-attachment="'+x.id+'"]');if(node){if(error)node.textContent="Adjunto guardado, pero no se pudo generar el enlace: "+error.message;else node.innerHTML='Adjunto: <a href="'+safe(data.signedUrl)+'" target="_blank" rel="noopener">'+safe(x.attachment_name||"Ver archivo")+'</a> (enlace válido durante 1 hora)';}});
- enquiryRoot.querySelectorAll("[data-enquiry-campaign]").forEach(b=>b.addEventListener("click",()=>prepareAdFromEnquiry(enquiries.find(x=>x.id===b.dataset.enquiryCampaign))));
+ enquiries.forEach(async x=>{if(!x.attachment_path)return;const {data,error}=await client.storage.from("news-submissions").createSignedUrl(x.attachment_path,3600);const node=enquiryRoot.querySelector('[data-attachment="'+x.id+'"]');if(node){if(error)node.textContent="Adjunto guardado, pero no se pudo generar el enlace: "+error.message;else node.innerHTML='Adjunto: <a href="'+safe(data.signedUrl)+'" target="_blank" rel="noopener">'+safe(x.attachment_name||"Ver archivo")+'</a> (enlace válido durante 1 hora)';}});
+ enquiryRoot.querySelectorAll("[data-enquiry-campaign]").forEach(b=>b.addEventListener("click",()=>prepareAdFromEnquiry(enquiryById.get(b.dataset.enquiryCampaign))));
  enquiryRoot.querySelectorAll("[data-enquiry-edit]").forEach(b=>b.addEventListener("click",()=>{const form=enquiryRoot.querySelector('[data-enquiry-form="'+b.dataset.enquiryEdit+'"]');form.hidden=!form.hidden;}));
  enquiryRoot.querySelectorAll("[data-enquiry-cancel]").forEach(b=>b.addEventListener("click",()=>{b.closest("form").hidden=true;}));
  enquiryRoot.querySelectorAll("[data-enquiry-form]").forEach(form=>form.addEventListener("submit",saveAdEnquiry));
@@ -799,8 +848,8 @@ async function saveAd(event){
 
 function wire(){
   $("maintenanceToggleBtn").addEventListener("click",toggleMaintenance);
-  $("refreshOverviewBtn").addEventListener("click",loadOverview);
-  $("overviewRange").addEventListener("change",loadOverview);
+  $("refreshOverviewBtn").addEventListener("click",()=>loadOverview(true));
+  $("overviewRange").addEventListener("change",()=>loadOverview(true));
   $("loginForm").addEventListener("submit",login);
   $("logoutBtn").addEventListener("click",()=>client.auth.signOut());
   $("newArticleBtn").addEventListener("click",()=>editArticle(null));
@@ -848,7 +897,7 @@ function wire(){
       return;
     }
     if(draftButton){
-      const {data:item,error}=await client.from("imported_items").select("*").eq("id",draftButton.dataset.draft).single();
+      const {data:item,error}=await client.from("imported_items").select("id,title,summary,suggested_category,country,region,source_id,article_url").eq("id",draftButton.dataset.draft).single();
       if(error){say("globalMessage","No se pudo abrir la noticia: "+error.message);return;}
       editArticle(null);
       $("title").value=item.title||"";
@@ -885,7 +934,11 @@ function wire(){
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
     ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!==b.dataset.tab;});
+    if(b.dataset.tab==="articles")loadArticles();
     if(b.dataset.tab==="briefing")loadBriefings();
+    if(b.dataset.tab==="inbox")loadInbox();
+    if(b.dataset.tab==="sources")loadSources();
+    if(b.dataset.tab==="submissions")loadSubmissions();
     if(b.dataset.tab==="overview")loadOverview();
     if(b.dataset.tab==="directory")loadDirectoryAdmin();
     if(b.dataset.tab==="courses")loadCourses();

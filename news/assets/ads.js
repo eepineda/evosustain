@@ -54,29 +54,68 @@
       (horizontal ? media + copy : media + copy) + '</a>';
   }
 
-  async function loadCampaignSlots() {
-    if (!window.supabase) return;
-    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-    const { data, error } = await client.from("published_ad_campaigns")
-      .select("id,campaign_title,placement,creative_url,target_url,start_date,end_date,publication_mode");
-    if (error) {
-      console.warn("Evoford News ads:", error.message);
-      return;
+  const CAMPAIGNS_CACHE_TTL_MS = 60_000;
+  let campaignsCache = null;
+  let campaignsCacheAt = 0;
+  let campaignsLoadPromise = null;
+
+  function renderCampaignSlots(campaigns) {
+    const byPlacement = new Map([
+      ["banner", []], ["homepage", []], ["sidebar", []], ["article", []], ["sponsored", []]
+    ]);
+    for (const campaign of campaigns) {
+      const matches = byPlacement.get(campaign.placement);
+      if (matches && safeHttps(campaign.creative_url)) matches.push(campaign);
     }
-    const campaigns = data || [];
-    ["banner", "homepage", "sidebar", "article", "sponsored"].forEach(placement => {
+    for (const [placement, matches] of byPlacement) {
       const slot = document.querySelector('[data-ad-slot="' + placement + '"]');
-      if (!slot) return;
-      const matches = campaigns.filter(item => item.placement === placement && safeHttps(item.creative_url));
+      if (!slot) continue;
       if (!matches.length) {
         slot.hidden = true;
         slot.innerHTML = "";
+        continue;
+      }
+      const limit = placement === "sponsored" ? 2 : 1;
+      let html = "";
+      for (let i = 0; i < matches.length && i < limit; i++) {
+        html += renderCampaign(matches[i], placement);
+      }
+      slot.innerHTML = html;
+      slot.hidden = !html;
+    }
+  }
+
+  async function loadCampaignSlots() {
+    if (!window.supabase) return;
+    const cacheIsFresh = campaignsCache !== null && Date.now() - campaignsCacheAt < CAMPAIGNS_CACHE_TTL_MS;
+    if (cacheIsFresh) {
+      renderCampaignSlots(campaignsCache);
+      return;
+    }
+    if (campaignsLoadPromise) {
+      await campaignsLoadPromise;
+      if (campaignsCache !== null) renderCampaignSlots(campaignsCache);
+      return;
+    }
+
+    campaignsLoadPromise = (async () => {
+      const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+      const { data, error } = await client.from("published_ad_campaigns")
+        .select("id,campaign_title,placement,creative_url,target_url,start_date,end_date,publication_mode");
+      if (error) {
+        console.warn("Evoford News ads:", error.message);
         return;
       }
-      const visible = placement === "sponsored" ? matches.slice(0, 2) : matches.slice(0, 1);
-      slot.innerHTML = visible.map(item => renderCampaign(item, placement)).join("");
-      slot.hidden = !slot.innerHTML;
-    });
+      campaignsCache = data || [];
+      campaignsCacheAt = Date.now();
+      renderCampaignSlots(campaignsCache);
+    })();
+
+    try {
+      await campaignsLoadPromise;
+    } finally {
+      campaignsLoadPromise = null;
+    }
   }
 
   let scheduled = false;

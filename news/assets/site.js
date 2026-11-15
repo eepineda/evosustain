@@ -6,7 +6,7 @@ let currentLanguage=localStorage.getItem("evoford-news-language")==="en"?"en":"e
 const translations={es:{edition:"EDICIÓN DIGITAL",print:"Imprimir edición",markets:"MERCADOS",marketData:"INDICADORES FINANCIEROS · DATOS DE TRADINGVIEW",marketNote:"Los datos pueden tener retraso según el mercado y el proveedor. No constituyen asesoramiento financiero.",international:"Enfoque internacional",coverage:"COBERTURA POR PAÍSES",uk:"Reino Unido",do:"República Dominicana",spain:"España",front:"EN PORTADA",live:"ACTUALIDAD",latest:"ÚLTIMAS",latestPublications:"Últimas publicaciones",published:"ARTÍCULOS PUBLICADOS",opinion:"ESPACIO DE OPINIÓN",ideas:"Ideas, argumentos y análisis.",opinionText:"Los artículos de opinión aparecen identificados y separados de las noticias.",origin:"Conoce el origen y el plan editorial de Evoford News ↗",sections:"Secciones",explore:"EXPLORA EVOFORD NEWS",politics:"Política",security:"Seguridad y defensa",economy:"Economía",technology:"Startups e innovación",world:"Internacional",analysis:"Opinión y análisis",aula:"Aula de Innovación",read:"Leer noticia ↗",readArticle:"Leer artículo",readFeature:"Leer reportaje",empty:"Todavía no hay artículos publicados.",noCountry:"Aún no hay artículos publicados con esta etiqueta. La cobertura aparecerá aquí cuando la redacción publique noticias de este país.",footer:"Noticias · Opinión · Análisis",author:"POR",source:"EDICIÓN LONDRES"},en:{edition:"DIGITAL EDITION",print:"Print edition",markets:"MARKETS",marketData:"FINANCIAL INDICATORS · TRADINGVIEW DATA",marketNote:"Market data may be delayed depending on the exchange and provider. Not financial advice.",international:"International coverage",coverage:"COUNTRY COVERAGE",uk:"United Kingdom",do:"Dominican Republic",spain:"Spain",front:"TOP STORY",live:"LATEST",latest:"LATEST",latestPublications:"Latest stories",published:"PUBLISHED ARTICLES",opinion:"OPINION",ideas:"Ideas, arguments and analysis.",opinionText:"Opinion articles are clearly identified and separated from news reporting.",origin:"Read about the origins and editorial plan of Evoford News ↗",sections:"Sections",explore:"EXPLORE EVOFORD NEWS",politics:"Politics",security:"Security & defence",economy:"Economy",technology:"Startups & innovation",world:"International",analysis:"Opinion & analysis",aula:"Innovation Academy",read:"Read story ↗",readArticle:"Read article",readFeature:"Read full story",empty:"There are no published articles yet.",noCountry:"No articles have been published under this country yet. Coverage will appear here when the newsroom publishes a story.",footer:"News · Opinion · Analysis",author:"BY",source:"LONDON EDITION"}};
 const tr=key=>translations[currentLanguage][key]||key;
 function categoryLabel(value){const map={Internacional:"International",Política:"Politics",Economía:"Economy",Seguridad:"Security",Tecnología:"Technology",Opinión:"Opinion",Clima:"Climate",Sociedad:"Society"};return currentLanguage==="en"?(map[value]||value):value;}
-function setLanguage(lang){currentLanguage=lang==="en"?"en":"es";localStorage.setItem("evoford-news-language",currentLanguage);document.documentElement.lang=currentLanguage;document.querySelectorAll("[data-language]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.language===currentLanguage)));renderStaticLanguage();if(date)date.textContent=new Date().toLocaleDateString(currentLanguage==="en"?"en-GB":"es-ES",{day:"numeric",month:"long",year:"numeric"});loadPublishedArticles();window.dispatchEvent(new CustomEvent("evoford:languagechange",{detail:{language:currentLanguage}}));}
+function setLanguage(lang){currentLanguage=lang==="en"?"en":"es";localStorage.setItem("evoford-news-language",currentLanguage);renderStaticLanguage();if(date)date.textContent=new Date().toLocaleDateString(currentLanguage==="en"?"en-GB":"es-ES",{day:"numeric",month:"long",year:"numeric"});if(publishedArticlesCache)renderPublishedArticles(publishedArticlesCache);else loadPublishedArticles();window.dispatchEvent(new CustomEvent("evoford:languagechange",{detail:{language:currentLanguage}}));}
 function renderStaticLanguage(){
  const set=(selector,text)=>{const el=document.querySelector(selector);if(el)el.textContent=text;};
  const en=currentLanguage==="en";
@@ -20,7 +20,7 @@ function renderStaticLanguage(){
   : ["Internacional","Política","Economía","Seguridad","Startups e innovación","Evoford Briefing","Opinión","Directorio","Envía tu noticia","Edición impresa"];
  const mainNav=document.querySelector(".masthead .nav");
  if(mainNav){
-  Array.from(mainNav.querySelectorAll("a")).forEach((el,i)=>{
+  mainNav.querySelectorAll("a").forEach((el,i)=>{
    if(mainNavLabels[i])el.textContent=mainNavLabels[i];
   });
  }
@@ -29,7 +29,7 @@ function renderStaticLanguage(){
   : ["Política","Seguridad y defensa","Economía","Startups e innovación","Aula de Innovación","Internacional","Opinión y análisis"];
  const topics=document.querySelector(".topics");
  if(topics){
-  Array.from(topics.querySelectorAll("a")).forEach((el,i)=>{
+  topics.querySelectorAll("a").forEach((el,i)=>{
    const current=(el.textContent||"").trim().toLowerCase();
    if(current.startsWith("aula de innovación")||current.startsWith("innovation academy"))el.setAttribute("href","aula-innovacion.html");
    if(current.startsWith("startups"))el.setAttribute("href","startups.html");
@@ -57,18 +57,18 @@ function renderStaticLanguage(){
  const author=document.querySelector(".author");if(author){const spans=author.querySelectorAll("span");const labels= en?["Columnist · Entrepreneur · Information Technology Professional","University education in Spain · BSc (Hons) Cyber Security in progress · London, England"]:["Articulista · Emprendedor · Profesional de Tecnologías de la Información","Formación universitaria en España · BSc (Hons) Cyber Security en curso · Londres, Inglaterra"];spans.forEach((el,i)=>{if(i<labels.length)el.textContent=labels[i];});}
  const footer=document.querySelector("body > footer");
  if(footer){
-  const footerLinks=Array.from(footer.querySelectorAll("a"));
-  const hasAdvertise=footerLinks.some(a=>/publicidad|advertise|anúnciate/i.test(a.textContent));
+  let adLink=null,accessLink=null,aboutLink=null;
+  footer.querySelectorAll("a").forEach(link=>{
+   const label=link.textContent;
+   if(!adLink&&/publicidad|advertise|anúnciate/i.test(label))adLink=link;
+   if(!accessLink&&/editorial access|acceso editorial/i.test(label))accessLink=link;
+   if(!aboutLink&&/about evoford|sobre/i.test(label))aboutLink=link;
+  });
   const footerText=footer.querySelector(":scope > span");
   if(footerText)footerText.textContent=tr("footer");
-  if(hasAdvertise){
-   const adLink=footerLinks.find(a=>/publicidad|advertise|anúnciate/i.test(a.textContent));
-   const accessLink=footerLinks.find(a=>/editorial access|acceso editorial/i.test(a.textContent));
-   const aboutLink=footerLinks.find(a=>/about evoford|sobre/i.test(a.textContent));
-   if(adLink)adLink.textContent=en?"Advertise":"Anúnciate";
-   if(accessLink)accessLink.textContent=en?"Editorial access":"Acceso editorial";
-   if(aboutLink)aboutLink.textContent=en?"About Evoford News":"Sobre / About Evoford News";
-  }
+  if(adLink)adLink.textContent=en?"Advertise":"Anúnciate";
+  if(adLink&&accessLink)accessLink.textContent=en?"Editorial access":"Acceso editorial";
+  if(adLink&&aboutLink)aboutLink.textContent=en?"About Evoford News":"Sobre / About Evoford News";
   const yearLabel=footer.querySelector("span:last-child");
   if(yearLabel && yearLabel.querySelector("#year"))yearLabel.innerHTML="© <span id='year'>"+new Date().getFullYear()+"</span> Evoford";
  }
@@ -84,8 +84,8 @@ function escapeHtml(value="") {
 function shortArticleToken(id){
   const hex=String(id||"").replace(/-/g,"").toLowerCase();
   if(!/^[0-9a-f]{32}$/.test(hex))return "";
-  const bytes=new Uint8Array(hex.match(/../g).map(pair=>parseInt(pair,16)));
-  let binary="";bytes.forEach(byte=>binary+=String.fromCharCode(byte));
+  let binary="";
+  for(let i=0;i<32;i+=2)binary+=String.fromCharCode(parseInt(hex.slice(i,i+2),16));
   return btoa(binary).replace(/[+]/g,"-").replace(/[/]/g,"_").replace(/=+$/,"");
 }
 function articleUrl(article){
@@ -101,27 +101,94 @@ function articleImage(a,cls="") {
   if (src) return '<img class="'+cls+'" src="' + escapeHtml(src) + '" alt="' + escapeHtml(a.title||"") + '" loading="lazy">';
   return '<div class="story-art '+(cls?cls+" ":"")+'art-blue"><span>'+escapeHtml((a.category||"EV").slice(0,2).toUpperCase())+'</span></div>';
 }
+let publishedArticlesCache = null;
+let publishedArticlesLoadPromise = null;
+
 async function loadPublishedArticles() {
   const container = document.getElementById("publishedArticles");
   if (!container || !window.supabase) return;
-  const client = window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-  let {data,error} = await client.from("articles").select("id,title,title_en,slug,category,author,summary,summary_en,image_url,created_at,country,region")
-    .eq("status","published").order("updated_at",{ascending:false}).limit(30);
-  if(error && String(error.message||"").includes("title_en")){
-    ({data,error}=await client.from("articles").select("id,title,slug,category,author,summary,image_url,created_at,country,region")
-      .eq("status","published").order("updated_at",{ascending:false}).limit(30));
+  if (publishedArticlesCache) {
+    renderPublishedArticles(publishedArticlesCache);
+    return;
   }
-  if (error) {
-    container.innerHTML='<p class="muted">'+(currentLanguage==="en"?"Stories could not be loaded. Please try again later.":"No se pudieron cargar las publicaciones. Inténtalo más tarde.")+'</p>';
-    console.error("Evoford News:",error.message); return;
+  if (publishedArticlesLoadPromise) return publishedArticlesLoadPromise;
+
+  publishedArticlesLoadPromise = (async () => {
+    const client = window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+    let {data,error} = await client.from("articles").select("id,title,title_en,slug,category,author,summary,summary_en,image_url,created_at,country,region")
+      .eq("status","published").order("updated_at",{ascending:false}).limit(30);
+    if(error && String(error.message||"").includes("title_en")){
+      ({data,error}=await client.from("articles").select("id,title,slug,category,author,summary,image_url,created_at,country,region")
+        .eq("status","published").order("updated_at",{ascending:false}).limit(30));
+    }
+    if (error) {
+      container.innerHTML='<p class="muted">'+(currentLanguage==="en"?"Stories could not be loaded. Please try again later.":"No se pudieron cargar las publicaciones. Inténtalo más tarde.")+'</p>';
+      console.error("Evoford News:",error.message);
+      return;
+    }
+    publishedArticlesCache = data || [];
+    renderPublishedArticles(publishedArticlesCache);
+  })();
+
+  try {
+    await publishedArticlesLoadPromise;
+  } finally {
+    publishedArticlesLoadPromise = null;
   }
-  if (!data?.length) {
+}
+
+function renderPublishedArticles(articles) {
+  const container = document.getElementById("publishedArticles");
+  if (!container) return;
+  if (!articles?.length) {
     container.innerHTML='<p class="muted">'+tr("empty")+'</p>'; return;
   }
   const normalize=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+  const articleOrder=new Map();
+  const articlesByCategory=new Map(),articlesByCountry=new Map();
+  const frontStories=[],remaining=[],frontStorySlugs=new Set();
+  let opinionArticle=null;
+  for(let articleIndex=0;articleIndex<articles.length;articleIndex++){
+    const article=articles[articleIndex];
+    articleOrder.set(article,articleIndex);
+    const category=normalize(article.category),country=normalize(article.country);
+    if(category){
+      if(!articlesByCategory.has(category))articlesByCategory.set(category,[]);
+      articlesByCategory.get(category).push(article);
+      if(!opinionArticle&&category.includes("opinion"))opinionArticle=article;
+    }
+    if(country){
+      if(!articlesByCountry.has(country))articlesByCountry.set(country,[]);
+      articlesByCountry.get(country).push(article);
+    }
+    if(frontStories.length<2&&!category.includes("opinion")){
+      frontStories.push(article);
+      frontStorySlugs.add(article.slug);
+    }else if(!frontStorySlugs.has(article.slug)){
+      remaining.push(article);
+    }
+  }
+  const latestFromIndex=(index,terms,limit=3)=>{
+    const lists=[],positions=[];
+    for(const term of terms){lists.push(index.get(term)||[]);positions.push(0);}
+    const matches=[],seen=new Set();
+    while(matches.length<limit){
+      let selected=-1,selectedOrder=Infinity;
+      for(let i=0;i<lists.length;i++){
+        const candidate=lists[i][positions[i]];
+        if(candidate){
+          const order=articleOrder.get(candidate);
+          if(order<selectedOrder){selected=i;selectedOrder=order;}
+        }
+      }
+      if(selected<0)break;
+      const candidate=lists[selected][positions[selected]++];
+      if(!seen.has(candidate)){seen.add(candidate);matches.push(candidate);}
+    }
+    return matches;
+  };
   const opinionRoot=document.getElementById("latestOpinion");
   if(opinionRoot){
-    const opinionArticle=data.find(a=>normalize(a.category).includes("opinion"));
     const label=currentLanguage==="en"?"LATEST OPINION ARTICLE":"ÚLTIMO ARTÍCULO DE OPINIÓN";
     const readLabel=currentLanguage==="en"?"READ ARTICLE":"LEER ARTÍCULO";
     if(opinionArticle){
@@ -130,9 +197,7 @@ async function loadPublishedArticles() {
       opinionRoot.innerHTML='<span class="kicker">'+label+'</span><p class="muted">'+(currentLanguage==="en"?"No opinion articles have been published yet.":"Todavía no hay artículos de opinión publicados.")+'</p>';
     }
   }
-  const frontStories=data.filter(a=>!normalize(a.category).includes("opinion")).slice(0,2);
-  const featured=frontStories[0]||data[0];
-  const remaining=data.filter(a=>!frontStories.some(f=>f.slug===a.slug));
+
   const briefItems=remaining.slice(0,3);
   const publicationItems=remaining.slice(3,9);
   const feature=document.getElementById("featuredStory");
@@ -158,7 +223,7 @@ async function loadPublishedArticles() {
       {id:"es",name:tr("spain"),flag:"🇪🇸",terms:["espana","spain"]}
     ];
     countryRoot.innerHTML=editions.map(country=>{
-      const matches=data.filter(a=>country.terms.includes(normalize(a.country))).slice(0,3);
+      const matches=latestFromIndex(articlesByCountry,country.terms);
       const liveStories=matches.map(a=>'<a class="country-story" href="'+articleUrl(a)+'"><span class="kicker">'+escapeHtml(categoryLabel(a.category||"ACTUALIDAD"))+'</span><b>'+escapeHtml(currentLanguage==="en"?(a.title_en||a.title):a.title)+'</b><span class="country-read">'+tr("read")+'</span></a>').join("");
       const stories=liveStories||'<p class="country-empty">'+tr("noCountry")+'</p>';
       return '<section class="country-card" id="country-'+country.id+'"><div class="country-title"><span class="country-flag" aria-hidden="true">'+country.flag+'</span><h3>'+country.name+'</h3></div>'+stories+'</section>';
@@ -176,7 +241,7 @@ async function loadPublishedArticles() {
     ];
     const normalize=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
     sectionRoot.innerHTML=sections.map(section=>{
-      const matches=data.filter(a=>section.terms.includes(normalize(a.category))).slice(0,3);
+      const matches=latestFromIndex(articlesByCategory,section.terms);
 
       const cards=matches.map((a,i)=>{
         const dateText=a.created_at?new Date(a.created_at).toLocaleDateString(currentLanguage==="en"?"en-GB":"es-ES",{day:"numeric",month:"short",year:"numeric"}):"";
@@ -187,6 +252,7 @@ async function loadPublishedArticles() {
     }).join("");
     if(location.hash){const anchorId=decodeURIComponent(location.hash.slice(1));const scrollToSection=()=>{const target=document.getElementById(anchorId);if(!target)return false;const top=target.getBoundingClientRect().top+window.scrollY-88;window.scrollTo({top:Math.max(0,top),behavior:"auto"});return true;};const waitForImages=Array.from(document.images).filter(img=>!img.complete&&sectionRoot.compareDocumentPosition(img)&Node.DOCUMENT_POSITION_PRECEDING).map(img=>new Promise(resolve=>{img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true});}));Promise.all(waitForImages).then(()=>{requestAnimationFrame(()=>requestAnimationFrame(()=>{if(!scrollToSection())setTimeout(scrollToSection,250);}));});}
   }
+
 }
 const printEditionButton=document.getElementById("printEditionBtn");
 if(printEditionButton) printEditionButton.addEventListener("click",()=>window.print());

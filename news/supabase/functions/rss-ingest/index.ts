@@ -10,7 +10,7 @@ const corsHeaders = {
 
 const ADMIN_EMAIL = "eepinedacarrasco@gmail.com";
 const MAX_SOURCES = 50;
-const MAX_ITEMS_PER_SOURCE = 30;
+const UPSERT_BATCH_SIZE = 100;
 const MAX_FEED_BYTES = 2_000_000;
 
 function response(body: unknown, status = 200) {
@@ -162,7 +162,7 @@ Deno.serve(async (req) => {
         throw new Error("Feed exceeds the 2 MB safety limit.");
       }
       const parsed = parser.parse(xml) as Record<string, unknown>;
-      const items = extractItems(parsed).slice(0, MAX_ITEMS_PER_SOURCE);
+      const items = extractItems(parsed);
 
       const rows: Array<Record<string, unknown>> = [];
       for (const rawItem of items) {
@@ -199,18 +199,22 @@ Deno.serve(async (req) => {
 
       if (rows.length) {
         // article_url has a UNIQUE constraint in the live database.
-        // Use that existing key for idempotent imports; source_id,feed_guid is not unique there.
-        const { data: inserted, error: insertError } = await admin
-          .from("imported_items")
-          .upsert(rows, {
-            onConflict: "article_url",
-            ignoreDuplicates: true,
-          })
-          .select("id");
+        // Chunk requests to keep payloads bounded without dropping older feed entries.
+        for (let offset = 0; offset < rows.length; offset += UPSERT_BATCH_SIZE) {
+          const batch = rows.slice(offset, offset + UPSERT_BATCH_SIZE);
+          const { data: inserted, error: insertError } = await admin
+            .from("imported_items")
+            .upsert(batch, {
+              onConflict: "article_url",
+              ignoreDuplicates: true,
+            })
+            .select("id");
 
-        if (insertError) throw insertError;
-        result.imported = inserted?.length || 0;
-        result.skipped += rows.length - result.imported;
+          if (insertError) throw insertError;
+          const imported = inserted?.length || 0;
+          result.imported += imported;
+          result.skipped += batch.length - imported;
+        }
       }
     } catch (error) {
       if (error instanceof Error) {

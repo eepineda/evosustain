@@ -565,10 +565,11 @@ $("directoryEditForm")?.addEventListener("submit",async event=>{
 
 let courseEnquiries=[];
 function courseStatusLabel(status){return ({received:"Recibida",contacted:"Contactada",enrolled:"Matriculada",closed:"Cerrada",discarded:"Descartada"})[status]||status;}
+function indexCourseSearch(item){item._searchText=[item.full_name,item.email,item.course_interest,item.message,item.internal_notes].map(v=>String(v||"").toLocaleLowerCase("es")).join(" ");return item;}
 function filterCourses(){
  const q=($("courseSearch")?.value||"").trim().toLocaleLowerCase("es");
  const status=$("courseStatusFilter")?.value||"";
- const filtered=courseEnquiries.filter(x=>(!status||x.status===status)&&[x.full_name,x.email,x.course_interest,x.message,x.internal_notes].some(v=>String(v||"").toLocaleLowerCase("es").includes(q)));
+ const filtered=courseEnquiries.filter(x=>(!status||x.status===status)&&(!q||(x._searchText||"").includes(q)));
  $("courseCount").textContent=filtered.length+" de "+courseEnquiries.length+" solicitudes";
  const counts={received:0,contacted:0,enrolled:0,closed:0,discarded:0};courseEnquiries.forEach(x=>{if(counts[x.status]!==undefined)counts[x.status]++;});
  $("courseStats").innerHTML=[["Recibidas",counts.received],["Contactadas",counts.contacted],["Matriculadas",counts.enrolled],["Cerradas",counts.closed],["Descartadas",counts.discarded]].map(([label,n])=>'<div class="course-stat"><strong>'+n+'</strong><span>'+label+'</span></div>').join("");
@@ -591,7 +592,7 @@ async function loadCourses(){
  root.innerHTML='<p class="muted">Cargando solicitudes…</p>';
  const {data,error}=await client.from("course_enquiries").select("id,full_name,email,course_interest,message,internal_notes,status,created_at").order("created_at",{ascending:false});
  if(error){root.innerHTML='<p class="muted">No se pudieron cargar las solicitudes: '+safe(error.message)+'</p>';return;}
- courseEnquiries=data||[];filterCourses();
+ courseEnquiries=(data||[]).map(indexCourseSearch);filterCourses();
 }
 async function updateCourseStatus(id,status){
  const {error}=await client.from("course_enquiries").update({status}).eq("id",id);
@@ -617,7 +618,7 @@ async function saveCourseNotes(id){
  const field=document.querySelector('[data-course-notes="'+id+'"]');if(!field)return;
  const {error}=await client.from("course_enquiries").update({internal_notes:field.value}).eq("id",id);
  if(error){say("globalMessage","No se pudieron guardar las notas: "+error.message);return;}
- const item=courseEnquiries.find(x=>x.id===id);if(item)item.internal_notes=field.value;
+ const item=courseEnquiries.find(x=>x.id===id);if(item){item.internal_notes=field.value;indexCourseSearch(item);}
  say("globalMessage","Notas internas guardadas.");
 }
 

@@ -853,7 +853,9 @@ async function saveAd(event){
 
 function wire(){
   $("maintenanceToggleBtn").addEventListener("click",toggleMaintenance);
-  $("refreshPrintAccessBtn")?.addEventListener("click",loadPrintAccess);\n  $("addPrintAccessForm")?.addEventListener("submit",addPrintAccess);\n  $("printAccessList")?.addEventListener("click",event=>{const button=event.target.closest("[data-delete-print-access]");if(button)deletePrintAccess(button.dataset.deletePrintAccess,button);});
+  $("refreshPrintAccessBtn")?.addEventListener("click",loadPrintAccess);
+  $("addPrintAccessForm")?.addEventListener("submit",addPrintAccess);
+  $("printAccessList")?.addEventListener("click",event=>{const button=event.target.closest("[data-delete-print-access]");if(button)deletePrintAccess(button.dataset.deletePrintAccess,button);});
   $("refreshOverviewBtn").addEventListener("click",()=>loadOverview(true));
   $("overviewRange").addEventListener("change",()=>loadOverview(true));
   $("loginForm").addEventListener("submit",login);

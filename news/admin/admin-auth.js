@@ -713,9 +713,16 @@ async function loadAds(){
   campaignRoot.innerHTML='<p class="muted">No se pudieron cargar las campañas: '+safe(c.error.message)+'</p>';
   statsRoot.innerHTML="";
  }else{
-  const stats=[["Campañas",adCampaigns.length],["Activas",adCampaigns.filter(x=>x.status==="active").length],["Pagadas",adCampaigns.filter(x=>x.payment_status==="paid").length],["Por cobrar",adCampaigns.filter(x=>["unpaid","pending","overdue"].includes(x.payment_status)).length]];
+  let activeCampaigns=0,paidCampaigns=0,pendingPaymentCampaigns=0;
+  const campaignById=new Map();
+  for(const item of adCampaigns){
+   campaignById.set(String(item.id),item);
+   if(item.status==="active")activeCampaigns++;
+   if(item.payment_status==="paid")paidCampaigns++;
+   if(["unpaid","pending","overdue"].includes(item.payment_status))pendingPaymentCampaigns++;
+  }
+  const stats=[["Campañas",adCampaigns.length],["Activas",activeCampaigns],["Pagadas",paidCampaigns],["Por cobrar",pendingPaymentCampaigns]];
   statsRoot.innerHTML=stats.map(([t,n])=>'<div class="course-stat"><strong>'+n+'</strong><span>'+t+'</span></div>').join("");
-  const campaignById=new Map(adCampaigns.map(item=>[String(item.id),item]));
   campaignRoot.innerHTML=adCampaigns.length?adCampaigns.map(a=>'<article class="item ad-item"><div><h3>'+safe(a.campaign_title)+'</h3><p>'+safe(a.advertiser_name)+' · '+safe(adPlacementText(a.placement))+' · '+safe(adStatusText(a.status))+' · '+(a.publication_mode==='scheduled'?'Programada':'Manual')+'</p><p>'+safe(a.amount)+' '+safe(a.currency)+' · Pago: '+safe(adStatusText(a.payment_status))+(a.invoice_reference?' · Factura: '+safe(a.invoice_reference):'')+'</p><p>'+safe(a.start_date||"Sin inicio")+' → '+safe(a.end_date||"Sin fin")+'</p></div><div class="item-actions"><button class="secondary" data-ad-edit="'+a.id+'">Editar</button><button class="secondary" data-ad-delete="'+a.id+'">Eliminar</button></div></article>').join(""):'<p class="muted">Todavía no hay campañas.</p>';
   campaignRoot.querySelectorAll("[data-ad-edit]").forEach(b=>b.addEventListener("click",()=>editAd(campaignById.get(b.dataset.adEdit))));
   campaignRoot.querySelectorAll("[data-ad-delete]").forEach(b=>b.addEventListener("click",async()=>{const a=campaignById.get(b.dataset.adDelete);if(!a||!confirm("¿Eliminar esta campaña?"))return;const r=await client.from("ad_campaigns").delete().eq("id",a.id);if(r.error){say("globalMessage",r.error.message);return;}await loadAds();}));

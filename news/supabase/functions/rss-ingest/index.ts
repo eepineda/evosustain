@@ -10,7 +10,7 @@ const corsHeaders = {
 
 const ADMIN_EMAIL = "eepinedacarrasco@gmail.com";
 const MAX_SOURCES = 50;
-const MAX_ITEMS_PER_SOURCE = 30;
+const MAX_ITEMS_PER_SOURCE = 10;
 const MAX_FEED_BYTES = 2_000_000;
 
 function response(body: unknown, status = 200) {

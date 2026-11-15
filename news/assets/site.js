@@ -144,6 +144,7 @@ function renderPublishedArticles(articles) {
     container.innerHTML='<p class="muted">'+tr("empty")+'</p>'; return;
   }
   const normalize=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+  const articleOrder=new Map(articles.map((article,index)=>[article,index]));
   const articlesByCategory=new Map(),articlesByCountry=new Map();
   for(const article of articles){
     const category=normalize(article.category),country=normalize(article.country);
@@ -189,7 +190,7 @@ function renderPublishedArticles(articles) {
       {id:"es",name:tr("spain"),flag:"🇪🇸",terms:["espana","spain"]}
     ];
     countryRoot.innerHTML=editions.map(country=>{
-      const matches=country.terms.flatMap(term=>articlesByCountry.get(term)||[]).slice(0,3);
+      const matches=country.terms.flatMap(term=>articlesByCountry.get(term)||[]).sort((a,b)=>articleOrder.get(a)-articleOrder.get(b)).slice(0,3);
       const liveStories=matches.map(a=>'<a class="country-story" href="'+articleUrl(a)+'"><span class="kicker">'+escapeHtml(categoryLabel(a.category||"ACTUALIDAD"))+'</span><b>'+escapeHtml(currentLanguage==="en"?(a.title_en||a.title):a.title)+'</b><span class="country-read">'+tr("read")+'</span></a>').join("");
       const stories=liveStories||'<p class="country-empty">'+tr("noCountry")+'</p>';
       return '<section class="country-card" id="country-'+country.id+'"><div class="country-title"><span class="country-flag" aria-hidden="true">'+country.flag+'</span><h3>'+country.name+'</h3></div>'+stories+'</section>';
@@ -207,7 +208,7 @@ function renderPublishedArticles(articles) {
     ];
     const normalize=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
     sectionRoot.innerHTML=sections.map(section=>{
-      const matches=section.terms.flatMap(term=>articlesByCategory.get(term)||[]).slice(0,3);
+      const matches=section.terms.flatMap(term=>articlesByCategory.get(term)||[]).sort((a,b)=>articleOrder.get(a)-articleOrder.get(b)).slice(0,3);
 
       const cards=matches.map((a,i)=>{
         const dateText=a.created_at?new Date(a.created_at).toLocaleDateString(currentLanguage==="en"?"en-GB":"es-ES",{day:"numeric",month:"short",year:"numeric"}):"";

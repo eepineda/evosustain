@@ -254,6 +254,14 @@ function renderPublishedArticles(articles) {
   }
 
 }
+async function loadOpinionAuthors(){
+ const root=document.getElementById("opinionAuthors");if(!root||!window.supabase)return;
+ const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+ const {data,error}=await client.from("opinion_authors").select("name,profession,bio,photo_url").eq("active",true).order("display_order",{ascending:true}).order("name",{ascending:true});
+ if(error){root.innerHTML='<p class="muted">'+(currentLanguage==="en"?"Authors could not be loaded.":"No se pudieron cargar los autores.")+'</p>';console.error("Evoford News authors:",error.message);return;}
+ if(!data?.length){root.innerHTML='<p class="muted">'+(currentLanguage==="en"?"Author profiles will appear here soon.":"Los perfiles de los autores aparecerán aquí próximamente.")+'</p>';return;}
+ root.innerHTML='<div class="opinion-authors-heading">'+(currentLanguage==="en"?"AUTHORS & CONTRIBUTORS":"AUTORES Y COLABORADORES")+'</div>'+data.map(author=>'<article class="opinion-author">'+(author.photo_url&&/^https:\/\//i.test(author.photo_url)?'<img class="opinion-author-photo" src="'+escapeHtml(author.photo_url)+'" alt="Retrato de '+escapeHtml(author.name)+'" loading="lazy">':'<span class="opinion-author-placeholder" aria-hidden="true">'+escapeHtml(author.name.trim().slice(0,1).toUpperCase())+'</span>')+'<div class="opinion-author-copy"><h3>'+escapeHtml(author.name)+'</h3>'+(author.profession?'<p class="opinion-author-profession">'+escapeHtml(author.profession)+'</p>':'')+(author.bio?'<p>'+escapeHtml(author.bio)+'</p>':'')+'</div></article>').join("");
+}
 const printEditionButton=document.getElementById("printEditionBtn");
 if(printEditionButton) printEditionButton.addEventListener("click",()=>window.print());
 
@@ -261,3 +269,4 @@ if(printEditionButton) printEditionButton.addEventListener("click",()=>window.pr
 document.querySelectorAll("[data-language]").forEach(b=>b.addEventListener("click",()=>setLanguage(b.dataset.language)));
 renderStaticLanguage();
 loadPublishedArticles();
+loadOpinionAuthors();

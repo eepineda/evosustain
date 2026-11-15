@@ -320,6 +320,44 @@
   `;
   document.head.appendChild(style);
 
+  const MAINTENANCE_CACHE_KEY = "evoford-maintenance-state";
+  const MAINTENANCE_CACHE_TTL_MS = 10_000;
+
+  function applyMaintenanceState(enabled) {
+    if (enabled) {
+      if (document.body) {
+        showMaintenancePage();
+      } else {
+        document.addEventListener("DOMContentLoaded", showMaintenancePage, { once: true });
+      }
+    } else {
+      revealSite();
+    }
+  }
+
+  function readRecentMaintenanceState() {
+    try {
+      const cached = JSON.parse(sessionStorage.getItem(MAINTENANCE_CACHE_KEY) || "null");
+      if (
+        cached &&
+        typeof cached.enabled === "boolean" &&
+        Number.isFinite(cached.savedAt) &&
+        Date.now() - cached.savedAt < MAINTENANCE_CACHE_TTL_MS
+      ) {
+        return cached.enabled;
+      }
+    } catch (_) {
+      // Storage may be unavailable; fall back to the live setting.
+    }
+    return null;
+  }
+
+  const recentState = readRecentMaintenanceState();
+  if (recentState !== null) {
+    applyMaintenanceState(recentState);
+    return;
+  }
+
   fetch(
     SUPABASE_URL + "/rest/v1/site_settings?key=eq.maintenance&select=value",
     {
@@ -335,15 +373,16 @@
       return response.json();
     })
     .then(rows => {
-      if (rows[0]?.value?.enabled === true) {
-        if (document.body) {
-          showMaintenancePage();
-        } else {
-          document.addEventListener("DOMContentLoaded", showMaintenancePage, { once: true });
-        }
-      } else {
-        revealSite();
+      const enabled = rows[0]?.value?.enabled === true;
+      try {
+        sessionStorage.setItem(MAINTENANCE_CACHE_KEY, JSON.stringify({
+          enabled,
+          savedAt: Date.now()
+        }));
+      } catch (_) {
+        // The live setting still applies when storage is unavailable.
       }
+      applyMaintenanceState(enabled);
     })
     .catch(revealSite);
 })();

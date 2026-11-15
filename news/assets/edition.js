@@ -112,7 +112,7 @@ function showAccessPanel(message){
   document.body.insertBefore(accessPanel,document.body.firstChild);
   accessPanel.querySelector("#editionLoginForm").addEventListener("submit",async event=>{
    event.preventDefault();const button=event.currentTarget.querySelector("button");button.disabled=true;
-   const {error}=await authClient.auth.signInWithOtp({email:accessPanel.querySelector("#editionEmail").value.trim().toLowerCase(),options:{emailRedirectTo:location.href}});
+   const {error}=await authClient.auth.signInWithOtp({email:accessPanel.querySelector("#editionEmail").value.trim().toLowerCase(),options:{emailRedirectTo:new URL("/news/edicion.html",location.origin).href}});
    accessPanel.querySelector("#editionAccessMessage").textContent=error?error.message:"Revisa tu correo para completar el acceso.";button.disabled=false;
   });
  }

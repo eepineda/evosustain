@@ -84,13 +84,8 @@ function escapeHtml(value="") {
 function shortArticleToken(id){
   const hex=String(id||"").replace(/-/g,"").toLowerCase();
   if(!/^[0-9a-f]{32}$/.test(hex))return "";
-  const bytes=new Uint8Array(16);
   let binary="";
-  for(let i=0;i<16;i++){
-    const byte=parseInt(hex.slice(i*2,i*2+2),16);
-    bytes[i]=byte;
-    binary+=String.fromCharCode(byte);
-  }
+  for(let i=0;i<32;i+=2)binary+=String.fromCharCode(parseInt(hex.slice(i,i+2),16));
   return btoa(binary).replace(/[+]/g,"-").replace(/[/]/g,"_").replace(/=+$/,"");
 }
 function articleUrl(article){

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#102b4e">
+<title>Accesos · Edición impresa | Evoford News</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{font-family:Arial,sans-serif;color:#17283c;background:#f3f5f8}*{box-sizing:border-box}body{margin:0}.wrap{max-width:850px;margin:42px auto;padding:0 18px}.panel{background:#fff;border:1px solid #dbe2ea;border-radius:8px;padding:24px;margin:16px 0}h1,h2{color:#102b4e}p{line-height:1.55;color:#5b6878}label{display:block;font-weight:700;font-size:13px;margin:12px 0 6px}input{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:5px;font:inherit}button{border:0;border-radius:5px;background:#102b4e;color:white;padding:11px 16px;font-weight:700;cursor:pointer}button.secondary{background:#e8edf3;color:#102b4e}button:disabled{opacity:.55}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.entry{display:flex;justify-content:space-between;gap:12px;align-items:center;border-top:1px solid #e5eaf0;padding:14px 0}.entry small{display:block;color:#697789;margin-top:4px}.status{font-size:12px;font-weight:700}.message{min-height:20px;color:#102b4e} [hidden]{display:none!important}
+</style></head>
+<body><main class="wrap">
+<a href="/news/admin/">← Panel editorial</a>
+<section id="login" class="panel"><h1>Acceso a Edición impresa</h1><p>Inicia sesión con el correo del administrador para aprobar o revocar lectores.</p><form id="loginForm"><label for="email">Correo autorizado</label><input id="email" type="email" autocomplete="email" required><p><button>Enviar enlace de acceso</button></p></form><p id="message" class="message" role="status"></p></section>
+<section id="manager" hidden><div class="row"><div><h1>Gestión de lectores</h1><p>Solo los correos aprobados pueden abrir e imprimir la edición.</p></div><button id="logout" class="secondary">Cerrar sesión</button></div>
+<div class="panel"><h2>Aprobar un correo</h2><form id="addForm" class="row"><div style="flex:1;min-width:220px"><label for="newEmail">Correo electrónico</label><input id="newEmail" type="email" required maxlength="254" placeholder="lector@correo.com"></div><button type="submit">Aprobar acceso</button></form><p id="managerMessage" class="message" role="status"></p></div>
+<div class="panel"><div class="row"><h2 style="flex:1">Correos autorizados</h2><button id="refresh" class="secondary">Actualizar</button></div><div id="entries"></div></div></section>
+</main>
+<script>
+(function(){
+const URL="https://poywsdigujbarvnzbfnz.supabase.co",KEY="sb_publishable_1t7gv1Y9-6HHwMqW5E343A_51GH_L7f";
+const client=window.supabase.createClient(URL,KEY),$=id=>document.getElementById(id);
+let session=null;
+function say(id,msg){$(id).textContent=msg||"";}
+async function invoke(action,extra={}){const {data:{session:current}}=await client.auth.getSession();if(!current)throw new Error("La sesión ha caducado.");const {data,error}=await client.functions.invoke("print-edition",{body:{action,...extra},headers:{Authorization:"Bearer "+current.access_token}});if(error)throw error;if(data?.error)throw new Error(data.error);return data;}
+async function refresh(){try{const data=await invoke("list_access");$("entries").innerHTML=(data.access||[]).map(item=>'<div class="entry"><div><strong>'+escapeHtml(item.email)+'</strong><small class="status">'+(item.approved?"APROBADO":"REVOCADO")+'</small></div>'+(item.email==="eepinedacarrasco@gmail.com"?"<span>Administrador</span>":'<button class="secondary" data-email="'+escapeHtml(item.email)+'" data-approved="'+(!item.approved)+'">'+(item.approved?"Revocar":"Aprobar")+'</button>')+'</div>').join("")||"<p>No hay correos registrados.</p>";$("entries").querySelectorAll("button[data-email]").forEach(button=>button.addEventListener("click",async()=>{button.disabled=true;try{await invoke("set_access",{email:button.dataset.email,approved:button.dataset.approved==="true"});await refresh();}catch(error){say("managerMessage",error.message||"Error al actualizar.");button.disabled=false;}}));}catch(error){say("managerMessage",error.message||"No se pudo cargar la lista.");}}
+function escapeHtml(value){return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+async function show(){const {data:{session:current}}=await client.auth.getSession();session=current;$("login").hidden=!!session;$("manager").hidden=!session;if(session)await refresh();}
+$("loginForm").addEventListener("submit",async event=>{event.preventDefault();const button=event.currentTarget.querySelector("button");button.disabled=true;say("message","Enviando enlace…");const {error}=await client.auth.signInWithOtp({email:$("email").value.trim().toLowerCase(),options:{emailRedirectTo:new URL("/news/admin/edicion-acceso.html",location.origin).href}});say("message",error?error.message:"Revisa tu correo para completar el acceso.");button.disabled=false;});
+$("addForm").addEventListener("submit",async event=>{event.preventDefault();try{await invoke("add_access",{email:$("newEmail").value});$("newEmail").value="";say("managerMessage","Correo aprobado.");await refresh();}catch(error){say("managerMessage",error.message||"No se pudo aprobar.");}});
+$("refresh").addEventListener("click",refresh);$("logout").addEventListener("click",async()=>{await client.auth.signOut();await show();});client.auth.onAuthStateChange(()=>setTimeout(show,0));show();
+})();
+</script></body></html>

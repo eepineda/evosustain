@@ -639,7 +639,7 @@ async function handleDirectoryAction(e){
   openDirectoryEdit(item);return;
  }
  if(b.dataset.directoryConvert){
-  const {data:s,error}=await client.from("directory_submissions").select("*").eq("id",b.dataset.directoryConvert).single();
+  const {data:s,error}=await client.from("directory_submissions").select("id,listing_name,category,listing_type,description,address,postcode,phone,contact_email,website").eq("id",b.dataset.directoryConvert).single();
   if(error){say("globalMessage",error.message);return;}
   const slug=slugify(s.listing_name)+"-"+Math.random().toString(36).slice(2,7);
   const payload={name:s.listing_name,slug,category:s.category,listing_type:s.listing_type,description:s.description,address:s.address,postcode:s.postcode,phone:s.phone,email:s.contact_email,website:s.website,status:"draft",city:"London"};

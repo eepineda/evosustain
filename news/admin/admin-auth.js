@@ -211,7 +211,7 @@ async function showApp(user){
   }
   currentUser=user; $("loginView").hidden=true; $("appView").hidden=false;
   $("signedInAs").textContent=user.email;
-  await Promise.all([loadOverview(),loadArticles(),loadInbox(),loadSources(),loadSubmissions(),loadCourses(),loadMaintenanceControl(),loadAds(),loadBriefings()]);
+  await Promise.all([loadOverview(),loadMaintenanceControl()]);
 }
 async function login(e){
   e.preventDefault();
@@ -900,7 +900,11 @@ function wire(){
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
     ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!==b.dataset.tab;});
+    if(b.dataset.tab==="articles")loadArticles();
     if(b.dataset.tab==="briefing")loadBriefings();
+    if(b.dataset.tab==="inbox")loadInbox();
+    if(b.dataset.tab==="sources")loadSources();
+    if(b.dataset.tab==="submissions")loadSubmissions();
     if(b.dataset.tab==="overview")loadOverview();
     if(b.dataset.tab==="directory")loadDirectoryAdmin();
     if(b.dataset.tab==="courses")loadCourses();

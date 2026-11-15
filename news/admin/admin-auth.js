@@ -15,6 +15,16 @@ const slugify = (s) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]
 function say(id, message){ $(id).textContent = message || ""; }
 function safe(value=""){ return String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 
+function withTimeout(promise, timeoutMs, fallback){
+  return new Promise((resolve,reject)=>{
+    const timer=setTimeout(()=>resolve(fallback),timeoutMs);
+    Promise.resolve(promise).then(
+      value=>{clearTimeout(timer);resolve(value);},
+      error=>{clearTimeout(timer);reject(error);}
+    );
+  });
+}
+
 function translationStatus(article){
   const baseLanguage=String(article.language||"es").toLowerCase().startsWith("en")?"en":"es";
   const hasSpanish=baseLanguage==="es"
@@ -113,13 +123,13 @@ async function renderOverview(){
    if(table==="rss_sources"&&typeof status==="boolean")query=query.eq("active",status);
    else if(status)query=query.eq("status",status);
    if(since)query=query.gte("created_at",since);
-   const result=await Promise.race([query,new Promise(resolve=>setTimeout(()=>resolve({count:null,error:{message:"Tiempo de espera agotado"}}),12000))]);
+   const result=await withTimeout(query,12000,{count:null,error:{message:"Tiempo de espera agotado"}});
    return {key,table,count:result.count??0,error:result.error||null};
   }catch(error){return {key,table,count:0,error};}
  }));
  const by=Object.fromEntries(results.map(x=>[x.key,x])),val=key=>by[key]?.count??0;
  const adSpecs=[["adCampaignsTotal","ad_campaigns"],["adCampaignsActive","ad_campaigns","active"],["adCampaignsPaid","ad_campaigns",null,null,"paid"],["adCampaignsUnpaid","ad_campaigns",null,null,"unpaid"],["adEnquiriesTotal","ad_enquiries"],["adEnquiriesReceived","ad_enquiries","received"],["adEnquiriesPeriod","ad_enquiries",null,cutoff]];
- const adResults=await Promise.all(adSpecs.map(async ([key,table,status,since,payment])=>{try{let q=client.from(table).select("id",{count:"exact",head:true});if(status)q=q.eq("status",status);if(payment)q=q.eq("payment_status",payment);if(since)q=q.gte("created_at",since);const r=await Promise.race([q,new Promise(resolve=>setTimeout(()=>resolve({count:null,error:{message:"Tiempo de espera agotado"}}),12000))]);return {key,count:r.count??0,error:r.error||null};}catch(error){return {key,count:0,error};}}));
+ const adResults=await Promise.all(adSpecs.map(async ([key,table,status,since,payment])=>{try{let q=client.from(table).select("id",{count:"exact",head:true});if(status)q=q.eq("status",status);if(payment)q=q.eq("payment_status",payment);if(since)q=q.gte("created_at",since);const r=await withTimeout(q,12000,{count:null,error:{message:"Tiempo de espera agotado"}});return {key,count:r.count??0,error:r.error||null};}catch(error){return {key,count:0,error};}}));
  const adBy=Object.fromEntries(adResults.map(x=>[x.key,x])),adVal=key=>adBy[key]?.count??0;
  const cards=[
   ["Artículos publicados",val("articlesPublished"),"de "+val("articlesTotal")+" artículos"],
@@ -146,7 +156,7 @@ async function renderOverview(){
    to.setHours(0,0,0,0);
    try{
     const q=client.from(table).select("id",{count:"exact",head:true}).gte("created_at",from.toISOString()).lt("created_at",to.toISOString());
-    const r=await Promise.race([q,new Promise(resolve=>setTimeout(()=>resolve({count:0,error:true}),10000))]);
+    const r=await withTimeout(q,10000,{count:0,error:true});
     return r.count??0;
    }catch{return 0;}
   }));

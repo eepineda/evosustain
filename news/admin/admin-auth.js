@@ -852,7 +852,8 @@ async function saveAd(event){
 
 
 function wire(){
-  $("maintenanceToggleBtn").addEventListener("click",toggleMaintenance);\n  $("refreshPrintAccessBtn")?.addEventListener("click",loadPrintAccess);\n  $("addPrintAccessForm")?.addEventListener("submit",addPrintAccess);\n  $("printAccessList")?.addEventListener("click",event=>{const button=event.target.closest("[data-delete-print-access]");if(button)deletePrintAccess(button.dataset.deletePrintAccess,button);});
+  $("maintenanceToggleBtn").addEventListener("click",toggleMaintenance);
+  $("refreshPrintAccessBtn")?.addEventListener("click",loadPrintAccess);\n  $("addPrintAccessForm")?.addEventListener("submit",addPrintAccess);\n  $("printAccessList")?.addEventListener("click",event=>{const button=event.target.closest("[data-delete-print-access]");if(button)deletePrintAccess(button.dataset.deletePrintAccess,button);});
   $("refreshOverviewBtn").addEventListener("click",()=>loadOverview(true));
   $("overviewRange").addEventListener("change",()=>loadOverview(true));
   $("loginForm").addEventListener("submit",login);
@@ -947,7 +948,8 @@ function wire(){
     if(b.dataset.tab==="overview")loadOverview();
     if(b.dataset.tab==="directory")loadDirectoryAdmin();
     if(b.dataset.tab==="courses")loadCourses();
-    if(b.dataset.tab==="ads")loadAds();\n    if(b.dataset.tab==="printEdition")loadPrintAccess();
+    if(b.dataset.tab==="ads")loadAds();
+    if(b.dataset.tab==="printEdition")loadPrintAccess();
   }));
 }
 window.addEventListener("error",event=>{

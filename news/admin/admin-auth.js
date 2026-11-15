@@ -362,16 +362,18 @@ async function runRssImport(){
     const imported=Number(data?.imported||0);
     const checked=Number(data?.checked_sources||0);
     const results=Array.isArray(data?.results)?data.results:[];
-    const failed=results.filter(x=>x.error);
-    const invalid=results.reduce((n,x)=>n+Number(x.invalid||0),0);
-    const duplicates=results.reduce((n,x)=>n+Number(x.duplicates||0),0);
-    const duration=Math.max(0,...results.map(x=>Number(x.duration_ms||0)));
-    const details=results.map(x=>{
-      const time=(Number(x.duration_ms||0)/1000).toFixed(1)+" s";
-      return "• "+x.source+": "+(x.error?"ERROR · "+x.error:Number(x.imported||0)+" nuevas · "+Number(x.duplicates||0)+" repetidas · "+Number(x.invalid||0)+" inválidas")+" · "+time;
-    }).join("\n");
+    let failed=0,invalid=0,duplicates=0;
+    const detailLines=[];
+    for(const item of results){
+      if(item.error)failed++;
+      invalid+=Number(item.invalid||0);
+      duplicates+=Number(item.duplicates||0);
+      const time=(Number(item.duration_ms||0)/1000).toFixed(1)+" s";
+      detailLines.push("• "+item.source+": "+(item.error?"ERROR · "+item.error:Number(item.imported||0)+" nuevas · "+Number(item.duplicates||0)+" repetidas · "+Number(item.invalid||0)+" inválidas")+" · "+time);
+    }
+    const details=detailLines.join("\n");
     const summary="Proceso terminado: "+imported+" noticias nuevas de "+checked+" fuentes. Repetidas: "+duplicates+". Inválidas: "+invalid+".";
-    say("rssRunMessage",summary+"\n"+(failed.length?"Fuentes con errores:":"Detalle por fuente:")+"\n"+details);
+    say("rssRunMessage",summary+"\n"+(failed?"Fuentes con errores:":"Detalle por fuente:")+"\n"+details);
     await loadInbox();
   }catch(error){
     say("rssRunMessage","No se pudo importar: "+(error.message||"Error desconocido")+". Comprueba el despliegue de rss-ingest.");

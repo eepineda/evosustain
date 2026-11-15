@@ -614,7 +614,7 @@ async function discardCourse(id){
  item.status="discarded";filterCourses();say("globalMessage","Solicitud descartada. Se ha conservado en el registro.");
 }
 async function deleteCourse(id){
- const item=courseEnquiries.find(x=>x.id===id);if(!item)return;
+ const item=courseEnquiryById.get(String(id));if(!item)return;
  if(!confirm("¿Eliminar definitivamente la solicitud de "+item.full_name+"? Esta acción no se puede deshacer."))return;
  const {error}=await client.from("course_enquiries").delete().eq("id",id);
  if(error){say("globalMessage","No se pudo eliminar la solicitud: "+error.message);return;}

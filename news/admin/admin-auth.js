@@ -588,7 +588,7 @@ function exportCoursesCsv(){
 async function loadCourses(){
  const root=$("courseEnquiryList");if(!root)return;
  root.innerHTML='<p class="muted">Cargando solicitudes…</p>';
- const {data,error}=await client.from("course_enquiries").select("*").order("created_at",{ascending:false});
+ const {data,error}=await client.from("course_enquiries").select("id,full_name,email,course_interest,message,internal_notes,status,created_at").order("created_at",{ascending:false});
  if(error){root.innerHTML='<p class="muted">No se pudieron cargar las solicitudes: '+safe(error.message)+'</p>';return;}
  courseEnquiries=data||[];filterCourses();
 }

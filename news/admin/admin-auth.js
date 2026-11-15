@@ -571,9 +571,13 @@ function indexCourseSearch(item){item._searchText=[item.full_name,item.email,ite
 function filterCourses(){
  const q=($("courseSearch")?.value||"").trim().toLocaleLowerCase("es");
  const status=$("courseStatusFilter")?.value||"";
- const filtered=courseEnquiries.filter(x=>(!status||x.status===status)&&(!q||(x._searchText||"").includes(q)));
+ const filtered=[];
+ const counts={received:0,contacted:0,enrolled:0,closed:0,discarded:0};
+ for(const item of courseEnquiries){
+  if(counts[item.status]!==undefined)counts[item.status]++;
+  if((!status||item.status===status)&&(!q||(item._searchText||"").includes(q)))filtered.push(item);
+ }
  $("courseCount").textContent=filtered.length+" de "+courseEnquiries.length+" solicitudes";
- const counts={received:0,contacted:0,enrolled:0,closed:0,discarded:0};courseEnquiries.forEach(x=>{if(counts[x.status]!==undefined)counts[x.status]++;});
  $("courseStats").innerHTML=[["Recibidas",counts.received],["Contactadas",counts.contacted],["Matriculadas",counts.enrolled],["Cerradas",counts.closed],["Descartadas",counts.discarded]].map(([label,n])=>'<div class="course-stat"><strong>'+n+'</strong><span>'+label+'</span></div>').join("");
  $("courseEnquiryList").innerHTML=filtered.length?filtered.map(x=>{
   const date=x.created_at?new Date(x.created_at).toLocaleString("es-GB",{dateStyle:"medium",timeStyle:"short"}):"Fecha no disponible";

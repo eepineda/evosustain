@@ -102,7 +102,7 @@ function render(){
  $("storyCount").textContent=rest.length+" "+ui[language].stories;
 }
 const authClient=window.supabase.createClient(URL,KEY);
-let accessPanel=null,accessInitialized=false;
+let accessPanel=null;
 function showAccessPanel(message){
  if(!accessPanel){
   accessPanel=document.createElement("section");
@@ -142,7 +142,6 @@ async function load(){
 }
 authClient.auth.onAuthStateChange((event,session)=>{
  if(event==="SIGNED_IN"||event==="TOKEN_REFRESHED"||event==="SIGNED_OUT"){
-  if(!accessInitialized){accessInitialized=true;return;}
   editionLoadPromise=load();
  }
 });

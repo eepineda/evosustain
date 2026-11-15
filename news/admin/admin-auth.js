@@ -622,8 +622,8 @@ async function saveCourseNotes(id){
 
 async function loadDirectoryAdmin(){
   const [sub,items]=await Promise.all([
-    client.from("directory_submissions").select("*").order("created_at",{ascending:false}),
-    client.from("directory_listings").select("*").order("created_at",{ascending:false})
+    client.from("directory_submissions").select("id,listing_name,category,listing_type,contact_name,contact_email,status,description").order("created_at",{ascending:false}),
+    client.from("directory_listings").select("id,name,category,city,status,sponsored").order("created_at",{ascending:false})
   ]);
   const subRoot=$("directorySubmissionList"),listRoot=$("directoryAdminList");
   if(sub.error)subRoot.innerHTML='<p class="muted">'+safe(sub.error.message)+'</p>';

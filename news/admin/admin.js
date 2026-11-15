@@ -99,7 +99,7 @@ async function showApp(user){
   }
   currentUser=user; $("loginView").hidden=true; $("appView").hidden=false;
   $("signedInAs").textContent=user.email;
-  await Promise.all([loadArticles(),loadInbox(),loadSources(),loadSubmissions(),loadCourses(),loadMaintenanceControl(),loadAds(),loadBriefings(),loadOpinionAuthorsAdmin()]);
+  await Promise.all([loadArticles(),loadInbox(),loadSources(),loadSubmissions(),loadCourses(),loadMaintenanceControl(),loadAds(),loadBriefings()]);
 }
 async function login(e){
   e.preventDefault();
@@ -215,37 +215,6 @@ async function saveArticle(status,preserveStatus=false){
 }
 
 
-async function loadOpinionAuthorsAdmin(){
- const root=$("opinionAuthorsAdminList");if(!root)return;
- const {data,error}=await client.from("opinion_authors").select("*").order("display_order",{ascending:true}).order("name",{ascending:true});
- if(error){root.innerHTML='<p class="muted">No se pudieron cargar los perfiles: '+safe(error.message)+'</p>';return;}
- root.innerHTML=data?.length?data.map(a=>'<article class="item"><div class="item-author-profile">'+(a.photo_url?'<img src="'+safe(a.photo_url)+'" alt="" style="width:54px;height:54px;object-fit:cover;border-radius:50%;float:left;margin:0 14px 8px 0">':'')+'<h3>'+safe(a.name)+'</h3><p>'+safe(a.profession||"Sin especialidad indicada")+' · '+(a.active?"Visible":"Oculto")+'</p>'+(a.bio?'<p>'+safe(a.bio)+'</p>':'')+'</div><div class="item-actions"><button type="button" class="secondary" data-opinion-author-edit="'+a.id+'">Editar</button><button type="button" class="secondary danger" data-opinion-author-delete="'+a.id+'">Eliminar</button></div></article>').join(""):'<p class="muted">Todavía no hay autores registrados.</p>';
- root.querySelectorAll("[data-opinion-author-edit]").forEach(b=>b.addEventListener("click",()=>editOpinionAuthor(data.find(a=>a.id===b.dataset.opinionAuthorEdit))));
- root.querySelectorAll("[data-opinion-author-delete]").forEach(b=>b.addEventListener("click",async()=>{const a=data.find(x=>x.id===b.dataset.opinionAuthorDelete);if(!a||!confirm("¿Eliminar el perfil de "+a.name+"? Los artículos publicados no se eliminarán."))return;const {error}=await client.from("opinion_authors").delete().eq("id",a.id);if(error){say("opinionAuthorMessage",error.message);return;}await loadOpinionAuthorsAdmin();}));
-}
-function editOpinionAuthor(a){
- $("opinionAuthorFormPanel").hidden=false;$("opinionAuthorFormTitle").textContent=a?"Editar perfil":"Nuevo autor";
- $("opinionAuthorId").value=a?.id||"";$("opinionAuthorName").value=a?.name||"";$("opinionAuthorProfession").value=a?.profession||"";$("opinionAuthorBio").value=a?.bio||"";$("opinionAuthorPhotoUrl").value=a?.photo_url||"";$("opinionAuthorPhotoPreview").src=a?.photo_url||"";$("opinionAuthorPhotoPreview").hidden=!a?.photo_url;$("opinionAuthorPhotoFile").value="";$("opinionAuthorOrder").value=a?.display_order??100;$("opinionAuthorActive").checked=a?.active!==false;say("opinionAuthorPhotoMessage","");say("opinionAuthorMessage","");$("opinionAuthorFormPanel").scrollIntoView({behavior:"smooth",block:"start"});
-}
-async function uploadOpinionAuthorPhoto(){
- const file=$("opinionAuthorPhotoFile").files?.[0];if(!file)return;
- const allowed=["image/jpeg","image/png","image/webp"];if(!allowed.includes(file.type)){say("opinionAuthorPhotoMessage","Formato no admitido. Usa JPG, PNG o WebP.");return;}
- if(file.size>8*1024*1024){say("opinionAuthorPhotoMessage","La imagen supera el límite de 8 MB.");return;}
- const button=$("uploadOpinionAuthorPhotoBtn");button.disabled=true;say("opinionAuthorPhotoMessage","Subiendo retrato…");
- try{const ext=({"image/jpeg":"jpg","image/png":"png","image/webp":"webp"})[file.type];const path="authors/"+crypto.randomUUID()+"-"+Date.now()+"."+ext;
- const {error}=await client.storage.from("news-images").upload(path,file,{cacheControl:"3600",upsert:false,contentType:file.type});if(error)throw error;
- const url=client.storage.from("news-images").getPublicUrl(path).data.publicUrl;$("opinionAuthorPhotoUrl").value=url;$("opinionAuthorPhotoPreview").src=url;$("opinionAuthorPhotoPreview").hidden=false;say("opinionAuthorPhotoMessage","Fotografía subida. Guarda el perfil para publicarla.");
- }catch(error){say("opinionAuthorPhotoMessage","No se pudo subir la fotografía: "+(error.message||"error desconocido"));}
- finally{button.disabled=false;}
-}
-async function saveOpinionAuthor(event){
- event.preventDefault();const name=$("opinionAuthorName").value.trim(),photo=$("opinionAuthorPhotoUrl").value.trim();if(!name){say("opinionAuthorMessage","Escribe el nombre del autor.");return;}
- if(photo&&!/^https:\/\//i.test(photo)){say("opinionAuthorMessage","La URL de fotografía debe comenzar por https://.");return;}
- const id=$("opinionAuthorId").value;const payload={name,profession:$("opinionAuthorProfession").value.trim()||null,bio:$("opinionAuthorBio").value.trim()||null,photo_url:photo||null,display_order:Math.max(0,Math.min(999,Number($("opinionAuthorOrder").value)||0)),active:$("opinionAuthorActive").checked,updated_at:new Date().toISOString()};
- const result=id?await client.from("opinion_authors").update(payload).eq("id",id):await client.from("opinion_authors").insert(payload);
- if(result.error){say("opinionAuthorMessage","No se pudo guardar: "+result.error.message);return;}
- say("opinionAuthorMessage","Perfil guardado.");$("opinionAuthorForm").reset();$("opinionAuthorFormPanel").hidden=true;await loadOpinionAuthorsAdmin();
-}
 async function loadBriefings(){
   const box=$("briefingList");if(!box)return;
   const {data,error}=await client.from("articles").select("id,title,summary,status,author,created_at,updated_at").eq("category","Evoford Briefing").order("updated_at",{ascending:false});
@@ -683,10 +652,6 @@ function wire(){
   $("loginForm").addEventListener("submit",login);
   $("logoutBtn").addEventListener("click",()=>client.auth.signOut());
   $("newArticleBtn").addEventListener("click",()=>editArticle(null));
-  $("newOpinionAuthorBtn")?.addEventListener("click",()=>editOpinionAuthor(null));
-  $("cancelOpinionAuthorBtn")?.addEventListener("click",()=>{$("opinionAuthorFormPanel").hidden=true;});
-  $("opinionAuthorForm")?.addEventListener("submit",saveOpinionAuthor);
-  $("uploadOpinionAuthorPhotoBtn")?.addEventListener("click",uploadOpinionAuthorPhoto);
   $("newBriefingBtn")?.addEventListener("click",openNewBriefing);
   $("articleSearch").addEventListener("input",filterArticles);
   $("articleStatusFilter").addEventListener("change",filterArticles);
@@ -805,8 +770,7 @@ function wire(){
   $("runRssBtn").addEventListener("click",runRssImport);$("newAdBtn").addEventListener("click",()=>editAd(null));$("cancelAdBtn").addEventListener("click",()=>{$("adForm").hidden=true;});$("cancelAdBtn2").addEventListener("click",()=>{$("adForm").hidden=true;});$("adForm").addEventListener("submit",saveAd);$("adPlacement").addEventListener("change",renderAdPlacementPreview);
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
-    ["overview","articles","opinionAuthors","briefing","inbox","sources","submissions","directory","courses","ads","printEdition"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!==b.dataset.tab;});
-    if(b.dataset.tab==="opinionAuthors")loadOpinionAuthorsAdmin();
+    ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!==b.dataset.tab;});
     if(b.dataset.tab==="briefing")loadBriefings();
     if(b.dataset.tab==="directory")loadDirectoryAdmin();
     if(b.dataset.tab==="courses")loadCourses();if(b.dataset.tab==="ads")loadAds();

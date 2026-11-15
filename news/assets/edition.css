@@ -645,3 +645,9 @@
     page-break-before: auto !important;
   }
 }
+
+
+/* No mostrar la barra de herramientas mientras la edición está bloqueada. */
+.toolbar[hidden] {
+  display: none !important;
+}

@@ -249,3 +249,16 @@ footer a:not(.footer-brand):hover{color:#fff;text-decoration:underline}
 .story img.story-image,.story img:not(.avatar){object-fit:contain;background:#eef1f4;}
 .feature-card-image img:not(.feature-image-keep-cover){object-fit:contain;background:#eef1f4;}
 @media(max-width:760px){#articleView>img{max-height:none;}}
+
+
+/* Opinion authors and contributors */
+.opinion-authors{display:grid;gap:12px;margin-top:22px}
+.opinion-authors-heading{padding-bottom:8px;border-bottom:1px solid var(--line);font:700 9px/1.4 Arial,sans-serif;letter-spacing:.15em;color:var(--muted)}
+.opinion-author{display:grid;grid-template-columns:48px minmax(0,1fr);align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.opinion-author-photo,.opinion-author-placeholder{width:46px;height:46px;border-radius:50%;object-fit:cover;border:1px solid var(--line);background:#e9edf1}
+.opinion-author-placeholder{display:grid;place-items:center;color:var(--navy);font:700 17px Georgia,serif}
+.opinion-author-copy{min-width:0}
+.opinion-author-copy h3{margin:0 0 3px;color:var(--navy);font:700 16px/1.2 var(--serif)}
+.opinion-author-copy p{margin:3px 0 0;color:var(--muted);font:11px/1.45 Arial,sans-serif}
+.opinion-author-copy .opinion-author-profession{color:var(--ink);font-weight:700}
+@media(max-width:620px){.opinion-authors{gap:8px}.opinion-author{grid-template-columns:42px minmax(0,1fr);gap:10px}.opinion-author-photo,.opinion-author-placeholder{width:40px;height:40px}}

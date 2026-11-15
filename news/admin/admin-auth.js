@@ -565,6 +565,7 @@ $("directoryEditForm")?.addEventListener("submit",async event=>{
 });
 
 let courseEnquiries=[];
+let courseEnquiryById=new Map();
 function courseStatusLabel(status){return ({received:"Recibida",contacted:"Contactada",enrolled:"Matriculada",closed:"Cerrada",discarded:"Descartada"})[status]||status;}
 function indexCourseSearch(item){item._searchText=[item.full_name,item.email,item.course_interest,item.message,item.internal_notes].map(v=>String(v||"").toLocaleLowerCase("es")).join(" ");return item;}
 function filterCourses(){
@@ -593,16 +594,16 @@ async function loadCourses(){
  root.innerHTML='<p class="muted">Cargando solicitudes…</p>';
  const {data,error}=await client.from("course_enquiries").select("id,full_name,email,course_interest,message,internal_notes,status,created_at").order("created_at",{ascending:false});
  if(error){root.innerHTML='<p class="muted">No se pudieron cargar las solicitudes: '+safe(error.message)+'</p>';return;}
- courseEnquiries=(data||[]).map(indexCourseSearch);filterCourses();
+ courseEnquiries=(data||[]).map(indexCourseSearch);courseEnquiryById=new Map(courseEnquiries.map(item=>[String(item.id),item]));filterCourses();
 }
 async function updateCourseStatus(id,status){
  const {error}=await client.from("course_enquiries").update({status}).eq("id",id);
  if(error){say("globalMessage","No se pudo actualizar el estado: "+error.message);return;}
- const item=courseEnquiries.find(x=>x.id===id);if(item)item.status=status;
+ const item=courseEnquiryById.get(String(id));if(item)item.status=status;
  filterCourses();
 }
 async function discardCourse(id){
- const item=courseEnquiries.find(x=>x.id===id);if(!item)return;
+ const item=courseEnquiryById.get(String(id));if(!item)return;
  if(!confirm("¿Descartar la solicitud de "+item.full_name+"? Se conservará en el sistema con estado «Descartada» y podrás consultarla filtrando por ese estado."))return;
  const {error}=await client.from("course_enquiries").update({status:"discarded"}).eq("id",id);
  if(error){say("globalMessage","No se pudo descartar la solicitud: "+error.message);return;}
@@ -613,13 +614,13 @@ async function deleteCourse(id){
  if(!confirm("¿Eliminar definitivamente la solicitud de "+item.full_name+"? Esta acción no se puede deshacer."))return;
  const {error}=await client.from("course_enquiries").delete().eq("id",id);
  if(error){say("globalMessage","No se pudo eliminar la solicitud: "+error.message);return;}
- courseEnquiries=courseEnquiries.filter(x=>x.id!==id);filterCourses();say("globalMessage","Solicitud eliminada definitivamente.");
+ courseEnquiries=courseEnquiries.filter(x=>x.id!==id);courseEnquiryById.delete(String(id));filterCourses();say("globalMessage","Solicitud eliminada definitivamente.");
 }
 async function saveCourseNotes(id){
  const field=document.querySelector('[data-course-notes="'+id+'"]');if(!field)return;
  const {error}=await client.from("course_enquiries").update({internal_notes:field.value}).eq("id",id);
  if(error){say("globalMessage","No se pudieron guardar las notas: "+error.message);return;}
- const item=courseEnquiries.find(x=>x.id===id);if(item){item.internal_notes=field.value;indexCourseSearch(item);}
+ const item=courseEnquiryById.get(String(id));if(item){item.internal_notes=field.value;indexCourseSearch(item);}
  say("globalMessage","Notas internas guardadas.");
 }
 

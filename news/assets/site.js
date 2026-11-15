@@ -167,8 +167,9 @@ function renderPublishedArticles(articles) {
     }
   }
   const latestFromIndex=(index,terms,limit=3)=>{
-    const lists=terms.map(term=>index.get(term)||[]);
-    const positions=lists.map(()=>0),matches=[],seen=new Set();
+    const lists=[],positions=[];
+    for(const term of terms){lists.push(index.get(term)||[]);positions.push(0);}
+    const matches=[],seen=new Set();
     while(matches.length<limit){
       let selected=-1,selectedOrder=Infinity;
       for(let i=0;i<lists.length;i++){

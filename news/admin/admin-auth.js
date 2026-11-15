@@ -237,7 +237,7 @@ async function login(e){
 function filterArticles(){
   const query=($("articleSearch")?.value||"").trim().toLocaleLowerCase("es");
   const status=$("articleStatusFilter")?.value||"";
-  const items=[...$("articleList").querySelectorAll("[data-article-item]")];
+  const items=$("articleList").querySelectorAll("[data-article-item]");
   let visible=0;
   items.forEach(item=>{
     const matchesText=!query||(item.dataset.search||"").includes(query);

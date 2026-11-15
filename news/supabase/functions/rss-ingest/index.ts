@@ -164,9 +164,20 @@ Deno.serve(async (req) => {
       const parsed = parser.parse(xml) as Record<string, unknown>;
       const items = extractItems(parsed);
 
+      // Keep at most five pending items per source in the editorial queue.
+      const { count: pendingCount, error: pendingCountError } = await admin
+        .from("imported_items")
+        .select("id", { count: "exact", head: true })
+        .eq("source_id", String(source.id))
+        .eq("status", "pending");
+      if (pendingCountError) throw pendingCountError;
+
+      const availableSlots = Math.max(0, 5 - (pendingCount || 0));
       const rows: Array<Record<string, unknown>> = [];
-      for (const rawItem of items) {
-        const item = normalizeItem(rawItem);
+      const candidates: Array<{ item: ReturnType<typeof normalizeItem>; index: number }> = [];
+
+      for (let index = 0; index < items.length; index++) {
+        const item = normalizeItem(items[index]);
         if (!item.title || !item.article_url || !item.feed_guid) {
           result.skipped++;
           continue;
@@ -184,6 +195,20 @@ Deno.serve(async (req) => {
           continue;
         }
 
+        candidates.push({ item, index });
+      }
+
+      // Prefer the most recently published valid entries; retain feed order for undated entries.
+      candidates.sort((a, b) => {
+        const aDate = a.item.published_at ? Date.parse(a.item.published_at) : -Infinity;
+        const bDate = b.item.published_at ? Date.parse(b.item.published_at) : -Infinity;
+        return bDate - aDate || a.index - b.index;
+      });
+
+      const selected = candidates.slice(0, availableSlots);
+      result.skipped += candidates.length - selected.length;
+
+      for (const { item } of selected) {
         rows.push({
           source_id: String(source.id),
           feed_guid: item.feed_guid,
@@ -198,8 +223,7 @@ Deno.serve(async (req) => {
       }
 
       if (rows.length) {
-        // article_url has a UNIQUE constraint in the live database.
-        // Chunk requests to keep payloads bounded without dropping older feed entries.
+        // article_url is unique; the per-source pending cap prevents queue growth.
         for (let offset = 0; offset < rows.length; offset += UPSERT_BATCH_SIZE) {
           const batch = rows.slice(offset, offset + UPSERT_BATCH_SIZE);
           const { data: inserted, error: insertError } = await admin

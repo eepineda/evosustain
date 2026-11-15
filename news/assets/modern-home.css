@@ -87,8 +87,24 @@ footer .footer-brand{letter-spacing:-.03em}
 .feature-card-briefing .image-stamp{display:none!important;}
 
 
-/* Show the full source photograph in editorial cards, without trimming faces or details. */
-.story img.story-image,.feature-card-image img:not(.feature-image-keep-cover){object-fit:contain;background:#eef1f4;}
+/* Editorial cards: fill the complete image frame and restore a restrained hover zoom. */
+.story-link,.feature-card-image{display:block;overflow:hidden;}
+.story img.story-image,.feature-card-image img:not(.feature-image-keep-cover){
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  background:transparent;
+  transition:transform .35s ease;
+}
+.story-link:hover img.story-image,.story-link:focus-visible img.story-image,
+.feature-card-image:hover img:not(.feature-image-keep-cover),
+.feature-card-image:focus-visible img:not(.feature-image-keep-cover){
+  transform:scale(1.045);
+}
+@media (prefers-reduced-motion:reduce){
+  .story img.story-image,.feature-card-image img{transition:none;}
+}
 
 
 /* EVOFORD NEWS — editorial refinement, visual-only layer */
@@ -233,7 +249,7 @@ body{background:var(--modern-bg)!important;color:var(--modern-ink)!important;fon
 .feature-pair{gap:22px!important}
 .feature-card{background:transparent!important;border:0!important;border-right:1px solid var(--modern-line)!important;border-radius:0!important;padding-right:18px!important}
 .feature-card:last-child{border-right:0!important;padding-right:0!important}
-.feature-card-image{border-radius:0!important;aspect-ratio:16/9!important;background:#e8e5df!important}
+.feature-card-image{border-radius:0!important;aspect-ratio:16/9!important;background:#e8e5df!important;overflow:hidden!important}
 .feature-card .feature-copy{padding:13px 0 0!important}
 .feature-card .feature-copy h1,.feature-card .feature-copy h2{font-family:"Playfair Display",Georgia,serif!important;font-weight:700!important;letter-spacing:-.025em!important;line-height:1.08!important}
 .feature-card .feature-copy h1{font-size:clamp(28px,3vw,43px)!important}
@@ -248,7 +264,7 @@ body{background:var(--modern-bg)!important;color:var(--modern-ink)!important;fon
 .section-head{border-bottom:2px solid #102b4e!important}
 .section-head h2{font-size:clamp(25px,2.5vw,34px)!important}
 #publishedArticles .story,.category-section .story{background:#fff!important;padding:0 0 18px!important;border:0!important;border-bottom:1px solid var(--modern-line)!important}
-.story img.story-image{border-radius:0!important;aspect-ratio:16/10!important;max-height:250px!important}
+.story img.story-image{border-radius:0!important;aspect-ratio:16/10!important;max-height:250px!important;object-fit:cover!important}
 .story-copy h3{font-family:"Playfair Display",Georgia,serif!important;font-size:21px!important;line-height:1.18!important}
 .story-copy p{font-size:12px!important;line-height:1.6!important}
 .opinion{border:0!important;border-top:4px solid #b3212d!important;border-radius:0!important;background:#fff!important;box-shadow:none!important}

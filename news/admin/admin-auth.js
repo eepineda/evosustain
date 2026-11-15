@@ -418,7 +418,7 @@ function editorialSuggestion(item){
 
 async function loadInbox(){
   const [{data,error},{data:sources},{data:articles,error:articlesError}] = await Promise.all([
-    client.from("imported_items").select("*").order("created_at",{ascending:false}),
+    client.from("imported_items").select("id,title,source_id,article_url,status,summary,suggested_category,country,region,created_at").order("created_at",{ascending:false}),
     client.from("rss_sources").select("id,name,category"),
     client.from("articles").select("id,title,source_url,status")
   ]);

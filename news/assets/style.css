@@ -674,3 +674,6 @@ footer a:not(.footer-brand){color:#e6c98b;border-bottom-color:rgba(230,201,139,.
 #articleView>.ad-slot-sidebar{float:right;width:240px;max-width:34%;margin:8px 0 18px 24px}
 #articleView>.ad-slot-sidebar .ad-slot-card img{max-height:180px}
 @media(max-width:700px){#articleView>.ad-slot-sidebar{float:none;width:100%;max-width:100%;margin:18px auto}}
+
+/* Hide the per-article print control; keep browser printing available from its own menu. */
+.print-article-btn{display:none!important}

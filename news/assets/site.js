@@ -144,11 +144,13 @@ function renderPublishedArticles(articles) {
     container.innerHTML='<p class="muted">'+tr("empty")+'</p>'; return;
   }
   const normalize=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
-  const articleOrder=new Map(articles.map((article,index)=>[article,index]));
+  const articleOrder=new Map();
   const articlesByCategory=new Map(),articlesByCountry=new Map();
   const frontStories=[],remaining=[],frontStorySlugs=new Set();
   let opinionArticle=null;
-  for(const article of articles){
+  for(let articleIndex=0;articleIndex<articles.length;articleIndex++){
+    const article=articles[articleIndex];
+    articleOrder.set(article,articleIndex);
     const category=normalize(article.category),country=normalize(article.country);
     if(category){
       if(!articlesByCategory.has(category))articlesByCategory.set(category,[]);

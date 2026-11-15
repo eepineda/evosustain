@@ -131,11 +131,11 @@ async function loadPublishedArticles() {
 
   publishedArticlesLoadPromise = (async () => {
     const client = window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-    let {data,error} = await client.from("articles").select("id,title,title_en,slug,category,author,summary,summary_en,image_url,created_at,country,region")
-      .eq("status","published").order("updated_at",{ascending:false}).limit(30);
+    let {data,error} = await client.from("articles").select("id,title,title_en,slug,category,author,summary,summary_en,image_url,created_at,country,region,is_featured")
+      .eq("status","published").order("created_at",{ascending:false}).limit(30);
     if(error && String(error.message||"").includes("title_en")){
-      ({data,error}=await client.from("articles").select("id,title,slug,category,author,summary,image_url,created_at,country,region")
-        .eq("status","published").order("updated_at",{ascending:false}).limit(30));
+      ({data,error}=await client.from("articles").select("id,title,slug,category,author,summary,image_url,created_at,country,region,is_featured")
+        .eq("status","published").order("created_at",{ascending:false}).limit(30));
     }
     if (error) {
       container.innerHTML='<p class="muted">'+(currentLanguage==="en"?"Stories could not be loaded. Please try again later.":"No se pudieron cargar las publicaciones. Inténtalo más tarde.")+'</p>';
@@ -177,7 +177,7 @@ function renderPublishedArticles(articles) {
       if(!articlesByCountry.has(country))articlesByCountry.set(country,[]);
       articlesByCountry.get(country).push(article);
     }
-    if(frontStories.length<2&&!category.includes("opinion")){
+    if(article.is_featured===true&&frontStories.length<2&&!category.includes("opinion")){
       frontStories.push(article);
       frontStorySlugs.add(article.slug);
     }else if(!frontStorySlugs.has(article.slug)){

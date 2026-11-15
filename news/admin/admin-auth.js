@@ -271,13 +271,13 @@ async function loadBriefings(){
   const {data:article,error}=await client.from("articles").select("*").eq("id",button.dataset.briefingEdit).single();
   if(error){say("globalMessage","No se pudo abrir la edición: "+error.message);return;}
   document.querySelectorAll(".tab").forEach(tab=>tab.classList.toggle("active",tab.dataset.tab==="articles"));
-  ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(key=>{const panel=$(key+"Tab");if(panel)panel.hidden=key!=="articles";});
+  ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads","printEdition"].forEach(key=>{const panel=$(key+"Tab");if(panel)panel.hidden=key!=="articles";});
   editArticle(article);say("formHeading","Editar Evoford Briefing");
  }));
 }
 function openNewBriefing(){
  document.querySelectorAll(".tab").forEach(tab=>tab.classList.toggle("active",tab.dataset.tab==="articles"));
- ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(key=>{const panel=$(key+"Tab");if(panel)panel.hidden=key!=="articles";});
+ ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads","printEdition"].forEach(key=>{const panel=$(key+"Tab");if(panel)panel.hidden=key!=="articles";});
  editArticle(null);$("category").value="Evoford Briefing";$("formHeading").textContent="Nueva edición · Evoford Briefing";$("author").value="Evoford News";
  $("summary").placeholder="Resumen breve de la edición semanal…";
  $("content").placeholder="Escribe aquí el guion y la transcripción de la edición. Incluye apertura, noticias seleccionadas, contexto, cierre y fuentes verificadas…";
@@ -893,7 +893,7 @@ function wire(){
       if(error){say("globalMessage","No se pudo abrir el borrador: "+error.message);return;}
       editArticle(article);
       document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab==="articles"));
-      ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!=="articles";});
+      ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads","printEdition"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!=="articles";});
       return;
     }
     if(draftButton){
@@ -920,7 +920,7 @@ function wire(){
       $("content").value="NOTA DE FUENTE (EXTRACTO RSS; NO ES REDACCIÓN PROPIA):\\n"+(rssNote||"El feed RSS no incluye un resumen. Consulta la fuente original.")+"\\n\\nPENDIENTE DE REDACCIÓN: verifica los datos con la fuente original y redacta aquí una noticia propia. No copies literalmente el contenido de terceros.\\n\\nFuente consultada: "+(item.article_url||"");
       say("editorMessage",rssNote?"Borrador preparado con el titular y el extracto RSS en el campo Resumen. El texto se conserva como nota de consulta; redacta y revisa el artículo antes de enviarlo a aprobación.":"Borrador preparado. El feed no incluye extracto; consulta la fuente original y añade el resumen manualmente.");
       document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab==="articles"));
-      ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!=="articles";});
+      ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads","printEdition"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!=="articles";});
       $("articleForm").scrollIntoView({behavior:"smooth",block:"start"});
       return;
     }
@@ -933,7 +933,7 @@ function wire(){
   $("runRssBtn").addEventListener("click",runRssImport);
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
-    ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!==b.dataset.tab;});
+    ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads","printEdition"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!==b.dataset.tab;});
     if(b.dataset.tab==="articles")loadArticles();
     if(b.dataset.tab==="briefing")loadBriefings();
     if(b.dataset.tab==="inbox")loadInbox();

@@ -32,7 +32,6 @@
     </section>
 
     <section id="appView" hidden>
-      <p><a href="/news/admin/edicion-acceso.html">Gestionar accesos de Edición impresa →</a></p>
       <div class="welcome">
         <div><p class="eyebrow">EVOFORD NEWS</p><h1>Panel editorial</h1><p id="signedInAs" class="muted"></p></div>
         <button id="logoutBtn" class="secondary">Cerrar sesión</button>
@@ -43,9 +42,10 @@
         <button class="tab" data-tab="articles">Artículos</button>
         <button class="tab" data-tab="briefing">Evoford Briefing</button>
         <button class="tab" data-tab="inbox">Noticias RSS</button>
-        <button class="tab" data-tab="sources">Fuentes RSS</button><button class="tab" data-tab="submissions">Envíos recibidos</button><button class="tab" data-tab="directory">Directorio</button><button class="tab" data-tab="courses">Solicitudes de formación</button><button class="tab" data-tab="ads">Anuncios y publicidad</button>
+        <button class="tab" data-tab="sources">Fuentes RSS</button><button class="tab" data-tab="submissions">Envíos recibidos</button><button class="tab" data-tab="directory">Directorio</button><button class="tab" data-tab="courses">Solicitudes de formación</button><button class="tab" data-tab="ads">Anuncios y publicidad</button><button class="tab" data-tab="printEdition">Edición impresa</button>
       </nav>
 
+      <section id="printEditionTab" class="tabview" hidden><div class="section-head"><div><p class="eyebrow">GESTIÓN EDITORIAL</p><h2>Edición impresa</h2><p class="muted">Consulta, actualiza y prepara la edición desde el Panel editorial.</p></div><a class="button secondary" href="/news/edicion.html" target="_blank" rel="noopener">Abrir en otra pestaña</a></div><iframe title="Gestión de Edición impresa" src="/news/edicion.html" style="display:block;width:100%;height:1100px;border:1px solid #dbe2ea;border-radius:10px;background:#fff" loading="lazy"></iframe></section>
       <section id="overviewTab" class="tabview">
         <div class="section-head"><div><p class="eyebrow">EVOFORD NEWS · CONTROL EDITORIAL</p><h2>Resumen general</h2><p class="muted">Indicadores de actividad y solicitudes registradas en el sistema.</p></div><button id="refreshOverviewBtn" class="secondary">Actualizar métricas</button></div>
         <div class="overview-controls"><label for="overviewRange">Periodo de análisis<select id="overviewRange"><option value="7">Últimos 7 días</option><option value="30" selected>Últimos 30 días</option><option value="90">Últimos 90 días</option></select></label><p id="overviewUpdated" class="muted">Consultando datos…</p></div>

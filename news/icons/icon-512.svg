@@ -1,1 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="92" fill="#102b4e"/><path d="M92 112h328v288H92z" fill="#fff"/><path d="M124 150h264v28H124zm0 56h264v13H124zm0 36h264v13H124z" fill="#102b4e"/><path d="M124 286h164v78H124z" fill="#a9232d"/><path d="M306 286h82v13h-82zm0 24h82v10h-82zm0 21h82v10h-82zm0 21h58v10h-58z" fill="#102b4e"/><text x="256" y="452" font-family="Arial,sans-serif" font-size="34" font-weight="700" text-anchor="middle" fill="#fff">EVOFORD</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#102b4e"/>
+  <path d="M151 86h252v296H151c-31 0-56-25-56-56V142c0-31 25-56 56-56Z" fill="#fff"/>
+  <path d="M151 86h34v296h-34c-31 0-56-25-56-56V142c0-31 25-56 56-56Z" fill="#e9eef4"/>
+  <path d="M207 125h153v118H207z" fill="#102b4e"/>
+  <g fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round">
+    <path d="M216 220a67 67 0 0 1 135 0M283 153v67M232 177q51 35 103 0M245 157q-30 63 0 63M321 157q30 63 0 63"/>
+  </g>
+  <path d="M207 263h153v15H207zm0 31h132v12H207zm0 28h91v12h-91z" fill="#102b4e"/>
+  <path d="M119 406c91-64 181-106 296-126l-26-23 93 4-61 71 2-34c-112 25-202 65-304 108Z" fill="#e8ad43"/>
+</svg>

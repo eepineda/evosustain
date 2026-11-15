@@ -72,25 +72,24 @@ self.addEventListener("fetch", event => {
     event.respondWith((async () => {
       const cache = await caches.open(STATIC);
 
-      // Static resources are versioned in their URLs (or use unique upload paths).
-      // Return a cached response immediately instead of downloading it again on
-      // every visit. Precached shell resources are reused as well.
+      // Only use cache-first for explicitly versioned assets. Unversioned
+      // resources (for example icons replaced at the same URL) are refreshed
+      // from the network and use the cache only as an offline fallback.
+      const isVersioned = url.searchParams.has("v") || /\.[a-f0-9]{8,}\./i.test(url.pathname);
       const cached = await cache.match(request);
-      if (cached) return cached;
+      if (isVersioned && cached) return cached;
 
       const shell = await caches.open(SHELL);
       const precached = await shell.match(request);
-      if (precached) {
-        await cache.put(request, precached.clone());
-        return precached;
-      }
 
       try {
         const response = await fetch(request);
-        if (response && response.ok) await cache.put(request, response.clone());
+        if (response && response.ok) {
+          await cache.put(request, response.clone());
+        }
         return response;
       } catch (_) {
-        return Response.error();
+        return cached || precached || Response.error();
       }
     })());
   }

@@ -146,10 +146,25 @@ function renderPublishedArticles(articles) {
   const normalize=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
   const articleOrder=new Map(articles.map((article,index)=>[article,index]));
   const articlesByCategory=new Map(),articlesByCountry=new Map();
+  const frontStories=[],remaining=[],frontStorySlugs=new Set();
+  let opinionArticle=null;
   for(const article of articles){
     const category=normalize(article.category),country=normalize(article.country);
-    if(category){if(!articlesByCategory.has(category))articlesByCategory.set(category,[]);articlesByCategory.get(category).push(article);}
-    if(country){if(!articlesByCountry.has(country))articlesByCountry.set(country,[]);articlesByCountry.get(country).push(article);}
+    if(category){
+      if(!articlesByCategory.has(category))articlesByCategory.set(category,[]);
+      articlesByCategory.get(category).push(article);
+      if(!opinionArticle&&category.includes("opinion"))opinionArticle=article;
+    }
+    if(country){
+      if(!articlesByCountry.has(country))articlesByCountry.set(country,[]);
+      articlesByCountry.get(country).push(article);
+    }
+    if(frontStories.length<2&&!category.includes("opinion")){
+      frontStories.push(article);
+      frontStorySlugs.add(article.slug);
+    }else if(!frontStorySlugs.has(article.slug)){
+      remaining.push(article);
+    }
   }
   const latestFromIndex=(index,terms,limit=3)=>{
     const lists=terms.map(term=>index.get(term)||[]);
@@ -171,7 +186,6 @@ function renderPublishedArticles(articles) {
   };
   const opinionRoot=document.getElementById("latestOpinion");
   if(opinionRoot){
-    const opinionArticle=articles.find(a=>normalize(a.category).includes("opinion"));
     const label=currentLanguage==="en"?"LATEST OPINION ARTICLE":"ÚLTIMO ARTÍCULO DE OPINIÓN";
     const readLabel=currentLanguage==="en"?"READ ARTICLE":"LEER ARTÍCULO";
     if(opinionArticle){
@@ -180,16 +194,7 @@ function renderPublishedArticles(articles) {
       opinionRoot.innerHTML='<span class="kicker">'+label+'</span><p class="muted">'+(currentLanguage==="en"?"No opinion articles have been published yet.":"Todavía no hay artículos de opinión publicados.")+'</p>';
     }
   }
-  const frontStories=[],remaining=[],frontStorySlugs=new Set();
-  for(const article of articles){
-    if(frontStories.length<2&&!normalize(article.category).includes("opinion")){
-      frontStories.push(article);
-      frontStorySlugs.add(article.slug);
-    }else if(!frontStorySlugs.has(article.slug)){
-      remaining.push(article);
-    }
-  }
-  const featured=frontStories[0]||articles[0];
+
   const briefItems=remaining.slice(0,3);
   const publicationItems=remaining.slice(3,9);
   const feature=document.getElementById("featuredStory");

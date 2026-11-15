@@ -20,7 +20,7 @@ function renderStaticLanguage(){
   : ["Internacional","Política","Economía","Seguridad","Startups e innovación","Evoford Briefing","Opinión","Directorio","Envía tu noticia","Edición impresa"];
  const mainNav=document.querySelector(".masthead .nav");
  if(mainNav){
-  Array.from(mainNav.querySelectorAll("a")).forEach((el,i)=>{
+  mainNav.querySelectorAll("a").forEach((el,i)=>{
    if(mainNavLabels[i])el.textContent=mainNavLabels[i];
   });
  }
@@ -29,7 +29,7 @@ function renderStaticLanguage(){
   : ["Política","Seguridad y defensa","Economía","Startups e innovación","Aula de Innovación","Internacional","Opinión y análisis"];
  const topics=document.querySelector(".topics");
  if(topics){
-  Array.from(topics.querySelectorAll("a")).forEach((el,i)=>{
+  topics.querySelectorAll("a").forEach((el,i)=>{
    const current=(el.textContent||"").trim().toLowerCase();
    if(current.startsWith("aula de innovación")||current.startsWith("innovation academy"))el.setAttribute("href","aula-innovacion.html");
    if(current.startsWith("startups"))el.setAttribute("href","startups.html");

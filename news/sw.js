@@ -1,6 +1,6 @@
 /* Evoford News service worker: cache-first static assets, network-first pages, no API caching. */
 "use strict";
-const VERSION = "evoford-news-pwa-v15";
+const VERSION = "evoford-news-pwa-v16";
 const SHELL = VERSION + "-shell";
 const STATIC = VERSION + "-static";
 const PRECACHE = [
@@ -9,6 +9,7 @@ const PRECACHE = [
   "/news/manifest.webmanifest",
   "/news/icons/icon-192.svg",
   "/news/icons/icon-512.svg",
+  "/news/favicon.svg",
   "/news/assets/style.css?v=20261114-ads2",
   "/news/assets/news-core.css?v=1",
   "/news/assets/editorial-premium.css?v=20261114-premium5",
@@ -47,7 +48,6 @@ self.addEventListener("fetch", event => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin || !url.pathname.startsWith("/news/")) return;
   if (url.pathname.startsWith("/news/admin/") || url.pathname.includes("/api/")) return;
-
   if (request.mode === "navigate") {
     event.respondWith((async () => {
       try {
@@ -67,26 +67,17 @@ self.addEventListener("fetch", event => {
     })());
     return;
   }
-
   if (["style", "script", "image", "font"].includes(request.destination) || url.pathname.endsWith(".webmanifest") || url.pathname.endsWith(".svg")) {
     event.respondWith((async () => {
       const cache = await caches.open(STATIC);
-
-      // Only use cache-first for explicitly versioned assets. Unversioned
-      // resources (for example icons replaced at the same URL) are refreshed
-      // from the network and use the cache only as an offline fallback.
       const isVersioned = url.searchParams.has("v") || /\.[a-f0-9]{8,}\./i.test(url.pathname);
       const cached = await cache.match(request);
       if (isVersioned && cached) return cached;
-
       const shell = await caches.open(SHELL);
       const precached = await shell.match(request);
-
       try {
         const response = await fetch(request);
-        if (response && response.ok) {
-          await cache.put(request, response.clone());
-        }
+        if (response && response.ok) await cache.put(request, response.clone());
         return response;
       } catch (_) {
         return cached || precached || Response.error();

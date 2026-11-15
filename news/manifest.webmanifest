@@ -1,54 +1,26 @@
 {
   "id": "/news/",
   "name": "Evoford News",
-  "short_name": "Evoford News",
+  "short_name": "Evoford",
   "description": "Información internacional, noticias, análisis y opinión.",
   "lang": "es",
   "start_url": "/news/",
   "scope": "/news/",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "orientation": "portrait-primary",
-  "background_color": "#ffffff",
+  "background_color": "#102b4e",
   "theme_color": "#102b4e",
-  "categories": [
-    "news",
-    "business"
-  ],
+  "categories": ["news", "business"],
   "icons": [
-    {
-      "src": "/news/icons/icon-192.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
-      "src": "/news/icons/icon-512.svg",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
+    {"src": "/news/icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml", "purpose": "any"},
+    {"src": "/news/icons/icon-512.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "any maskable"}
   ],
   "shortcuts": [
-    {
-      "name": "Últimas noticias",
-      "short_name": "Últimas",
-      "url": "/news/#latest-publications"
-    },
-    {
-      "name": "Internacional",
-      "url": "/news/a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLWludGVybmFjaW9uYWw"
-    },
-    {
-      "name": "Política",
-      "url": "/news/a.html?i=cG9saXRpY2EuaHRtbA"
-    },
-    {
-      "name": "Economía",
-      "url": "/news/a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLWVjb25vbWlh"
-    },
-    {
-      "name": "Startups",
-      "url": "/news/a.html?i=c3RhcnR1cHMuaHRtbA"
-    }
+    {"name": "Últimas noticias", "short_name": "Últimas", "url": "/news/#latest-publications"},
+    {"name": "Internacional", "url": "/news/a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLWludGVybmFjaW9uYWw"},
+    {"name": "Política", "url": "/news/a.html?i=cG9saXRpY2EuaHRtbA"},
+    {"name": "Economía", "url": "/news/a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLWVjb25vbWlh"},
+    {"name": "Startups", "url": "/news/a.html?i=c3RhcnR1cHMuaHRtbA"}
   ]
 }

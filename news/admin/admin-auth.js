@@ -278,9 +278,10 @@ async function loadArticles(){
   const {data,error}=await client.from("articles").select("*").order("created_at",{ascending:false});
   if(error){$("articleList").innerHTML=`<p class="muted">${safe(error.message)}</p>`;return;}
   $("articleList").innerHTML=data.length?data.map(a=>{const translation=translationStatus(a);return `<article class="item" data-article-item data-status="${safe(a.status)}" data-search="${safe([a.title,a.category,a.author].filter(Boolean).join(" ").toLocaleLowerCase("es"))}"><div><h3>${safe(a.title)}</h3><p>${safe(a.category)} · ${safe(a.author)} · <span class="pill">${safe(({draft:"Borrador",pending:"En revisión",approved:"Aprobado",published:"Publicado",rejected:"Descartado"})[a.status]||a.status)}</span> · <span class="translation-pill ${translation.kind}">${translation.label}</span></p></div><div class="item-actions"><button class="secondary" data-edit="${a.id}">Editar</button>${a.status!=="published"?`<button class="secondary" data-discard="${a.id}">Descartar</button>`:""}<button class="secondary" data-delete="${a.id}">Eliminar</button></div></article>`;}).join(""):'<p class="muted">Todavía no hay artículos.</p>';
-  $("articleList").querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>editArticle(data.find(a=>a.id===b.dataset.edit))));
+  const articleById=new Map(data.map(article=>[String(article.id),article]));
+  $("articleList").querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>editArticle(articleById.get(b.dataset.edit))));
   $("articleList").querySelectorAll("[data-discard]").forEach(b=>b.addEventListener("click",async()=>{
-    const article=data.find(a=>a.id===b.dataset.discard);
+    const article=articleById.get(b.dataset.discard);
     if(!article||!window.confirm(`¿Descartar «${article.title}»? Seguirá guardado, pero dejará de estar en el flujo editorial.`))return;
     const {error}=await client.from("articles").update({status:"rejected",updated_at:new Date().toISOString()}).eq("id",article.id);
     if(error){say("globalMessage","No se pudo descartar: "+error.message);return;}
@@ -288,7 +289,7 @@ async function loadArticles(){
     await loadArticles();
   }));
   $("articleList").querySelectorAll("[data-delete]").forEach(b=>b.addEventListener("click",async()=>{
-    const article=data.find(a=>a.id===b.dataset.delete);
+    const article=articleById.get(b.dataset.delete);
     if(!article||!window.confirm(`¿Eliminar definitivamente «${article.title}»? Esta acción no se puede deshacer.${article.status==="published"?" También desaparecerá de la web pública.":""}`))return;
     const {error}=await client.from("articles").delete().eq("id",article.id);
     if(error){say("globalMessage","No se pudo eliminar: "+error.message);return;}

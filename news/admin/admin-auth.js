@@ -244,6 +244,11 @@ async function login(e){
     if(button)button.disabled=false;
   }
 }
+async function invokePrintEdition(action,extra={}){const {data,error}=await client.functions.invoke("print-edition",{body:{action,...extra}});if(error)throw error;if(data?.error)throw new Error(data.error);return data;}
+function printAccessMessage(message){say("printAccessMessage",message);}
+async function loadPrintAccess(){const list=$("printAccessList");if(!list)return;list.innerHTML='<p class="muted">Cargando accesos…</p>';try{const data=await invokePrintEdition("list_access");const entries=data.access||[];list.innerHTML=entries.map(item=>'<div class="list-item" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #e5eaf0"><div><strong>'+safe(item.email)+'</strong><p class="muted">'+(item.approved?"APROBADO":"REVOCADO")+'</p></div>'+(item.email===ADMIN_EMAIL?'<span>Administrador</span>':'<button type="button" class="secondary" data-delete-print-access="'+safe(item.email)+'">Eliminar</button>')+'</div>').join("")||'<p class="muted">No hay correos registrados.</p>';}catch(error){list.textContent="No se pudo cargar la lista: "+(error.message||"error");}}
+async function addPrintAccess(event){event.preventDefault();const email=$("newPrintAccessEmail").value.trim().toLowerCase();try{await invokePrintEdition("add_access",{email});$("newPrintAccessEmail").value="";printAccessMessage("Correo aprobado.");await loadPrintAccess();}catch(error){printAccessMessage(error.message||"No se pudo aprobar el correo.");}}
+async function deletePrintAccess(email,button){if(!confirm("¿Eliminar "+email+" de la lista de correos autorizados?"))return;button.disabled=true;try{await invokePrintEdition("delete_access",{email});printAccessMessage("Correo eliminado.");await loadPrintAccess();}catch(error){printAccessMessage(error.message||"No se pudo eliminar el correo.");button.disabled=false;}}
 function filterArticles(){
   const query=($("articleSearch")?.value||"").trim().toLocaleLowerCase("es");
   const status=$("articleStatusFilter")?.value||"";
@@ -271,13 +276,13 @@ async function loadBriefings(){
   const {data:article,error}=await client.from("articles").select("*").eq("id",button.dataset.briefingEdit).single();
   if(error){say("globalMessage","No se pudo abrir la edición: "+error.message);return;}
   document.querySelectorAll(".tab").forEach(tab=>tab.classList.toggle("active",tab.dataset.tab==="articles"));
-  ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(key=>{const panel=$(key+"Tab");if(panel)panel.hidden=key!=="articles";});
+  ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads","printEdition"].forEach(key=>{const panel=$(key+"Tab");if(panel)panel.hidden=key!=="articles";});
   editArticle(article);say("formHeading","Editar Evoford Briefing");
  }));
 }
 function openNewBriefing(){
  document.querySelectorAll(".tab").forEach(tab=>tab.classList.toggle("active",tab.dataset.tab==="articles"));
- ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(key=>{const panel=$(key+"Tab");if(panel)panel.hidden=key!=="articles";});
+ ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads","printEdition"].forEach(key=>{const panel=$(key+"Tab");if(panel)panel.hidden=key!=="articles";});
  editArticle(null);$("category").value="Evoford Briefing";$("formHeading").textContent="Nueva edición · Evoford Briefing";$("author").value="Evoford News";
  $("summary").placeholder="Resumen breve de la edición semanal…";
  $("content").placeholder="Escribe aquí el guion y la transcripción de la edición. Incluye apertura, noticias seleccionadas, contexto, cierre y fuentes verificadas…";
@@ -848,6 +853,9 @@ async function saveAd(event){
 
 function wire(){
   $("maintenanceToggleBtn").addEventListener("click",toggleMaintenance);
+  $("refreshPrintAccessBtn")?.addEventListener("click",loadPrintAccess);
+  $("addPrintAccessForm")?.addEventListener("submit",addPrintAccess);
+  $("printAccessList")?.addEventListener("click",event=>{const button=event.target.closest("[data-delete-print-access]");if(button)deletePrintAccess(button.dataset.deletePrintAccess,button);});
   $("refreshOverviewBtn").addEventListener("click",()=>loadOverview(true));
   $("overviewRange").addEventListener("change",()=>loadOverview(true));
   $("loginForm").addEventListener("submit",login);
@@ -893,7 +901,7 @@ function wire(){
       if(error){say("globalMessage","No se pudo abrir el borrador: "+error.message);return;}
       editArticle(article);
       document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab==="articles"));
-      ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!=="articles";});
+      ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads","printEdition"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!=="articles";});
       return;
     }
     if(draftButton){
@@ -920,7 +928,7 @@ function wire(){
       $("content").value="NOTA DE FUENTE (EXTRACTO RSS; NO ES REDACCIÓN PROPIA):\\n"+(rssNote||"El feed RSS no incluye un resumen. Consulta la fuente original.")+"\\n\\nPENDIENTE DE REDACCIÓN: verifica los datos con la fuente original y redacta aquí una noticia propia. No copies literalmente el contenido de terceros.\\n\\nFuente consultada: "+(item.article_url||"");
       say("editorMessage",rssNote?"Borrador preparado con el titular y el extracto RSS en el campo Resumen. El texto se conserva como nota de consulta; redacta y revisa el artículo antes de enviarlo a aprobación.":"Borrador preparado. El feed no incluye extracto; consulta la fuente original y añade el resumen manualmente.");
       document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab==="articles"));
-      ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!=="articles";});
+      ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads","printEdition"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!=="articles";});
       $("articleForm").scrollIntoView({behavior:"smooth",block:"start"});
       return;
     }
@@ -933,7 +941,7 @@ function wire(){
   $("runRssBtn").addEventListener("click",runRssImport);
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
-    ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!==b.dataset.tab;});
+    ["overview","articles","briefing","inbox","sources","submissions","directory","courses","ads","printEdition"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!==b.dataset.tab;});
     if(b.dataset.tab==="articles")loadArticles();
     if(b.dataset.tab==="briefing")loadBriefings();
     if(b.dataset.tab==="inbox")loadInbox();
@@ -943,6 +951,7 @@ function wire(){
     if(b.dataset.tab==="directory")loadDirectoryAdmin();
     if(b.dataset.tab==="courses")loadCourses();
     if(b.dataset.tab==="ads")loadAds();
+    if(b.dataset.tab==="printEdition")loadPrintAccess();
   }));
 }
 window.addEventListener("error",event=>{

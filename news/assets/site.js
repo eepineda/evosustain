@@ -92,6 +92,22 @@ function articleUrl(article){
   const token=shortArticleToken(article&&article.id);
   return token?"a.html?i="+token:"articles/plantilla-articulo.html?slug="+encodeURIComponent(article&&article.slug||"");
 }
+function categoryInitials(value){
+  const normalized=String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim().replace(/&/g," y ");
+  const aliases={
+    "internacional":"IN","international":"IN","mundo":"IN","world":"IN",
+    "economia":"EC","economy":"EC",
+    "politica":"PO","politics":"PO",
+    "seguridad":"SE","seguridad y defensa":"SD","security":"SE","security and defence":"SD","security & defence":"SD",
+    "tecnologia":"TE","technology":"TE","startups":"ST","startups e innovacion":"SI","startups and innovation":"SI",
+    "opinion":"OP","opinion y analisis":"OA","opinion and analysis":"OA",
+    "sociedad":"SO","society":"SO","clima":"CL","climate":"CL",
+    "evoford briefing":"EB","aula de innovacion":"AI","innovation academy":"IA"
+  };
+  if(aliases[normalized])return aliases[normalized];
+  const words=normalized.split(/[^a-z0-9]+/).filter(word=>word&&!["y","and","de","the","e"].includes(word));
+  return words.slice(0,2).map(word=>word[0].toUpperCase()).join("")||"EV";
+}
 function articleImage(a,cls="") {
   const slug=String(a.slug||"");
   const editorialPhoto=slug.includes("fresh-concerns-raised-over-gaza-doctor")
@@ -99,7 +115,7 @@ function articleImage(a,cls="") {
     : "";
   const src=(a.image_url && /^https:\/\//i.test(a.image_url)) ? a.image_url : editorialPhoto;
   if (src) return '<img class="'+cls+'" src="' + escapeHtml(src) + '" alt="' + escapeHtml(a.title||"") + '" loading="lazy">';
-  return '<div class="story-art '+(cls?cls+" ":"")+'art-blue"><span>'+escapeHtml((a.category||"EV").slice(0,2).toUpperCase())+'</span></div>';
+  return '<div class="story-art '+(cls?cls+" ":"")+'art-blue"><span>'+escapeHtml(categoryInitials(a.category))+'</span></div>';
 }
 let publishedArticlesCache = null;
 let publishedArticlesLoadPromise = null;

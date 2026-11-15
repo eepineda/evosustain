@@ -561,12 +561,13 @@ $("directoryEditForm")?.addEventListener("submit",async event=>{
     if(value){try{const u=new URL(value);if(!["http:","https:"].includes(u.protocol))throw new Error();}catch{$("directoryEditMessage").textContent=label+" debe ser una URL válida.";return;}}
   }
   const status=$("directoryEditStatus").value;
+  const services=[];for(const line of $("directoryEditServices").value.split("\n")){const service=line.trim();if(service)services.push(service);}
   const payload={
     name,slug,category:$("directoryEditCategory").value,listing_type:$("directoryEditType").value,
     city:$("directoryEditCity").value.trim()||"London",postcode:$("directoryEditPostcode").value.trim()||null,
     address:$("directoryEditAddress").value.trim()||null,phone:$("directoryEditPhone").value.trim()||null,
     email:$("directoryEditEmail").value.trim()||null,website:website||null,
-    description:$("directoryEditDescription").value.trim(),services:$("directoryEditServices").value.split("\n").map(x=>x.trim()).filter(Boolean),
+    description:$("directoryEditDescription").value.trim(),services,
     opening_hours:$("directoryEditHours").value.trim()||null,image_url:imageUrl||null,
     status,sponsored:$("directoryEditSponsored").checked,
     verified_at:status==="published"?new Date().toISOString():null,updated_at:new Date().toISOString()

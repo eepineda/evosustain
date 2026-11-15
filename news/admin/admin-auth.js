@@ -403,7 +403,7 @@ function editorialSuggestion(item){
     ["Opinión",["opinion","columna","editorial","debate |"]]
   ];
   let category="Internacional";
-  for(const [name,words] of rules){if(words.some(word=>text.includes(word))){category=name;break;}}
+  for(const [name,words] of rules){let matched=false;for(const word of words){if(text.includes(word)){matched=true;break;}}if(matched){category=name;break;}}
   const countries=[
     ["España",["espana","madrid","barcelona","oviedo","el hierro","valladolid","andalucia","cataluna"]],
     ["Estados Unidos",["estados unidos","ee uu","misisipi","mississippi","brooklyn","nueva york","washington","nasdaq"]],
@@ -419,7 +419,8 @@ function editorialSuggestion(item){
     ["Chile",["chile","chileno","chilena"]],
     ["Colombia",["colombia","colombiano","colombiana"]]
   ];
-  const country=countries.find(([name,terms])=>terms.some(term=>text.includes(term)))?.[0]||"";
+  let country="";
+  for(const [name,terms] of countries){let matched=false;for(const term of terms){if(text.includes(term)){matched=true;break;}}if(matched){country=name;break;}}
   let region="";
   if(["España","Italia","Reino Unido","Francia","Alemania","Ucrania","Rusia"].includes(country)) region="Europa";
   else if(country==="Estados Unidos"||country==="México") region="América del Norte";

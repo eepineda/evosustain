@@ -138,6 +138,8 @@ async function loadPublishedArticles() {
 }
 
 function renderPublishedArticles(articles) {
+  const container = document.getElementById("publishedArticles");
+  if (!container) return;
   if (!articles?.length) {
     container.innerHTML='<p class="muted">'+tr("empty")+'</p>'; return;
   }

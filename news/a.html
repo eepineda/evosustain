@@ -56,7 +56,14 @@
 .app-install>div span{color:#5d6875;font-size:12px}
 .app-install button{border:0;border-radius:6px;padding:10px 13px;background:#102b4e;color:#fff;font-weight:700;cursor:pointer}
 .app-install .install-dismiss{background:transparent;color:#5d6875;font-size:20px;padding:4px 8px}
-@media(max-width:620px){.app-install{margin:10px auto 16px;flex-wrap:wrap}.app-install>div{flex-basis:calc(100% - 20px)}.app-install button{flex:1}}
+@media(max-width:620px){
+  .app-install{width:calc(100% - 20px);margin:8px auto 12px;padding:8px 9px;gap:7px;border-radius:8px;flex-wrap:nowrap}
+  .app-install>div{min-width:0;flex:1 1 auto;gap:1px}
+  .app-install>div strong{font-size:11px;line-height:1.25}
+  .app-install>div span{display:none}
+  .app-install button{flex:0 0 auto;padding:8px 9px;font-size:11px;white-space:nowrap}
+  .app-install .install-dismiss{padding:2px 4px;font-size:18px}
+}
 </style>
 </head>
 <body class="article-page">
@@ -233,5 +240,5 @@ loadArticle();
 </script>
 <script src="assets/ads.js?v=20261114-ads2"></script>
 
-<script src="assets/pwa.js?v=4" defer></script>
+<script src="assets/pwa.js?v=5" defer></script>
 </body></html>

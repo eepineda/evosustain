@@ -425,8 +425,10 @@ async function loadInbox(){
   ]);
   if(error){$("inboxList").innerHTML=`<p class="muted">${safe(error.message)}</p>`;return;}
   if(articlesError){$("inboxList").innerHTML=`<p class="muted">No se pudo comprobar la relación con los borradores: ${safe(articlesError.message)}</p>`;return;}
-  const sourceMap=new Map((sources||[]).map(source=>[String(source.id),source]));
-  const articleBySource=new Map((articles||[]).filter(a=>a.source_url).map(a=>[a.source_url,a]));
+  const sourceMap=new Map();
+  for(const source of sources||[])sourceMap.set(String(source.id),source);
+  const articleBySource=new Map();
+  for(const article of articles||[])if(article.source_url)articleBySource.set(article.source_url,article);
   $("inboxList").innerHTML=data.length?data.map(n=>{
     const source=sourceMap.get(String(n.source_id));
     const linkedArticle=articleBySource.get(n.article_url);

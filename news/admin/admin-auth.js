@@ -864,7 +864,7 @@ function wire(){
       return;
     }
     if(draftButton){
-      const {data:item,error}=await client.from("imported_items").select("*").eq("id",draftButton.dataset.draft).single();
+      const {data:item,error}=await client.from("imported_items").select("id,title,summary,suggested_category,country,region,source_id,article_url").eq("id",draftButton.dataset.draft).single();
       if(error){say("globalMessage","No se pudo abrir la noticia: "+error.message);return;}
       editArticle(null);
       $("title").value=item.title||"";

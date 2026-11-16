@@ -88,7 +88,7 @@
 
   const POPUP_DISMISS_KEY = "evoford-popup-ad-dismissed-at";
   function showPopupCampaign(campaigns) {
-    const isHome = /\\/news\\/?$/.test(location.pathname) || /\\/news\\/index\\.html$/.test(location.pathname);
+    const isHome = /\/news\/?$/.test(location.pathname) || /\/news\/index\.html$/.test(location.pathname);
     if (!isHome || !campaigns.length || document.getElementById("evoPopupAd")) return;
     let dismissedAt = 0;
     try { dismissedAt = Number(localStorage.getItem(POPUP_DISMISS_KEY) || 0); } catch (_) {}
@@ -97,7 +97,7 @@
     if (!campaign) return;
     const creative = safeHttps(campaign.creative_url);
     const target = safeHttps(campaign.target_url) || creative;
-    const isPdf = /\\.pdf(?:$|[?#])/i.test(creative);
+    const isPdf = /\.pdf(?:$|[?#])/i.test(creative);
     const en = (document.documentElement.lang || "es") === "en";
     const title = escapeHtml(campaign.campaign_title || (en ? "Featured advertising" : "Publicidad destacada"));
     const closeLabel = en ? "Close advertising" : "Cerrar publicidad";

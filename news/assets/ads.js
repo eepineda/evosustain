@@ -61,7 +61,7 @@
 
   function renderCampaignSlots(campaigns) {
     const byPlacement = new Map([
-      ["banner", []], ["homepage", []], ["sidebar", []], ["article", []], ["sponsored", []]
+      ["banner", []], ["homepage", []], ["sidebar", []], ["article", []], ["sponsored", []], ["popup", []]
     ]);
     for (const campaign of campaigns) {
       const matches = byPlacement.get(campaign.placement);
@@ -83,6 +83,56 @@
       slot.innerHTML = html;
       slot.hidden = !html;
     }
+    showPopupCampaign(byPlacement.get("popup") || []);
+  }
+
+  const POPUP_DISMISS_KEY = "evoford-popup-ad-dismissed-at";
+  function showPopupCampaign(campaigns) {
+    const isHome = /\\/news\\/?$/.test(location.pathname) || /\\/news\\/index\\.html$/.test(location.pathname);
+    if (!isHome || !campaigns.length || document.getElementById("evoPopupAd")) return;
+    let dismissedAt = 0;
+    try { dismissedAt = Number(localStorage.getItem(POPUP_DISMISS_KEY) || 0); } catch (_) {}
+    if (dismissedAt && Date.now() - dismissedAt < 24 * 60 * 60 * 1000) return;
+    const campaign = campaigns.find(item => safeHttps(item.creative_url));
+    if (!campaign) return;
+    const creative = safeHttps(campaign.creative_url);
+    const target = safeHttps(campaign.target_url) || creative;
+    const isPdf = /\\.pdf(?:$|[?#])/i.test(creative);
+    const en = (document.documentElement.lang || "es") === "en";
+    const title = escapeHtml(campaign.campaign_title || (en ? "Featured advertising" : "Publicidad destacada"));
+    const closeLabel = en ? "Close advertising" : "Cerrar publicidad";
+    const visitLabel = en ? "Visit advertiser" : "Visitar anunciante";
+    const media = isPdf
+      ? '<a class="evo-popup-pdf" href="' + escapeHtml(creative) + '" target="_blank" rel="noopener noreferrer">' + (en ? "View advertising material" : "Ver material publicitario") + ' ↗</a>'
+      : '<a class="evo-popup-creative" href="' + escapeHtml(target) + '" target="_blank" rel="sponsored noopener noreferrer"><img src="' + escapeHtml(creative) + '" alt="' + title + '"></a>';
+    const modal = document.createElement("div");
+    modal.id = "evoPopupAd";
+    modal.setAttribute("role", "dialog");
+    modal.setAttribute("aria-modal", "true");
+    modal.setAttribute("aria-label", en ? "Advertisement" : "Publicidad");
+    modal.innerHTML = '<div class="evo-popup-backdrop" data-popup-close></div><section class="evo-popup-panel"><button type="button" class="evo-popup-close" aria-label="' + closeLabel + '" data-popup-close>×</button><span class="evo-popup-kicker">' + (en ? "ADVERTISEMENT" : "PUBLICIDAD") + '</span><h2>' + title + '</h2>' + media + '<a class="evo-popup-cta" href="' + escapeHtml(target) + '" target="_blank" rel="sponsored noopener noreferrer">' + visitLabel + ' ↗</a></section>';
+    if (!document.getElementById("evoPopupAdStyles")) {
+      const style = document.createElement("style");
+      style.id = "evoPopupAdStyles";
+      style.textContent = '#evoPopupAd{position:fixed;inset:0;z-index:100000;display:grid;place-items:center;padding:18px;box-sizing:border-box;font-family:Arial,sans-serif}#evoPopupAd[hidden]{display:none}.evo-popup-backdrop{position:absolute;inset:0;background:rgba(8,18,32,.76);backdrop-filter:blur(3px)}.evo-popup-panel{position:relative;z-index:1;width:min(560px,100%);max-height:calc(100vh - 36px);overflow:auto;box-sizing:border-box;padding:26px;background:#fff;border-radius:12px;box-shadow:0 24px 80px rgba(0,0,0,.3);color:#102b4e}.evo-popup-close{position:absolute;right:12px;top:10px;width:38px;height:38px;border:0;border-radius:50%;background:#edf1f5;color:#102b4e;font-size:28px;line-height:1;cursor:pointer}.evo-popup-kicker{display:block;margin:2px 44px 10px 0;color:#9a2630;font-size:10px;font-weight:800;letter-spacing:.16em}.evo-popup-panel h2{margin:0 40px 18px 0;font:700 23px/1.25 Georgia,serif}.evo-popup-creative{display:block}.evo-popup-creative img{display:block;width:100%;max-height:56vh;object-fit:contain;background:#f3f5f7}.evo-popup-pdf{display:block;padding:28px;text-align:center;background:#f3f5f7;color:#102b4e;font-weight:700}.evo-popup-cta{display:inline-flex;margin-top:17px;padding:12px 18px;border-radius:6px;background:#102b4e;color:#fff;text-decoration:none;font-weight:700}.evo-popup-close:focus-visible,.evo-popup-cta:focus-visible{outline:3px solid #d69b36;outline-offset:3px}@media(max-width:520px){.evo-popup-panel{padding:22px 16px 18px}.evo-popup-panel h2{font-size:20px}}';
+      document.head.appendChild(style);
+    }
+    const openPopup = () => {
+      if (!document.body || document.getElementById("evoPopupAd")) return;
+      document.body.appendChild(modal);
+      document.body.style.overflow = "hidden";
+      const close = () => {
+        try { localStorage.setItem(POPUP_DISMISS_KEY, String(Date.now())); } catch (_) {}
+        modal.remove();
+        document.body.style.overflow = "";
+      };
+      modal.querySelectorAll("[data-popup-close]").forEach(button => button.addEventListener("click", close));
+      modal.addEventListener("keydown", event => {
+        if (event.key === "Escape") close();
+      });
+      modal.querySelector(".evo-popup-close")?.focus();
+    };
+    window.setTimeout(openPopup, 3000);
   }
 
   async function loadCampaignSlots() {

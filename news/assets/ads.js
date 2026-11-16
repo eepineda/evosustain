@@ -88,7 +88,8 @@
 
   const POPUP_DISMISS_KEY = "evoford-popup-ad-dismissed-at";
   function showPopupCampaign(campaigns) {
-    const isHome = location.pathname === "/" || /\/news\/?$/.test(location.pathname) || /\/news\/index\.html$/.test(location.pathname);
+    const path = location.pathname || "/";
+    const isHome = path === "/" || path === "/news" || path === "/news/" || path === "/news/index.html" || (path.startsWith("/news/") && !path.startsWith("/news/admin/"));
     if (!isHome || !campaigns.length || document.getElementById("evoPopupAd")) return;
     let dismissedAt = 0;
     try { dismissedAt = Number(localStorage.getItem(POPUP_DISMISS_KEY) || 0); } catch (_) {}

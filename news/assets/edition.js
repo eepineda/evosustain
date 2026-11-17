@@ -172,7 +172,8 @@ async function printEdition(){
   return new Promise(resolve=>{img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true});});
  }));
  if(document.fonts&&document.fonts.ready)await document.fonts.ready;
-  window.print();
+  if(!window.EvoPrintController||!window.EvoPrintController.print)throw new Error("No se ha cargado el generador PDF.");
+  await window.EvoPrintController.print();
  }catch(error){alert(error.message||"No se pudo preparar la edición para imprimir.");}
  finally{button.disabled=false;}
 }

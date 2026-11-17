@@ -12,7 +12,7 @@ function getImage(url){
  if(!url||!/^https:\/\//i.test(url))return Promise.resolve(null);
  return fetch(url,{mode:"cors",credentials:"omit"}).then(function(r){if(!r.ok)throw Error("image");return r.blob();}).then(function(b){return new Promise(function(resolve){var objectUrl=URL.createObjectURL(b),img=new Image();img.onload=function(){try{var canvas=document.createElement("canvas");canvas.width=img.naturalWidth||img.width;canvas.height=img.naturalHeight||img.height;var ctx=canvas.getContext("2d");ctx.fillStyle="#ffffff";ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0);var data=canvas.toDataURL("image/jpeg",0.9);URL.revokeObjectURL(objectUrl);resolve({data:data,type:"image/jpeg"});}catch(e){URL.revokeObjectURL(objectUrl);resolve(null);}};img.onerror=function(){URL.revokeObjectURL(objectUrl);resolve(null);};img.src=objectUrl;});}).catch(function(){return null;});
 }
-function generate(){
+function generate(returnDocument){
  var en=lang()==="en",a3=paper()==="a3";
  if(!window.jspdf||!window.jspdf.jsPDF){alert(en?"The local PDF engine did not load. Refresh the page and try again.":"No se cargó el motor PDF local. Actualiza la página e inténtalo de nuevo.");return;}
  var lead=$("#lead"),article=$("#fullArticle"),secondary=$(".secondary-area");
@@ -143,8 +143,10 @@ function imageReady(url){return getImage(url);}
   ruleLine(m,y,W-m,y,navy,.7);y+=4;font("bold",7,navy);doc.text(en?"MORE STORIES":"OTRAS NOTICIAS",m,y);
   font("normal",6,grey);doc.text(stories.length+" "+(en?"stories":"noticias"),W-m,y,{align:"right"});y+=newsGap;
   drawStories(storyLayout);footer();
+  if(returnDocument)return doc;
   doc.save("Evoford-News-"+(a3?"A3":"A4")+"-"+(en?"EN":"ES")+"-"+new Date().toISOString().slice(0,10)+".pdf");
+  return doc;
  }).catch(function(err){console.error("Evoford PDF",err);alert(en?"Could not generate the PDF. Please retry.":"No se pudo generar el PDF. Inténtalo de nuevo.");});
 }
-window.EvoPrintController={setSize:function(){return paper();},print:generate};
+window.EvoPrintController={setSize:function(){return paper();},print:function(){return generate(false);},createDocument:function(){return generate(true);}};
 })();

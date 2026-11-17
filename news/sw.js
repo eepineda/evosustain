@@ -1,6 +1,6 @@
 /* Evoford News service worker: cache-first static assets, network-first pages, no API caching. */
 "use strict";
-const VERSION = "evoford-news-pwa-v20";
+const VERSION = "evoford-news-pwa-v21";
 const SHELL = VERSION + "-shell";
 const STATIC = VERSION + "-static";
 const PRECACHE = [
@@ -17,7 +17,7 @@ const PRECACHE = [
   "/news/assets/app-shell.css?v=11",
   "/news/assets/news-core.js?v=1",
   "/news/assets/site.js?v=20261114-bio1",
-  "/news/assets/ads.js?v=20261117-editorial1",
+  "/news/assets/ads.js?v=20261117-editorial2",
   "/news/assets/pwa.js?v=6"
 ];
 self.addEventListener("install", event => {

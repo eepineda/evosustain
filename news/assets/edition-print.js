@@ -94,9 +94,9 @@ function imageReady(url){return getImage(url);}
    row.forEach(function(node,j){
     var im=images[idx+j],ih=0;
     if(im&&im.data){
-     try{var p=doc.getImageProperties(im.data);ih=Math.min(a3?20:6.5,cw/(p.width/p.height));}catch(e){}
+     try{var p=doc.getImageProperties(im.data);ih=Math.min(a3?30:19,cw/(p.width/p.height));}catch(e){}
     }
-    var titleSize=a3?8.2:6.6,titleStep=a3?3.15:2.55,summarySize=a3?6.2:5.0,summaryStep=a3?2.5:1.95;
+    var titleSize=a3?10:8.2,titleStep=a3?3.8:3.1,summarySize=a3?7.2:6.1,summaryStep=a3?2.9:2.4;
     doc.setFont("times","bold");doc.setFontSize(titleSize);
     var titleLines=doc.splitTextToSize(clean(plain($("h2",node))),cw).slice(0,a3?3:2);
     doc.setFont("times","normal");doc.setFontSize(summarySize);
@@ -134,15 +134,20 @@ function imageReady(url){return getImage(url);}
   leadBlock(images[0]);var articleTitle=clean(plain($(".full-article-heading h2",article)))||title;
   font("bold",6.5,red);doc.text(en?"FULL STORY":"ARTÍCULO COMPLETO",m,y);y+=4;
   font("bold",a3?15:12,ink);doc.splitTextToSize(articleTitle,U).forEach(function(v){ensure(5);doc.text(v,m,y);y+=5;});
-  y+=3;ruleLine(m,y,W-m,y,rule,.3);y+=5;articleColumns(bodyNodes,3,a3?9:6.8);y+=4;
+  y+=3;ruleLine(m,y,W-m,y,rule,.3);y+=5;articleColumns(bodyNodes,2,a3?10:8.2);y+=4;
   var storyLayout=prepareStories(images[1]);
-  var adHeight=a3?17:10,sectionHead=11,newsGap=6;
-  var newsReserve=adHeight+sectionHead+newsGap+storyLayout.total;
-  if(y+newsReserve>H-m-12)nextPage();
+  var adHeight=a3?17:10,sectionHead=11,newsGap=6,firstRow=storyLayout.rows[0]?storyLayout.rows[0].height:0;
+  if(y+adHeight+sectionHead+newsGap+firstRow>H-m-12)nextPage();
   doc.setDrawColor(190,198,205);doc.setLineDash([1,1],0);doc.rect(m,y,U,a3?11:6);doc.setLineDash([]);font("bold",6,grey);doc.text(en?"ADVERTISING SPACE":"ESPACIO PUBLICITARIO",W/2,y+(a3?6.5:4),{align:"center"});y+=adHeight;
   ruleLine(m,y,W-m,y,navy,.7);y+=4;font("bold",7,navy);doc.text(en?"MORE STORIES":"OTRAS NOTICIAS",m,y);
   font("normal",6,grey);doc.text(stories.length+" "+(en?"stories":"noticias"),W-m,y,{align:"right"});y+=newsGap;
-  drawStories(storyLayout);footer();
+  storyLayout.rows.forEach(function(row,index){
+   if(y+row.height>H-m-12){
+    nextPage();font("bold",6.5,red);doc.text(en?"MORE STORIES · CONTINUED":"OTRAS NOTICIAS · CONTINUACIÓN",m,y);y+=4;ruleLine(m,y,W-m,y,rule,.25);y+=5;
+   }
+   drawStories({rows:[row]});
+  });
+  footer();
   if(returnDocument)return doc;
   doc.save("Evoford-News-"+(a3?"A3":"A4")+"-"+(en?"EN":"ES")+"-"+new Date().toISOString().slice(0,10)+".pdf");
   return doc;

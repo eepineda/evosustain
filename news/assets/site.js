@@ -120,9 +120,19 @@ function articleImage(a,cls="") {
 let publishedArticlesCache = null;
 let publishedArticlesLoadPromise = null;
 
+function showCoverageFallback(message) {
+  const root=document.getElementById("countryCoverage");
+  if(root) root.innerHTML='<div class="country-card"><p class="country-empty">'+message+'</p></div>';
+}
+
 async function loadPublishedArticles() {
   const container = document.getElementById("publishedArticles");
-  if (!container || !window.supabase) return;
+  if (!container) return;
+  if (!window.supabase) {
+    container.innerHTML='<p class="muted">No se pudo conectar con el servicio de noticias. Recarga la página.</p>';
+    showCoverageFallback("No se pudo cargar la cobertura. Recarga la página.");
+    return;
+  }
   if (publishedArticlesCache) {
     renderPublishedArticles(publishedArticlesCache);
     return;
@@ -139,13 +149,18 @@ async function loadPublishedArticles() {
     }
     if (error) {
       container.innerHTML='<p class="muted">'+(currentLanguage==="en"?"Stories could not be loaded. Please try again later.":"No se pudieron cargar las publicaciones. Inténtalo más tarde.")+'</p>';
+      showCoverageFallback(currentLanguage==="en"?"Coverage could not be loaded. Please reload the page.":"No se pudo cargar la cobertura. Recarga la página.");
       console.error("Evoford News:",error.message);
       return;
     }
     publishedArticlesCache = data || [];
     renderPublishedArticles(publishedArticlesCache);
     window.dispatchEvent(new CustomEvent("evoford:articles-loaded"));
-  })();
+  })().catch(error => {
+    container.innerHTML='<p class="muted">'+(currentLanguage==="en"?"A connection error prevented stories from loading.":"Un error de conexión impidió cargar las noticias.")+'</p>';
+    showCoverageFallback(currentLanguage==="en"?"A connection error prevented coverage from loading.":"Un error de conexión impidió cargar la cobertura.");
+    console.error("Evoford News load:",error);
+  });
 
   try {
     await publishedArticlesLoadPromise;
@@ -158,7 +173,14 @@ function renderPublishedArticles(articles) {
   const container = document.getElementById("publishedArticles");
   if (!container) return;
   if (!articles?.length) {
-    container.innerHTML='<p class="muted">'+tr("empty")+'</p>'; return;
+    container.innerHTML='<p class="muted">'+tr("empty")+'</p>';
+    const root=document.getElementById("countryCoverage");
+    if(root) root.innerHTML=[
+      {id:"uk",name:tr("uk"),flag:"🇬🇧"},
+      {id:"do",name:tr("do"),flag:"🇩🇴"},
+      {id:"es",name:tr("spain"),flag:"🇪🇸"}
+    ].map(country=>'<section class="country-card" id="country-'+country.id+'"><div class="country-title"><span class="country-flag" aria-hidden="true">'+country.flag+'</span><h3>'+country.name+'</h3></div><p class="country-empty">'+tr("noCountry")+'</p></section>').join("");
+    return;
   }
   const normalize=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
   const articleOrder=new Map();

@@ -54,7 +54,9 @@ window.addEventListener("unhandledrejection",function(event){
  if(target){var reason=event.reason&&event.reason.message?event.reason.message:String(event.reason||"Error desconocido");target.innerHTML="<p class=empty>Error de carga: "+String(reason).replace(/[&<>]/g," ")+"</p>";}
 });
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
-<script src="/news/assets/edition-png.js?v=2"></script>
-<script src="/news/assets/edition.js?v=31"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous"></script>
+<script src="/news/assets/edition-print.js?v=2"></script>
+<script src="/news/assets/edition-png.js?v=3"></script>
+<script src="/news/assets/edition.js?v=32"></script>
 </body></html>

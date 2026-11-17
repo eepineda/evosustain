@@ -5,7 +5,8 @@
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5JJ2FSP3');</script>
 <!-- End Google Tag Manager -->
 <script>document.documentElement.classList.add('evo-maintenance-checking')</script><style>.evo-maintenance-checking body{visibility:hidden}</style><script src="/maintenance.js"></script>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script id="evo-pwa-mode-detect">(()=>{const m=window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches;if(m||navigator.standalone===true)document.documentElement.classList.add("evo-pwa");})();</script>
 <meta name="theme-color" content="#102b4e">
 <meta name="description" content="Aula de Innovación Evoford: charlas, formación práctica y orientación para emprendedores, profesionales y equipos innovadores.">
 <title>Aula de Innovación | Evoford News</title>
@@ -13,6 +14,7 @@
 <link rel="stylesheet" href="assets/style.css?v=20261114-print2">
 <link rel="stylesheet" href="assets/news-core.css?v=1">
 <link rel="stylesheet" href="assets/editorial-premium.css?v=20261114-premium3">
+<link rel="stylesheet" href="assets/app-shell.css?v=11">
 <style>
 .aula-hero{padding:clamp(34px,6vw,72px) 0 42px;border-bottom:3px double var(--navy)}
 .aula-eyebrow{color:var(--red);font:700 10px Arial,sans-serif;letter-spacing:.17em}
@@ -127,6 +129,16 @@
     font-size:12px!important;line-height:1.5!important;overflow-wrap:anywhere!important;
   }
 }
+
+/* Use the exact standard Evoford app navigation on standalone mobile only. */
+@media(max-width:760px){
+  html.evo-pwa body{padding-bottom:calc(84px + env(safe-area-inset-bottom))!important}
+  html.evo-pwa .aula-nav{display:none!important}
+  html.evo-pwa .app-bottom-nav{display:grid!important}
+}
+@media(min-width:761px){
+  html body .app-bottom-nav{display:none!important}
+}
 </style>
 <script>/* Canonical compact URL: direct visits and short-link redirects stay on the same public code. */(function(){try{var q=new URLSearchParams(location.search),t=q.get("__short"),p=location.pathname.split("/").pop()||"index.html",h=location.hash;var map={"index.html":{"":"aW5kZXguaHRtbA","#section-internacional":"aW5kZXguaHRtbCNzZWN0aW9uLWludGVybmFjaW9uYWw","#section-politica":"aW5kZXguaHRtbCNzZWN0aW9uLXBvbGl0aWNh","#section-economia":"aW5kZXguaHRtbCNzZWN0aW9uLWVjb25vbWlh","#section-seguridad":"aW5kZXguaHRtbCNzZWN0aW9uLXNlZ3VyaWRhZA","#section-opinion-analisis":"aW5kZXguaHRtbCNzZWN0aW9uLW9waW5pb24tYW5hbGlzaXM"},"startups.html":{"":"c3RhcnR1cHMuaHRtbA"},"briefing.html":{"":"YnJpZWZpbmcuaHRtbA"},"politica.html":{"":"cG9saXRpY2EuaHRtbA"},"directory.html":{"":"ZGlyZWN0b3J5Lmh0bWw"},"enviar.html":{"":"ZW52aWFyLmh0bWw"},"edicion.html":{"":"ZWRpY2lvbi5odG1s"},"aula-innovacion.html":{"":"YXVsYS1pbm5vdmFjaW9uLmh0bWw"},"sobre-evoford.html":{"":"c29icmUtZXZvZm9yZC5odG1s"},"publicidad.html":{"":"cHVibGljaWRhZC5odG1s"}};var code=t||(map[p]&&map[p][h]);if(!code)return;var lang=q.get("lang");history.replaceState(null,"","/news/a.html?i="+encodeURIComponent(code)+(lang?"&lang="+encodeURIComponent(lang):""));}catch(e){}})();</script>
 </head>
@@ -140,7 +152,7 @@
 <main class="wrap">
 <div class="edition"><span id="aulaEdition">EVOFORD NEWS · CONOCIMIENTO EN ACCIÓN</span><span id="today"></span><div class="edition-actions"><div class="language-switch" aria-label="Language"><button type="button" data-language="es" aria-pressed="true">ES</button><button type="button" data-language="en" aria-pressed="false">EN</button></div></div></div>
 <section class="aula-hero"><div class="aula-eyebrow" id="heroEyebrow">APRENDER · CONECTAR · EMPRENDER</div><h1 id="heroTitle">Aula de Innovación Evoford</h1><p id="heroIntro">Un espacio para transformar curiosidad en conocimiento y conocimiento en acción. Charlas, formación práctica y orientación para personas que quieren comprender, impulsar o desarrollar proyectos innovadores.</p><div class="aula-hero-meta"><span id="metaOne">Charlas y conversaciones</span><span id="metaTwo">Talleres prácticos</span><span id="metaThree">Orientación inicial</span></div></section>
-<nav class="aula-nav" aria-label="Aula de Innovación"><a href="#programas" id="navPrograms">Áreas de aprendizaje</a><a href="#formatos" id="navFormats">Formatos</a><a href="#participa" id="navParticipate">Participa</a><a href="#principios" id="navPrinciples">Nuestro enfoque</a></nav>
+
 
 <section class="aula-section" id="programas"><div class="aula-section-head"><h2 id="programTitle">Áreas de aprendizaje</h2><span id="programLabel">CONTENIDOS Y COMPETENCIAS</span></div><div class="aula-tracks">
 <details class="aula-track"><summary><span class="track-no">01 / STARTUP</span><h3 id="track1Title">Crear y desarrollar una startup</h3><span class="track-toggle" aria-hidden="true"></span></summary><div class="track-details"><p id="track1Text">De la idea al proyecto: identificar problemas, validar necesidades, diseñar propuestas de valor y comprender los primeros pasos de un negocio.</p><ul id="track1List"><li>Validación de ideas y clientes</li><li>Modelos de negocio y propuesta de valor</li><li>Primeros pasos y errores habituales</li></ul></div></details>
@@ -169,6 +181,13 @@
 
 </main>
 <footer><a class="footer-brand" href="./">EVOFORD NEWS</a><span id="footerText">Noticias · Opinión · Análisis</span><a href="a.html?i=c3RhcnR1cHMuaHRtbA">Startups e innovación</a><span>© <span id="year"></span> Evoford</span><a href="a.html?i=c29icmUtZXZvZm9yZC5odG1s">Sobre / About Evoford News</a></footer>
+<nav class="app-bottom-nav" aria-label="Navegación de la aplicación">
+<a href="./"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></span><span>Portada</span></a>
+<a href="politica.html"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0-18"/></svg></span><span>Política</span></a>
+<a href="briefing.html"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h17M7 15l4-4 3 2 6-7"/></svg></span><span>Evoford Briefing</span></a>
+<a href="startups.html" aria-current="page"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9 4.9 19.1"/></svg></span><span>Startups</span></a>
+<a href="a.html?i=ZGlyZWN0b3J5Lmh0bWw"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span><span>Directorio</span></a>
+</nav>
 <script>
 const aulaNow=new Date();let aulaLang=localStorage.getItem("evoford-news-language")==="en"?"en":"es";
 const aulaText={

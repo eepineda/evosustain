@@ -102,7 +102,7 @@ function imageReady(url){return getImage(url);}
     doc.setFont("times","normal");doc.setFontSize(summarySize);
     var summaryLines=doc.splitTextToSize(clean(plain($("p",node))),cw).slice(0,a3?4:3);
     var height=(ih?ih+1:0)+3+titleLines.length*titleStep+.8+summaryLines.length*summaryStep+2;
-    cards.push({node:node,image:im,x:m+j*(cw+gap),imageHeight:ih,titleLines:titleLines,summaryLines:summaryLines,titleSize:titleSize,titleStep:titleStep,summarySize:summarySize,summaryStep:summaryStep});
+    cards.push({node:node,image:im,x:m+j*(cw+gap),width:cw,imageHeight:ih,titleLines:titleLines,summaryLines:summaryLines,titleSize:titleSize,titleStep:titleStep,summarySize:summarySize,summaryStep:summaryStep});
     rowHeight=Math.max(rowHeight,height);
    });
    rows.push({cards:cards,height:rowHeight});
@@ -112,7 +112,7 @@ function imageReady(url){return getImage(url);}
  function drawStories(layout){
   layout.rows.forEach(function(row){
    row.cards.forEach(function(card){
-    var cy=0,cardWidth=(U-(a3?6:7)*(row.cards.length-1))/row.cards.length;
+    var cy=0,cardWidth=card.width;
     if(card.image&&card.image.data&&card.imageHeight){
      try{doc.addImage(card.image.data,"JPEG",card.x,y,cardWidth,card.imageHeight,undefined,"FAST");cy=card.imageHeight+1;}catch(e){}
     }

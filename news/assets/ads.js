@@ -160,7 +160,7 @@
     campaignsLoadPromise = (async () => {
       const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
       const { data, error } = await client.from("published_ad_campaigns")
-        .select("id,campaign_title,placement,creative_url,target_url,start_date,end_date,publication_mode");
+        .select("id,campaign_title,placement,creative_url,creative_mobile_url,target_url,start_date,end_date,publication_mode");
       if (error) {
         console.warn("Evoford News ads:", error.message);
         return;

@@ -88,20 +88,20 @@ function imageReady(url){return getImage(url);}
   y=Math.max.apply(Math,bottoms);articleFlow=false;
  }
  function prepareStories(images){
-  var cols=3,gap=a3?6:5,cw=(U-gap*(cols-1))/cols,rows=[];
+  var cols=a3?3:2,gap=a3?6:7,cw=(U-gap*(cols-1))/cols,rows=[];
   for(var idx=0;idx<stories.length;idx+=cols){
    var row=stories.slice(idx,idx+cols),cards=[],rowHeight=0;
    row.forEach(function(node,j){
     var im=images[idx+j],ih=0;
     if(im&&im.data){
-     try{var p=doc.getImageProperties(im.data);ih=Math.min(a3?30:19,cw/(p.width/p.height));}catch(e){}
+     try{var p=doc.getImageProperties(im.data);ih=Math.min(a3?36:31,cw/(p.width/p.height));}catch(e){}
     }
-    var titleSize=a3?10:8.2,titleStep=a3?3.8:3.1,summarySize=a3?7.2:6.1,summaryStep=a3?2.9:2.4;
+    var titleSize=a3?11:10,titleStep=a3?4.2:3.8,summarySize=a3?8:7.2,summaryStep=a3?3.2:2.9;
     doc.setFont("times","bold");doc.setFontSize(titleSize);
-    var titleLines=doc.splitTextToSize(clean(plain($("h2",node))),cw).slice(0,a3?3:2);
+    var titleLines=doc.splitTextToSize(clean(plain($("h2",node))),cw).slice(0,a3?4:3);
     doc.setFont("times","normal");doc.setFontSize(summarySize);
-    var summaryLines=doc.splitTextToSize(clean(plain($("p",node))),cw).slice(0,a3?3:1);
-    var height=(ih?ih+1:0)+2.5+titleLines.length*titleStep+.4+summaryLines.length*summaryStep+1.2;
+    var summaryLines=doc.splitTextToSize(clean(plain($("p",node))),cw).slice(0,a3?4:3);
+    var height=(ih?ih+1:0)+3+titleLines.length*titleStep+.8+summaryLines.length*summaryStep+2;
     cards.push({node:node,image:im,x:m+j*(cw+gap),imageHeight:ih,titleLines:titleLines,summaryLines:summaryLines,titleSize:titleSize,titleStep:titleStep,summarySize:summarySize,summaryStep:summaryStep});
     rowHeight=Math.max(rowHeight,height);
    });
@@ -112,16 +112,16 @@ function imageReady(url){return getImage(url);}
  function drawStories(layout){
   layout.rows.forEach(function(row){
    row.cards.forEach(function(card){
-    var cy=0;
+    var cy=0,cardWidth=(U-(a3?6:7)*(row.cards.length-1))/row.cards.length;
     if(card.image&&card.image.data&&card.imageHeight){
-     try{doc.addImage(card.image.data,"JPEG",card.x,y,U/3-(a3?4:3),card.imageHeight,undefined,"FAST");cy=card.imageHeight+1;}catch(e){}
+     try{doc.addImage(card.image.data,"JPEG",card.x,y,cardWidth,card.imageHeight,undefined,"FAST");cy=card.imageHeight+1;}catch(e){}
     }
     font("bold",a3?5.3:4.9,red);doc.text(clean(plain($(".category",card.node))).slice(0,35),card.x,y+cy);cy+=2.5;
     font("bold",card.titleSize,ink);
     card.titleLines.forEach(function(line){doc.text(line,card.x,y+cy);cy+=card.titleStep;});
     cy+=.4;font("normal",card.summarySize,grey);
     card.summaryLines.forEach(function(line){doc.text(line,card.x,y+cy);cy+=card.summaryStep;});
-    ruleLine(card.x,y+row.height,card.x+U/3-(a3?4:3),y+row.height,rule,.2);
+    ruleLine(card.x,y+row.height,card.x+cardWidth,y+row.height,rule,.2);
    });
    y+=row.height+(a3?4:2.5);
   });
@@ -136,9 +136,8 @@ function imageReady(url){return getImage(url);}
   font("bold",a3?15:12,ink);doc.splitTextToSize(articleTitle,U).forEach(function(v){ensure(5);doc.text(v,m,y);y+=5;});
   y+=3;ruleLine(m,y,W-m,y,rule,.3);y+=5;articleColumns(bodyNodes,2,a3?10:8.2);y+=4;
   var storyLayout=prepareStories(images[1]);
-  var adHeight=a3?17:10,sectionHead=11,newsGap=6,firstRow=storyLayout.rows[0]?storyLayout.rows[0].height:0;
-  if(y+adHeight+sectionHead+newsGap+firstRow>H-m-12)nextPage();
-  doc.setDrawColor(190,198,205);doc.setLineDash([1,1],0);doc.rect(m,y,U,a3?11:6);doc.setLineDash([]);font("bold",6,grey);doc.text(en?"ADVERTISING SPACE":"ESPACIO PUBLICITARIO",W/2,y+(a3?6.5:4),{align:"center"});y+=adHeight;
+  var sectionHead=7,newsGap=6,firstRow=storyLayout.rows[0]?storyLayout.rows[0].height:0;
+  if(y+sectionHead+newsGap+firstRow>H-m-12)nextPage();
   ruleLine(m,y,W-m,y,navy,.7);y+=4;font("bold",7,navy);doc.text(en?"MORE STORIES":"OTRAS NOTICIAS",m,y);
   font("normal",6,grey);doc.text(stories.length+" "+(en?"stories":"noticias"),W-m,y,{align:"right"});y+=newsGap;
   storyLayout.rows.forEach(function(row,index){

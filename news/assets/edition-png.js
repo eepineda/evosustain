@@ -20,6 +20,7 @@ async function exportPng(){
  try{
   var doc=await window.EvoPrintController.createDocument();
   if(!doc)throw new Error("The shared PDF document was not created");
+  window.pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
   var bytes=new Uint8Array(doc.output("arraybuffer"));
   var pdf=await window.pdfjsLib.getDocument({data:bytes}).promise;
   var date=new Date().toISOString().slice(0,10);

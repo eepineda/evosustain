@@ -36,6 +36,7 @@
 @media (display-mode: standalone){.ecosystem-nav{display:none!important}}
 @media (display-mode: fullscreen){.ecosystem-nav{display:none!important}}
 </style>
+  <link rel="stylesheet" href="assets/reader-tools.css?v=20261117-1">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -75,7 +76,14 @@
   </nav>
   <div id="countryCoverage" class="country-grid"><p class="muted">Cargando cobertura…</p></div>
 </section>
-<section class="frontpage" aria-label="En portada">
+
+<section class="reader-tools" id="readerTools" aria-label="Herramientas de lectura">
+  <div class="reader-tools-heading"><div><span class="kicker">EVOFORD NEWS</span><h2>Encuentra y guarda noticias</h2></div><button type="button" id="showSavedStories" class="reader-secondary" aria-expanded="false">♡ Mis favoritos <span id="savedStoriesCount">0</span></button></div>
+  <div class="reader-search-row"><label class="reader-search"><span aria-hidden="true">⌕</span><input id="newsSearchInput" type="search" placeholder="Buscar noticias, temas, autores o países…" autocomplete="off"></label><select id="newsCategoryFilter" aria-label="Filtrar por sección"><option value="">Todas las secciones</option></select><select id="newsCountryFilter" aria-label="Filtrar por país"><option value="">Todos los países</option></select></div>
+  <div id="newsSearchResults" class="reader-results" aria-live="polite" hidden></div>
+  <div id="savedStoriesPanel" class="saved-stories-panel" hidden><div class="reader-panel-heading"><strong>Mis noticias guardadas</strong><button type="button" id="closeSavedStories" aria-label="Cerrar favoritos">×</button></div><div id="savedStoriesList"></div></div>
+</section>
+  <section class="frontpage" aria-label="En portada">
     <div class="frontpage-top"><span class="kicker">EN PORTADA</span><span class="live-mark"><i></i> ACTUALIDAD</span></div>
     <div class="frontpage-grid">
       <article id="featuredStory" class="featured-story">
@@ -117,6 +125,16 @@
     </div>
   </section>
 </main>
+
+<section class="newsletter-panel" id="newsletterPanel">
+ <div class="newsletter-copy"><span class="kicker">EL BOLETÍN DE EVOFORD</span><h2>Las claves de la actualidad, en tu correo.</h2><p>Recibe una selección editorial de Evoford News. Tú eliges la frecuencia.</p></div>
+ <form id="newsletterForm" class="newsletter-form">
+  <label for="newsletterEmail">Correo electrónico</label><input id="newsletterEmail" name="email" type="email" maxlength="254" placeholder="tu@correo.com" required autocomplete="email">
+  <label for="newsletterFrequency">Frecuencia</label><select id="newsletterFrequency" name="frequency"><option value="weekly">Una vez por semana</option><option value="daily">Cada día</option></select>
+  <label class="newsletter-consent"><input type="checkbox" id="newsletterConsent" required><span>Acepto recibir el boletín informativo de Evoford News. Puedo solicitar la baja cuando quiera.</span></label>
+  <button type="submit" id="newsletterSubmit">Suscribirme</button><p class="newsletter-privacy">Tu correo se utilizará únicamente para gestionar esta suscripción. Consulta nuestra política de privacidad.</p><p id="newsletterFeedback" role="status" aria-live="polite"></p>
+ </form>
+</section>
 <footer><a class="footer-brand" href="./">EVOFORD NEWS</a><span>Noticias · Opinión · Análisis</span><a href="a.html?i=cHVibGljaWRhZC5odG1s">Anúnciate</a><a href="https://evoford.com/news/admin/#" target="_blank" rel="noopener noreferrer">Acceso editorial</a><span>© <span id="year"></span> Evoford</span><a href="a.html?i=c29icmUtZXZvZm9yZC5odG1s">Sobre / About Evoford News</a>
 </footer>
 <nav class="app-bottom-nav" aria-label="Navegación de la aplicación">
@@ -127,7 +145,7 @@
 <a href="a.html?i=ZGlyZWN0b3J5Lmh0bWw" ><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span><span>Directorio</span></a>
 </nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/site.js?v=20261115-featured1"></script>
+<script src="assets/site.js?v=20261117-reader-tools1"></script>
 <script src="assets/ads.js?v=20261117-editorial2"></script>
 
 

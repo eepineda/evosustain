@@ -196,7 +196,8 @@
   const EDITORIAL_POPUP_KEY = "evoford-editorial-popup-seen-at";
   function showEditorialPopup() {
     const path = location.pathname || "/";
-    const params = new URLSearchParams(location.search);\n    const isHome = path === "/" || path === "/news" || path === "/news/" || path === "/news/index.html" || (path === "/news/a.html" && params.get("i") === "aW5kZXguaHRtbA");
+    const params = new URLSearchParams(location.search);
+    const isHome = path === "/" || path === "/news" || path === "/news/" || path === "/news/index.html" || (path === "/news/a.html" && params.get("i") === "aW5kZXguaHRtbA");
     if (!isHome || document.getElementById("evoEditorialPopup") || document.getElementById("evoPopupAd")) return;
     let seenAt = 0;
     try { seenAt = Number(localStorage.getItem(EDITORIAL_POPUP_KEY) || 0); } catch (_) {}

@@ -139,6 +139,34 @@
 @media(min-width:761px){
   html body .app-bottom-nav{display:none!important}
 }
+
+/* Always expose the standard app navigation on phone-sized Aula pages.
+   Do not depend on standalone-mode detection: Android may open the short URL in a normal browser context. */
+@media screen and (max-width:760px){
+  html body nav.app-bottom-nav{
+    position:fixed!important;z-index:2147483000!important;
+    left:0!important;right:0!important;bottom:0!important;top:auto!important;
+    display:grid!important;visibility:visible!important;opacity:1!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    align-items:stretch!important;gap:0!important;
+    width:100%!important;min-height:64px!important;height:auto!important;
+    margin:0!important;padding:8px 6px calc(8px + env(safe-area-inset-bottom))!important;
+    box-sizing:border-box!important;background:rgba(255,255,255,.99)!important;
+    border-top:1px solid #dfe5ec!important;box-shadow:0 -7px 24px rgba(16,43,78,.12)!important;
+  }
+  html body nav.app-bottom-nav a{
+    display:flex!important;visibility:visible!important;opacity:1!important;
+    min-width:0!important;min-height:48px!important;flex-direction:column!important;
+    align-items:center!important;justify-content:center!important;gap:4px!important;
+    color:#68778a!important;text-decoration:none!important;
+    font:700 9px/1.2 Arial,sans-serif!important;text-align:center!important;
+  }
+  html body nav.app-bottom-nav a[aria-current="page"]{color:#102b4e!important}
+  html body nav.app-bottom-nav .nav-icon{display:grid!important;place-items:center!important;width:28px!important;height:25px!important}
+  html body nav.app-bottom-nav .nav-icon svg{display:block!important;width:22px!important;height:22px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+  html body{padding-bottom:calc(88px + env(safe-area-inset-bottom))!important}
+}
+@media screen and (min-width:761px){html body nav.app-bottom-nav{display:none!important}}
 </style>
 <script>/* Canonical compact URL: direct visits and short-link redirects stay on the same public code. */(function(){try{var q=new URLSearchParams(location.search),t=q.get("__short"),p=location.pathname.split("/").pop()||"index.html",h=location.hash;var map={"index.html":{"":"aW5kZXguaHRtbA","#section-internacional":"aW5kZXguaHRtbCNzZWN0aW9uLWludGVybmFjaW9uYWw","#section-politica":"aW5kZXguaHRtbCNzZWN0aW9uLXBvbGl0aWNh","#section-economia":"aW5kZXguaHRtbCNzZWN0aW9uLWVjb25vbWlh","#section-seguridad":"aW5kZXguaHRtbCNzZWN0aW9uLXNlZ3VyaWRhZA","#section-opinion-analisis":"aW5kZXguaHRtbCNzZWN0aW9uLW9waW5pb24tYW5hbGlzaXM"},"startups.html":{"":"c3RhcnR1cHMuaHRtbA"},"briefing.html":{"":"YnJpZWZpbmcuaHRtbA"},"politica.html":{"":"cG9saXRpY2EuaHRtbA"},"directory.html":{"":"ZGlyZWN0b3J5Lmh0bWw"},"enviar.html":{"":"ZW52aWFyLmh0bWw"},"edicion.html":{"":"ZWRpY2lvbi5odG1s"},"aula-innovacion.html":{"":"YXVsYS1pbm5vdmFjaW9uLmh0bWw"},"sobre-evoford.html":{"":"c29icmUtZXZvZm9yZC5odG1s"},"publicidad.html":{"":"cHVibGljaWRhZC5odG1s"}};var code=t||(map[p]&&map[p][h]);if(!code)return;var lang=q.get("lang");history.replaceState(null,"","/news/a.html?i="+encodeURIComponent(code)+(lang?"&lang="+encodeURIComponent(lang):""));}catch(e){}})();</script>
 </head>

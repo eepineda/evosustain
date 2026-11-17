@@ -126,7 +126,7 @@ function imageReady(url){return getImage(url);}
    y+=row.height+(a3?4:2.5);
   });
  }
- Promise.all([imageReady(imageUrl(leadImg)),Promise.all(stories.map(function(n){return imageReady(imageUrl($("img",n)));}))]).then(function(images){
+ return Promise.all([imageReady(imageUrl(leadImg)),Promise.all(stories.map(function(n){return imageReady(imageUrl($("img",n)));}))]).then(function(images){
   header();font("bold",6.5,red);doc.text(category.toUpperCase(),m,y);y+=5;
   var titlePt=a3?25:21;font("bold",titlePt,ink);
   doc.splitTextToSize(title,U).forEach(function(v){ensure(titlePt*.42+1);doc.text(v,m,y);y+=titlePt*.42;});

@@ -49,9 +49,12 @@
       : horizontal
         ? "display:block;flex:0 0 200px;width:200px;height:120px;max-width:38%;object-fit:contain;background:#f3f5f7;"
         : "display:block;width:100%;height:auto;max-height:180px;object-fit:contain;background:#f3f5f7;";
+    const mobileCreative = safeHttps(campaign.creative_mobile_url);
     const media = isPdf
       ? '<span style="display:flex;align-items:center;justify-content:center;min-height:90px;padding:14px;background:#f3f5f7;">Ver material publicitario (PDF) ↗</span>'
-      : '<img src="' + escapeHtml(creative) + '" alt="' + title + '" loading="lazy" style="' + imageStyle + '">';
+      : (bannerPlacement && mobileCreative
+        ? '<picture style="display:block;width:100%;"><source media="(max-width:600px)" srcset="' + escapeHtml(mobileCreative) + '"><img src="' + escapeHtml(creative) + '" alt="' + title + '" loading="lazy" style="' + imageStyle + '"></picture>'
+        : '<img src="' + escapeHtml(creative) + '" alt="' + title + '" loading="lazy" style="' + imageStyle + '">');
     const copy = '<span style="display:flex;' + (bannerPlacement ? 'width:100%;' : 'flex:1;') + 'min-width:0;flex-direction:column;gap:5px;padding:4px 8px;">' +
       '<span style="display:block;color:#9a2630;font:800 10px/1.4 Arial,sans-serif;letter-spacing:.15em;">' + label + '</span>' +
       '<span style="display:block;color:#102b4e;font:700 17px/1.35 Georgia,serif;">' + title + '</span></span>';

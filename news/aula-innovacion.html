@@ -116,6 +116,18 @@ details.aula-track ul{margin-top:9px}
 .aula-smallprint{margin:12px 0 0;color:var(--muted);font:11px/1.6 Arial,sans-serif}
 @media(max-width:760px){.aula-lead{grid-template-columns:1fr}.aula-tracks{grid-template-columns:1fr}.aula-track{min-height:0}.aula-format-grid{grid-template-columns:1fr 1fr}.aula-audience{grid-template-columns:1fr}.aula-cta{grid-template-columns:1fr}.aula-cta a{justify-self:start}.aula-principles{grid-template-columns:1fr}.aula-section-head{align-items:flex-start;flex-direction:column}}
 @media(max-width:480px){.aula-format-grid{grid-template-columns:1fr}.aula-hero h1{font-size:clamp(42px,13vw,58px)}}
+
+/* FINAL MOBILE APP OVERRIDES — hide the website masthead and footer */
+@media screen and (max-width: 900px){
+  html body .ecosystem-nav,
+  html body header.masthead,
+  html body > footer,
+  html body footer{display:none!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;overflow:hidden!important}
+  html body{padding-bottom:calc(78px + env(safe-area-inset-bottom))!important}
+  html body .wrap{padding-top:12px!important}
+  html body nav.aula-nav{position:fixed!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;inset:auto 0 0!important;z-index:99999!important;margin:0!important;padding:9px 5px calc(9px + env(safe-area-inset-bottom))!important;background:rgba(255,255,255,.98)!important;border-top:1px solid #dfe5ec!important;box-shadow:0 -7px 24px rgba(16,43,78,.08)!important}
+  html body nav.aula-nav a{display:flex!important;align-items:center!important;justify-content:center!important;min-width:0!important;padding:8px 3px!important;text-align:center!important;color:#102b4e!important;font:800 9px/1.2 Arial,sans-serif!important}
+}
 </style>
 <script>/* Canonical compact URL: direct visits and short-link redirects stay on the same public code. */(function(){try{var q=new URLSearchParams(location.search),t=q.get("__short"),p=location.pathname.split("/").pop()||"index.html",h=location.hash;var map={"index.html":{"":"aW5kZXguaHRtbA","#section-internacional":"aW5kZXguaHRtbCNzZWN0aW9uLWludGVybmFjaW9uYWw","#section-politica":"aW5kZXguaHRtbCNzZWN0aW9uLXBvbGl0aWNh","#section-economia":"aW5kZXguaHRtbCNzZWN0aW9uLWVjb25vbWlh","#section-seguridad":"aW5kZXguaHRtbCNzZWN0aW9uLXNlZ3VyaWRhZA","#section-opinion-analisis":"aW5kZXguaHRtbCNzZWN0aW9uLW9waW5pb24tYW5hbGlzaXM"},"startups.html":{"":"c3RhcnR1cHMuaHRtbA"},"briefing.html":{"":"YnJpZWZpbmcuaHRtbA"},"politica.html":{"":"cG9saXRpY2EuaHRtbA"},"directory.html":{"":"ZGlyZWN0b3J5Lmh0bWw"},"enviar.html":{"":"ZW52aWFyLmh0bWw"},"edicion.html":{"":"ZWRpY2lvbi5odG1s"},"aula-innovacion.html":{"":"YXVsYS1pbm5vdmFjaW9uLmh0bWw"},"sobre-evoford.html":{"":"c29icmUtZXZvZm9yZC5odG1s"},"publicidad.html":{"":"cHVibGljaWRhZC5odG1s"}};var code=t||(map[p]&&map[p][h]);if(!code)return;var lang=q.get("lang");history.replaceState(null,"","/news/a.html?i="+encodeURIComponent(code)+(lang?"&lang="+encodeURIComponent(lang):""));}catch(e){}})();</script>
 </head>

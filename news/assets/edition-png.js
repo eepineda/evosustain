@@ -42,12 +42,36 @@ async function exportPng(){
    logging:false,windowWidth:Math.max(document.documentElement.clientWidth,width),
    width:width,height:height,scrollX:0,scrollY:0
   });
-  var ratio=297/210,pageHeight=Math.round(canvas.width*ratio);
-  var total=Math.ceil(canvas.height/pageHeight),date=new Date().toISOString().slice(0,10);
-  for(var i=0;i<total;i++){
-   var y=i*pageHeight,h=Math.min(pageHeight,canvas.height-y);
-   var page=document.createElement("canvas");page.width=canvas.width;page.height=h;
-   page.getContext("2d").drawImage(canvas,0,y,canvas.width,h,0,0,canvas.width,h);
+  // Break only at editorial block boundaries where possible; every PNG has full page dimensions.
+  var pageHeight=Math.round(canvas.width*297/210),scaleFactor=canvas.width/width;
+  var breaks=[0,canvas.height];
+  function addBreak(node,edge){
+   if(!node)return;
+   var r=node.getBoundingClientRect(),base=newspaper.getBoundingClientRect().top;
+   var pos=(edge==="bottom"?r.bottom:r.top)-base;
+   pos=Math.round(pos*scaleFactor);
+   if(pos>0&&pos<canvas.height)breaks.push(pos);
+  }
+  [".paper-masthead",".paper-sections","#lead","#fullArticle","#printAdSlot",".section-label",".paper-footer"].forEach(function(sel){
+   newspaper.querySelectorAll(sel).forEach(function(n){addBreak(n,"top");});
+  });
+  newspaper.querySelectorAll("#fullArticle .full-article-body > *").forEach(function(n){addBreak(n,"top");});
+  newspaper.querySelectorAll("#storyGrid .story").forEach(function(n){addBreak(n,"top");});
+  breaks=Array.from(new Set(breaks)).sort(function(a,b){return a-b;});
+  var pages=[],start=0;
+  while(start<canvas.height){
+   var limit=Math.min(start+pageHeight,canvas.height),minimum=start+Math.round(pageHeight*.48);
+   var candidates=breaks.filter(function(v){return v>minimum&&v<=limit;});
+   var end=candidates.length?candidates[candidates.length-1]:limit;
+   if(end<=start)end=limit;
+   pages.push({start:start,end:end});start=end;
+  }
+  var date=new Date().toISOString().slice(0,10);
+  for(var i=0;i<pages.length;i++){
+   var segment=pages[i],h=segment.end-segment.start;
+   var page=document.createElement("canvas");page.width=canvas.width;page.height=pageHeight;
+   var ctx=page.getContext("2d");ctx.fillStyle="#ffffff";ctx.fillRect(0,0,page.width,page.height);
+   ctx.drawImage(canvas,0,segment.start,canvas.width,h,0,0,canvas.width,h);
    var name="Evoford-News-"+paper()+"-"+(lang==="en"?"EN":"ES")+"-"+date+"-pagina-"+String(i+1).padStart(2,"0")+".png";
    var ok=await download(page,name);if(!ok)throw new Error("PNG encoding failed");
    page.width=page.height=1;

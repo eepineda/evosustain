@@ -128,6 +128,40 @@ details.aula-track ul{margin-top:9px}
   html body nav.aula-nav{position:fixed!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;inset:auto 0 0!important;z-index:99999!important;margin:0!important;padding:9px 5px calc(9px + env(safe-area-inset-bottom))!important;background:rgba(255,255,255,.98)!important;border-top:1px solid #dfe5ec!important;box-shadow:0 -7px 24px rgba(16,43,78,.08)!important}
   html body nav.aula-nav a{display:flex!important;align-items:center!important;justify-content:center!important;min-width:0!important;padding:8px 3px!important;text-align:center!important;color:#102b4e!important;font:800 9px/1.2 Arial,sans-serif!important}
 }
+
+/* Readable CTA panels: preserve navy panel and strong white text on app screens. */
+html body .aula-cta{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:center!important;
+  gap:18px!important;
+  min-height:0!important;
+  padding:24px!important;
+  margin:22px 0!important;
+  background:#102b4e!important;
+  background-color:#102b4e!important;
+  color:#fff!important;
+  border:1px solid #102b4e!important;
+  border-radius:16px!important;
+  box-shadow:0 8px 22px rgba(16,43,78,.10)!important;
+}
+html body .aula-cta h2,
+html body .aula-cta p{color:#fff!important;opacity:1!important;text-shadow:none!important}
+html body .aula-cta h2{font-size:clamp(21px,5vw,28px)!important;line-height:1.2!important;margin:0 0 10px!important}
+html body .aula-cta p{font-size:15px!important;line-height:1.65!important;color:#e3ebf4!important}
+html body .aula-cta a{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ min-height:44px!important;padding:12px 16px!important;border:0!important;border-radius:8px!important;
+ background:#fff!important;color:#102b4e!important;opacity:1!important;
+ font:800 11px/1.35 Arial,sans-serif!important;text-decoration:none!important;
+}
+html body .aula-section{scroll-margin-top:22px!important}
+@media(max-width:760px){
+ html body .aula-cta{grid-template-columns:minmax(0,1fr)!important;padding:20px!important;gap:14px!important}
+ html body .aula-cta a{justify-self:start!important;max-width:100%!important;white-space:normal!important}
+ html body .aula-section-head{scroll-margin-top:24px!important}
+ html body .aula-section-head h2{font-size:clamp(24px,7vw,30px)!important;line-height:1.18!important;overflow:visible!important}
+}
 </style>
 <script>/* Canonical compact URL: direct visits and short-link redirects stay on the same public code. */(function(){try{var q=new URLSearchParams(location.search),t=q.get("__short"),p=location.pathname.split("/").pop()||"index.html",h=location.hash;var map={"index.html":{"":"aW5kZXguaHRtbA","#section-internacional":"aW5kZXguaHRtbCNzZWN0aW9uLWludGVybmFjaW9uYWw","#section-politica":"aW5kZXguaHRtbCNzZWN0aW9uLXBvbGl0aWNh","#section-economia":"aW5kZXguaHRtbCNzZWN0aW9uLWVjb25vbWlh","#section-seguridad":"aW5kZXguaHRtbCNzZWN0aW9uLXNlZ3VyaWRhZA","#section-opinion-analisis":"aW5kZXguaHRtbCNzZWN0aW9uLW9waW5pb24tYW5hbGlzaXM"},"startups.html":{"":"c3RhcnR1cHMuaHRtbA"},"briefing.html":{"":"YnJpZWZpbmcuaHRtbA"},"politica.html":{"":"cG9saXRpY2EuaHRtbA"},"directory.html":{"":"ZGlyZWN0b3J5Lmh0bWw"},"enviar.html":{"":"ZW52aWFyLmh0bWw"},"edicion.html":{"":"ZWRpY2lvbi5odG1s"},"aula-innovacion.html":{"":"YXVsYS1pbm5vdmFjaW9uLmh0bWw"},"sobre-evoford.html":{"":"c29icmUtZXZvZm9yZC5odG1s"},"publicidad.html":{"":"cHVibGljaWRhZC5odG1s"}};var code=t||(map[p]&&map[p][h]);if(!code)return;var lang=q.get("lang");history.replaceState(null,"","/news/a.html?i="+encodeURIComponent(code)+(lang?"&lang="+encodeURIComponent(lang):""));}catch(e){}})();</script>
 </head>

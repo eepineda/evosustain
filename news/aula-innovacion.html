@@ -105,6 +105,28 @@
   .wrap{max-width:1180px}
   .aula-nav{position:static!important;display:flex!important;grid-template-columns:none!important;inset:auto!important;background:transparent!important;box-shadow:none!important;border-top:0!important}
 }
+
+/* Desktop footer: readable multi-row editorial layout; app nav fixed only on mobile. */
+@media(min-width:761px){
+  html body nav.aula-nav{
+    position:static!important;inset:auto!important;display:flex!important;flex-wrap:wrap!important;
+    justify-content:flex-start!important;align-items:center!important;gap:24px!important;
+    margin:0!important;padding:15px 0!important;background:transparent!important;
+    border-top:0!important;border-bottom:1px solid var(--line)!important;box-shadow:none!important;
+  }
+  html body footer{
+    display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    align-items:center!important;justify-items:start!important;gap:18px 28px!important;
+    width:100%!important;box-sizing:border-box!important;
+    min-height:112px!important;padding:24px max(28px,calc((100% - 1100px)/2))!important;
+    font:12px/1.5 Arial,sans-serif!important;white-space:normal!important;
+  }
+  html body footer .footer-brand{font-size:22px!important;white-space:nowrap!important}
+  html body footer span,html body footer a:not(.footer-brand){
+    display:inline-block!important;min-width:0!important;max-width:100%!important;
+    font-size:12px!important;line-height:1.5!important;overflow-wrap:anywhere!important;
+  }
+}
 </style>
 <script>/* Canonical compact URL: direct visits and short-link redirects stay on the same public code. */(function(){try{var q=new URLSearchParams(location.search),t=q.get("__short"),p=location.pathname.split("/").pop()||"index.html",h=location.hash;var map={"index.html":{"":"aW5kZXguaHRtbA","#section-internacional":"aW5kZXguaHRtbCNzZWN0aW9uLWludGVybmFjaW9uYWw","#section-politica":"aW5kZXguaHRtbCNzZWN0aW9uLXBvbGl0aWNh","#section-economia":"aW5kZXguaHRtbCNzZWN0aW9uLWVjb25vbWlh","#section-seguridad":"aW5kZXguaHRtbCNzZWN0aW9uLXNlZ3VyaWRhZA","#section-opinion-analisis":"aW5kZXguaHRtbCNzZWN0aW9uLW9waW5pb24tYW5hbGlzaXM"},"startups.html":{"":"c3RhcnR1cHMuaHRtbA"},"briefing.html":{"":"YnJpZWZpbmcuaHRtbA"},"politica.html":{"":"cG9saXRpY2EuaHRtbA"},"directory.html":{"":"ZGlyZWN0b3J5Lmh0bWw"},"enviar.html":{"":"ZW52aWFyLmh0bWw"},"edicion.html":{"":"ZWRpY2lvbi5odG1s"},"aula-innovacion.html":{"":"YXVsYS1pbm5vdmFjaW9uLmh0bWw"},"sobre-evoford.html":{"":"c29icmUtZXZvZm9yZC5odG1s"},"publicidad.html":{"":"cHVibGljaWRhZC5odG1s"}};var code=t||(map[p]&&map[p][h]);if(!code)return;var lang=q.get("lang");history.replaceState(null,"","/news/a.html?i="+encodeURIComponent(code)+(lang?"&lang="+encodeURIComponent(lang):""));}catch(e){}})();</script>
 </head>
@@ -118,7 +140,7 @@
 <main class="wrap">
 <div class="edition"><span id="aulaEdition">EVOFORD NEWS · CONOCIMIENTO EN ACCIÓN</span><span id="today"></span><div class="edition-actions"><div class="language-switch" aria-label="Language"><button type="button" data-language="es" aria-pressed="true">ES</button><button type="button" data-language="en" aria-pressed="false">EN</button></div></div></div>
 <section class="aula-hero"><div class="aula-eyebrow" id="heroEyebrow">APRENDER · CONECTAR · EMPRENDER</div><h1 id="heroTitle">Aula de Innovación Evoford</h1><p id="heroIntro">Un espacio para transformar curiosidad en conocimiento y conocimiento en acción. Charlas, formación práctica y orientación para personas que quieren comprender, impulsar o desarrollar proyectos innovadores.</p><div class="aula-hero-meta"><span id="metaOne">Charlas y conversaciones</span><span id="metaTwo">Talleres prácticos</span><span id="metaThree">Orientación inicial</span></div></section>
-<nav class="aula-nav" aria-label="Aula de Innovación" style="position:fixed!important;z-index:99999!important;left:0!important;right:0!important;bottom:0!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;margin:0!important;padding:9px 5px calc(9px + env(safe-area-inset-bottom))!important;background:rgba(255,255,255,.98)!important;border-top:1px solid #dfe5ec!important;box-shadow:0 -7px 24px rgba(16,43,78,.08)!important"><a href="#programas" id="navPrograms">Áreas de aprendizaje</a><a href="#formatos" id="navFormats">Formatos</a><a href="#participa" id="navParticipate">Participa</a><a href="#principios" id="navPrinciples">Nuestro enfoque</a></nav>
+<nav class="aula-nav" aria-label="Aula de Innovación"><a href="#programas" id="navPrograms">Áreas de aprendizaje</a><a href="#formatos" id="navFormats">Formatos</a><a href="#participa" id="navParticipate">Participa</a><a href="#principios" id="navPrinciples">Nuestro enfoque</a></nav>
 
 <section class="aula-section" id="programas"><div class="aula-section-head"><h2 id="programTitle">Áreas de aprendizaje</h2><span id="programLabel">CONTENIDOS Y COMPETENCIAS</span></div><div class="aula-tracks">
 <details class="aula-track"><summary><span class="track-no">01 / STARTUP</span><h3 id="track1Title">Crear y desarrollar una startup</h3><span class="track-toggle" aria-hidden="true"></span></summary><div class="track-details"><p id="track1Text">De la idea al proyecto: identificar problemas, validar necesidades, diseñar propuestas de valor y comprender los primeros pasos de un negocio.</p><ul id="track1List"><li>Validación de ideas y clientes</li><li>Modelos de negocio y propuesta de valor</li><li>Primeros pasos y errores habituales</li></ul></div></details>

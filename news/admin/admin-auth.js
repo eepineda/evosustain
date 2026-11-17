@@ -736,6 +736,9 @@ function editAd(a){
  $("adPublicationMode").value=a?.publication_mode||"manual";
  $("adCreative").value=a?.creative_url||"";
  $("adCreativeFile").value="";
+ $("adCreativeMobile").value=a?.creative_mobile_url||"";
+ $("adCreativeMobileFile").value="";
+ updateMobileCreativePreview();
  $("adTarget").value=a?.target_url||"";
  $("adStart").value=a?.start_date||"";
  $("adEnd").value=a?.end_date||"";
@@ -752,7 +755,7 @@ async function loadAds(){
  campaignRoot.innerHTML='<p class="muted">Cargando campañas…</p>';
  enquiryRoot.innerHTML='<p class="muted">Cargando solicitudes comerciales…</p>';
  const [c,e]=await Promise.all([
-  client.from("ad_campaigns").select("id,campaign_title,advertiser_name,placement,status,publication_mode,amount,currency,payment_status,invoice_reference,start_date,end_date,source_enquiry_id,contact_name,contact_email,contact_phone,creative_url,target_url,internal_notes,created_at").order("created_at",{ascending:false}),
+  client.from("ad_campaigns").select("id,campaign_title,advertiser_name,placement,status,publication_mode,amount,currency,payment_status,invoice_reference,start_date,end_date,source_enquiry_id,contact_name,contact_email,contact_phone,creative_url,creative_mobile_url,target_url,internal_notes,created_at").order("created_at",{ascending:false}),
   client.from("ad_enquiries").select("id,company_name,advertiser_type,contact_name,email,phone,website,attachment_path,attachment_name,attachment_mime,budget,placement_interest,message,status,created_at,internal_notes").order("created_at",{ascending:false})
  ]);
  adCampaigns=c.data||[];
@@ -845,8 +848,15 @@ async function saveAdEnquiry(event){
  say("globalMessage","Solicitud comercial actualizada.");
  await loadAds();
 }
-async function uploadAdCreative(file){
- if(!file)return $("adCreative").value.trim()||null;
+function updateMobileCreativePreview(file){
+ const image=$("adCreativeMobilePreview");
+ if(!image)return;
+ const url=file?URL.createObjectURL(file):$("adCreativeMobile").value.trim();
+ image.src=url||"";
+ image.hidden=!url;
+}
+async function uploadAdCreative(file,inputId="adCreative"){
+ if(!file)return $(inputId).value.trim()||null;
  const allowed=["image/jpeg","image/png","image/webp","application/pdf"];
  if(!allowed.includes(file.type))throw new Error("Formato no admitido. Utiliza JPG, PNG, WebP o PDF.");
  if(file.size>8*1024*1024)throw new Error("El archivo supera el límite de 8 MB.");
@@ -867,8 +877,9 @@ async function saveAd(event){
  if(!$("adAdvertiser").value.trim()||!$("adEmail").value.trim()||!$("adTitle").value.trim()||!Number.isFinite(amount)||amount<0){say("adMessage","Revisa los campos obligatorios y el importe.");return;}
  const submit=$("adForm").querySelector('button[type="submit"]');submit.disabled=true;say("adMessage","Guardando campaña y material gráfico…");
  try{
-  const creative=await uploadAdCreative($("adCreativeFile").files[0]);
-  const p={advertiser_name:$("adAdvertiser").value.trim(),contact_name:$("adContact").value.trim()||null,contact_email:$("adEmail").value.trim(),contact_phone:$("adPhone").value.trim()||null,campaign_title:$("adTitle").value.trim(),placement:$("adPlacement").value,status,publication_mode:mode,source_enquiry_id:$("adEnquiryId").value||null,creative_url:creative,target_url:$("adTarget").value.trim()||null,start_date:startDate,end_date:$("adEnd").value||null,amount,currency:$("adCurrency").value,payment_status:$("adPayment").value,invoice_reference:$("adInvoice").value.trim()||null,internal_notes:$("adNotes").value.trim()||null,updated_at:new Date().toISOString()};
+  const creative=await uploadAdCreative($("adCreativeFile").files[0],"adCreative");
+  const creativeMobile=await uploadAdCreative($("adCreativeMobileFile").files[0],"adCreativeMobile");
+  const p={advertiser_name:$("adAdvertiser").value.trim(),contact_name:$("adContact").value.trim()||null,contact_email:$("adEmail").value.trim(),contact_phone:$("adPhone").value.trim()||null,campaign_title:$("adTitle").value.trim(),placement:$("adPlacement").value,status,publication_mode:mode,source_enquiry_id:$("adEnquiryId").value||null,creative_url:creative,creative_mobile_url:creativeMobile,target_url:$("adTarget").value.trim()||null,start_date:startDate,end_date:$("adEnd").value||null,amount,currency:$("adCurrency").value,payment_status:$("adPayment").value,invoice_reference:$("adInvoice").value.trim()||null,internal_notes:$("adNotes").value.trim()||null,updated_at:new Date().toISOString()};
   const r=id?await client.from("ad_campaigns").update(p).eq("id",id):await client.from("ad_campaigns").insert(p);
   if(r.error)throw r.error;
   say("adMessage",status==="active"?(mode==="scheduled"?"Campaña guardada y programada. Se mostrará automáticamente en sus fechas.":"Campaña activada. Ya puede aparecer en el espacio seleccionado."):"Campaña guardada como borrador o pendiente.");
@@ -905,6 +916,8 @@ function wire(){
   $("refreshCoursesBtn").addEventListener("click",loadCourses);
   $("newAdBtn").addEventListener("click",()=>editAd(null));
   $("adForm").addEventListener("submit",saveAd);
+  $("adCreativeMobileFile").addEventListener("change",()=>updateMobileCreativePreview($("adCreativeMobileFile").files[0]));
+  $("adCreativeMobile").addEventListener("input",()=>{if(!$("adCreativeMobileFile").files[0])updateMobileCreativePreview();});
   $("cancelAdBtn").addEventListener("click",()=>{$("adForm").hidden=true;});
   $("cancelAdBtn2").addEventListener("click",()=>{$("adForm").hidden=true;});
   $("exportCoursesBtn").addEventListener("click",exportCoursesCsv);

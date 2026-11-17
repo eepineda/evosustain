@@ -30,6 +30,7 @@
   <button id="languageToggle" type="button" aria-label="Change edition language">English</button>
   <button id="refreshBtn" class="secondary-tool" type="button">Actualizar edición</button>
   <button id="printBtn" type="button">Imprimir / Guardar PDF</button>
+  <button id="pngBtn" type="button">Exportar PNG</button>
  </nav>
 </header>
 <main class="newspaper" id="newspaper">
@@ -53,5 +54,7 @@ window.addEventListener("unhandledrejection",function(event){
  if(target){var reason=event.reason&&event.reason.message?event.reason.message:String(event.reason||"Error desconocido");target.innerHTML="<p class=empty>Error de carga: "+String(reason).replace(/[&<>]/g," ")+"</p>";}
 });
 </script>
-<script src="/news/assets/edition.js?v=30"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
+<script src="/news/assets/edition-png.js?v=1"></script>
+<script src="/news/assets/edition.js?v=31"></script>
 </body></html>

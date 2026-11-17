@@ -191,5 +191,82 @@
     });
     observer.observe(document.documentElement, { childList: true, subtree: true });
   }
+  
+  // Editorial discovery popup: highlights a real story already published on the homepage.
+  const EDITORIAL_POPUP_KEY = "evoford-editorial-popup-seen-at";
+  function showEditorialPopup() {
+    const path = location.pathname || "/";
+    const isHome = path === "/" || path === "/news" || path === "/news/" || path === "/news/index.html";
+    if (!isHome || document.getElementById("evoEditorialPopup") || document.getElementById("evoPopupAd")) return;
+    let seenAt = 0;
+    try { seenAt = Number(localStorage.getItem(EDITORIAL_POPUP_KEY) || 0); } catch (_) {}
+    if (seenAt && Date.now() - seenAt < 24 * 60 * 60 * 1000) return;
+    const card = document.querySelector("#featuredStory .feature-card-lead") || document.querySelector("#featuredStory .feature-card");
+    const headline = card && card.querySelector("h1 a, h2 a");
+    if (!headline || !headline.textContent.trim() || !headline.href) return;
+    const summary = card.querySelector(".dek");
+    const image = card.querySelector(".feature-card-image img");
+    const en = (document.documentElement.lang || "es") === "en";
+    const modal = document.createElement("div");
+    modal.id = "evoEditorialPopup";
+    modal.setAttribute("role", "dialog");
+    modal.setAttribute("aria-modal", "true");
+    modal.setAttribute("aria-labelledby", "evoEditorialPopupTitle");
+    const safeLink = headline.href;
+    const imageHtml = image && /^https:\/\//i.test(image.src)
+      ? '<img class="evo-editorial-image" src="' + escapeHtml(image.src) + '" alt="">'
+      : "";
+    modal.innerHTML =
+      '<div class="evo-editorial-backdrop" data-editorial-close></div>' +
+      '<section class="evo-editorial-panel">' +
+      '<button type="button" class="evo-editorial-close" data-editorial-close aria-label="' + (en ? "Close" : "Cerrar") + '">×</button>' +
+      '<span class="evo-editorial-kicker">' + (en ? "EDITOR’S PICK · EVOFORD NEWS" : "SELECCIÓN EDITORIAL · EVOFORD NEWS") + '</span>' +
+      imageHtml +
+      '<h2 id="evoEditorialPopupTitle">' + escapeHtml(headline.textContent.trim()) + '</h2>' +
+      '<p>' + escapeHtml(summary ? summary.textContent.trim() : (en ? "The story and the context behind it." : "La noticia y las claves para entenderla.")) + '</p>' +
+      '<a class="evo-editorial-cta" href="' + escapeHtml(safeLink) + '">' + (en ? "Read the story" : "Leer la noticia") + ' ↗</a>' +
+      '<span class="evo-editorial-note">' + (en ? "Independent information · Context · Analysis" : "Información · Contexto · Análisis") + '</span>' +
+      '</section>';
+    if (!document.getElementById("evoEditorialPopupStyles")) {
+      const style = document.createElement("style");
+      style.id = "evoEditorialPopupStyles";
+      style.textContent = '#evoEditorialPopup{position:fixed;inset:0;z-index:99990;display:grid;place-items:center;padding:18px;box-sizing:border-box;font-family:Arial,sans-serif}#evoEditorialPopup .evo-editorial-backdrop{position:absolute;inset:0;background:rgba(8,18,32,.72);backdrop-filter:blur(4px)}#evoEditorialPopup .evo-editorial-panel{position:relative;width:min(570px,100%);max-height:calc(100vh - 36px);overflow:auto;box-sizing:border-box;padding:27px;background:#fff;color:#102b4e;border-radius:10px;box-shadow:0 24px 80px rgba(0,0,0,.32)}#evoEditorialPopup .evo-editorial-close{position:absolute;right:12px;top:10px;width:36px;height:36px;border:0;border-radius:50%;background:#edf1f5;color:#102b4e;font-size:26px;cursor:pointer}#evoEditorialPopup .evo-editorial-kicker{display:block;margin:2px 45px 14px 0;color:#a22b35;font-size:10px;font-weight:800;letter-spacing:.15em}#evoEditorialPopup .evo-editorial-image{display:block;width:100%;max-height:245px;object-fit:cover;margin:0 0 18px;background:#edf1f5}#evoEditorialPopup h2{margin:0 0 12px;font:700 clamp(22px,4vw,29px)/1.2 Georgia,serif;letter-spacing:-.02em}#evoEditorialPopup p{margin:0;color:#536174;font:15px/1.6 Arial,sans-serif}#evoEditorialPopup .evo-editorial-cta{display:inline-flex;margin-top:20px;padding:12px 18px;background:#102b4e;color:#fff;text-decoration:none;border-radius:4px;font-weight:700}#evoEditorialPopup .evo-editorial-note{display:block;margin-top:18px;padding-top:12px;border-top:1px solid #e1e5e9;color:#7a8490;font-size:10px;letter-spacing:.08em;text-transform:uppercase}#evoEditorialPopup button:focus-visible,#evoEditorialPopup a:focus-visible{outline:3px solid #c58d32;outline-offset:3px}@media(max-width:520px){#evoEditorialPopup .evo-editorial-panel{padding:23px 17px 18px}#evoEditorialPopup .evo-editorial-image{max-height:190px}}';
+      document.head.appendChild(style);
+    }
+    document.body.appendChild(modal);
+    document.body.style.overflow = "hidden";
+    const close = () => {
+      try { localStorage.setItem(EDITORIAL_POPUP_KEY, String(Date.now())); } catch (_) {}
+      modal.remove();
+      document.body.style.overflow = "";
+    };
+    modal.querySelectorAll("[data-editorial-close]").forEach(el => el.addEventListener("click", close));
+    modal.addEventListener("keydown", event => { if (event.key === "Escape") close(); });
+    modal.querySelector(".evo-editorial-close")?.focus();
+  }
+  function watchEditorialFeature() {
+    const feature = document.getElementById("featuredStory");
+    if (!feature) return;
+    const tryShow = () => {
+      if (feature.querySelector(".feature-card-lead, .feature-card")) {
+        window.setTimeout(() => {
+          if (!document.getElementById("evoPopupAd")) showEditorialPopup();
+        }, 9000);
+        return true;
+      }
+      return false;
+    };
+    if (tryShow()) return;
+    const observer = new MutationObserver(() => {
+      if (tryShow()) observer.disconnect();
+    });
+    observer.observe(feature, { childList: true, subtree: true });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", watchEditorialFeature, { once: true });
+  } else {
+    watchEditorialFeature();
+  }
+
   loadCampaignSlots();
 })();

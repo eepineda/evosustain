@@ -210,8 +210,38 @@ async function saveArticle(status,preserveStatus=false){
       :client.from("articles").insert(payload);
   }
   const {error}=await query;
-  say("editorMessage",error?error.message:(preserveStatus?"Cambios guardados sin modificar el estado de publicación.":({draft:"Borrador guardado.",pending:"Artículo enviado a revisión.",approved:"Artículo aprobado. Sigue sin publicarse.",published:"Artículo publicado y visible en la web."}[status]||"Artículo actualizado.")));
-  if(!error){$("articleForm").hidden=true;await loadArticles();}
+  if(error){
+    say("editorMessage",error.message);
+    return;
+  }
+
+  let successMessage=preserveStatus
+    ?"Cambios guardados sin modificar el estado de publicación."
+    :({draft:"Borrador guardado.",pending:"Artículo enviado a revisión.",approved:"Artículo aprobado. Sigue sin publicarse.",published:"Artículo publicado y visible en la web."}[status]||"Artículo actualizado.");
+
+  if(status==="published"&&!preserveStatus){
+    say("editorMessage","Artículo publicado en la web. Enviando a Facebook e Instagram…");
+    const {data:socialData,error:socialError}=await client.functions.invoke("publish-article-social",{body:{article_id:id}});
+    if(socialError){
+      say("globalMessage","El artículo ya está publicado en la web, pero no se pudo completar el envío automático a redes. No vuelvas a publicarlo; revisa el estado de redes antes de reintentar.");
+    }else{
+      const results=Array.isArray(socialData?.results)?socialData.results:[];
+      const published=results.filter(item=>item.status==="published").map(item=>item.platform);
+      const failed=results.filter(item=>["failed","error","publishing"].includes(item.status));
+      const skipped=results.filter(item=>item.duplicate_prevented);
+      const summary=[
+        published.length?"Publicado en: "+published.join(", "):"",
+        skipped.length?"Ya existía una publicación y se evitó duplicarla.":"",
+        failed.length?"Hay una red pendiente de revisión; consulta el registro de publicaciones.":""
+      ].filter(Boolean).join(" ");
+      say("globalMessage",summary||"Artículo publicado. Se ha comprobado el envío a redes.");
+    }
+  }else{
+    say("editorMessage",successMessage);
+  }
+
+  $("articleForm").hidden=true;
+  await loadArticles();
 }
 
 

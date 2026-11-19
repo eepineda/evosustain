@@ -132,7 +132,7 @@ async function load(){
   const {data,error}=await authClient.functions.invoke("print-edition",{body:{action:"load"},headers:{Authorization:"Bearer "+session.access_token}});
   if(error)throw error;
   if(data&&data.error)throw new Error(data.error);
-  articles=data.articles||[];printAdCampaign=data.printAd||null;
+  articles=data.articles||[];printAdCampaign=data.printAd||null;window.EvofordEditionArticles=articles;document.dispatchEvent(new CustomEvent("edition:articlesloaded",{detail:{articles}}));
   hideAccessPanel();render();renderPrintAd();
  }catch(error){
   const message=error.message||"No se pudo comprobar el acceso.";

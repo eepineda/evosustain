@@ -20,8 +20,8 @@
     es: {
       heading:"Promoción de esta edición", intro:"Campaña independiente. No publica ni modifica los artículos individuales.",
       drafts:"Borradores anteriores", fresh:"Nueva campaña", load:"Cargar", title:"Título de la campaña",
-      caption:"Texto para Facebook e Instagram", preview:"Vista previa de portada",
-      previewNote:"Se utiliza la primera página real de la edición maquetada.", close:"Cerrar",
+      caption:"Texto para Facebook e Instagram", preview:"Vista previa de todas las páginas",
+      previewNote:"Se incluyen todas las páginas reales de la edición maquetada.", close:"Cerrar",
       save:"Guardar borrador", update:"Actualizar borrador", publish:"Aprobar y publicar",
       savingCover:"Generando la portada real de la edición…", saving:"Guardando la campaña como borrador…",
       saved:"Borrador guardado. Revisa la portada y el texto; todavía no se ha publicado en ninguna red.",
@@ -34,8 +34,8 @@
     en: {
       heading:"Promote this edition", intro:"Separate campaign. It does not publish or modify individual articles.",
       drafts:"Previous drafts", fresh:"New campaign", load:"Load", title:"Campaign title",
-      caption:"Facebook and Instagram caption", preview:"Cover preview",
-      previewNote:"Uses the actual first page of the laid-out edition.", close:"Close",
+      caption:"Facebook and Instagram caption", preview:"Edition pages preview",
+      previewNote:"Includes every actual page of the laid-out edition.", close:"Close",
       save:"Save draft", update:"Update draft", publish:"Approve and publish",
       savingCover:"Generating the actual edition cover…", saving:"Saving campaign as a draft…",
       saved:"Draft saved. Review the cover and caption; nothing has been published to social media yet.",
@@ -57,7 +57,7 @@
     panel.querySelector('label[for="campaignDrafts"]').textContent = t.drafts;
     panel.querySelector('label[for="campaignTitle"]').textContent = t.title;
     panel.querySelector('label[for="campaignCaption"]').textContent = t.caption;
-    panel.querySelector("#campaignPreview").alt = t.preview;
+    panel.querySelector("#campaignPreview").setAttribute("aria-label", t.preview);
     panel.querySelector("#campaignPreview").parentElement.querySelector("div").textContent = t.preview;
     panel.querySelector("#campaignPreview").nextElementSibling.textContent = t.previewNote;
     $("campaignCloseBtn").textContent = t.close;
@@ -77,9 +77,9 @@
     $("campaignPublishBtn").disabled = value || !campaignId;
   };
 
-  async function makeCoverPng() {
+  async function makeEditionPages() {
     if (!window.EvoPrintController?.createDocument || !window.pdfjsLib) {
-      throw new Error("No está disponible el motor de portada. Actualiza la página.");
+      throw new Error("No está disponible el motor PDF. Actualiza la página.");
     }
     if ($("lead").querySelector(".loading") || !$("lead").querySelector(".lead-headline h1")) {
       throw new Error("La edición todavía se está cargando.");
@@ -88,19 +88,47 @@
     if (!doc) throw new Error("No se pudo preparar el documento de la edición.");
     window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
     const pdf = await window.pdfjsLib.getDocument({ data: new Uint8Array(doc.output("arraybuffer")) }).promise;
-    const page = await pdf.getPage(1);
-    const viewport = page.getViewport({ scale: 2 });
-    const canvas = document.createElement("canvas");
-    canvas.width = Math.ceil(viewport.width);
-    canvas.height = Math.ceil(viewport.height);
-    const ctx = canvas.getContext("2d", { alpha: false });
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    await page.render({ canvasContext: ctx, viewport, background: "#fff" }).promise;
-    const dataUrl = canvas.toDataURL("image/png");
-    canvas.width = canvas.height = 1;
+    if (pdf.numPages > 10) {
+      if (pdf.destroy) await pdf.destroy();
+      throw new Error(currentLanguage === "en"
+        ? "This edition has " + pdf.numPages + " pages. Instagram carousels support up to 10 pages; reduce the edition to 10 pages or fewer before promoting it."
+        : "Esta edición tiene " + pdf.numPages + " páginas. Instagram admite carruseles de hasta 10 páginas; reduce la edición a 10 páginas o menos antes de promocionarla.");
+    }
+    const pages = [];
+    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+      const page = await pdf.getPage(pageNumber);
+      const viewport = page.getViewport({ scale: 1.35 });
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.ceil(viewport.width);
+      canvas.height = Math.ceil(viewport.height);
+      const ctx = canvas.getContext("2d", { alpha: false });
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      await page.render({ canvasContext: ctx, viewport, background: "#fff" }).promise;
+      pages.push(canvas.toDataURL("image/jpeg", 0.88));
+      canvas.width = canvas.height = 1;
+    }
     if (pdf.destroy) await pdf.destroy();
-    return dataUrl;
+    return pages;
+  }
+
+  function showPagePreviews(urls) {
+    const holder = $("campaignPreview");
+    holder.innerHTML = "";
+    (urls || []).forEach((url, index) => {
+      const figure = document.createElement("figure");
+      figure.style.cssText = "margin:0;min-width:0";
+      const img = document.createElement("img");
+      img.src = url;
+      img.alt = (currentLanguage === "en" ? "Edition page " : "Página de edición ") + (index + 1);
+      img.style.cssText = "display:block;width:100%;height:auto;border:1px solid #d8e0e8;background:#fff;box-shadow:0 1px 3px #0001";
+      const caption = document.createElement("figcaption");
+      caption.textContent = (currentLanguage === "en" ? "Page " : "Página ") + (index + 1);
+      caption.style.cssText = "font-size:11px;text-align:center;color:#64748b;padding:3px";
+      figure.append(img, caption);
+      holder.appendChild(figure);
+    });
+    $("campaignPageCount").textContent = (currentLanguage === "en" ? urls.length + " pages included" : urls.length + " páginas incluidas");
   }
 
   async function loadCampaignList() {
@@ -125,7 +153,7 @@
     if (!id) {
       campaignId = null; savedImage = null;
       $("campaignTitle").value = "Nueva edición de EVOFORD NEWS";
-      $("campaignPreview").removeAttribute("src");
+      showPagePreviews([]);
       $("campaignPublishBtn").disabled = true;
       $("campaignSaveBtn").textContent = copy[currentLanguage].save;
       status(copy[currentLanguage].ready);
@@ -141,7 +169,7 @@
       campaignId = item.id;
       $("campaignTitle").value = item.title;
       $("campaignCaption").value = item.caption;
-      $("campaignPreview").src = item.image_url;
+      showPagePreviews(Array.isArray(item.image_urls) && item.image_urls.length ? item.image_urls : [item.image_url]);
       const editable = item.status === "draft";
       $("campaignSaveBtn").disabled = !editable;
       $("campaignSaveBtn").textContent = editable ? "Actualizar borrador" : "Borrador cerrado";
@@ -165,8 +193,8 @@
       const { data: { session } } = await client.auth.getSession();
       if (!session) throw new Error(copy[currentLanguage].login);
       status(copy[currentLanguage].savingCover);
-      savedImage = await makeCoverPng();
-      $("campaignPreview").src = savedImage;
+      savedImage = await makeEditionPages();
+      showPagePreviews(savedImage);
       status(copy[currentLanguage].saving);
       const { data, error } = await client.functions.invoke("print-edition-campaign", {
         body: {
@@ -174,7 +202,7 @@
           campaign_id: campaignId,
           title: $("campaignTitle").value.trim(),
           caption: $("campaignCaption").value.trim(),
-          image_base64: savedImage
+          images_base64: savedImage
         },
         headers: { Authorization: "Bearer " + session.access_token }
       });

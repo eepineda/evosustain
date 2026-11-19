@@ -58,7 +58,7 @@
     panel.querySelector('label[for="campaignTitle"]').textContent = t.title;
     panel.querySelector('label[for="campaignCaption"]').textContent = t.caption;
     panel.querySelector("#campaignPreview").setAttribute("aria-label", t.preview);
-    panel.querySelector("#campaignPreview").parentElement.querySelector("div").textContent = t.preview;
+    $("campaignPreviewTitle").textContent = t.preview;
     panel.querySelector("#campaignPreview").nextElementSibling.textContent = t.previewNote;
     $("campaignCloseBtn").textContent = t.close;
     $("campaignLoadBtn").textContent = t.load;

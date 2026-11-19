@@ -10,7 +10,68 @@
   let campaignId = null;
   let savedImage = null;
 
+  let currentLanguage = document.documentElement.lang === "en" ? "en" : "es";
+  const defaultTitle = { es: "Nueva edición de EVOFORD NEWS", en: "New EVOFORD NEWS edition" };
+  const defaultCaption = {
+    es: "📰 Ya está disponible la nueva edición de EVOFORD NEWS. Información, opinión y análisis para entender la actualidad.\\n\\n#EvofordNews #Actualidad #Noticias",
+    en: "📰 The new edition of EVOFORD NEWS is now available. News, opinion and analysis to understand current affairs.\\n\\n#EvofordNews #News #CurrentAffairs"
+  };
+  const copy = {
+    es: {
+      heading:"Promoción de esta edición", intro:"Campaña independiente. No publica ni modifica los artículos individuales.",
+      drafts:"Borradores anteriores", fresh:"Nueva campaña", load:"Cargar", title:"Título de la campaña",
+      caption:"Texto para Facebook e Instagram", preview:"Vista previa de portada",
+      previewNote:"Se utiliza la primera página real de la edición maquetada.", close:"Cerrar",
+      save:"Guardar borrador", update:"Actualizar borrador", publish:"Aprobar y publicar",
+      savingCover:"Generando la portada real de la edición…", saving:"Guardando la campaña como borrador…",
+      saved:"Borrador guardado. Revisa la portada y el texto; todavía no se ha publicado en ninguna red.",
+      ready:"Preparado para crear una nueva campaña.", loaded:"Campaña cargada",
+      noDrafts:"No se pudieron cargar los borradores.", login:"Inicia sesión con la cuenta editorial autorizada.",
+      confirm:"¿Apruebas esta portada y este texto para publicar la edición impresa en Facebook e Instagram?",
+      sending:"Enviando la campaña aprobada a Facebook e Instagram…",
+      closed:"Borrador cerrado", failed:"No se pudo guardar el borrador.", publishFailed:"No se pudo completar la publicación."
+    },
+    en: {
+      heading:"Promote this edition", intro:"Separate campaign. It does not publish or modify individual articles.",
+      drafts:"Previous drafts", fresh:"New campaign", load:"Load", title:"Campaign title",
+      caption:"Facebook and Instagram caption", preview:"Cover preview",
+      previewNote:"Uses the actual first page of the laid-out edition.", close:"Close",
+      save:"Save draft", update:"Update draft", publish:"Approve and publish",
+      savingCover:"Generating the actual edition cover…", saving:"Saving campaign as a draft…",
+      saved:"Draft saved. Review the cover and caption; nothing has been published to social media yet.",
+      ready:"Ready to create a new campaign.", loaded:"Campaign loaded",
+      noDrafts:"Could not load drafts.", login:"Sign in with the authorised editorial account.",
+      confirm:"Do you approve this cover and caption for publishing the print edition on Facebook and Instagram?",
+      sending:"Sending the approved campaign to Facebook and Instagram…",
+      closed:"Draft locked", failed:"Could not save the draft.", publishFailed:"Could not complete publishing."
+    }
+  };
   const status = (message) => { $("campaignStatus").textContent = message; };
+  function setLanguage(language) {
+    currentLanguage = language === "en" ? "en" : "es";
+    const t = copy[currentLanguage];
+    const panel = $("editionCampaignPanel");
+    panel.setAttribute("aria-label", t.heading);
+    panel.querySelector("h2").textContent = t.heading;
+    panel.querySelector("h2").nextElementSibling.textContent = t.intro;
+    panel.querySelector('label[for="campaignDrafts"]').textContent = t.drafts;
+    panel.querySelector('label[for="campaignTitle"]').textContent = t.title;
+    panel.querySelector('label[for="campaignCaption"]').textContent = t.caption;
+    panel.querySelector("#campaignPreview").alt = t.preview;
+    panel.querySelector("#campaignPreview").parentElement.querySelector("div").textContent = t.preview;
+    panel.querySelector("#campaignPreview").nextElementSibling.textContent = t.previewNote;
+    $("campaignCloseBtn").textContent = t.close;
+    $("campaignLoadBtn").textContent = t.load;
+    $("campaignSaveBtn").textContent = campaignId ? t.update : t.save;
+    $("campaignPublishBtn").textContent = t.publish;
+    const select = $("campaignDrafts");
+    if (select.options.length) select.options[0].textContent = t.fresh;
+    if ($("campaignTitle").value === defaultTitle[language === "en" ? "es" : "en"] || !$("campaignTitle").value) $("campaignTitle").value = defaultTitle[currentLanguage];
+    const previousCaption = defaultCaption[language === "en" ? "es" : "en"];
+    if ($("campaignCaption").value.trim() === previousCaption.trim() || !$("campaignCaption").value.trim()) $("campaignCaption").value = defaultCaption[currentLanguage];
+  }
+  document.addEventListener("edition:languagechange", event => setLanguage(event.detail?.language));
+  setLanguage(currentLanguage);
   const busy = (value) => {
     $("campaignSaveBtn").disabled = value;
     $("campaignPublishBtn").disabled = value || !campaignId;
@@ -54,7 +115,7 @@
     (data.campaigns || []).forEach(item => {
       const option = document.createElement("option");
       option.value = item.id;
-      option.textContent = new Date(item.created_at).toLocaleDateString("es-ES") + " · " + item.title + " (" + item.status + ")";
+      option.textContent = new Date(item.created_at).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "es-ES") + " · " + item.title + " (" + item.status + ")";
       select.appendChild(option);
     });
   }
@@ -66,8 +127,8 @@
       $("campaignTitle").value = "Nueva edición de EVOFORD NEWS";
       $("campaignPreview").removeAttribute("src");
       $("campaignPublishBtn").disabled = true;
-      $("campaignSaveBtn").textContent = "Guardar borrador";
-      status("Preparado para crear una nueva campaña.");
+      $("campaignSaveBtn").textContent = copy[currentLanguage].save;
+      status(copy[currentLanguage].ready);
       return;
     }
     try {
@@ -85,7 +146,7 @@
       $("campaignSaveBtn").disabled = !editable;
       $("campaignSaveBtn").textContent = editable ? "Actualizar borrador" : "Borrador cerrado";
       $("campaignPublishBtn").disabled = item.status === "published" || (item.facebook_status === "published" && item.instagram_status === "published");
-      status("Campaña cargada · Facebook: " + item.facebook_status + " · Instagram: " + item.instagram_status);
+      status(copy[currentLanguage].loaded + " · Facebook: " + item.facebook_status + " · Instagram: " + item.instagram_status);
     } catch (error) { status(error.message || "No se pudo cargar la campaña."); }
   });
 
@@ -102,11 +163,11 @@
     busy(true);
     try {
       const { data: { session } } = await client.auth.getSession();
-      if (!session) throw new Error("Inicia sesión con la cuenta editorial autorizada.");
-      status("Generando la portada real de la edición…");
+      if (!session) throw new Error(copy[currentLanguage].login);
+      status(copy[currentLanguage].savingCover);
       savedImage = await makeCoverPng();
       $("campaignPreview").src = savedImage;
-      status("Guardando la campaña como borrador…");
+      status(copy[currentLanguage].saving);
       const { data, error } = await client.functions.invoke("print-edition-campaign", {
         body: {
           action: campaignId ? "update" : "save",
@@ -118,11 +179,11 @@
         headers: { Authorization: "Bearer " + session.access_token }
       });
       if (error) throw error;
-      if (!data?.ok || !data?.campaign?.id) throw new Error(data?.error || "No se pudo guardar el borrador.");
+      if (!data?.ok || !data?.campaign?.id) throw new Error(data?.error || copy[currentLanguage].failed);
       campaignId = data.campaign.id;
       $("campaignPublishBtn").disabled = false;
-      $("campaignSaveBtn").textContent = "Actualizar borrador";
-      status("Borrador guardado. Revisa la portada y el texto; todavía no se ha publicado en ninguna red.");
+      $("campaignSaveBtn").textContent = copy[currentLanguage].update;
+      status(copy[currentLanguage].saved);
     } catch (error) {
       console.error("Print edition campaign save:", error);
       status(error.message || "No se pudo guardar la campaña.");
@@ -133,12 +194,12 @@
 
   $("campaignPublishBtn").addEventListener("click", async () => {
     if (!campaignId) return;
-    if (!window.confirm("¿Apruebas esta portada y este texto para publicar la edición impresa en Facebook e Instagram?")) return;
+    if (!window.confirm(copy[currentLanguage].confirm)) return;
     busy(true);
     try {
       const { data: { session } } = await client.auth.getSession();
       if (!session) throw new Error("La sesión editorial ha caducado. Vuelve a iniciar sesión.");
-      status("Enviando la campaña aprobada a Facebook e Instagram…");
+      status(copy[currentLanguage].sending);
       const { data, error } = await client.functions.invoke("print-edition-campaign", {
         body: { action: "publish", campaign_id: campaignId },
         headers: { Authorization: "Bearer " + session.access_token }
@@ -152,7 +213,7 @@
       if (data.ok) $("campaignPublishBtn").disabled = true;
     } catch (error) {
       console.error("Print edition campaign publish:", error);
-      status(error.message || "No se pudo completar la publicación.");
+      status(error.message || copy[currentLanguage].publishFailed);
     } finally {
       busy(false);
     }

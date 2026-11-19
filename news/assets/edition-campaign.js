@@ -163,19 +163,32 @@
 
   async function loadCampaignList() {
     const { data: { session } } = await client.auth.getSession();
-    if (!session) return;
+    if (!session) {
+      status(currentLanguage === "en"
+        ? "Your editorial session has expired. Sign in again to load and repair previous campaigns."
+        : "La sesión editorial ha caducado. Inicia sesión de nuevo para cargar y reparar las campañas anteriores.");
+      return;
+    }
     const { data, error } = await client.functions.invoke("print-edition-campaign", {
       body: { action: "list" }, headers: { Authorization: "Bearer " + session.access_token }
     });
     if (error || data?.error) { status(data?.error || "No se pudieron cargar los borradores."); return; }
     const select = $("campaignDrafts");
     select.innerHTML = '<option value="">' + copy[currentLanguage].fresh + '</option>';
-    (data.campaigns || []).forEach(item => {
+    const campaigns = data.campaigns || [];
+    campaigns.forEach(item => {
       const option = document.createElement("option");
       option.value = item.id;
       option.textContent = new Date(item.created_at).toLocaleDateString(currentLanguage === "en" ? "en-GB" : "es-ES") + " · " + item.title + " (" + item.status + ")";
       select.appendChild(option);
     });
+    if (!campaigns.length) {
+      status(currentLanguage === "en"
+        ? "No previous campaigns were returned. Check the editorial login before creating a new one."
+        : "No se han devuelto campañas anteriores. Comprueba la sesión editorial antes de crear otra.");
+    } else {
+      status((currentLanguage === "en" ? "Previous campaigns loaded: " : "Campañas anteriores cargadas: ") + campaigns.length);
+    }
   }
 
   $("campaignLoadBtn").addEventListener("click", async () => {

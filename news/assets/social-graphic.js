@@ -17,7 +17,7 @@ function applyLanguage(){const d=t();const set=(id,value)=>{const el=$(id);if(el
 function populate(list){
  const incoming=Array.isArray(list)?list:[];
  articles=incoming.filter(a=>a&&typeof a==="object"&&/^https:\/\//i.test(String(a.image_url||""))&&(a.title_es||a.title||a.title_en));
- const select=$("sgArticle"),previousArticle=selected,previousValue=select.value,previousSlug=previousArticle?.slug||"",previousId=previousArticle?.id||"";
+ const select=$("sgArticle");if(!select)return;const previousArticle=selected,previousValue=select.value,previousSlug=previousArticle?.slug||"",previousId=previousArticle?.id||"";
  select.innerHTML="";
  const first=document.createElement("option");first.value="";first.textContent=articles.length?t().choose:t().none;select.appendChild(first);
  articles.forEach((a,i)=>{const o=document.createElement("option");o.value=String(i);o.textContent=(language==="en"?(a.title_en||a.title_es||a.title):(a.title_es||a.title||a.title_en||"Sin titular")).slice(0,110);select.appendChild(o);});

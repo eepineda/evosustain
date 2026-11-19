@@ -55,3 +55,10 @@
 .directory-location-tools[hidden],.directory-map-panel[hidden],#directoryList[hidden]{display:none!important}
 @media(max-width:900px){.directory-location-tools{grid-template-columns:1fr 1fr!important}.directory-location-tools input{grid-column:1/-1}}
 @media(max-width:620px){.directory-explorer-head{align-items:flex-start;flex-direction:column}.directory-view-toggle{width:100%}.directory-view-toggle button{flex:1}.directory-location-tools{grid-template-columns:1fr!important}.directory-location-tools input{grid-column:auto}#directoryMap{height:430px;min-height:330px}}
+
+/* Map rendering resilience */
+.directory-map-panel{display:block;position:relative;min-height:390px}
+#directoryMap{display:block!important;min-height:390px;z-index:1}
+.directory-map-panel[hidden]{display:none!important}
+.leaflet-container{font-family:Arial,sans-serif}
+@media(max-width:620px){.directory-map-panel{min-height:340px}#directoryMap{min-height:340px}}

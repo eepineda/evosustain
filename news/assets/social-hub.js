@@ -12,8 +12,6 @@
     const isEdition = which === "edition";
     cover.hidden = isEdition;
     edition.hidden = !isEdition;
-    cover.style.setProperty("display", isEdition ? "none" : "block", "important");
-    edition.style.setProperty("display", isEdition ? "block" : "none", "important");
     coverTab.classList.toggle("is-active", !isEdition);
     editionTab.classList.toggle("is-active", isEdition);
     coverTab.setAttribute("aria-selected", String(!isEdition));

@@ -17,12 +17,14 @@ function applyLanguage(){const d=t();const set=(id,value)=>{const el=$(id);if(el
 function populate(list){
  const incoming=Array.isArray(list)?list:[];
  articles=incoming.filter(a=>a&&typeof a==="object"&&/^https:\/\//i.test(String(a.image_url||""))&&(a.title_es||a.title||a.title_en));
- const select=$("sgArticle"),previous=select.value;
+ const select=$("sgArticle"),previousArticle=selected,previousValue=select.value,previousSlug=previousArticle?.slug||"",previousId=previousArticle?.id||"";
  select.innerHTML="";
  const first=document.createElement("option");first.value="";first.textContent=articles.length?t().choose:t().none;select.appendChild(first);
  articles.forEach((a,i)=>{const o=document.createElement("option");o.value=String(i);o.textContent=(language==="en"?(a.title_en||a.title_es||a.title):(a.title_es||a.title||a.title_en||"Sin titular")).slice(0,110);select.appendChild(o);});
- if(previous&&articles[Number(previous)])select.value=previous;
- if(!articles.length){selected=null;photo=null;ready=false;lockDownload();$("sgStatus").textContent=incoming.length?"Hay noticias publicadas, pero ninguna tiene una fotografía válida asociada.":"Cargando noticias publicadas…";}
+ let nextIndex=articles.findIndex(a=>(previousId&&a.id===previousId)||(previousSlug&&a.slug===previousSlug));
+ if(nextIndex<0&&previousValue!==""&&articles[Number(previousValue)])nextIndex=Number(previousValue);
+ if(nextIndex>=0)select.value=String(nextIndex);
+ if(!articles.length){selected=null;photo=null;ready=false;lockDownload();$("sgStatus").textContent=incoming.length?t().none:(language==="en"?"Loading published stories…":"Cargando noticias publicadas…");}
  else $("sgStatus").textContent=articles.length+(language==="en"?" stories with photos available.":" noticias con fotografía disponibles.");
 }
 async function loadArticlesFallback(){
@@ -111,10 +113,16 @@ $("sgPublish").addEventListener("click",async()=>{
  }catch(error){console.error("Evoford social graphic publish:",error);$("sgStatus").textContent=error.message||"No se pudo completar la publicación.";}
  finally{button.textContent=t().publish;button.disabled=!ready;button.style.opacity=ready?"1":".5";button.style.cursor=ready?"pointer":"not-allowed";}
 });
-document.addEventListener("edition:articlesloaded",e=>populate(e.detail?.articles||[]));
+document.addEventListener("edition:articlesloaded",e=>{
+ const incoming=e.detail?.articles||[];
+ populate(incoming);
+ if(articles.length&&!selected){
+  $("sgArticle").value="0";
+  loadArticle();
+ }
+});
 document.addEventListener("edition:languagechange",e=>{language=e.detail?.language==="en"?"en":"es";applyLanguage();});
 populate(window.EvofordEditionArticles||[]);
 applyLanguage();
 draw();
-if(!articles.length)loadArticlesFallback();
 })();

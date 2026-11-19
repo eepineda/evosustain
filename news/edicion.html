@@ -10,7 +10,7 @@
 <title>Edición impresa | Evoford News</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/edition.css?v=17">
-<link rel="stylesheet" href="assets/edition-editorial.css?v=3">
+<link rel="stylesheet" href="assets/edition-editorial.css?v=4">
 <link rel="stylesheet" href="assets/edition-print.css?v=4">
 <link rel="stylesheet" href="assets/edition-print-final.css?v=12">
  <link id="paperA4" rel="stylesheet" href="assets/edition-paper-a4.css?v=1" media="print">
@@ -34,18 +34,40 @@
   <button id="campaignBtn" class="secondary-tool" type="button">Promocionar edición</button>
  </nav>
 </header>
-<section id="editionCampaignPanel" hidden aria-label="Promoción independiente de la edición impresa" style="max-width:980px;margin:18px auto;padding:20px;background:#fff;border:1px solid #d8e0e8;border-radius:10px;color:#17283c;box-sizing:border-box">
- <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><h2 style="margin:0;color:#102b4e">Promoción de esta edición</h2><button id="campaignCloseBtn" type="button" class="secondary-tool">Cerrar</button></div>
- <p id="campaignIntro" style="margin:8px 0 16px;color:#536273">Campaña independiente. No publica ni modifica los artículos individuales.</p>
- <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,340px);gap:18px;align-items:start">
-  <div><label for="campaignDrafts" style="display:block;font-weight:700;margin:8px 0 5px">Borradores anteriores</label><div style="display:flex;gap:8px"><select id="campaignDrafts" style="flex:1;min-width:0;padding:10px;border:1px solid #cbd5e1;border-radius:6px"><option value="">Nueva campaña</option></select><button id="campaignLoadBtn" type="button" class="secondary-tool">Cargar</button></div><label for="campaignTitle" style="display:block;font-weight:700;margin:12px 0 5px">Título de la campaña</label><input id="campaignTitle" maxlength="180" value="Nueva edición de EVOFORD NEWS" style="width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:6px;box-sizing:border-box">
-  <label for="campaignCaption" style="display:block;font-weight:700;margin:12px 0 5px">Texto para Facebook e Instagram</label><textarea id="campaignCaption" rows="7" maxlength="2200" style="width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:6px;box-sizing:border-box;resize:vertical">📰 Ya está disponible la nueva edición de EVOFORD NEWS. Información, opinión y análisis para entender la actualidad.
+<section id="editionCampaignPanel" class="campaign-studio" hidden aria-label="Promoción independiente de la edición impresa">
+  <header class="campaign-studio__header">
+    <div><p class="campaign-eyebrow">EVOFORD NEWS · DISTRIBUCIÓN EDITORIAL</p><h2>Promoción de la edición</h2><p id="campaignIntro">Prepara una publicación para Facebook e Instagram a partir de la edición impresa.</p></div>
+    <button id="campaignCloseBtn" type="button" class="secondary-tool">Cerrar</button>
+  </header>
+  <div class="campaign-studio__toolbar">
+    <label for="campaignDrafts">Campañas guardadas</label>
+    <select id="campaignDrafts"><option value="">Nueva campaña</option></select>
+    <button id="campaignLoadBtn" type="button" class="secondary-tool">Cargar campaña</button>
+    <span class="campaign-studio__hint">Los borradores anteriores se conservan.</span>
+  </div>
+  <div class="campaign-studio__grid">
+    <div class="campaign-studio__editor">
+      <div class="campaign-step"><span>01</span><div><strong>Mensaje de publicación</strong><small>Un único texto para las dos redes sociales.</small></div></div>
+      <label for="campaignTitle">Título interno de la campaña</label>
+      <input id="campaignTitle" maxlength="180" value="Nueva edición de EVOFORD NEWS">
+      <label for="campaignCaption">Texto para Facebook e Instagram</label>
+      <textarea id="campaignCaption" rows="7" maxlength="2200">📰 Ya está disponible la nueva edición de EVOFORD NEWS. Información, opinión y análisis para entender la actualidad.
 
 #EvofordNews #Actualidad #Noticias</textarea>
-  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><button id="campaignSaveBtn" type="button">Guardar borrador</button><button id="campaignPublishBtn" type="button" disabled>Aprobar y publicar</button></div>
-  <p id="campaignStatus" role="status" style="font-size:14px;color:#536273"></p></div>
-  <div><div style="font-weight:700;margin-bottom:7px"><span id="campaignPreviewTitle">Vista previa de todas las páginas</span> <span id="campaignPageCount" style="font-weight:400;color:#64748b"></span></div><div id="campaignPreview" aria-label="Vista previa de todas las páginas" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-height:460px;overflow:auto;background:#f1f4f7;padding:8px;border:1px solid #d8e0e8;border-radius:6px"></div><p id="campaignPreviewNote" style="font-size:12px;color:#64748b">Se incluyen todas las páginas reales de la edición maquetada.</p></div>
- </div>
+      <div class="campaign-step campaign-step--second"><span>02</span><div><strong>Revisión y publicación</strong><small>Primero guarda el borrador. Publicar requiere aprobación expresa.</small></div></div>
+      <div class="campaign-studio__actions">
+        <button id="campaignSaveBtn" type="button">Preparar y guardar borrador</button>
+        <button id="campaignPublishBtn" type="button" disabled>Aprobar y publicar</button>
+      </div>
+      <p id="campaignStatus" class="campaign-status" role="status" aria-live="polite">Al abrir este panel podrás preparar la campaña.</p>
+    </div>
+    <aside class="campaign-studio__preview">
+      <div class="campaign-step"><span>03</span><div><strong>Vista previa de la edición</strong><small id="campaignPreviewTitle">Páginas que se enviarán</small></div></div>
+      <div id="campaignPreview" aria-label="Vista previa de todas las páginas"></div>
+      <p id="campaignPageCount" class="campaign-page-count">Aún no se han generado las páginas.</p>
+      <p id="campaignPreviewNote" class="campaign-preview-note">Se genera desde la edición maquetada actual. Instagram admite hasta 10 páginas por carrusel.</p>
+    </aside>
+  </div>
 </section>
 <section id="socialGraphicPanel" style="max-width:1180px;margin:20px auto;padding:22px;background:#fff;border:1px solid #d8e0e8;border-radius:12px;color:#17283c;box-sizing:border-box">
 <div style="max-width:850px;margin:0 auto"><p style="margin:0;color:#9a4d3c;font-size:11px;font-weight:800;letter-spacing:.18em">ESTUDIO EDITORIAL · EVOFORD NEWS</p><h2 style="margin:7px 0;color:#142c43;font-family:Georgia,serif;font-size:30px;font-weight:600">Crear portada para redes</h2><p style="margin:0;color:#64748b;line-height:1.5">Diseño de revista en formato vertical. Añade una fotografía y un titular; el diseño se compone automáticamente.</p>
@@ -82,9 +104,9 @@ window.addEventListener("unhandledrejection",function(event){
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js'"></script>
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js" crossorigin="anonymous" onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'"></script>
-<script src="/news/assets/edition-print-v13.js?v=13"></script>
+<script src="/news/assets/edition-print-v13.js?v=14"></script>
 <script src="/news/assets/edition-png.js?v=5"></script>
 <script src="/news/assets/edition.js?v=32"></script>
-<script src="/news/assets/edition-campaign.js?v=10"></script>
+<script src="/news/assets/edition-campaign.js?v=11"></script>
 <script src="/news/assets/social-graphic.js?v=3"></script>
 </body></html>

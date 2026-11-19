@@ -173,3 +173,17 @@ body.print-edition{background:#e7e9ec;color:var(--ei-ink)}
 .campaign-page-count{margin:9px 0 0;color:#344252;font:700 12px Arial,sans-serif}
 .campaign-preview-note{margin:7px 0 0;color:#788491;font:11px/1.5 Arial,sans-serif}
 @media(max-width:760px){.campaign-studio{margin:14px 10px;padding:17px;border-radius:10px}.campaign-studio__grid{grid-template-columns:1fr}.campaign-studio__toolbar{align-items:stretch}.campaign-studio__toolbar label{width:100%}.campaign-studio__toolbar select{flex:1}.campaign-studio__header{gap:10px}.campaign-studio__actions{display:grid;grid-template-columns:1fr}.campaign-studio__actions button{width:100%}}
+
+/* Unified social publishing workspace */
+.social-hub{max-width:1180px;margin:20px auto 24px;padding:22px;background:#f7f9fb;border:1px solid #d8e0e8;border-radius:14px;box-sizing:border-box}
+.social-hub__intro{padding:2px 4px 17px}
+.social-hub__intro p{margin:0 0 6px;color:#a04439;font:800 10px Arial,sans-serif;letter-spacing:.17em}
+.social-hub__intro h2{margin:0;color:#102b4e;font:600 27px Georgia,serif}
+.social-hub__intro span{display:block;margin-top:6px;color:#657487;font:13px/1.5 Arial,sans-serif}
+.social-hub__tabs{display:flex;gap:8px;flex-wrap:wrap;padding:0 0 16px;border-bottom:1px solid #dce3e9}
+.social-hub__tabs button{padding:10px 16px;border:1px solid #cbd5df;border-radius:7px;background:#fff;color:#34465a;font:700 12px Arial,sans-serif;cursor:pointer}
+.social-hub__tabs button.is-active{border-color:#102b4e;background:#102b4e;color:#fff}
+.social-hub #socialGraphicPanel,.social-hub #editionCampaignPanel{max-width:none!important;margin:16px 0 0!important}
+.social-hub #socialGraphicPanel{padding:20px!important}
+.social-hub #editionCampaignPanel{padding:20px!important}
+@media(max-width:650px){.social-hub{margin:12px 8px;padding:14px}.social-hub__tabs{display:grid;grid-template-columns:1fr 1fr}.social-hub__tabs button{padding:10px 8px}.social-hub #socialGraphicPanel,.social-hub #editionCampaignPanel{padding:14px!important}}

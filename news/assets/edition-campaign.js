@@ -24,7 +24,7 @@
       drafts:"Borradores anteriores", fresh:"Nueva campaña", load:"Cargar", title:"Título de la campaña",
       caption:"Texto para Facebook e Instagram", preview:"Vista previa de todas las páginas",
       previewNote:"Se incluyen todas las páginas reales de la edición maquetada.", close:"Cerrar",
-      save:"Guardar borrador", update:"Actualizar borrador", publish:"Aprobar y publicar",
+      save:"Preparar y guardar borrador", update:"Actualizar borrador", publish:"Aprobar y publicar",
       savingCover:"Generando la portada real de la edición…", saving:"Guardando la campaña como borrador…",
       saved:"Borrador guardado. Revisa la portada y el texto; todavía no se ha publicado en ninguna red.",
       ready:"Preparado para crear una nueva campaña.", loaded:"Campaña cargada",
@@ -38,7 +38,7 @@
       drafts:"Previous drafts", fresh:"New campaign", load:"Load", title:"Campaign title",
       caption:"Facebook and Instagram caption", preview:"Edition pages preview",
       previewNote:"Includes every actual page of the laid-out edition.", close:"Close",
-      save:"Save draft", update:"Update draft", publish:"Approve and publish",
+      save:"Prepare and save draft", update:"Update draft", publish:"Approve and publish",
       savingCover:"Generating the actual edition cover…", saving:"Saving campaign as a draft…",
       saved:"Draft saved. Review the cover and caption; nothing has been published to social media yet.",
       ready:"Ready to create a new campaign.", loaded:"Campaign loaded",
@@ -115,7 +115,8 @@
     const instagramPages = [];
     for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
       const page = await pdf.getPage(pageNumber);
-      const viewport = page.getViewport({ scale: 3 });
+      status((currentLanguage === "en" ? "Rendering page " : "Generando página ") + pageNumber + " / " + pdf.numPages + "…");
+      const viewport = page.getViewport({ scale: 2 });
       const canvas = document.createElement("canvas");
       canvas.width = Math.ceil(viewport.width);
       canvas.height = Math.ceil(viewport.height);
@@ -123,7 +124,7 @@
       ctx.fillStyle = "#fff";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       await page.render({ canvasContext: ctx, viewport, background: "#fff" }).promise;
-      pages.push(canvas.toDataURL("image/png"));
+      pages.push(canvas.toDataURL("image/jpeg", 0.86));
       const instagramCanvas = document.createElement("canvas");
       instagramCanvas.width = 1440;
       instagramCanvas.height = 1800;
@@ -134,7 +135,7 @@
       const fittedWidth = Math.round(canvas.width * scale);
       const fittedHeight = Math.round(canvas.height * scale);
       instagramContext.drawImage(canvas, Math.round((1440 - fittedWidth) / 2), Math.round((1800 - fittedHeight) / 2), fittedWidth, fittedHeight);
-      instagramPages.push(instagramCanvas.toDataURL("image/png"));
+      instagramPages.push(instagramCanvas.toDataURL("image/jpeg", 0.86));
       canvas.width = canvas.height = 1;
       instagramCanvas.width = instagramCanvas.height = 1;
     }

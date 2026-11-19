@@ -31,10 +31,10 @@
   <button id="refreshBtn" class="secondary-tool" type="button">Actualizar edición</button>
   <button id="printBtn" type="button">Imprimir / Guardar PDF</button>
   <button id="pngBtn" type="button">Exportar PNG</button>
-  <button id="campaignBtn" class="secondary-tool" type="button">Promocionar edición</button>
+  <button id="campaignBtn" class="secondary-tool" type="button">Redes sociales</button>
  </nav>
 </header>
-<section id="editionCampaignPanel" class="campaign-studio" hidden aria-label="Promoción independiente de la edición impresa">
+<section id="socialHub" class="social-hub" aria-label="Herramientas de redes sociales"><div class="social-hub__intro"><p>EVOFORD NEWS · DISTRIBUCIÓN DIGITAL</p><h2>Redes sociales</h2><span>Elige qué quieres compartir: una noticia individual o la edición completa.</span></div><nav class="social-hub__tabs" aria-label="Tipo de publicación"><button type="button" id="socialTabCover" class="is-active" aria-selected="true">Portada de una noticia</button><button type="button" id="socialTabEdition" aria-selected="false">Promoción de la edición</button></nav><section id="editionCampaignPanel" class="campaign-studio" hidden aria-label="Promoción independiente de la edición impresa">
   <header class="campaign-studio__header">
     <div><p class="campaign-eyebrow">EVOFORD NEWS · DISTRIBUCIÓN EDITORIAL</p><h2>Promoción de la edición</h2><p id="campaignIntro">Prepara una publicación para Facebook e Instagram a partir de la edición impresa.</p></div>
     <button id="campaignCloseBtn" type="button" class="secondary-tool">Cerrar</button>
@@ -80,7 +80,7 @@
 <p id="sgStatus" role="status" style="margin:0;color:#64748b;font-size:13px;min-height:20px"></p>
 </div>
 <div><p style="margin:0 0 8px;font-size:11px;font-weight:800;letter-spacing:.12em;color:#64748b">VISTA PREVIA · 4:5</p><div style="max-width:300px;margin:auto;padding:8px;background:#edf0f2;border-radius:8px"><canvas id="sgCanvas" width="1080" height="1350" style="display:block;width:100%;height:auto;background:#f5f2eb"></canvas></div><button id="sgDownload" type="button" disabled style="display:block;width:100%;max-width:300px;margin:12px auto 0;padding:12px;background:#9a4d3c;color:white;border:0;border-radius:6px;font-weight:700;opacity:.5;cursor:not-allowed">Descargar PNG</button><p style="margin:8px 0 0;text-align:center;color:#7b8794;font-size:11px">Alta resolución · 1080 × 1350 px</p></div>
-</div></div></section>
+</div></div></section></section>
 <main class="newspaper" id="newspaper">
  <div class="paper-topline"><span id="editionDate">EDICIÓN DIGITAL</span><span>INFORMACIÓN · OPINIÓN · ANÁLISIS</span><span id="editionNumber">EVOFORD NEWS</span></div>
  <header class="paper-masthead"><div class="paper-kicker">EL PERIÓDICO GLOBAL · INFORMACIÓN CON CONTEXTO</div><div class="paper-brand">EVOFORD <span>NEWS</span></div><div class="paper-motto">Noticias para entender el mundo</div></header>
@@ -108,5 +108,5 @@ window.addEventListener("unhandledrejection",function(event){
 <script src="/news/assets/edition-png.js?v=5"></script>
 <script src="/news/assets/edition.js?v=32"></script>
 <script src="/news/assets/edition-campaign.js?v=12"></script>
-<script src="/news/assets/social-graphic.js?v=4"></script>
+<script src="/news/assets/social-graphic.js?v=5"></script>
 </body></html>

@@ -90,8 +90,8 @@
   }
 
   const busy = (value) => {
-    $("campaignSaveBtn").disabled = value;
-    $("campaignPublishBtn").disabled = value || !campaignId;
+    $("campaignSaveBtn").disabled = value || (!!campaignId && currentCampaignStatus !== "draft" && !instagramAlreadyFailedAfterFacebook);
+    $("campaignPublishBtn").disabled = value || !campaignId || currentCampaignStatus === "published";
   };
 
   async function makeEditionPages() {
@@ -208,7 +208,10 @@
         ? (currentLanguage === "en" ? "Prepare Instagram images" : "Preparar imágenes de Instagram")
         : editable ? copy[currentLanguage].update : (currentLanguage === "en" ? "Draft locked" : "Borrador cerrado");
       $("campaignPublishBtn").disabled = item.status === "published" || (item.facebook_status === "published" && item.instagram_status === "published");
-      status(copy[currentLanguage].loaded + " · Facebook: " + item.facebook_status + " · Instagram: " + item.instagram_status);
+      status(copy[currentLanguage].loaded + " · Facebook: " + item.facebook_status + " · Instagram: " + item.instagram_status +
+        (instagramAlreadyFailedAfterFacebook && !(Array.isArray(item.instagram_image_urls) && item.instagram_image_urls.length === (item.image_urls || []).length)
+          ? (currentLanguage === "en" ? " · First click “Prepare Instagram images”; then approve to retry Instagram only." : " · Primero pulsa «Preparar imágenes de Instagram»; después aprueba para reintentar solo Instagram.")
+          : ""));
     } catch (error) { status(error.message || "No se pudo cargar la campaña."); }
   });
 
@@ -245,6 +248,7 @@
       if (instagramAlreadyFailedAfterFacebook) {
         if (!data?.ok) throw new Error(data?.error || copy[currentLanguage].failed);
         instagramAlreadyFailedAfterFacebook = false;
+        currentCampaignStatus = "partial";
         $("campaignSaveBtn").disabled = true;
         $("campaignSaveBtn").textContent = currentLanguage === "en" ? "Instagram images prepared" : "Imágenes de Instagram preparadas";
         status(currentLanguage === "en"

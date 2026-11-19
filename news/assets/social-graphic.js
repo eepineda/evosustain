@@ -36,7 +36,8 @@ function loadArticle(){
  selected=articles[Number(index)];
  if(!selected)return;
  $("sgTitle").value=selected.title_es||selected.title||"";
- $("sgSubtitle").value=selected.summary_es||selected.summary||"";
+ $("sgSubtitle").value=selected.summary_es||selected.summary||selected.summary_en||"";
+ $("sgCaption").value="📰 "+$("sgTitle").value+"\n\n"+$("sgSubtitle").value+"\n\nLee la noticia completa en EVOFORD NEWS: https://evoford.com/news\n\n#EvofordNews #Actualidad #Noticias";
  photo=null;ready=false;lockDownload();
  const src=selected.image_url;
  if(src&&/^https:\/\//i.test(src)){
@@ -47,7 +48,7 @@ function loadArticle(){
  }else{$("sgStatus").textContent="El artículo no tiene una fotografía asociada. Añade una imagen al artículo y actualiza la edición.";}
  draw();
 }
-function lockDownload(){const b=$("sgDownload");b.disabled=true;b.style.opacity=".5";b.style.cursor="not-allowed";}
+function lockDownload(){["sgDownload","sgPublish"].forEach(id=>{const b=$(id);b.disabled=true;b.style.opacity=".5";b.style.cursor="not-allowed";});}
 function draw(){
  ctx.clearRect(0,0,W,H);ctx.fillStyle="#f4f1e9";ctx.fillRect(0,0,W,H);
  ctx.fillStyle="#142c43";ctx.fillRect(0,0,W,12);
@@ -73,10 +74,27 @@ $("sgCreate").addEventListener("click",()=>{
  if(!selected){$("sgStatus").textContent="Selecciona primero una noticia.";return;}
  if(!photo){$("sgStatus").textContent="La noticia seleccionada no tiene una fotografía exportable.";return;}
  if(!$("sgTitle").value.trim()){$("sgStatus").textContent="La noticia no tiene titular.";return;}
- draw();ready=true;const b=$("sgDownload");b.disabled=false;b.style.opacity="1";b.style.cursor="pointer";$("sgStatus").textContent="Portada creada con la fotografía y el contenido del artículo.";
+ draw();ready=true;["sgDownload","sgPublish"].forEach(id=>{const b=$(id);b.disabled=false;b.style.opacity="1";b.style.cursor="pointer";});$("sgStatus").textContent="Portada creada. Puedes descargarla o publicarla en Facebook e Instagram.";
 });
 ["sgTitle","sgSubtitle"].forEach(id=>$(id).addEventListener("input",()=>{if(ready){ready=false;lockDownload();$("sgStatus").textContent="Has modificado el texto. Vuelve a crear la imagen.";}}));
 $("sgDownload").addEventListener("click",()=>{if(!ready)return;const a=document.createElement("a");a.download="evoford-news-portada-revista-1080x1350.png";a.href=canvas.toDataURL("image/png");a.click();$("sgStatus").textContent="PNG descargado en 1080 × 1350 píxeles.";});
+$("sgPublish").addEventListener("click",async()=>{
+ if(!ready||!selected)return;
+ const caption=$("sgCaption").value.trim();
+ if(!caption){$("sgStatus").textContent="Escribe el texto que acompañará la publicación.";return;}
+ if(!window.confirm("¿Confirmas publicar esta portada y su texto en Facebook e Instagram?"))return;
+ const button=$("sgPublish");button.disabled=true;button.textContent="Publicando…";$("sgStatus").textContent="Subiendo la portada y enviando a las redes sociales…";
+ try{
+  const client=window.supabase.createClient("https://poywsdigujbarvnzbfnz.supabase.co","sb_publishable_1t7gv1Y9-6HHwMqW5E343A_51GH_L7f");
+  const {data:{session}}=await client.auth.getSession();
+  if(!session)throw new Error("Inicia sesión con la cuenta editorial autorizada.");
+  const {data,error}=await client.functions.invoke("publish-social-graphic",{body:{article_id:selected.id,title:$("sgTitle").value.trim(),caption,image_base64:canvas.toDataURL("image/png")},headers:{Authorization:"Bearer "+session.access_token}});
+  if(error)throw new Error(error.message||"Error de comunicación con el servicio de publicación.");
+  if(!data?.ok)throw new Error(data?.error||"No se confirmó ninguna publicación.");
+  $("sgStatus").textContent="Resultado: "+(data.results||[]).map(x=>x.platform+": "+x.status+(x.error?" — "+x.error:"")).join(" | ");
+ }catch(error){console.error("Evoford social graphic publish:",error);$("sgStatus").textContent=error.message||"No se pudo completar la publicación.";}
+ finally{button.textContent="Publicar en Facebook e Instagram";button.disabled=!ready;button.style.opacity=ready?"1":".5";button.style.cursor=ready?"pointer":"not-allowed";}
+});
 document.addEventListener("edition:articlesloaded",e=>populate(e.detail?.articles||[]));
 populate(window.EvofordEditionArticles||[]);
 draw();

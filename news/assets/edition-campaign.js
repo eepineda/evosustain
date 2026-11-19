@@ -240,6 +240,10 @@
   $("campaignCloseBtn").addEventListener("click", () => { panel.hidden = true; });
 
   $("campaignSaveBtn").addEventListener("click", async () => {
+    if (!$("campaignTitle").value.trim() || !$("campaignCaption").value.trim()) {
+      status(currentLanguage === "en" ? "Enter a campaign title and caption before saving." : "Escribe el título y el texto de la campaña antes de guardarla.");
+      return;
+    }
     busy(true);
     try {
       const { data: { session } } = await client.auth.getSession();

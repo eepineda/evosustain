@@ -31,10 +31,20 @@ async function loadArticlesFallback(){
  if(articles.length||!window.supabase?.createClient)return;
  try{
   const client=window.supabase.createClient("https://poywsdigujbarvnzbfnz.supabase.co","sb_publishable_1t7gv1Y9-6HHwMqW5E343A_51GH_L7f");
-  const {data,error}=await client.from("articles").select("id,title,title_en,title_es,slug,category,author,summary,summary_en,summary_es,image_url,published_at,created_at,country").eq("status","published").order("published_at",{ascending:false,nullsFirst:false}).order("created_at",{ascending:false}).limit(40);
+  const {data:{session},error:sessionError}=await client.auth.getSession();
+  if(sessionError)throw sessionError;
+  if(!session){$("sgStatus").textContent=language==="en"?"Sign in with the authorised editorial account to load published stories.":"Inicia sesión con la cuenta editorial autorizada para cargar las noticias publicadas.";return;}
+  const {data,error}=await client.functions.invoke("print-edition",{body:{action:"load"},headers:{Authorization:"Bearer "+session.access_token}});
   if(error)throw error;
-  if(Array.isArray(data)&&data.length){populate(data);$("sgStatus").textContent=articles.length+(language==="en"?" published stories with photos loaded directly.":" noticias publicadas con fotografía cargadas directamente.");return;}
-  $("sgStatus").textContent="No se encontraron noticias publicadas. Comprueba el estado de los artículos.";
+  if(data?.error)throw new Error(data.error);
+  const published=Array.isArray(data?.articles)?data.articles:[];
+  populate(published);
+  if(articles.length){
+   $("sgStatus").textContent=articles.length+(language==="en"?" published stories with photos loaded.":" noticias publicadas con fotografía cargadas.");
+   if(!selected){$("sgArticle").value="0";loadArticle();}
+   return;
+  }
+  $("sgStatus").textContent=published.length?(language==="en"?"Published stories were found, but none has an exportable HTTPS photo.":"Se encontraron noticias publicadas, pero ninguna tiene una fotografía HTTPS exportable."):(language==="en"?"No published stories were returned.":"No se recibieron noticias publicadas.");
  }catch(error){
   console.error("Evoford social cover article fallback:",error);
   $("sgStatus").textContent="No se pudieron recuperar las noticias: "+(error.message||"error de conexión");

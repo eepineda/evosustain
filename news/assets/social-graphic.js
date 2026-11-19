@@ -21,7 +21,7 @@ async function loadArticlesFallback(){
  if(articles.length||!window.supabase?.createClient)return;
  try{
   const client=window.supabase.createClient("https://poywsdigujbarvnzbfnz.supabase.co","sb_publishable_1t7gv1Y9-6HHwMqW5E343A_51GH_L7f");
-  const {data,error}=await client.from("articles").select("title,title_en,title_es,slug,category,author,summary,summary_en,summary_es,image_url,published_at,created_at,country").eq("status","published").order("published_at",{ascending:false,nullsFirst:false}).order("created_at",{ascending:false}).limit(40);
+  const {data,error}=await client.from("articles").select("id,title,title_en,title_es,slug,category,author,summary,summary_en,summary_es,image_url,published_at,created_at,country").eq("status","published").order("published_at",{ascending:false,nullsFirst:false}).order("created_at",{ascending:false}).limit(40);
   if(error)throw error;
   if(Array.isArray(data)&&data.length){populate(data);$("sgStatus").textContent=articles.length+" noticias publicadas con fotografía cargadas directamente.";return;}
   $("sgStatus").textContent="No se encontraron noticias publicadas. Comprueba el estado de los artículos.";
@@ -89,7 +89,7 @@ $("sgPublish").addEventListener("click",async()=>{
   const {data:{session}}=await client.auth.getSession();
   if(!session)throw new Error("Inicia sesión con la cuenta editorial autorizada.");
   const {data,error}=await client.functions.invoke("publish-social-graphic",{body:{article_id:selected.id,title:$("sgTitle").value.trim(),caption,image_base64:canvas.toDataURL("image/png")},headers:{Authorization:"Bearer "+session.access_token}});
-  if(error)throw new Error(error.message||"Error de comunicación con el servicio de publicación.");
+  if(error){let detail=error.message||"Error de comunicación con el servicio de publicación.";try{const context=error.context;if(context&&typeof context.json==="function"){const body=await context.json();detail=body.error||body.message||detail;}}catch(_){}throw new Error(detail);}
   if(!data?.ok)throw new Error(data?.error||"No se confirmó ninguna publicación.");
   $("sgStatus").textContent="Resultado: "+(data.results||[]).map(x=>x.platform+": "+x.status+(x.error?" — "+x.error:"")).join(" | ");
  }catch(error){console.error("Evoford social graphic publish:",error);$("sgStatus").textContent=error.message||"No se pudo completar la publicación.";}

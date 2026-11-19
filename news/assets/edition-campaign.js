@@ -59,7 +59,8 @@
       status("Guardando la campaña como borrador…");
       const { data, error } = await client.functions.invoke("print-edition-campaign", {
         body: {
-          action: "save",
+          action: campaignId ? "update" : "save",
+          campaign_id: campaignId,
           title: $("campaignTitle").value.trim(),
           caption: $("campaignCaption").value.trim(),
           image_base64: savedImage

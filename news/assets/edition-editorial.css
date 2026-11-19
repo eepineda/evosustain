@@ -138,3 +138,38 @@ body.print-edition{background:#e7e9ec;color:var(--ei-ink)}
   html[data-print-size="a4"] .print-edition .full-article-body{font-size:9pt!important;line-height:1.38!important;column-gap:6mm!important}
   html[data-print-size="a4"] .print-edition .story img{height:25mm!important}
 }
+
+
+/* EVOFORD NEWS — estudio de promoción editorial */
+.campaign-studio{max-width:1120px;margin:22px auto 28px;padding:clamp(18px,3vw,30px);background:#fff;border:1px solid #d8e0e8;border-radius:14px;box-shadow:0 12px 36px #102b4e0c;color:#17212b;box-sizing:border-box}
+.campaign-studio[hidden]{display:none!important}
+.campaign-studio__header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;padding-bottom:20px;border-bottom:1px solid #e4e8ed}
+.campaign-eyebrow{margin:0 0 8px;color:#9d2635;font:800 10px/1.3 Arial,sans-serif;letter-spacing:.18em}
+.campaign-studio__header h2{margin:0;color:#102b4e;font:600 clamp(25px,3vw,34px)/1.08 Georgia,serif}
+.campaign-studio__header p:last-child{margin:8px 0 0;color:#64717e;font:14px/1.5 Arial,sans-serif}
+.campaign-studio__toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:16px 0;border-bottom:1px solid #e4e8ed}
+.campaign-studio__toolbar label,.campaign-studio__editor>label{color:#344252;font:700 12px/1.4 Arial,sans-serif}
+.campaign-studio__toolbar select{min-width:190px;max-width:100%;padding:10px 12px;border:1px solid #d4dce4;border-radius:7px;background:#fff;color:#17212b;font:13px Arial,sans-serif}
+.campaign-studio__hint{color:#788491;font:12px Arial,sans-serif}
+.campaign-studio__grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(270px,.95fr);gap:clamp(20px,3vw,34px);padding-top:22px}
+.campaign-studio__editor{display:flex;flex-direction:column;gap:9px;min-width:0}
+.campaign-step{display:flex;align-items:center;gap:11px;margin-bottom:7px}
+.campaign-step>span{display:grid;place-items:center;width:32px;height:32px;flex:0 0 32px;border-radius:50%;background:#edf2f7;color:#102b4e;font:800 11px Arial,sans-serif}
+.campaign-step strong{display:block;color:#1d2b3a;font:700 14px Arial,sans-serif}
+.campaign-step small{display:block;margin-top:3px;color:#778391;font:12px/1.4 Arial,sans-serif}
+.campaign-studio__editor>label{margin-top:8px}
+.campaign-studio__editor input,.campaign-studio__editor textarea{width:100%;box-sizing:border-box;padding:12px 13px;border:1px solid #d4dce4;border-radius:8px;background:#fff;color:#17212b;font:14px/1.5 Arial,sans-serif;outline:none}
+.campaign-studio__editor input:focus,.campaign-studio__editor textarea:focus,.campaign-studio__toolbar select:focus{border-color:#496985;box-shadow:0 0 0 3px #102b4e12}
+.campaign-studio__editor textarea{resize:vertical;min-height:150px}
+.campaign-step--second{margin-top:18px}
+.campaign-studio__actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.campaign-studio__actions button{min-height:42px;padding:11px 16px;border:1px solid #102b4e;border-radius:7px;background:#102b4e;color:#fff;font:700 13px Arial,sans-serif;cursor:pointer}
+.campaign-studio__actions button+button{background:#fff;color:#102b4e}
+.campaign-studio__actions button:disabled{opacity:.45;cursor:not-allowed}
+.campaign-status{min-height:42px;margin:8px 0 0;padding:11px 12px;border-radius:7px;background:#f3f6f8;color:#4d5b69;font:13px/1.5 Arial,sans-serif;overflow-wrap:anywhere}
+.campaign-studio__preview{min-width:0;padding:16px;border:1px solid #e1e6eb;border-radius:10px;background:#f7f8fa}
+.campaign-studio__preview #campaignPreview{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-height:560px;overflow:auto;padding:10px;background:#edf0f3;border:1px solid #dce2e8;border-radius:8px}
+.campaign-studio__preview #campaignPreview:empty:after{content:"La vista previa aparecerá aquí al preparar la campaña.";grid-column:1/-1;padding:35px 12px;color:#7b8793;text-align:center;font:13px/1.5 Arial,sans-serif}
+.campaign-page-count{margin:9px 0 0;color:#344252;font:700 12px Arial,sans-serif}
+.campaign-preview-note{margin:7px 0 0;color:#788491;font:11px/1.5 Arial,sans-serif}
+@media(max-width:760px){.campaign-studio{margin:14px 10px;padding:17px;border-radius:10px}.campaign-studio__grid{grid-template-columns:1fr}.campaign-studio__toolbar{align-items:stretch}.campaign-studio__toolbar label{width:100%}.campaign-studio__toolbar select{flex:1}.campaign-studio__header{gap:10px}.campaign-studio__actions{display:grid;grid-template-columns:1fr}.campaign-studio__actions button{width:100%}}

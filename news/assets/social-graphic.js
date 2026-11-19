@@ -5,80 +5,80 @@ const canvas = $("sgCanvas");
 if (!canvas) return;
 const ctx = canvas.getContext("2d");
 let photo = null;
-const ids = ["Type","Date","Title","Subtitle","Author","Section","Body"];
-$("sgDate").value = new Date().toLocaleDateString("es-ES",{day:"numeric",month:"long",year:"numeric"});
-function lines(text, max, font) {
-  ctx.font = font;
-  const words = String(text || "").split(/\s+/), out = [];
-  let line = "";
-  words.forEach(word => {
-    const test = line ? line + " " + word : word;
-    if (ctx.measureText(test).width > max && line) { out.push(line); line = word; }
-    else line = test;
-  });
-  if (line) out.push(line);
-  return out;
-}
-function draw() {
-  const v = id => $( "sg" + id ).value.trim();
-  const type = v("Type");
-  ctx.clearRect(0,0,1080,1350);
-  ctx.fillStyle="#f8fafc"; ctx.fillRect(0,0,1080,1350);
-  ctx.fillStyle="#102b4e"; ctx.fillRect(0,0,1080,18);
-  ctx.fillStyle="#102b4e"; ctx.font="700 38px Arial"; ctx.fillText("EVOFORD",72,91);
-  ctx.fillStyle="#d34b3e"; ctx.fillText("NEWS",260,91);
-  ctx.fillStyle="#64748b"; ctx.font="500 19px Arial"; ctx.textAlign="right"; ctx.fillText(v("Date"),1008,88); ctx.textAlign="left";
-  ctx.fillStyle="#d34b3e"; ctx.fillRect(72,120,936,5);
-  ctx.fillStyle="#d34b3e"; ctx.font="700 22px Arial"; ctx.fillText((v("Section")||"ACTUALIDAD").toUpperCase(),72,174);
-  const top=210, height=type==="editorial"?390:470;
-  if(photo) {
-    const scale=Math.max(936/photo.width,height/photo.height), w=photo.width*scale,h=photo.height*scale;
-    ctx.save();ctx.beginPath();ctx.rect(72,top,936,height);ctx.clip();ctx.drawImage(photo,72+(936-w)/2,top+(height-h)/2,w,h);ctx.restore();
-  } else {
-    const grad=ctx.createLinearGradient(72,top,1008,top+height);grad.addColorStop(0,"#e8eef4");grad.addColorStop(1,"#d7e1eb");
-    ctx.fillStyle=grad;ctx.fillRect(72,top,936,height);ctx.fillStyle="#9aaabd";ctx.font="700 25px Arial";ctx.fillText("EVOFORD NEWS",105,top+height-35);
+let ready = false;
+const W = 1080, H = 1350;
+const dateText = new Intl.DateTimeFormat("es-ES",{day:"2-digit",month:"long",year:"numeric"}).format(new Date()).toUpperCase();
+function wrap(text,maxWidth,font){
+  ctx.font=font;
+  const words=String(text||"").trim().split(/\s+/).filter(Boolean), result=[];
+  let line="";
+  for(const word of words){
+    const candidate=line?line+" "+word:word;
+    if(ctx.measureText(candidate).width>maxWidth&&line){result.push(line);line=word;}else line=candidate;
   }
-  const title=v("Title")||"Tu titular aquí", size=type==="editorial"?59:64, font="700 "+size+"px Arial";
-  ctx.fillStyle="#102b4e";ctx.font=font;
-  const titleLines=lines(title,920,font).slice(0,3); let y=top+height+78;
-  titleLines.forEach(line=>{ctx.fillText(line,72,y);y+=size+8;});
-  y+=8;
-  if(v("Subtitle")) {ctx.fillStyle="#536273";ctx.font="400 31px Arial";lines(v("Subtitle"),920,"400 31px Arial").slice(0,2).forEach(line=>{ctx.fillText(line,72,y);y+=42;});}
-  if(v("Body")) {y+=18;ctx.fillStyle="#34465a";ctx.font="400 25px Arial";lines(v("Body"),920,"400 25px Arial").slice(0,4).forEach(line=>{ctx.fillText(line,72,y);y+=36;});}
-  ctx.fillStyle="#d34b3e";ctx.fillRect(72,1260,936,3);
-  ctx.fillStyle="#102b4e";ctx.font="700 20px Arial";ctx.fillText(v("Author")||"EVOFORD NEWS",72,1302);
-  ctx.fillStyle="#64748b";ctx.font="400 18px Arial";ctx.textAlign="right";ctx.fillText("evoford.com/news",1008,1302);ctx.textAlign="left";
+  if(line)result.push(line);
+  return result;
 }
-ids.forEach(k=>$("sg"+k).addEventListener("input",draw));
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle="#f4f1e9";ctx.fillRect(0,0,W,H);
+  ctx.fillStyle="#142c43";ctx.fillRect(0,0,W,12);
+  ctx.fillStyle="#142c43";ctx.font="700 56px Georgia,serif";ctx.fillText("EVOFORD",64,91);
+  const brandWidth=ctx.measureText("EVOFORD").width;
+  ctx.fillStyle="#a44e3d";ctx.font="700 54px Georgia,serif";ctx.fillText(" NEWS",64+brandWidth,91);
+  ctx.fillStyle="#596674";ctx.font="600 15px Arial,sans-serif";ctx.textAlign="right";ctx.fillText("REVISTA DE ACTUALIDAD",1016,62);
+  ctx.font="500 17px Arial,sans-serif";ctx.fillText(dateText,1016,91);ctx.textAlign="left";
+  ctx.fillStyle="#a44e3d";ctx.fillRect(64,119,952,3);
+  ctx.fillStyle="#596674";ctx.font="600 15px Arial,sans-serif";ctx.fillText("INFORMACIÓN · CULTURA · COMUNIDAD · IDEAS",64,157);
+  const x=48,y=184,w=984,h=870;
+  if(photo){
+    const scale=Math.max(w/photo.width,h/photo.height),dw=photo.width*scale,dh=photo.height*scale;
+    ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
+    ctx.drawImage(photo,x+(w-dw)/2,y+(h-dh)/2,dw,dh);
+    const shade=ctx.createLinearGradient(0,y+350,0,y+h);
+    shade.addColorStop(0,"rgba(7,20,32,0)");shade.addColorStop(.48,"rgba(7,20,32,.14)");shade.addColorStop(1,"rgba(7,20,32,.88)");
+    ctx.fillStyle=shade;ctx.fillRect(x,y,w,h);ctx.restore();
+  }else{
+    ctx.fillStyle="#d9dedf";ctx.fillRect(x,y,w,h);
+    ctx.fillStyle="#71808b";ctx.font="600 24px Arial,sans-serif";ctx.textAlign="center";ctx.fillText("LA FOTOGRAFÍA DE PORTADA",W/2,y+h/2);ctx.textAlign="left";
+  }
+  const title=($("sgTitle").value||"El titular de tu próxima portada").trim();
+  let size=78,titleLines;
+  do{titleLines=wrap(title,880,"700 "+size+"px Georgia,serif");if(titleLines.length>3)size-=4;}while(titleLines.length>3&&size>48);
+  const sub=($("sgSubtitle").value||"").trim();
+  const subLines=wrap(sub,880,"400 27px Arial,sans-serif").slice(0,2);
+  let total=titleLines.length*(size+5)+(subLines.length?24+subLines.length*37:0);
+  let ty=y+h-total-58;
+  ctx.fillStyle="#fff";ctx.font="700 "+size+"px Georgia,serif";
+  titleLines.forEach(line=>{ctx.fillText(line,x+54,ty);ty+=size+5;});
+  if(subLines.length){ty+=17;ctx.fillStyle="#f1eee8";ctx.font="400 27px Arial,sans-serif";subLines.forEach(line=>{ctx.fillText(line,x+54,ty);ty+=37;});}
+  ctx.fillStyle="#a44e3d";ctx.fillRect(64,1090,54,5);
+  ctx.fillStyle="#142c43";ctx.font="700 17px Arial,sans-serif";ctx.fillText("EVOFORD NEWS",64,1140);
+  ctx.fillStyle="#596674";ctx.font="400 16px Arial,sans-serif";ctx.fillText("Una mirada informada a la actualidad",64,1172);
+  ctx.fillStyle="#142c43";ctx.fillRect(64,1210,952,1);
+  ctx.fillStyle="#596674";ctx.font="600 14px Arial,sans-serif";ctx.fillText("REINO UNIDO  ·  ESPAÑA  ·  REPÚBLICA DOMINICANA",64,1250);
+  ctx.textAlign="right";ctx.fillText("EVOFORD.COM/NEWS",1016,1250);ctx.textAlign="left";
+  ctx.fillStyle="#a44e3d";ctx.fillRect(64,1282,952,3);
+}
 $("sgImage").addEventListener("change",e=>{
- const file=e.target.files&&e.target.files[0];if(!file)return;
- if(file.size>12000000){$("sgStatus").textContent="La imagen supera los 12 MB.";e.target.value="";return;}
- const reader=new FileReader();reader.onload=()=>{const img=new Image();img.onload=()=>{photo=img;draw();};img.src=reader.result;};reader.readAsDataURL(file);
+  const file=e.target.files&&e.target.files[0];if(!file)return;
+  if(file.size>15000000){$("sgStatus").textContent="La fotografía supera los 15 MB.";e.target.value="";return;}
+  if(!/^image\/(jpeg|png|webp)$/.test(file.type)){$("sgStatus").textContent="Selecciona una imagen JPG, PNG o WebP.";e.target.value="";return;}
+  const reader=new FileReader();
+  reader.onload=()=>{const img=new Image();img.onload=()=>{photo=img;ready=false;$("sgDownload").disabled=true;$("sgDownload").style.opacity=".5";$("sgDownload").style.cursor="not-allowed";$("sgStatus").textContent="Fotografía cargada. Pulsa «Crear imagen» para generar la portada.";};img.onerror=()=>$("sgStatus").textContent="No se pudo abrir la fotografía.";img.src=reader.result;};
+  reader.readAsDataURL(file);
 });
-function refresh(){
- const select=$("sgDrafts");select.innerHTML='<option value="">Borradores guardados</option>';
- try {JSON.parse(localStorage.getItem("evo_social_graphic_drafts")||"[]").forEach(d=>{const o=document.createElement("option");o.value=d.id;o.textContent=d.title||"Sin titular";select.appendChild(o);});}catch(e){}
-}
-$("sgSave").addEventListener("click",()=>{
- try {
-  const d={id:Date.now().toString(),title:$("sgTitle").value.trim()||"Sin titular"};
-  ids.forEach(k=>d[k]=$("sg"+k).value);
-  const all=JSON.parse(localStorage.getItem("evo_social_graphic_drafts")||"[]");all.unshift(d);
-  localStorage.setItem("evo_social_graphic_drafts",JSON.stringify(all.slice(0,30)));
-  refresh();$("sgDrafts").value=d.id;
-  $("sgStatus").textContent="Borrador guardado en este navegador. La fotografía debe volver a seleccionarse al cargarlo.";
- } catch(e) {$("sgStatus").textContent="No se pudo guardar el borrador en este navegador.";}
+$("sgCreate").addEventListener("click",()=>{
+  if(!photo){$("sgStatus").textContent="Selecciona primero una fotografía.";return;}
+  if(!$("sgTitle").value.trim()){$("sgStatus").textContent="Escribe el titular de la portada.";return;}
+  draw();ready=true;$("sgDownload").disabled=false;$("sgDownload").style.opacity="1";$("sgDownload").style.cursor="pointer";$("sgStatus").textContent="Portada creada. Ya puedes descargar el PNG.";
 });
-$("sgLoad").addEventListener("click",()=>{
- const id=$("sgDrafts").value;if(!id)return;
- try {const d=JSON.parse(localStorage.getItem("evo_social_graphic_drafts")||"[]").find(x=>x.id===id);if(!d)return;
- ids.forEach(k=>{if(d[k]!==undefined)$("sg"+k).value=d[k];});
- photo=null;$("sgImage").value="";draw();$("sgStatus").textContent="Borrador cargado. Selecciona de nuevo la fotografía si corresponde.";
- }catch(e){}
-});
+$("sgTitle").addEventListener("input",()=>{if(ready){ready=false;$("sgDownload").disabled=true;$("sgDownload").style.opacity=".5";$("sgStatus").textContent="Has cambiado el titular. Vuelve a crear la imagen.";}});
+$("sgSubtitle").addEventListener("input",()=>{if(ready){ready=false;$("sgDownload").disabled=true;$("sgDownload").style.opacity=".5";$("sgStatus").textContent="Has cambiado el texto. Vuelve a crear la imagen.";}});
 $("sgDownload").addEventListener("click",()=>{
- draw();const a=document.createElement("a");a.download="evoford-news-redes-1080x1350.png";a.href=canvas.toDataURL("image/png");a.click();
- $("sgStatus").textContent="PNG generado en 1080 × 1350 píxeles.";
+  if(!ready)return;
+  const a=document.createElement("a");a.download="evoford-news-portada-revista-1080x1350.png";a.href=canvas.toDataURL("image/png");a.click();
+  $("sgStatus").textContent="PNG descargado en 1080 × 1350 píxeles.";
 });
-refresh();draw();
+draw();
 })();

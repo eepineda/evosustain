@@ -4,8 +4,8 @@ const URL="https://poywsdigujbarvnzbfnz.supabase.co";
 const KEY="sb_publishable_1t7gv1Y9-6HHwMqW5E343A_51GH_L7f";
 const $=id=>document.getElementById(id);let language=localStorage.getItem("evoford-news-language")==="en"?"en":"es",articles=[],printAdCampaign=null,editionLoadPromise=Promise.resolve();
 const ui={
-es:{back:"← Volver a Evoford News",format:"Formato",a4:"A4 · Estándar",a3:"A3 · Periódico",refresh:"Actualizar edición",print:"Imprimir / Guardar PDF",png:"Exportar PNG",other:"English",date:"EDICIÓN DEL",descriptor:"INFORMACIÓN · OPINIÓN · ANÁLISIS",kicker:"EL PERIÓDICO GLOBAL · INFORMACIÓN CON CONTEXTO",motto:"Noticias para entender el mundo",sections:"INTERNACIONAL · ECONOMÍA · SOCIEDAD · TECNOLOGÍA · OPINIÓN",otherNews:"OTRAS NOTICIAS",paperFooter:"Edición digital preparada para impresión",empty:"Todavía no hay artículos publicados para esta edición.",noMore:"No hay más noticias en esta edición.",stories:"noticias",by:"POR"},
-en:{back:"← Back to Evoford News",format:"Paper size",a4:"A4 · Standard",a3:"A3 · Newspaper",refresh:"Refresh edition",print:"Print / Save PDF",png:"Export PNG",other:"Español",date:"EDITION OF",descriptor:"INFORMATION · OPINION · ANALYSIS",kicker:"THE GLOBAL NEWSPAPER · INFORMATION WITH CONTEXT",motto:"News to understand the world",sections:"INTERNATIONAL · ECONOMY · SOCIETY · TECHNOLOGY · OPINION",otherNews:"MORE STORIES",paperFooter:"Digital edition prepared for print",empty:"There are no published articles in this edition yet.",noMore:"There are no more stories in this edition.",stories:"stories",by:"BY"}};
+es:{back:"← Volver a Evoford News",format:"Formato",a4:"A4 · Estándar",a3:"A3 · Periódico",refresh:"Actualizar edición",print:"Imprimir / Guardar PDF",png:"Exportar PNG",campaign:"Promocionar edición",other:"English",date:"EDICIÓN DEL",descriptor:"INFORMACIÓN · OPINIÓN · ANÁLISIS",kicker:"EL PERIÓDICO GLOBAL · INFORMACIÓN CON CONTEXTO",motto:"Noticias para entender el mundo",sections:"INTERNACIONAL · ECONOMÍA · SOCIEDAD · TECNOLOGÍA · OPINIÓN",otherNews:"OTRAS NOTICIAS",paperFooter:"Edición digital preparada para impresión",empty:"Todavía no hay artículos publicados para esta edición.",noMore:"No hay más noticias en esta edición.",stories:"noticias",by:"POR"},
+en:{back:"← Back to Evoford News",format:"Paper size",a4:"A4 · Standard",a3:"A3 · Newspaper",refresh:"Refresh edition",print:"Print / Save PDF",png:"Export PNG",campaign:"Promote edition",other:"Español",date:"EDITION OF",descriptor:"INFORMATION · OPINION · ANALYSIS",kicker:"THE GLOBAL NEWSPAPER · INFORMATION WITH CONTEXT",motto:"News to understand the world",sections:"INTERNATIONAL · ECONOMY · SOCIETY · TECHNOLOGY · OPINION",otherNews:"MORE STORIES",paperFooter:"Digital edition prepared for print",empty:"There are no published articles in this edition yet.",noMore:"There are no more stories in this edition.",stories:"stories",by:"BY"}};
 const esc=v=>String(v||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const pick=(a,es,en)=>language==="en"?(a[en]||a[es]||""):(a[es]||a.title||"");
 const url=a=>"articles/plantilla-articulo.html?slug="+encodeURIComponent(a.slug||"");
@@ -41,7 +41,7 @@ function applyLanguage(){
  document.querySelector(".section-label span:first-child").textContent=t.otherNews;
  document.querySelector(".paper-footer span:nth-child(2)").textContent=t.paperFooter;
  $("editionDate").textContent=t.date+" "+new Date().toLocaleDateString(language==="en"?"en-GB":"es-ES",{day:"numeric",month:"long",year:"numeric"}).toUpperCase();
- document.documentElement.lang=language;renderPrintAd();
+ $("campaignBtn").textContent=t.campaign;document.documentElement.lang=language;renderPrintAd();document.dispatchEvent(new CustomEvent("edition:languagechange",{detail:{language}}));
 }
 function render(){
  const lead=articles[0];

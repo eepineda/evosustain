@@ -135,4 +135,5 @@ document.addEventListener("edition:languagechange",e=>{language=e.detail?.langua
 populate(window.EvofordEditionArticles||[]);
 applyLanguage();
 draw();
+loadArticlesFallback();
 })();

@@ -115,7 +115,7 @@
     const instagramPages = [];
     for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
       const page = await pdf.getPage(pageNumber);
-      const viewport = page.getViewport({ scale: 2.4 });
+      const viewport = page.getViewport({ scale: 3 });
       const canvas = document.createElement("canvas");
       canvas.width = Math.ceil(viewport.width);
       canvas.height = Math.ceil(viewport.height);
@@ -123,7 +123,7 @@
       ctx.fillStyle = "#fff";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       await page.render({ canvasContext: ctx, viewport, background: "#fff" }).promise;
-      pages.push(canvas.toDataURL("image/jpeg", 0.96));
+      pages.push(canvas.toDataURL("image/png"));
       const instagramCanvas = document.createElement("canvas");
       instagramCanvas.width = 1440;
       instagramCanvas.height = 1800;
@@ -134,7 +134,7 @@
       const fittedWidth = Math.round(canvas.width * scale);
       const fittedHeight = Math.round(canvas.height * scale);
       instagramContext.drawImage(canvas, Math.round((1440 - fittedWidth) / 2), Math.round((1800 - fittedHeight) / 2), fittedWidth, fittedHeight);
-      instagramPages.push(instagramCanvas.toDataURL("image/jpeg", 0.96));
+      instagramPages.push(instagramCanvas.toDataURL("image/png"));
       canvas.width = canvas.height = 1;
       instagramCanvas.width = instagramCanvas.height = 1;
     }

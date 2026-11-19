@@ -7,13 +7,28 @@ let articles=[],selected=null,photo=null,ready=false;
 const dateText=new Intl.DateTimeFormat("es-ES",{day:"2-digit",month:"long",year:"numeric"}).format(new Date()).toUpperCase();
 function wrap(text,max,font){ctx.font=font;const words=String(text||"").trim().split(/\s+/).filter(Boolean),out=[];let line="";for(const word of words){const test=line?line+" "+word:word;if(ctx.measureText(test).width>max&&line){out.push(line);line=word;}else line=test;}if(line)out.push(line);return out;}
 function populate(list){
- articles=Array.isArray(list)?list:[];
+ const incoming=Array.isArray(list)?list:[];
+ articles=incoming.filter(a=>a&&typeof a==="object"&&/^https:\/\//i.test(String(a.image_url||""))&&(a.title_es||a.title||a.title_en));
  const select=$("sgArticle"),previous=select.value;
  select.innerHTML="";
- const first=document.createElement("option");first.value="";first.textContent=articles.length?"Selecciona una noticia publicada":"No hay noticias disponibles";select.appendChild(first);
- articles.forEach((a,i)=>{const o=document.createElement("option");o.value=String(i);o.textContent=(a.title_es||a.title||"Sin titular").slice(0,110);select.appendChild(o);});
+ const first=document.createElement("option");first.value="";first.textContent=articles.length?"Selecciona una noticia publicada":"No hay noticias publicadas con fotografía";select.appendChild(first);
+ articles.forEach((a,i)=>{const o=document.createElement("option");o.value=String(i);o.textContent=(a.title_es||a.title||a.title_en||"Sin titular").slice(0,110);select.appendChild(o);});
  if(previous&&articles[Number(previous)])select.value=previous;
- if(!articles.length){selected=null;photo=null;$("sgStatus").textContent="No se han cargado artículos. Comprueba que la edición esté abierta y actualizada.";}
+ if(!articles.length){selected=null;photo=null;ready=false;lockDownload();$("sgStatus").textContent=incoming.length?"Hay noticias publicadas, pero ninguna tiene una fotografía válida asociada.":"Cargando noticias publicadas…";}
+ else $("sgStatus").textContent=articles.length+" noticias con fotografía disponibles.";
+}
+async function loadArticlesFallback(){
+ if(articles.length||!window.supabase?.createClient)return;
+ try{
+  const client=window.supabase.createClient("https://poywsdigujbarvnzbfnz.supabase.co","sb_publishable_1t7gv1Y9-6HHwMqW5E343A_51GH_L7f");
+  const {data,error}=await client.from("articles").select("title,title_en,title_es,slug,category,author,summary,summary_en,summary_es,image_url,published_at,created_at,country").eq("status","published").order("published_at",{ascending:false,nullsFirst:false}).order("created_at",{ascending:false}).limit(40);
+  if(error)throw error;
+  if(Array.isArray(data)&&data.length){populate(data);$("sgStatus").textContent=articles.length+" noticias publicadas con fotografía cargadas directamente.";return;}
+  $("sgStatus").textContent="No se encontraron noticias publicadas. Comprueba el estado de los artículos.";
+ }catch(error){
+  console.error("Evoford social cover article fallback:",error);
+  $("sgStatus").textContent="No se pudieron recuperar las noticias: "+(error.message||"error de conexión");
+ }
 }
 function loadArticle(){
  const index=$("sgArticle").value;
@@ -65,4 +80,5 @@ $("sgDownload").addEventListener("click",()=>{if(!ready)return;const a=document.
 document.addEventListener("edition:articlesloaded",e=>populate(e.detail?.articles||[]));
 populate(window.EvofordEditionArticles||[]);
 draw();
+if(!articles.length)loadArticlesFallback();
 })();

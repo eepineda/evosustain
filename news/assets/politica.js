@@ -105,6 +105,7 @@ editorial:"Editorial policy: Evoford News will cover organisations neutrally, id
 window.setPoliticsLanguage=function(lang){
  const t=lang==="en"?en:null;localStorage.setItem("evoford-news-language",lang);document.documentElement.lang=lang;
  document.querySelectorAll("[data-language]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.language===lang)));
+ document.querySelectorAll("[data-pwa-tu-label]").forEach(el=>el.textContent=lang==="en"?"Your Republic":"Tu República");
  const set=(s,v)=>{const e=document.querySelector(s);if(e)e.textContent=v;};
  if(!t){location.reload();return;}
  set("#editionLabel",t.edition);document.querySelectorAll(".topline span").forEach((e,i)=>e.textContent=t.top[i]||e.textContent);

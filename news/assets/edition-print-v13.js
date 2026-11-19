@@ -14,9 +14,9 @@ function getImage(url){
 }
 function generate(returnDocument){
  var en=lang()==="en",a3=paper()==="a3";
- if(!window.jspdf||!window.jspdf.jsPDF){alert(en?"The local PDF engine did not load. Refresh the page and try again.":"No se cargó el motor PDF local. Actualiza la página e inténtalo de nuevo.");return;}
+ if(!window.jspdf||!window.jspdf.jsPDF){var engineError=new Error(en?"The local PDF engine did not load. Refresh the page and try again.":"No se cargó el motor PDF local. Actualiza la página e inténtalo de nuevo.");if(returnDocument)return Promise.reject(engineError);alert(engineError.message);return Promise.resolve(null);}
  var lead=$("#lead"),article=$("#fullArticle"),secondary=$(".secondary-area");
- if(!lead||!$(".lead-headline h1",lead)){alert(en?"The edition is still loading.":"La edición todavía se está cargando.");return;}
+ if(!lead||!$(".lead-headline h1",lead)){var loadingError=new Error(en?"The edition is still loading.":"La edición todavía se está cargando.");if(returnDocument)return Promise.reject(loadingError);alert(loadingError.message);return Promise.resolve(null);}
  var JsPDF=window.jspdf.jsPDF,doc=new JsPDF({orientation:"portrait",unit:"mm",format:a3?"a3":"a4",compress:true});
  var W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight(),m=a3?14:11,U=W-2*m;
  var navy=[16,43,78],red=[157,38,53],ink=[23,33,43],grey=[91,101,112],rule=[190,198,205];
@@ -157,7 +157,7 @@ function imageReady(url){return getImage(url);}
   if(returnDocument)return doc;
   doc.save("Evoford-News-"+(a3?"A3":"A4")+"-"+(en?"EN":"ES")+"-"+new Date().toISOString().slice(0,10)+".pdf");
   return doc;
- }).catch(function(err){console.error("Evoford PDF",err);alert(en?"Could not generate the PDF. Please retry.":"No se pudo generar el PDF. Inténtalo de nuevo.");});
+ }).catch(function(err){console.error("Evoford PDF",err);if(returnDocument)throw err;alert(en?"Could not generate the PDF. Please retry.":"No se pudo generar el PDF. Inténtalo de nuevo.");return null;});
 }
 window.EvoPrintController={setSize:function(){return paper();},print:function(){return generate(false);},createDocument:function(){return generate(true);}};
 })();

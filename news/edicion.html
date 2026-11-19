@@ -47,21 +47,18 @@
   <div><div style="font-weight:700;margin-bottom:7px"><span id="campaignPreviewTitle">Vista previa de todas las páginas</span> <span id="campaignPageCount" style="font-weight:400;color:#64748b"></span></div><div id="campaignPreview" aria-label="Vista previa de todas las páginas" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-height:460px;overflow:auto;background:#f1f4f7;padding:8px;border:1px solid #d8e0e8;border-radius:6px"></div><p id="campaignPreviewNote" style="font-size:12px;color:#64748b">Se incluyen todas las páginas reales de la edición maquetada.</p></div>
  </div>
 </section>
-<section id="socialGraphicPanel" style="max-width:1180px;margin:20px auto;padding:20px;background:#fff;border:1px solid #d8e0e8;border-radius:12px;color:#17283c;box-sizing:border-box">
-<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><p style="margin:0;color:#64748b;font-size:12px;font-weight:700;letter-spacing:.12em">HERRAMIENTA INDEPENDIENTE</p><h2 style="margin:5px 0;color:#102b4e">Imagen para redes</h2><p style="margin:0;color:#64748b">Una pieza única para móvil. La edición impresa A4/A3 conserva todas sus funciones.</p></div><b style="font-size:12px;background:#edf3f8;padding:8px 12px;border-radius:20px">1080 × 1350 px · 4:5</b></div>
-<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,390px);gap:20px;margin-top:18px;align-items:start">
-<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
-<label>Tipo de diseño<select id="sgType"><option value="cover">Portada</option><option value="editorial">Editorial</option><option value="feature">Noticia destacada</option><option value="free">Diseño libre</option></select></label>
-<label>Fecha<input id="sgDate" placeholder="19 de noviembre de 2026"></label>
-<label style="grid-column:1/-1">Titular<input id="sgTitle" maxlength="150" placeholder="Escribe el titular principal"></label>
-<label style="grid-column:1/-1">Subtítulo<input id="sgSubtitle" maxlength="220" placeholder="Una frase para ampliar el titular"></label>
-<label>Autor / firma<input id="sgAuthor" maxlength="90" value="EVOFORD NEWS"></label>
-<label>Sección<input id="sgSection" maxlength="50" value="ACTUALIDAD"></label>
-<label style="grid-column:1/-1">Texto breve<textarea id="sgBody" rows="4" maxlength="500" placeholder="Entradilla o fragmento editorial breve"></textarea></label>
-<label style="grid-column:1/-1">Fotografía (opcional)<input id="sgImage" type="file" accept="image/png,image/jpeg,image/webp"></label>
-<div style="grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap"><button id="sgSave" type="button">Guardar borrador</button><select id="sgDrafts"><option value="">Borradores guardados</option></select><button id="sgLoad" type="button" class="secondary-tool">Cargar</button><button id="sgDownload" type="button">Descargar PNG</button></div>
-<p id="sgStatus" role="status" style="grid-column:1/-1;color:#64748b;font-size:13px;margin:0"></p></div>
-<div><p style="font-size:12px;font-weight:700;color:#536273">VISTA PREVIA · FORMATO VERTICAL</p><div style="max-width:360px;margin:auto;background:#e9eef3;padding:10px;border-radius:10px"><canvas id="sgCanvas" width="1080" height="1350" style="display:block;width:100%;height:auto;background:white"></canvas></div><p style="font-size:12px;color:#64748b;text-align:center">PNG original de 1080 × 1350 píxeles.</p></div></div></section>
+<section id="socialGraphicPanel" style="max-width:1180px;margin:20px auto;padding:22px;background:#fff;border:1px solid #d8e0e8;border-radius:12px;color:#17283c;box-sizing:border-box">
+<div style="max-width:850px;margin:0 auto"><p style="margin:0;color:#9a4d3c;font-size:11px;font-weight:800;letter-spacing:.18em">ESTUDIO EDITORIAL · EVOFORD NEWS</p><h2 style="margin:7px 0;color:#142c43;font-family:Georgia,serif;font-size:30px;font-weight:600">Crear portada para redes</h2><p style="margin:0;color:#64748b;line-height:1.5">Diseño de revista en formato vertical. Añade una fotografía y un titular; el diseño se compone automáticamente.</p>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,330px);gap:24px;margin-top:22px;align-items:start">
+<div style="display:grid;gap:14px">
+<label style="display:grid;gap:6px;font-weight:700;font-size:14px">Fotografía principal<input id="sgImage" type="file" accept="image/png,image/jpeg,image/webp" style="padding:12px;border:1px solid #d7dee5;border-radius:7px;background:#fafbfc;font-weight:400"></label>
+<label style="display:grid;gap:6px;font-weight:700;font-size:14px">Titular<input id="sgTitle" maxlength="150" placeholder="Escribe el titular de la portada" style="padding:12px;border:1px solid #d7dee5;border-radius:7px;font:inherit;font-weight:400"></label>
+<label style="display:grid;gap:6px;font-weight:700;font-size:14px">Frase complementaria <span style="font-weight:400;color:#7b8794">(opcional)</span><input id="sgSubtitle" maxlength="180" placeholder="Una frase breve para completar la historia" style="padding:12px;border:1px solid #d7dee5;border-radius:7px;font:inherit;font-weight:400"></label>
+<button id="sgCreate" type="button" style="padding:13px 18px;background:#142c43;color:white;border:0;border-radius:6px;font-weight:700;cursor:pointer">Crear imagen</button>
+<p id="sgStatus" role="status" style="margin:0;color:#64748b;font-size:13px;min-height:20px"></p>
+</div>
+<div><p style="margin:0 0 8px;font-size:11px;font-weight:800;letter-spacing:.12em;color:#64748b">VISTA PREVIA · 4:5</p><div style="max-width:300px;margin:auto;padding:8px;background:#edf0f2;border-radius:8px"><canvas id="sgCanvas" width="1080" height="1350" style="display:block;width:100%;height:auto;background:#f5f2eb"></canvas></div><button id="sgDownload" type="button" disabled style="display:block;width:100%;max-width:300px;margin:12px auto 0;padding:12px;background:#9a4d3c;color:white;border:0;border-radius:6px;font-weight:700;opacity:.5;cursor:not-allowed">Descargar PNG</button><p style="margin:8px 0 0;text-align:center;color:#7b8794;font-size:11px">Alta resolución · 1080 × 1350 px</p></div>
+</div></div></section>
 <main class="newspaper" id="newspaper">
  <div class="paper-topline"><span id="editionDate">EDICIÓN DIGITAL</span><span>INFORMACIÓN · OPINIÓN · ANÁLISIS</span><span id="editionNumber">EVOFORD NEWS</span></div>
  <header class="paper-masthead"><div class="paper-kicker">EL PERIÓDICO GLOBAL · INFORMACIÓN CON CONTEXTO</div><div class="paper-brand">EVOFORD <span>NEWS</span></div><div class="paper-motto">Noticias para entender el mundo</div></header>
@@ -89,5 +86,5 @@ window.addEventListener("unhandledrejection",function(event){
 <script src="/news/assets/edition-png.js?v=5"></script>
 <script src="/news/assets/edition.js?v=32"></script>
 <script src="/news/assets/edition-campaign.js?v=10"></script>
-<script src="/news/assets/social-graphic.js?v=1"></script>
+<script src="/news/assets/social-graphic.js?v=2"></script>
 </body></html>

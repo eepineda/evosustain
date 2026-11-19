@@ -15,8 +15,8 @@
   let currentLanguage = document.documentElement.lang === "en" ? "en" : "es";
   const defaultTitle = { es: "Nueva edición de EVOFORD NEWS", en: "New EVOFORD NEWS edition" };
   const defaultCaption = {
-    es: "📰 Ya está disponible la nueva edición de EVOFORD NEWS. Información, opinión y análisis para entender la actualidad.\\n\\n#EvofordNews #Actualidad #Noticias",
-    en: "📰 The new edition of EVOFORD NEWS is now available. News, opinion and analysis to understand current affairs.\\n\\n#EvofordNews #News #CurrentAffairs"
+    es: "📰 Ya está disponible la nueva edición de EVOFORD NEWS. Información, opinión y análisis para entender la actualidad.\n\n#EvofordNews #Actualidad #Noticias",
+    en: "📰 The new edition of EVOFORD NEWS is now available. News, opinion and analysis to understand current affairs.\n\n#EvofordNews #News #CurrentAffairs"
   };
   const copy = {
     es: {
@@ -55,13 +55,13 @@
     const panel = $("editionCampaignPanel");
     panel.setAttribute("aria-label", t.heading);
     panel.querySelector("h2").textContent = t.heading;
-    panel.querySelector("h2").nextElementSibling.textContent = t.intro;
+    $("campaignIntro").textContent = t.intro;
     panel.querySelector('label[for="campaignDrafts"]').textContent = t.drafts;
     panel.querySelector('label[for="campaignTitle"]').textContent = t.title;
     panel.querySelector('label[for="campaignCaption"]').textContent = t.caption;
     panel.querySelector("#campaignPreview").setAttribute("aria-label", t.preview);
     $("campaignPreviewTitle").textContent = t.preview;
-    panel.querySelector("#campaignPreview").nextElementSibling.textContent = t.previewNote;
+    $("campaignPreviewNote").textContent = t.previewNote;
     $("campaignCloseBtn").textContent = t.close;
     $("campaignLoadBtn").textContent = t.load;
     $("campaignSaveBtn").textContent = campaignId ? t.update : t.save;
@@ -169,7 +169,7 @@
     });
     if (error || data?.error) { status(data?.error || "No se pudieron cargar los borradores."); return; }
     const select = $("campaignDrafts");
-    select.innerHTML = '<option value="">Nueva campaña</option>';
+    select.innerHTML = '<option value="">' + copy[currentLanguage].fresh + '</option>';
     (data.campaigns || []).forEach(item => {
       const option = document.createElement("option");
       option.value = item.id;
@@ -219,6 +219,7 @@
     panel.hidden = !panel.hidden;
     if (!panel.hidden) {
       panel.scrollIntoView({ behavior: "smooth", block: "start" });
+      status(copy[currentLanguage].ready);
       loadCampaignList();
     }
   });

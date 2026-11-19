@@ -88,7 +88,15 @@ $("sgPublish").addEventListener("click",async()=>{
   const client=window.supabase.createClient("https://poywsdigujbarvnzbfnz.supabase.co","sb_publishable_1t7gv1Y9-6HHwMqW5E343A_51GH_L7f");
   const {data:{session}}=await client.auth.getSession();
   if(!session)throw new Error("Inicia sesión con la cuenta editorial autorizada.");
-  const {data,error}=await client.functions.invoke("publish-social-graphic",{body:{article_id:selected.id,title:$("sgTitle").value.trim(),caption,image_base64:canvas.toDataURL("image/png")},headers:{Authorization:"Bearer "+session.access_token}});
+  let articleId=selected.id;
+  if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(articleId||""))){
+    if(!selected.slug)throw new Error("La noticia seleccionada no contiene un identificador ni un enlace interno válido. Actualiza la edición y vuelve a seleccionarla.");
+    const {data:articleRecord,error:lookupError}=await client.from("articles").select("id").eq("slug",selected.slug).eq("status","published").maybeSingle();
+    if(lookupError)throw new Error("No se pudo identificar la noticia: "+lookupError.message);
+    articleId=articleRecord?.id;
+  }
+  if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(articleId||"")))throw new Error("No se encontró el identificador de la noticia publicada. Actualiza la edición e inténtalo de nuevo.");
+  const {data,error}=await client.functions.invoke("publish-social-graphic",{body:{article_id:articleId,title:$("sgTitle").value.trim(),caption,image_base64:canvas.toDataURL("image/png")},headers:{Authorization:"Bearer "+session.access_token}});
   if(error){let detail=error.message||"Error de comunicación con el servicio de publicación.";try{const context=error.context;if(context&&typeof context.json==="function"){const body=await context.json();detail=body.error||body.message||detail;}}catch(_){}throw new Error(detail);}
   if(!data?.ok)throw new Error(data?.error||"No se confirmó ninguna publicación.");
   $("sgStatus").textContent="Resultado: "+(data.results||[]).map(x=>x.platform+": "+x.status+(x.error?" — "+x.error:"")).join(" | ");

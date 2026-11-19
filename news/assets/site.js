@@ -15,6 +15,7 @@ function renderStaticLanguage(){
  // Los nombres del Evoford Ecosystem son marcas corporativas y no se traducen.
  set(".topline span:first-child",en?"LONDON · UNITED KINGDOM":"LONDRES · REINO UNIDO");
  set(".topline span:last-child",en?"NEWS · OPINION · ANALYSIS":"INFORMACIÓN · OPINIÓN · ANÁLISIS");
+ document.querySelectorAll("[data-pwa-tu-label]").forEach(el=>el.textContent=en?"Your Republic":"Tu República");
  const mainNavLabels=en
   ? ["International","Politics","Economy","Security","Startups & innovation","Evoford Briefing","Opinion","Directory","Submit a story","Print edition"]
   : ["Internacional","Política","Economía","Seguridad","Startups e innovación","Evoford Briefing","Opinión","Directorio","Envía tu noticia","Edición impresa"];

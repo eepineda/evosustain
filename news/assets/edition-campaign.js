@@ -42,9 +42,59 @@
     return dataUrl;
   }
 
+  async function loadCampaignList() {
+    const { data: { session } } = await client.auth.getSession();
+    if (!session) return;
+    const { data, error } = await client.functions.invoke("print-edition-campaign", {
+      body: { action: "list" }, headers: { Authorization: "Bearer " + session.access_token }
+    });
+    if (error || data?.error) { status(data?.error || "No se pudieron cargar los borradores."); return; }
+    const select = $("campaignDrafts");
+    select.innerHTML = '<option value="">Nueva campaña</option>';
+    (data.campaigns || []).forEach(item => {
+      const option = document.createElement("option");
+      option.value = item.id;
+      option.textContent = new Date(item.created_at).toLocaleDateString("es-ES") + " · " + item.title + " (" + item.status + ")";
+      select.appendChild(option);
+    });
+  }
+
+  $("campaignLoadBtn").addEventListener("click", async () => {
+    const id = $("campaignDrafts").value;
+    if (!id) {
+      campaignId = null; savedImage = null;
+      $("campaignTitle").value = "Nueva edición de EVOFORD NEWS";
+      $("campaignPreview").removeAttribute("src");
+      $("campaignPublishBtn").disabled = true;
+      $("campaignSaveBtn").textContent = "Guardar borrador";
+      status("Preparado para crear una nueva campaña.");
+      return;
+    }
+    try {
+      const { data: { session } } = await client.auth.getSession();
+      const { data, error } = await client.functions.invoke("print-edition-campaign", {
+        body: { action: "get", campaign_id: id }, headers: { Authorization: "Bearer " + session.access_token }
+      });
+      if (error || data?.error || !data?.campaign) throw new Error(data?.error || "No se pudo cargar la campaña.");
+      const item = data.campaign;
+      campaignId = item.id;
+      $("campaignTitle").value = item.title;
+      $("campaignCaption").value = item.caption;
+      $("campaignPreview").src = item.image_url;
+      const editable = item.status === "draft";
+      $("campaignSaveBtn").disabled = !editable;
+      $("campaignSaveBtn").textContent = editable ? "Actualizar borrador" : "Borrador cerrado";
+      $("campaignPublishBtn").disabled = item.status === "published" || (item.facebook_status === "published" && item.instagram_status === "published");
+      status("Campaña cargada · Facebook: " + item.facebook_status + " · Instagram: " + item.instagram_status);
+    } catch (error) { status(error.message || "No se pudo cargar la campaña."); }
+  });
+
   open.addEventListener("click", () => {
     panel.hidden = !panel.hidden;
-    if (!panel.hidden) panel.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (!panel.hidden) {
+      panel.scrollIntoView({ behavior: "smooth", block: "start" });
+      loadCampaignList();
+    }
   });
   $("campaignCloseBtn").addEventListener("click", () => { panel.hidden = true; });
 

@@ -72,6 +72,21 @@
   }
   document.addEventListener("edition:languagechange", event => setLanguage(event.detail?.language));
   setLanguage(currentLanguage);
+  async function readableFunctionError(error) {
+    const context = error?.context;
+    if (context) {
+      try {
+        const body = typeof context.clone === "function" ? await context.clone().json() : null;
+        if (body?.error) return body.error + (body.code ? " (" + body.code + ")" : "");
+      } catch {}
+      try {
+        const body = typeof context.clone === "function" ? await context.clone().text() : "";
+        if (body) return body.slice(0, 500);
+      } catch {}
+    }
+    return error?.message || "Error de comunicación con el servidor.";
+  }
+
   const busy = (value) => {
     $("campaignSaveBtn").disabled = value;
     $("campaignPublishBtn").disabled = value || !campaignId;
@@ -206,7 +221,7 @@
         },
         headers: { Authorization: "Bearer " + session.access_token }
       });
-      if (error) throw error;
+      if (error) throw new Error(await readableFunctionError(error));
       if (!data?.ok || !data?.campaign?.id) throw new Error(data?.error || copy[currentLanguage].failed);
       campaignId = data.campaign.id;
       $("campaignPublishBtn").disabled = false;
@@ -214,7 +229,7 @@
       status(copy[currentLanguage].saved);
     } catch (error) {
       console.error("Print edition campaign save:", error);
-      status(error.message || "No se pudo guardar la campaña.");
+      status(error.message || copy[currentLanguage].failed);
     } finally {
       busy(false);
     }

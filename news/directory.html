@@ -61,6 +61,18 @@ html.evo-pwa .directory-card{padding:15px!important;border:1px solid #e1e6ec!imp
 html.evo-pwa .directory-request{padding:18px!important;border-radius:15px!important}
 html.evo-pwa .directory-form{grid-template-columns:1fr!important}
 html.evo-pwa .directory-form .full{grid-column:auto!important}
+
+/* Directorio territorial: navegación clara por regiones */
+.directory-region-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.directory-region{min-width:0;padding:19px 20px;background:#fff;border:1px solid #dce3ea;border-top:3px solid #168c91;border-radius:12px;box-shadow:0 5px 18px rgba(16,43,78,.045)}
+.directory-region-dominican{background:#f7f5f1;border-top-color:#a9232d}
+.directory-region h3{font:700 20px Georgia,serif;color:#102b4e;margin:7px 0}
+.directory-region p{font-size:13px;line-height:1.55;color:#596574;margin:0 0 13px}
+.directory-region-links{display:grid;gap:7px}
+.directory-region-links a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 11px;background:#fff;border:1px solid #e1e6ec;border-radius:8px;color:#102b4e;text-decoration:none;font-size:12px;font-weight:700}
+.directory-region-links a:hover{border-color:#168c91;color:#08777c}
+.directory-region-links a span{color:#a9232d}
+@media(max-width:680px){.directory-region-grid{grid-template-columns:1fr}.directory-region{padding:16px}}
 </style><link rel="stylesheet" href="assets/news-core.css?v=1"><link rel="stylesheet" href="assets/directory-language.css?v=1">
 <link rel="stylesheet" href="assets/directory-modern.css?v=1">
 <script src="assets/news-core.js?v=1"></script>
@@ -76,19 +88,40 @@ html.evo-pwa .directory-form .full{grid-column:auto!important}
 <main class="directory-wrap"><section class="directory-hero"><span class="kicker">GUÍA DE SERVICIOS · DIÁSPORA DOMINICANA</span><h1>Servicios para dominicanos en el exterior</h1><p>Una guía de instituciones, servicios públicos, educación, vivienda, hipotecas, banca, empleo y apoyo comunitario para dominicanos en Reino Unido, España, Europa y República Dominicana.</p></section>
 <section class="directory-origin" aria-label="Origen y alcance del directorio"><div><span class="directory-tag">NUESTRAS RAÍCES</span><h2>La comunidad dominicana, en el centro</h2><p>Este directorio nace para apoyar a los dominicanos dentro y fuera del país: desde quienes llegan a Londres hasta quienes necesitan orientación, servicios o mantener sus vínculos con República Dominicana y España.</p></div><div><span class="directory-tag">UNA COMUNIDAD ABIERTA</span><p>La cobertura incluye Reino Unido, España y otros países europeos, además de República Dominicana. Priorizamos recursos prácticos y entidades que puedan ayudar directamente a la comunidad dominicana.</p></div></section>
 
-<section class="country-directory" aria-label="Servicios por país">
-  <div class="country-directory-head"><span class="flag" aria-hidden="true">🌍</span><div><h2>Servicios para la comunidad dominicana</h2><p>Información práctica para dominicanos en Reino Unido, España, otros países europeos y República Dominicana.</p></div></div>
-  <article class="country-primary">
-    <div><span class="directory-tag">REPÚBLICA DOMINICANA</span><h3>🇩🇴 Comunidad dominicana</h3><p>Acceso a servicios consulares, orientación, asociaciones, negocios y recursos útiles para mantener los vínculos con el país y resolver gestiones desde el exterior.</p></div>
-    <div class="country-links">
-      <a href="https://gbr.mirex.gob.do/" target="_blank" rel="noopener noreferrer"><span>🏛️</span> Portal oficial MIREX</a>
-      <a href="https://dominicanembassy.org.uk/" target="_blank" rel="noopener noreferrer"><span>🇩🇴</span> Embajada dominicana en Londres</a>
-    </div>
-  </article>
-  <h3 class="country-secondary-title">Servicios en Reino Unido y España</h3>
-  <div class="country-flag-grid">
-    <a class="country-flag-card" href="https://www.exteriores.gob.es/Embajadas/LONDRES/es/Paginas/index.aspx" target="_blank" rel="noopener noreferrer"><span class="flag">🇪🇸</span><span>España<small>Embajada y servicios consulares en Londres</small></span></a>
-    <a class="country-flag-card" href="https://www.gov.uk/" target="_blank" rel="noopener noreferrer"><span class="flag">🇬🇧</span><span>Reino Unido<small>Servicios y trámites oficiales</small></span></a>
+<section class="country-directory" aria-label="Servicios por territorio">
+  <div class="country-directory-head"><span class="flag" aria-hidden="true">🌍</span><div><h2>Servicios para la comunidad dominicana</h2><p>Recursos prácticos organizados por territorio para encontrar instituciones, orientación y servicios de interés.</p></div></div>
+  <div class="directory-region-grid">
+    <article class="directory-region directory-region-dominican">
+      <span class="directory-tag">NUESTRAS RAÍCES</span><h3>🇩🇴 República Dominicana</h3>
+      <p>Instituciones nacionales, documentación, servicios consulares y recursos para mantener los vínculos con el país y realizar gestiones desde el exterior.</p>
+      <div class="directory-region-links">
+        <a href="https://gbr.mirex.gob.do/" target="_blank" rel="noopener noreferrer">🏛️ Portal oficial MIREX <span>↗</span></a>
+        <a href="https://dominicanembassy.org.uk/" target="_blank" rel="noopener noreferrer">🇩🇴 Embajada dominicana en Londres <span>↗</span></a>
+      </div>
+    </article>
+    <article class="directory-region">
+      <span class="directory-tag">SERVICIOS LOCALES</span><h3>🇬🇧 Reino Unido</h3>
+      <p>Información oficial y recursos para dominicanos que viven, trabajan, estudian o llegan al Reino Unido.</p>
+      <div class="directory-region-links">
+        <a href="https://www.gov.uk/" target="_blank" rel="noopener noreferrer">Servicios y trámites oficiales <span>↗</span></a>
+        <a href="https://dominicanembassy.org.uk/" target="_blank" rel="noopener noreferrer">Embajada dominicana <span>↗</span></a>
+      </div>
+    </article>
+    <article class="directory-region">
+      <span class="directory-tag">SERVICIOS LOCALES</span><h3>🇪🇸 España</h3>
+      <p>Recursos de interés para la comunidad dominicana en España: administración, educación, vivienda, empleo y orientación.</p>
+      <div class="directory-region-links">
+        <a href="https://administracion.gob.es/" target="_blank" rel="noopener noreferrer">Administración pública de España <span>↗</span></a>
+        <a href="https://www.exteriores.gob.es/" target="_blank" rel="noopener noreferrer">Ministerio de Asuntos Exteriores <span>↗</span></a>
+      </div>
+    </article>
+    <article class="directory-region">
+      <span class="directory-tag">COBERTURA EUROPEA</span><h3>🇪🇺 Otros países de Europa</h3>
+      <p>Una sección abierta para localizar embajadas, consulados, asociaciones y servicios útiles organizados por país.</p>
+      <div class="directory-region-links">
+        <a href="https://mirex.gob.do/" target="_blank" rel="noopener noreferrer">MIREX · República Dominicana <span>↗</span></a>
+      </div>
+    </article>
   </div>
 </section>
 <div class="directory-tools"><input id="directorySearch" type="search" placeholder="Buscar institución, banco, ayuda, vivienda, estudios o ubicación…" aria-label="Buscar en el directorio"><select id="directoryCategory" aria-label="Filtrar por categoría"><option value="">Todas las categorías</option><option>Embajadas y consulados</option><option>Instituciones dominicanas</option><option>Asociaciones</option><option>Educación y formación</option><option>Vivienda y apoyo público</option><option>Vivienda e hipotecas</option><option>Banca y finanzas</option><option>Asesoría legal y migratoria</option><option>Salud y bienestar</option><option>Empleo y formación</option><option>Negocios dominicanos</option><option>Servicios profesionales</option><option>Comunidad y eventos</option></select></div>

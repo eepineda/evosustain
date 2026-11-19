@@ -229,27 +229,10 @@
     } catch (error) { status(error.message || "No se pudo cargar la campaña."); }
   });
 
-  const hub = $("socialHub");
-  const coverPanel = $("socialGraphicPanel");
-  const coverTab = $("socialTabCover");
-  const editionTab = $("socialTabEdition");
-  function selectSocialTab(tab) {
-    const edition = tab === "edition";
-    panel.hidden = !edition;
-    coverPanel.hidden = edition;
-    coverTab.classList.toggle("is-active", !edition);
-    editionTab.classList.toggle("is-active", edition);
-    coverTab.setAttribute("aria-selected", String(!edition));
-    editionTab.setAttribute("aria-selected", String(edition));
-    if (edition) { status(copy[currentLanguage].ready); loadCampaignList(); }
-  }
-  coverTab.addEventListener("click", () => selectSocialTab("cover"));
-  editionTab.addEventListener("click", () => selectSocialTab("edition"));
-  open.addEventListener("click", () => {
-    hub.scrollIntoView({ behavior: "smooth", block: "start" });
-    selectSocialTab("cover");
+  document.addEventListener("socialhub:edition-selected", () => {
+    status(copy[currentLanguage].ready);
+    loadCampaignList();
   });
-  $("campaignCloseBtn").addEventListener("click", () => selectSocialTab("cover"));
 
   $("campaignSaveBtn").addEventListener("click", async () => {
     if (!$("campaignTitle").value.trim() || !$("campaignCaption").value.trim()) {

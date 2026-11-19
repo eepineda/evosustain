@@ -36,7 +36,7 @@
 </header>
 <section id="editionCampaignPanel" hidden aria-label="Promoción independiente de la edición impresa" style="max-width:980px;margin:18px auto;padding:20px;background:#fff;border:1px solid #d8e0e8;border-radius:10px;color:#17283c;box-sizing:border-box">
  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><h2 style="margin:0;color:#102b4e">Promoción de esta edición</h2><button id="campaignCloseBtn" type="button" class="secondary-tool">Cerrar</button></div>
- <p style="margin:8px 0 16px;color:#536273">Campaña independiente. No publica ni modifica los artículos individuales.</p>
+ <p id="campaignIntro" style="margin:8px 0 16px;color:#536273">Campaña independiente. No publica ni modifica los artículos individuales.</p>
  <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,340px);gap:18px;align-items:start">
   <div><label for="campaignDrafts" style="display:block;font-weight:700;margin:8px 0 5px">Borradores anteriores</label><div style="display:flex;gap:8px"><select id="campaignDrafts" style="flex:1;min-width:0;padding:10px;border:1px solid #cbd5e1;border-radius:6px"><option value="">Nueva campaña</option></select><button id="campaignLoadBtn" type="button" class="secondary-tool">Cargar</button></div><label for="campaignTitle" style="display:block;font-weight:700;margin:12px 0 5px">Título de la campaña</label><input id="campaignTitle" maxlength="180" value="Nueva edición de EVOFORD NEWS" style="width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:6px;box-sizing:border-box">
   <label for="campaignCaption" style="display:block;font-weight:700;margin:12px 0 5px">Texto para Facebook e Instagram</label><textarea id="campaignCaption" rows="7" maxlength="2200" style="width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:6px;box-sizing:border-box;resize:vertical">📰 Ya está disponible la nueva edición de EVOFORD NEWS. Información, opinión y análisis para entender la actualidad.
@@ -44,7 +44,7 @@
 #EvofordNews #Actualidad #Noticias</textarea>
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><button id="campaignSaveBtn" type="button">Guardar borrador</button><button id="campaignPublishBtn" type="button" disabled>Aprobar y publicar</button></div>
   <p id="campaignStatus" role="status" style="font-size:14px;color:#536273"></p></div>
-  <div><div style="font-weight:700;margin-bottom:7px"><span id="campaignPreviewTitle">Vista previa de todas las páginas</span> <span id="campaignPageCount" style="font-weight:400;color:#64748b"></span></div><div id="campaignPreview" aria-label="Vista previa de todas las páginas" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-height:460px;overflow:auto;background:#f1f4f7;padding:8px;border:1px solid #d8e0e8;border-radius:6px"></div><p style="font-size:12px;color:#64748b">Se incluyen todas las páginas reales de la edición maquetada.</p></div>
+  <div><div style="font-weight:700;margin-bottom:7px"><span id="campaignPreviewTitle">Vista previa de todas las páginas</span> <span id="campaignPageCount" style="font-weight:400;color:#64748b"></span></div><div id="campaignPreview" aria-label="Vista previa de todas las páginas" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-height:460px;overflow:auto;background:#f1f4f7;padding:8px;border:1px solid #d8e0e8;border-radius:6px"></div><p id="campaignPreviewNote" style="font-size:12px;color:#64748b">Se incluyen todas las páginas reales de la edición maquetada.</p></div>
  </div>
 </section>
 <main class="newspaper" id="newspaper">
@@ -73,5 +73,5 @@ window.addEventListener("unhandledrejection",function(event){
 <script src="/news/assets/edition-print-v13.js?v=13"></script>
 <script src="/news/assets/edition-png.js?v=5"></script>
 <script src="/news/assets/edition.js?v=32"></script>
-<script src="/news/assets/edition-campaign.js?v=5"></script>
+<script src="/news/assets/edition-campaign.js?v=6"></script>
 </body></html>

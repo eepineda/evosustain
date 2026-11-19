@@ -9,6 +9,8 @@
   if (!panel || !open) return;
   let campaignId = null;
   let savedImage = null;
+  let currentCampaignStatus = null;
+  let instagramAlreadyFailedAfterFacebook = false;
 
   let currentLanguage = document.documentElement.lang === "en" ? "en" : "es";
   const defaultTitle = { es: "Nueva edición de EVOFORD NEWS", en: "New EVOFORD NEWS edition" };
@@ -110,6 +112,7 @@
         : "Esta edición tiene " + pdf.numPages + " páginas. Instagram admite carruseles de hasta 10 páginas; reduce la edición a 10 páginas o menos antes de promocionarla.");
     }
     const pages = [];
+    const instagramPages = [];
     for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
       const page = await pdf.getPage(pageNumber);
       const viewport = page.getViewport({ scale: 1.35 });
@@ -121,10 +124,22 @@
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       await page.render({ canvasContext: ctx, viewport, background: "#fff" }).promise;
       pages.push(canvas.toDataURL("image/jpeg", 0.88));
+      const instagramCanvas = document.createElement("canvas");
+      instagramCanvas.width = 1080;
+      instagramCanvas.height = 1350;
+      const instagramContext = instagramCanvas.getContext("2d", { alpha: false });
+      instagramContext.fillStyle = "#fff";
+      instagramContext.fillRect(0, 0, 1080, 1350);
+      const scale = Math.min(1080 / canvas.width, 1350 / canvas.height);
+      const fittedWidth = Math.round(canvas.width * scale);
+      const fittedHeight = Math.round(canvas.height * scale);
+      instagramContext.drawImage(canvas, Math.round((1080 - fittedWidth) / 2), Math.round((1350 - fittedHeight) / 2), fittedWidth, fittedHeight);
+      instagramPages.push(instagramCanvas.toDataURL("image/jpeg", 0.88));
       canvas.width = canvas.height = 1;
+      instagramCanvas.width = instagramCanvas.height = 1;
     }
     if (pdf.destroy) await pdf.destroy();
-    return pages;
+    return { pages, instagramPages };
   }
 
   function showPagePreviews(urls) {
@@ -166,7 +181,7 @@
   $("campaignLoadBtn").addEventListener("click", async () => {
     const id = $("campaignDrafts").value;
     if (!id) {
-      campaignId = null; savedImage = null;
+      campaignId = null; savedImage = null; currentCampaignStatus = null; instagramAlreadyFailedAfterFacebook = false;
       $("campaignTitle").value = "Nueva edición de EVOFORD NEWS";
       showPagePreviews([]);
       $("campaignPublishBtn").disabled = true;
@@ -185,9 +200,13 @@
       $("campaignTitle").value = item.title;
       $("campaignCaption").value = item.caption;
       showPagePreviews(Array.isArray(item.image_urls) && item.image_urls.length ? item.image_urls : [item.image_url]);
-      const editable = item.status === "draft";
+      currentCampaignStatus = item.status;
+      instagramAlreadyFailedAfterFacebook = item.facebook_status === "published" && item.instagram_status === "failed";
+      const editable = item.status === "draft" || instagramAlreadyFailedAfterFacebook;
       $("campaignSaveBtn").disabled = !editable;
-      $("campaignSaveBtn").textContent = editable ? "Actualizar borrador" : "Borrador cerrado";
+      $("campaignSaveBtn").textContent = instagramAlreadyFailedAfterFacebook
+        ? (currentLanguage === "en" ? "Prepare Instagram images" : "Preparar imágenes de Instagram")
+        : editable ? copy[currentLanguage].update : (currentLanguage === "en" ? "Draft locked" : "Borrador cerrado");
       $("campaignPublishBtn").disabled = item.status === "published" || (item.facebook_status === "published" && item.instagram_status === "published");
       status(copy[currentLanguage].loaded + " · Facebook: " + item.facebook_status + " · Instagram: " + item.instagram_status);
     } catch (error) { status(error.message || "No se pudo cargar la campaña."); }
@@ -209,21 +228,34 @@
       if (!session) throw new Error(copy[currentLanguage].login);
       status(copy[currentLanguage].savingCover);
       savedImage = await makeEditionPages();
-      showPagePreviews(savedImage);
+      showPagePreviews(savedImage.pages);
       status(copy[currentLanguage].saving);
       const { data, error } = await client.functions.invoke("print-edition-campaign", {
         body: {
-          action: campaignId ? "update" : "save",
+          action: instagramAlreadyFailedAfterFacebook ? "repair_instagram_images" : (campaignId ? "update" : "save"),
           campaign_id: campaignId,
           title: $("campaignTitle").value.trim(),
           caption: $("campaignCaption").value.trim(),
-          images_base64: savedImage
+          images_base64: savedImage.pages,
+          instagram_images_base64: savedImage.instagramPages
         },
         headers: { Authorization: "Bearer " + session.access_token }
       });
       if (error) throw new Error(await readableFunctionError(error));
+      if (instagramAlreadyFailedAfterFacebook) {
+        if (!data?.ok) throw new Error(data?.error || copy[currentLanguage].failed);
+        instagramAlreadyFailedAfterFacebook = false;
+        $("campaignSaveBtn").disabled = true;
+        $("campaignSaveBtn").textContent = currentLanguage === "en" ? "Instagram images prepared" : "Imágenes de Instagram preparadas";
+        status(currentLanguage === "en"
+          ? "Instagram images have been resized to 4:5 and saved. Facebook remains published; now retry the campaign to publish Instagram only."
+          : "Las imágenes de Instagram se han adaptado a 4:5 y guardado. Facebook sigue publicado; ahora puedes reintentar la campaña para publicar solo en Instagram.");
+        $("campaignPublishBtn").disabled = false;
+        return;
+      }
       if (!data?.ok || !data?.campaign?.id) throw new Error(data?.error || copy[currentLanguage].failed);
       campaignId = data.campaign.id;
+      currentCampaignStatus = "draft";
       $("campaignPublishBtn").disabled = false;
       $("campaignSaveBtn").textContent = copy[currentLanguage].update;
       status(copy[currentLanguage].saved);

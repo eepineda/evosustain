@@ -187,3 +187,31 @@ body.print-edition{background:#e7e9ec;color:var(--ei-ink)}
 .social-hub #socialGraphicPanel{padding:20px!important}
 .social-hub #editionCampaignPanel{padding:20px!important}
 @media(max-width:650px){.social-hub{margin:12px 8px;padding:14px}.social-hub__tabs{display:grid;grid-template-columns:1fr 1fr}.social-hub__tabs button{padding:10px 8px}.social-hub #socialGraphicPanel,.social-hub #editionCampaignPanel{padding:14px!important}}
+
+
+/* Social cover studio: isolate the editor and preview in bounded grid tracks */
+.social-hub #socialGraphicPanel,
+.social-hub #socialGraphicPanel *{box-sizing:border-box}
+.social-hub #socialGraphicPanel>div{width:100%;max-width:850px;min-width:0;margin-inline:auto}
+.social-hub #socialGraphicPanel>div>div{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(250px,300px)!important;
+  align-items:start!important;
+  gap:24px!important;
+  width:100%!important;
+  min-width:0!important;
+}
+.social-hub #socialGraphicPanel>div>div>div{min-width:0!important;width:100%;max-width:100%}
+.social-hub #socialGraphicPanel label{min-width:0}
+.social-hub #socialGraphicPanel input,
+.social-hub #socialGraphicPanel select,
+.social-hub #socialGraphicPanel textarea{display:block;width:100%;max-width:100%;min-width:0}
+.social-hub #socialGraphicPanel #sgCreate{display:block;width:100%;max-width:100%;min-width:0}
+.social-hub #socialGraphicPanel>div>div>div:last-child{width:100%;max-width:300px;justify-self:end}
+.social-hub #socialGraphicPanel #sgCanvas{width:100%;max-width:100%;height:auto}
+.social-hub #socialGraphicPanel #sgDownload,
+.social-hub #socialGraphicPanel #sgPublish{width:100%;max-width:300px}
+@media(max-width:760px){
+  .social-hub #socialGraphicPanel>div>div{grid-template-columns:minmax(0,1fr)!important;gap:20px!important}
+  .social-hub #socialGraphicPanel>div>div>div:last-child{max-width:320px;justify-self:center}
+}

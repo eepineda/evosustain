@@ -44,3 +44,11 @@
  body.letter-printing>#letterStudio>*:not(#letterPaper){display:none!important}
  body.letter-printing>#letterStudio>#letterPaper{display:block!important;position:relative!important;width:210mm!important;height:297mm!important;min-height:297mm!important;margin:0!important;padding:15mm 19mm 14mm!important;border:0!important;box-shadow:none!important;overflow:hidden!important;break-before:avoid!important;break-after:avoid!important;page-break-before:avoid!important;page-break-after:avoid!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
 }
+/* Redes sociales en la carta institucional */
+.letter-social-intro{margin-top:1.5mm!important;margin-bottom:1.2mm!important}
+.letter-social{display:flex;align-items:center;gap:5mm;margin:0 0 2.7mm!important;text-align:left!important}
+.letter-social a{display:inline-flex;align-items:center;gap:1.5mm;color:#052962!important;font:700 8.5pt 'DM Sans',Arial,sans-serif;text-decoration:none}
+.letter-social-icon{display:inline-flex;width:6mm;height:6mm;align-items:center;justify-content:center;border-radius:50%;color:#fff;font:700 10pt Arial,sans-serif}
+.letter-facebook{background:#1877f2}
+.letter-instagram{background:#c13584;font-size:13pt}
+@media print{.letter-social a{color:#052962!important;text-decoration:none!important}}

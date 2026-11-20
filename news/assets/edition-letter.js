@@ -2,7 +2,7 @@
 "use strict";
 var $=function(s,r){return (r||document).querySelector(s);};
 var esc=function(v){return String(v||"").replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});};
-function dateISO(){var d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");}
+var originalDocumentTitle=document.title;\nfunction dateISO(){var d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");}
 function dateES(v){if(!v)return "";var p=v.split("-");return p.length===3?p[2]+"/"+p[1]+"/"+p[0]:v;}
 function panel(){
  var root=$("#letterStudio");if(root)return root;
@@ -11,7 +11,7 @@ function panel(){
  var newspaper=$("#newspaper");if(newspaper&&newspaper.parentNode)newspaper.parentNode.insertBefore(root,newspaper);else document.body.appendChild(root);
  $("#letterClose").onclick=close;
  $("#letterPreview").onclick=render;
- $("#letterExport").onclick=function(){if(!render())return;document.body.classList.add("letter-printing");window.print();};
+ $("#letterExport").onclick=function(){if(!render())return;var recipient=$("#letterRecipient").value.trim().replace(/[\\\\/:*?"<>|]+/g," ").replace(/\\s+/g," ").slice(0,70);document.title="Carta - "+recipient+" - EVOFORD NEWS";document.body.classList.add("letter-printing");window.print();};
  $("#letterRecipient").addEventListener("input",render);
  $("#letterDate").addEventListener("change",render);
  return root;
@@ -44,6 +44,6 @@ function init(){
  var tools=$(".toolbar .tools");if(!tools||$("#letterOpenBtn"))return;
  var b=document.createElement("button");b.type="button";b.id="letterOpenBtn";b.className="secondary-tool";b.textContent="Carta de presentación";b.addEventListener("click",open);tools.appendChild(b);
 }
-window.addEventListener("afterprint",function(){document.body.classList.remove("letter-printing");});
+window.addEventListener("afterprint",function(){document.body.classList.remove("letter-printing");document.title=originalDocumentTitle;});
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();

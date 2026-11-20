@@ -123,7 +123,7 @@ function showAccessPanel(message){
    if(!emailInput.validity.valid){status.textContent="Introduce un correo electrónico completo y válido.";emailInput.focus();return;}
    button.disabled=true;button.textContent="Enviando…";status.textContent="Solicitando enlace de acceso…";
    try{
-    const {error}=await authClient.auth.signInWithOtp({email,options:{emailRedirectTo:new URL("/news/edicion.html",location.origin).href,shouldCreateUser:false}});
+    const {error}=await authClient.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+"/news/edicion.html",shouldCreateUser:false}});
     status.textContent=error?"No se pudo enviar el enlace: "+error.message:"Solicitud enviada. Revisa tu bandeja de entrada y el correo no deseado.";
    }catch(error){
     status.textContent="No se pudo enviar el enlace. "+(error&&error.message?error.message:"Comprueba la conexión e inténtalo de nuevo.");

@@ -52,3 +52,8 @@
 .letter-facebook{background:#1877f2}
 .letter-instagram{background:#c13584;font-size:13pt}
 @media print{.letter-social a{color:#052962!important;text-decoration:none!important}}
+
+/* Datos de contacto en la firma */
+.letter-contact{display:flex;gap:2mm;align-items:center;color:#626b75}
+.letter-contact a{color:#052962;text-decoration:none;font-weight:600}
+@media print{.letter-contact a{color:#052962!important;text-decoration:none!important}}

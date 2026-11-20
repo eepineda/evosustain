@@ -102,6 +102,7 @@ function render(){
  $("storyCount").textContent=rest.length+" "+ui[language].stories;
 }
 const authClient=window.supabase.createClient(URL,KEY);
+window.EvofordSupabaseClient=authClient;
 let accessPanel=null;
 function showAccessPanel(message){
  if(!accessPanel){

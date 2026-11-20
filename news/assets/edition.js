@@ -120,7 +120,7 @@ function showAccessPanel(message){
    event.preventDefault();
    const button=loginForm.querySelector("button");
    const email=emailInput.value.trim().toLowerCase();
-   if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)){status.textContent="Introduce un correo electrónico completo y válido.";emailInput.focus();return;}
+   if(!emailInput.validity.valid){status.textContent="Introduce un correo electrónico completo y válido.";emailInput.focus();return;}
    button.disabled=true;button.textContent="Enviando…";status.textContent="Solicitando enlace de acceso…";
    try{
     const {error}=await authClient.auth.signInWithOtp({email,options:{emailRedirectTo:new URL("/news/edicion.html",location.origin).href,shouldCreateUser:false}});

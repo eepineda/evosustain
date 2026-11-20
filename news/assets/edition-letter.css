@@ -18,7 +18,7 @@
 .letter-paper{width:210mm;min-height:297mm;box-sizing:border-box;margin:10px auto;padding:15mm 19mm 14mm;background:#fff;border:1px solid #d9dee5;box-shadow:0 5px 24px #05296214;color:#171717;font-family:'DM Sans',Arial,sans-serif}
 .letter-masthead{border-bottom:0;padding-bottom:0}
 .letter-topline{display:flex;justify-content:space-between;gap:12px;padding-bottom:2.5mm;border-bottom:1px solid #d9dee5;color:#626b75;font:700 6.5pt 'DM Sans',Arial,sans-serif;letter-spacing:.13em;text-transform:uppercase}
-.letter-brand{margin-top:4mm;color:#052962;font:800 31pt/1 'Playfair Display',Georgia,serif;letter-spacing:-1.8pt}
+.letter-brand{display:block;margin:4mm 0 0;padding:2mm 0 1mm;text-align:center;color:#052962;font:800 39pt/1 'Playfair Display',Georgia,serif;letter-spacing:-2.2pt}.letter-brand span{color:#c70000;font-style:normal}
 .letter-brand span{color:#c70000}
 .letter-tagline{margin-top:2mm;color:#626b75;font:700 7pt 'DM Sans',Arial,sans-serif;letter-spacing:.17em}
 .letter-rule{height:3px;width:100%;margin-top:3.5mm;background:linear-gradient(90deg,#052962 0 78%,#c70000 78% 100%)}

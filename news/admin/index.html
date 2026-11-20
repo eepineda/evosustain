@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="./admin.css?v=20261114-briefing1">
   <link rel="stylesheet" href="./modern-admin.css?v=1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="/news/admin/admin-auth.js?v=20261117-mobile1"></script>
+  <script defer src="/news/admin/admin-auth.js?v=20261120-dual-admins1"></script>
 </head>
 <body>
   <header class="topbar">
@@ -45,7 +45,6 @@
         <button class="tab" data-tab="inbox">Noticias RSS</button>
         <button class="tab" data-tab="sources">Fuentes RSS</button><button class="tab" data-tab="submissions">Envíos recibidos</button><button class="tab" data-tab="directory">Directorio</button><button class="tab" data-tab="courses">Solicitudes de formación</button><button class="tab" data-tab="ads">Anuncios y publicidad</button><button class="tab" data-tab="printEdition">Edición impresa</button>
       </nav>
-
       <section id="printEditionTab" class="tabview" hidden><div class="section-head"><div><p class="eyebrow">GESTIÓN EDITORIAL</p><h2>Edición impresa</h2><p class="muted">Consulta, actualiza y prepara la edición desde el Panel editorial.</p></div><a class="button secondary" href="/news/edicion.html" target="_blank" rel="noopener">Abrir en otra pestaña</a></div><section class="panel"><div class="section-head"><div><h3>Accesos autorizados</h3><p class="muted">La edición impresa sigue siendo exclusiva del administrador. Desde aquí puedes revisar y eliminar correos de la lista.</p></div><button type="button" id="refreshPrintAccessBtn" class="secondary">Actualizar</button></div><form id="addPrintAccessForm" class="form-grid"><label>Correo electrónico<input id="newPrintAccessEmail" type="email" maxlength="254" required placeholder="correo@ejemplo.com"></label><button type="submit">Aprobar correo</button></form><p id="printAccessMessage" class="muted" role="status"></p><div id="printAccessList"><p class="muted">Pulsa Actualizar para consultar los accesos.</p></div></section><section class="panel"><h3>Edición impresa</h3><p class="muted">Abre la edición para revisar su presentación y utilizar sus controles de impresión.</p><a class="button secondary" href="/news/edicion.html" target="_blank" rel="noopener">Abrir edición impresa</a></section></section>
       <section id="opinionAuthorsTab" class="tabview" hidden>
         <div class="section-head"><div><p class="eyebrow">COLABORADORES EDITORIALES</p><h2>Opinión y autores</h2><p class="muted">Gestiona los perfiles públicos de quienes escriben artículos de opinión. Los cambios no modifican los artículos existentes.</p></div><button type="button" id="newOpinionAuthorBtn">Añadir autor</button></div>
@@ -120,14 +119,12 @@
           <p id="editorMessage" class="message" role="status"></p>
         </form>
       </section>
-
       <section id="inboxTab" class="tabview" hidden>
         <div class="section-head"><div><p class="eyebrow">FUENTES EXTERNAS</p><h2>Bandeja de noticias RSS</h2></div><div class="item-actions"><button id="runRssBtn">Importar ahora</button><button id="refreshInboxBtn" class="secondary">Actualizar lista</button></div></div>
         <p id="rssRunMessage" class="message" role="status">La importación solo consulta fuentes activas y guarda elementos para revisión; nunca publica automáticamente.</p>
         <p class="muted">El RSS sirve para detectar temas, no para republicar. Pulsa «Preparar artículo propio» para abrir una guía de redacción con hechos que verificar, contexto, enfoque y fuentes. El borrador queda sin publicar y requiere revisión humana.</p>
         <div id="inboxList" class="list"><p class="muted">Cargando…</p></div>
       </section>
-
       <section id="submissionsTab" class="tabview" hidden><div class="section-head"><div><p class="eyebrow">COLABORACIONES EXTERNAS</p><h2>Envíos recibidos</h2></div><button id="refreshSubmissionsBtn" class="secondary">Actualizar</button></div><p class="muted">Los envíos son privados. Puedes convertirlos en borradores para revisarlos antes de aprobarlos.</p><div id="submissionsList" class="list"><p class="muted">Cargando…</p></div></section>
       <section id="directoryTab" class="tabview" hidden><div class="section-head"><div><p class="eyebrow">COMUNIDAD DOMINICANA · LONDRES</p><h2>Directorio y solicitudes</h2></div><button id="refreshDirectoryBtn" class="secondary">Actualizar</button></div><p class="muted">Revisa las solicitudes recibidas y publica únicamente las fichas verificadas. Las fichas comerciales patrocinadas deben identificarse como tales.</p><div id="directorySubmissionList" class="list"><p class="muted">Cargando solicitudes…</p></div><h2>Fichas del directorio</h2><div id="directoryAdminList" class="list"><p class="muted">Cargando fichas…</p></div><section id="directoryEditPanel" class="panel directory-edit-panel" hidden aria-labelledby="directoryEditTitle">
   <div class="section-head"><div><p class="eyebrow">GESTIÓN DEL DIRECTORIO</p><h2 id="directoryEditTitle">Editar ficha</h2></div><button type="button" id="closeDirectoryEdit" class="secondary">Cerrar</button></div>
@@ -199,7 +196,7 @@
               <div class="actions"><button type="submit" id="saveRssEdit">Guardar cambios</button><button type="button" id="cancelRssEdit" class="secondary">Cancelar</button></div>
             </form>
           </section>
-                <div id="sourceList" class="list"><p class="muted">Cargando fuentes…</p></div>
+          <div id="sourceList" class="list"><p class="muted">Cargando fuentes…</p></div>
       </section>
       <p id="globalMessage" class="message" role="status"></p>
     </section>

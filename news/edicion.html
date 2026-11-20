@@ -114,4 +114,15 @@ window.addEventListener("unhandledrejection",function(event){
 <script src="/news/assets/social-hub.js?v=2"></script>
 <script src="/news/assets/edition-dossier.js?v=9"></script>
 <script src="/news/assets/edition-letter.js?v=4"></script>
+<script>
+/* Limpia el texto residual literal \n que algunos navegadores muestran antes del contenido. */
+(function(){
+ function removeStray(){
+  var nodes=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),n,drop=[];
+  while((n=nodes.nextNode())){if(n.nodeValue && n.nodeValue.trim()==="\\n")drop.push(n);}
+  drop.forEach(function(x){if(x.parentNode)x.parentNode.removeChild(x);});
+ }
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",removeStray);else removeStray();
+})();
+</script>
 </body></html>

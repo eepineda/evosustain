@@ -123,11 +123,11 @@ function showAccessPanel(message){
    if(!emailInput.validity.valid){status.textContent="Introduce un correo electrónico completo y válido.";emailInput.focus();return;}
    button.disabled=true;button.textContent="Enviando…";status.textContent="Solicitando enlace de acceso…";
    try{
-    const {error}=await authClient.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+"/news/edicion.html",shouldCreateUser:false}});
-    status.textContent=error?"No se pudo enviar el enlace: "+error.message:"Solicitud enviada. Revisa tu bandeja de entrada y el correo no deseado.";
+    await authClient.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+"/news/edicion.html",shouldCreateUser:false}});
+    status.textContent="Si el correo está autorizado, recibirás un enlace de acceso. Comprueba tu bandeja de entrada y la carpeta de correo no deseado.";
    }catch(error){
-    status.textContent="No se pudo enviar el enlace. "+(error&&error.message?error.message:"Comprueba la conexión e inténtalo de nuevo.");
-    console.error("Evoford editorial magic link:",error);
+    status.textContent="Si el correo está autorizado, recibirás un enlace de acceso. Comprueba tu bandeja de entrada y la carpeta de correo no deseado. Si no llega, contacta con el administrador.";
+    console.warn("Evoford editorial sign-in request could not be completed.");
    }finally{
     button.disabled=false;button.textContent="Enviar enlace de acceso";
    }
@@ -155,9 +155,8 @@ async function load(){
   articles=data.articles||[];printAdCampaign=data.printAd||null;window.EvofordEditionArticles=articles;document.dispatchEvent(new CustomEvent("edition:articlesloaded",{detail:{articles}}));
   hideAccessPanel();render();renderPrintAd();
  }catch(error){
-  const message=error.message||"No se pudo comprobar el acceso.";
-  showAccessPanel(message+" Si necesitas autorización, contacta con el equipo editorial.");
-  console.error("Evoford print edition access:",error);
+  showAccessPanel("No se pudo verificar el acceso. Inicia sesión con el correo autorizado o contacta con el administrador.");
+  console.warn("Evoford print edition access check failed.");
  }
 }
 authClient.auth.onAuthStateChange((event,session)=>{

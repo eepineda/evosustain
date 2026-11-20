@@ -62,3 +62,12 @@
 .directory-map-panel[hidden]{display:none!important}
 .leaflet-container{font-family:Arial,sans-serif}
 @media(max-width:620px){.directory-map-panel{min-height:340px}#directoryMap{min-height:340px}}
+
+
+/* PWA: contraste reforzado en la portada del Directorio sobre tarjeta blanca */
+html.evo-pwa .directory-hero .kicker{color:#a9232d!important;background:#f8ecee!important;font-weight:800!important;}
+html.evo-pwa .directory-hero p{color:#4b5968!important;opacity:1!important;}
+html.evo-pwa .directory-hero h1{color:#172435!important;}
+html.evo-pwa .directory-origin .directory-tag,
+html.evo-pwa .directory-origin .directory-origin-tag{color:#087f78!important;}
+html.evo-pwa .directory-origin p{color:#4b5968!important;}

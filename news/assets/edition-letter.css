@@ -33,9 +33,14 @@
 @page{size:A4 portrait;margin:0}
 @media(max-width:760px){.letter-studio{margin:10px;padding:15px}.letter-studio__head{display:block}.letter-paper{width:100%;min-height:0;padding:9%;font-size:90%}.letter-brand{font-size:clamp(24px,7vw,31pt)}}
 @media print{
- html,body.letter-printing{margin:0!important;padding:0!important;background:#fff!important}
- body.letter-printing>*{display:none!important}
- body.letter-printing #letterStudio{display:block!important;visibility:visible!important;width:210mm!important;max-width:none!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+ @page{size:A4 portrait;margin:0}
+ html,body.letter-printing{width:210mm!important;height:297mm!important;margin:0!important;padding:0!important;background:#fff!important;overflow:visible!important}
+ /* Oculta visualmente toda la edición impresa y deja visible únicamente la carta. */
+ body.letter-printing *{visibility:hidden!important}
+ body.letter-printing #letterStudio,
+ body.letter-printing #letterStudio #letterPaper,
+ body.letter-printing #letterStudio #letterPaper *{visibility:visible!important}
+ body.letter-printing #letterStudio{display:block!important;position:absolute!important;top:0!important;left:0!important;width:210mm!important;height:297mm!important;max-width:none!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#fff!important;overflow:hidden!important}
  body.letter-printing #letterStudio>*:not(#letterPaper){display:none!important}
- body.letter-printing #letterStudio #letterPaper{display:block!important;width:210mm!important;height:297mm!important;min-height:297mm!important;margin:0!important;padding:19mm 21mm 18mm!important;border:0!important;box-shadow:none!important;overflow:hidden!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+ body.letter-printing #letterStudio #letterPaper{display:block!important;position:absolute!important;top:0!important;left:0!important;width:210mm!important;height:297mm!important;min-height:297mm!important;margin:0!important;padding:19mm 21mm 18mm!important;border:0!important;box-shadow:none!important;overflow:hidden!important;break-after:auto!important;page-break-after:auto!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
 }

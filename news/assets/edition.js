@@ -111,10 +111,26 @@ function showAccessPanel(message){
   accessPanel.style.cssText="max-width:560px;margin:48px auto;padding:28px;background:#fff;border:1px solid #dbe2ea;border-radius:8px;color:#17283c;font:15px Arial,sans-serif;line-height:1.5";
   accessPanel.innerHTML='<h1 style="color:#102b4e">Edición impresa privada</h1><p>Acceso reservado a los correos autorizados por Evoford News.</p><form id="editionLoginForm"><label for="editionEmail">Correo electrónico</label><input id="editionEmail" type="email" required autocomplete="email" style="display:block;width:100%;padding:12px;margin:8px 0 14px;border:1px solid #cbd5e1;border-radius:4px;box-sizing:border-box"><button type="submit" style="padding:11px 16px;background:#102b4e;color:#fff;border:0;border-radius:4px;font-weight:700">Enviar enlace de acceso</button></form><p id="editionAccessMessage" role="status"></p>';
   document.body.insertBefore(accessPanel,document.body.firstChild);
-  accessPanel.querySelector("#editionLoginForm").addEventListener("submit",async event=>{
-   event.preventDefault();const button=event.currentTarget.querySelector("button");button.disabled=true;
-   const {error}=await authClient.auth.signInWithOtp({email:accessPanel.querySelector("#editionEmail").value.trim().toLowerCase(),options:{emailRedirectTo:new URL("/news/edicion.html",location.origin).href}});
-   accessPanel.querySelector("#editionAccessMessage").textContent=error?error.message:"Revisa tu correo para completar el acceso.";button.disabled=false;
+  const loginForm=accessPanel.querySelector("#editionLoginForm");
+  const emailInput=accessPanel.querySelector("#editionEmail");
+  const status=accessPanel.querySelector("#editionAccessMessage");
+  emailInput.addEventListener("invalid",()=>{status.textContent="Introduce el correo completo, por ejemplo nombre@dominio.com.";});
+  emailInput.addEventListener("input",()=>{status.textContent="";});
+  loginForm.addEventListener("submit",async event=>{
+   event.preventDefault();
+   const button=loginForm.querySelector("button");
+   const email=emailInput.value.trim().toLowerCase();
+   if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)){status.textContent="Introduce un correo electrónico completo y válido.";emailInput.focus();return;}
+   button.disabled=true;button.textContent="Enviando…";status.textContent="Solicitando enlace de acceso…";
+   try{
+    const {error}=await authClient.auth.signInWithOtp({email,options:{emailRedirectTo:new URL("/news/edicion.html",location.origin).href,shouldCreateUser:false}});
+    status.textContent=error?"No se pudo enviar el enlace: "+error.message:"Solicitud enviada. Revisa tu bandeja de entrada y el correo no deseado.";
+   }catch(error){
+    status.textContent="No se pudo enviar el enlace. "+(error&&error.message?error.message:"Comprueba la conexión e inténtalo de nuevo.");
+    console.error("Evoford editorial magic link:",error);
+   }finally{
+    button.disabled=false;button.textContent="Enviar enlace de acceso";
+   }
   });
  }
  accessPanel.hidden=false;

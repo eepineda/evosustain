@@ -12,7 +12,7 @@ function page(n,k,title,deck,body){return '<section class="dossier-page">'+heade
 function build(){
  var rawArticles=Array.isArray(window.EvofordEditionArticles)?window.EvofordEditionArticles:[];
  var seenArticles=new Set();
- var articles=rawArticles.filter(function(a){var key=String(a.id||a.slug||articleTitle(a)).toLocaleLowerCase("es").replace(/\s+/g," ").trim();if(!key||seenArticles.has(key))return false;seenArticles.add(key);return true;});
+ var articles=rawArticles.filter(function(a){var key=String(articleTitle(a)||a.slug||a.id).toLocaleLowerCase("es").replace(/\s+/g," ").trim();if(!key||seenArticles.has(key))return false;seenArticles.add(key);return true;});
  if(!articles.length)throw new Error("La edición todavía no ha cargado artículos. Actualiza la edición e inténtalo de nuevo.");
  var listings=Array.isArray(window.EvofordDirectoryListings)?window.EvofordDirectoryListings:[];
  var pages=[];

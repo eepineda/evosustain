@@ -286,3 +286,32 @@
 #dossierRoot .dossier-directory-link:hover{text-decoration:underline;}
 @media(max-width:760px){#dossierRoot .dossier-directory-grid{grid-template-columns:1fr;}}
 @media print{body.dossier-printing #dossierRoot .dossier-directory-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:3mm!important;}body.dossier-printing #dossierRoot .dossier-directory-card{break-inside:avoid!important;page-break-inside:avoid!important;padding:3mm!important;}body.dossier-printing #dossierRoot .dossier-page .dossier-directory-card h3{font-size:9pt!important;}}
+
+
+/* Directorio institucional: composición compacta para evitar solapamientos con el pie */
+#dossierRoot .dossier-directory-page .dossier-content{flex:1 1 auto;min-height:0;overflow:hidden;}
+#dossierRoot .dossier-directory-page .dossier-deck{margin-bottom:2.5mm!important;padding-bottom:2mm!important;font-size:10pt!important;}
+#dossierRoot .dossier-directory-page .dossier-content>p{font-size:8.2pt!important;line-height:1.28!important;margin-bottom:2mm!important;}
+#dossierRoot .dossier-directory-page h2{font-size:12pt!important;line-height:1.1!important;margin:2.5mm 0 1.5mm!important;padding-top:1.5mm!important;}
+#dossierRoot .dossier-directory-page .dossier-directory-grid{gap:2.2mm!important;margin:1.5mm 0 2mm!important;}
+#dossierRoot .dossier-directory-page .dossier-directory-card{padding:2.4mm!important;border-radius:1.5mm!important;border-top-width:2px!important;}
+#dossierRoot .dossier-directory-page .dossier-directory-card-top{font-size:5.5pt!important;margin-bottom:1mm!important;}
+#dossierRoot .dossier-directory-page .dossier-directory-card h3{font-size:8.6pt!important;line-height:1.12!important;margin-bottom:1mm!important;}
+#dossierRoot .dossier-directory-page .dossier-directory-card .dossier-directory-meta{font-size:7.1pt!important;line-height:1.2!important;margin-bottom:1mm!important;}
+#dossierRoot .dossier-directory-page .dossier-directory-link{font-size:6.8pt!important;}
+#dossierRoot .dossier-directory-page .dossier-note{font-size:7.4pt!important;line-height:1.22!important;margin:1.5mm 0!important;padding-left:2.5mm;border-left:2px solid #cbd5df;}
+#dossierRoot .dossier-directory-page .dossier-card{padding:2mm 3mm!important;margin:1.5mm 0 0!important;border-left-width:2px!important;}
+#dossierRoot .dossier-directory-page .dossier-card p{font-size:7.3pt!important;line-height:1.2!important;}
+@media print{
+ body.dossier-printing #dossierRoot .dossier-directory-page .dossier-content{overflow:hidden!important;}
+ body.dossier-printing #dossierRoot .dossier-directory-page .dossier-deck{margin-bottom:2.5mm!important;padding-bottom:2mm!important;font-size:10pt!important;}
+ body.dossier-printing #dossierRoot .dossier-directory-page .dossier-content>p{font-size:8.2pt!important;line-height:1.28!important;margin-bottom:2mm!important;}
+ body.dossier-printing #dossierRoot .dossier-directory-page h2{font-size:12pt!important;margin:2.5mm 0 1.5mm!important;padding-top:1.5mm!important;}
+ body.dossier-printing #dossierRoot .dossier-directory-page .dossier-directory-grid{gap:2.2mm!important;margin:1.5mm 0 2mm!important;}
+ body.dossier-printing #dossierRoot .dossier-directory-page .dossier-directory-card{padding:2.4mm!important;}
+ body.dossier-printing #dossierRoot .dossier-directory-page .dossier-directory-card h3{font-size:8.6pt!important;line-height:1.12!important;}
+ body.dossier-printing #dossierRoot .dossier-directory-page .dossier-directory-card .dossier-directory-meta{font-size:7.1pt!important;line-height:1.2!important;}
+ body.dossier-printing #dossierRoot .dossier-directory-page .dossier-note{font-size:7.4pt!important;line-height:1.22!important;margin:1.5mm 0!important;}
+ body.dossier-printing #dossierRoot .dossier-directory-page .dossier-card{padding:2mm 3mm!important;margin:1.5mm 0 0!important;}
+ body.dossier-printing #dossierRoot .dossier-directory-page .dossier-card p{font-size:7.3pt!important;line-height:1.2!important;}
+}

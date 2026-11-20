@@ -1,0 +1,41 @@
+/* EVOFORD NEWS · carta institucional con membrete A4 */
+.letter-studio{max-width:1120px;margin:22px auto;padding:24px;background:#fff;border:1px solid #dbe1e7;border-radius:12px;color:#17212b;font-family:Arial,sans-serif;box-sizing:border-box}
+.letter-studio[hidden]{display:none!important}
+.letter-studio__head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;border-bottom:1px solid #e0e5ea;padding-bottom:16px}
+.letter-studio__eyebrow{margin:0 0 6px;color:#9d2635;font-size:10px;font-weight:800;letter-spacing:.16em}
+.letter-studio__head h2{margin:0;color:#102b4e;font:600 28px/1.15 Georgia,serif}
+.letter-studio__head p:last-child{color:#596777;font-size:14px;line-height:1.5}
+.letter-studio__form{max-width:520px;display:grid;gap:8px;padding:20px 0}
+.letter-studio__form label{margin-top:5px;color:#344252;font-size:13px;font-weight:700}
+.letter-studio__form input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbd4dd;border-radius:7px;background:#fff;color:#17212b;font:15px Arial,sans-serif}
+.letter-studio__form input:focus{outline:2px solid #b7c7d8;border-color:#496985}
+.letter-studio__actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.letter-studio__actions button,.letter-secondary{padding:11px 15px;border:1px solid #102b4e;border-radius:6px;background:#102b4e;color:#fff;font-weight:700;cursor:pointer}
+.letter-studio__actions button+button{background:#9d2635;border-color:#9d2635}
+.letter-secondary{background:#fff;color:#102b4e}
+.letter-studio__hint{color:#687687;font-size:12px;line-height:1.5}
+.letter-paper{width:210mm;min-height:297mm;box-sizing:border-box;margin:10px auto;padding:19mm 21mm 18mm;background:#fff;border:1px solid #e2e6ea;box-shadow:0 5px 24px #102b4e14;color:#263342;font-family:Georgia,"Times New Roman",serif}
+.letter-masthead{border-bottom:2px solid #102b4e;padding-bottom:7mm}
+.letter-location{font:700 8pt Arial,sans-serif;letter-spacing:.18em;color:#778493;margin-bottom:5mm}
+.letter-brand{font:900 31pt/1 Georgia,serif;letter-spacing:-1.5pt;color:#102b4e}
+.letter-brand span{color:#9d2635}
+.letter-tagline{margin-top:3mm;font:700 7pt Arial,sans-serif;letter-spacing:.12em;color:#647181}
+.letter-rule{width:24mm;height:3px;background:#9d2635;margin-top:5mm}
+.letter-date{text-align:right;margin:13mm 0 12mm;color:#344252;font:10pt Arial,sans-serif}
+.letter-recipient{margin-bottom:10mm}
+.letter-recipient span{display:block;margin-bottom:2mm;color:#9d2635;font:700 7pt Arial,sans-serif;letter-spacing:.14em}
+.letter-recipient strong{font:700 14pt Georgia,serif;color:#102b4e}
+.letter-body{font:11pt/1.65 Georgia,"Times New Roman",serif;color:#283747;text-align:justify}
+.letter-body p{margin:0 0 5mm}
+.letter-url{font-weight:700;color:#9d2635!important;text-align:left}
+.letter-signature{margin-top:14mm;padding-top:5mm;border-top:1px solid #d6dde4;display:grid;gap:2mm;color:#687687;font:8pt/1.4 Arial,sans-serif}
+.letter-signature strong{color:#102b4e;font-size:10pt;letter-spacing:.08em}
+@page{size:A4 portrait;margin:0}
+@media(max-width:760px){.letter-studio{margin:10px;padding:15px}.letter-studio__head{display:block}.letter-paper{width:100%;min-height:0;padding:9%;font-size:90%}.letter-brand{font-size:clamp(24px,7vw,31pt)}}
+@media print{
+ html,body.letter-printing{margin:0!important;padding:0!important;background:#fff!important}
+ body.letter-printing>*{display:none!important}
+ body.letter-printing #letterStudio{display:block!important;visibility:visible!important;width:210mm!important;max-width:none!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+ body.letter-printing #letterStudio>*:not(#letterPaper){display:none!important}
+ body.letter-printing #letterStudio #letterPaper{display:block!important;width:210mm!important;height:297mm!important;min-height:297mm!important;margin:0!important;padding:19mm 21mm 18mm!important;border:0!important;box-shadow:none!important;overflow:hidden!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+}

@@ -2,7 +2,8 @@
 "use strict";
 var $=function(s,r){return (r||document).querySelector(s);};
 var esc=function(v){return String(v||"").replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});};
-var originalDocumentTitle=document.title;\nfunction dateISO(){var d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");}
+var originalDocumentTitle=document.title;
+function dateISO(){var d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");}
 function dateES(v){if(!v)return "";var p=v.split("-");return p.length===3?p[2]+"/"+p[1]+"/"+p[0]:v;}
 function panel(){
  var root=$("#letterStudio");if(root)return root;

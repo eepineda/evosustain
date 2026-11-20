@@ -255,3 +255,21 @@
  body.dossier-printing #dossierRoot .dossier-article-image{width:100%!important;height:auto!important;max-height:42mm!important;object-fit:contain!important}
  body.dossier-printing #dossierRoot .dossier-article-copy{overflow:visible!important;max-height:none!important}
 }
+
+
+/* Corrección de paginación A4, portada y fotografías */
+#dossierRoot .dossier-page{overflow:visible}
+#dossierRoot .dossier-content{flex:1 1 auto;min-height:0;max-height:none;overflow:visible}
+#dossierRoot .dossier-cover{position:relative;overflow:hidden}
+#dossierRoot .dossier-cover .dossier-cover-meta{bottom:25mm}
+#dossierRoot .dossier-cover .dossier-footer{position:absolute;left:16mm;right:16mm;bottom:8mm;margin:0;flex:none}
+#dossierRoot .dossier-article-image{display:block;width:100%;height:auto;max-height:54mm;aspect-ratio:16/9;object-fit:contain;object-position:center;background:#f1f2f3}
+#dossierRoot .dossier-page:not(.dossier-cover) .dossier-grid article,#dossierRoot .dossier-card,#dossierRoot .dossier-list li{break-inside:avoid;page-break-inside:avoid}
+@media print{
+ body.dossier-printing #dossierRoot .dossier-page{overflow:visible!important}
+ body.dossier-printing #dossierRoot .dossier-content{flex:1 1 auto!important;max-height:none!important;overflow:visible!important}
+ body.dossier-printing #dossierRoot .dossier-cover{overflow:hidden!important}
+ body.dossier-printing #dossierRoot .dossier-cover .dossier-cover-meta{bottom:25mm!important}
+ body.dossier-printing #dossierRoot .dossier-cover .dossier-footer{position:absolute!important;left:16mm!important;right:16mm!important;bottom:8mm!important;margin:0!important}
+ body.dossier-printing #dossierRoot .dossier-article-image{height:auto!important;max-height:54mm!important;aspect-ratio:16/9!important;object-fit:contain!important}
+}

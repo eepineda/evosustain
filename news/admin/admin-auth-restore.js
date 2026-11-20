@@ -5,7 +5,8 @@
 */
 const SUPABASE_URL = "https://poywsdigujbarvnzbfnz.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_1t7gv1Y9-6HHwMqW5E343A_51GH_L7f";
-const ADMIN_EMAIL = "eepinedacarrasco@gmail.com";
+const ADMIN_EMAILS = ["eepinedacarrasco@gmail.com", "speepineda@gmail.com"];
+const isAdminEmail = email => ADMIN_EMAILS.includes((email || "").trim().toLowerCase());
 
 let client = null;
 let currentUser = null;
@@ -90,7 +91,7 @@ async function init(){
 }
 function showLogin(){ $("loginView").hidden=false; $("appView").hidden=true; }
 async function showApp(user){
-  if((user.email||"").toLowerCase() !== ADMIN_EMAIL){
+  if(!isAdminEmail(user.email)){
     await client.auth.signOut();
     say("loginMessage","Este correo no está autorizado para administrar Evoford News.");
     return;
@@ -105,7 +106,7 @@ async function login(e){
   const email=$("email").value.trim().toLowerCase();
   say("loginMessage","");
   if(!client){say("loginMessage","El servicio de acceso todavía está iniciándose. Recarga la página e inténtalo de nuevo.");return;}
-  if(email!==ADMIN_EMAIL){say("loginMessage","Correo no autorizado.");return;}
+  if(!isAdminEmail(email)){say("loginMessage","Correo no autorizado.");return;}
   if(button)button.disabled=true;
   say("loginMessage","Enviando enlace seguro…");
   try{

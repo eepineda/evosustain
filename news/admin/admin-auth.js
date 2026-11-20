@@ -5,7 +5,8 @@
 */
 const SUPABASE_URL = "https://poywsdigujbarvnzbfnz.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_1t7gv1Y9-6HHwMqW5E343A_51GH_L7f";
-const ADMIN_EMAIL = "eepinedacarrasco@gmail.com";
+const ADMIN_EMAILS = ["eepinedacarrasco@gmail.com", "speepineda@gmail.com"];
+const isAdminEmail = email => ADMIN_EMAILS.includes((email || "").trim().toLowerCase());
 
 let client = null;
 let currentUser = null;
@@ -214,7 +215,7 @@ async function loadOverview(force=false){
 }
 
 async function showApp(user){
-  if((user.email||"").toLowerCase() !== ADMIN_EMAIL){
+  if(!isAdminEmail(user.email)){
     await client.auth.signOut();
     say("loginMessage","Este correo no está autorizado para administrar Evoford News.");
     return;
@@ -230,7 +231,7 @@ async function login(e){
   const email=$("email").value.trim().toLowerCase();
   say("loginMessage","");
   if(!client){say("loginMessage","El servicio de acceso todavía está iniciándose. Recarga la página e inténtalo de nuevo.");return;}
-  if(email!==ADMIN_EMAIL){say("loginMessage","Correo no autorizado.");return;}
+  if(!isAdminEmail(email)){say("loginMessage","Correo no autorizado.");return;}
   if(button)button.disabled=true;
   say("loginMessage","Enviando enlace seguro…");
   try{
@@ -272,7 +273,7 @@ async function saveOpinionAuthor(event){
  const id=$("opinionAuthorId").value;const payload={name,profession:$("opinionAuthorProfession").value.trim()||null,bio:$("opinionAuthorBio").value.trim()||null,photo_url:photo||null,display_order:Math.max(0,Math.min(999,Number($("opinionAuthorOrder").value)||0)),active:$("opinionAuthorActive").checked,updated_at:new Date().toISOString()};
  const result=id?await client.from("opinion_authors").update(payload).eq("id",id):await client.from("opinion_authors").insert(payload);if(result.error){say("opinionAuthorMessage","No se pudo guardar: "+result.error.message);return;}say("opinionAuthorMessage","Perfil guardado.");$("opinionAuthorForm").reset();$("opinionAuthorFormPanel").hidden=true;await loadOpinionAuthorsAdmin();
 }
-async function loadPrintAccess(){const list=$("printAccessList");if(!list)return;list.innerHTML='<p class="muted">Cargando accesos…</p>';try{const data=await invokePrintEdition("list_access");const entries=data.access||[];list.innerHTML=entries.map(item=>'<div class="list-item" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #e5eaf0"><div><strong>'+safe(item.email)+'</strong><p class="muted">'+(item.approved?"APROBADO":"REVOCADO")+'</p></div>'+(item.email===ADMIN_EMAIL?'<span>Administrador</span>':'<button type="button" class="secondary" data-delete-print-access="'+safe(item.email)+'">Eliminar</button>')+'</div>').join("")||'<p class="muted">No hay correos registrados.</p>';}catch(error){list.textContent="No se pudo cargar la lista: "+(error.message||"error");}}
+async function loadPrintAccess(){const list=$("printAccessList");if(!list)return;list.innerHTML='<p class="muted">Cargando accesos…</p>';try{const data=await invokePrintEdition("list_access");const entries=data.access||[];list.innerHTML=entries.map(item=>'<div class="list-item" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #e5eaf0"><div><strong>'+safe(item.email)+'</strong><p class="muted">'+(item.approved?"APROBADO":"REVOCADO")+'</p></div>'+(isAdminEmail(item.email)?'<span>Administrador</span>':'<button type="button" class="secondary" data-delete-print-access="'+safe(item.email)+'">Eliminar</button>')+'</div>').join("")||'<p class="muted">No hay correos registrados.</p>';}catch(error){list.textContent="No se pudo cargar la lista: "+(error.message||"error");}}
 async function addPrintAccess(event){event.preventDefault();const email=$("newPrintAccessEmail").value.trim().toLowerCase();try{await invokePrintEdition("add_access",{email});$("newPrintAccessEmail").value="";printAccessMessage("Correo aprobado.");await loadPrintAccess();}catch(error){printAccessMessage(error.message||"No se pudo aprobar el correo.");}}
 async function deletePrintAccess(email,button){if(!confirm("¿Eliminar "+email+" de la lista de correos autorizados?"))return;button.disabled=true;try{await invokePrintEdition("delete_access",{email});printAccessMessage("Correo eliminado.");await loadPrintAccess();}catch(error){printAccessMessage(error.message||"No se pudo eliminar el correo.");button.disabled=false;}}
 function filterArticles(){

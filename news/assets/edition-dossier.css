@@ -245,3 +245,13 @@
     break-inside:avoid!important;
   }
 }
+
+
+/* Article page fit: readable excerpt ending, image ratio preserved */
+#dossierRoot .dossier-article-image{width:100%;height:auto;max-height:42mm;object-fit:contain;object-position:center}
+#dossierRoot .dossier-article-copy{overflow:visible;display:block;max-height:none;overflow-wrap:break-word}
+#dossierRoot .dossier-page:not(.dossier-cover) .dossier-card{break-inside:avoid}
+@media print{
+ body.dossier-printing #dossierRoot .dossier-article-image{width:100%!important;height:auto!important;max-height:42mm!important;object-fit:contain!important}
+ body.dossier-printing #dossierRoot .dossier-article-copy{overflow:visible!important;max-height:none!important}
+}

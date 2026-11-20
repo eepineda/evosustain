@@ -39,20 +39,51 @@ function build(){
  return pages.join("");
 }
 async function loadDirectoryListings(){
+ var controller=new AbortController();
+ var timeoutId;
  try{
   var client=window.EvofordSupabaseClient;
   if(!client)throw new Error("Inicia sesión en la edición antes de cargar el directorio.");
-  var result=await client.from("directory_listings").select("name,category,city,website,verified_at").eq("status","published").order("verified_at",{ascending:false,nullsFirst:false}).order("name");
+  var request=client.from("directory_listings").select("name,category,city,website,verified_at").eq("status","published").order("verified_at",{ascending:false,nullsFirst:false}).order("name").abortSignal(controller.signal);
+  var timeout=new Promise(function(_,reject){timeoutId=setTimeout(function(){controller.abort();reject(new Error("La consulta del directorio tardó demasiado. Comprueba la conexión e inténtalo de nuevo."));},12000);});
+  var result=await Promise.race([request,timeout]);
+  clearTimeout(timeoutId);
   if(result.error)throw result.error;
   window.EvofordDirectoryListings=result.data||[];
- }catch(error){window.EvofordDirectoryListings=[];window.EvofordDirectoryLoadError=error.message||"No se pudo cargar el directorio.";console.warn("Evoford dossier directory:",error.message||error);}
+  window.EvofordDirectoryLoadError="";
+  return true;
+ }catch(error){
+  clearTimeout(timeoutId);
+  window.EvofordDirectoryListings=[];
+  window.EvofordDirectoryLoadError=error.message||"No se pudo cargar el directorio.";
+  console.warn("Evoford dossier directory:",window.EvofordDirectoryLoadError);
+  return false;
+ }
 }
 async function openDossier(){
  await loadDirectoryListings();
  var root=$("#dossierRoot");if(!root){root=document.createElement("div");root.id="dossierRoot";document.body.appendChild(root);}
  root.innerHTML='<div class="dossier-toolbar"><button type="button" class="dossier-back" id="dossierBack">← Volver a edición impresa</button><span class="dossier-status" id="dossierStatus">Dossier institucional · 12 páginas</span><button type="button" id="dossierRefresh">Actualizar contenido</button><button type="button" id="dossierExport">Exportar PDF</button></div>'+build();
  root.classList.add("is-active");document.body.classList.add("dossier-printing");$(".newspaper").hidden=true;var toolbar=$(".toolbar");if(toolbar)toolbar.hidden=true;var hub=$("#socialHub");if(hub)hub.hidden=true;var campaign=$("#editionCampaignPanel");if(campaign)campaign.hidden=true;
- $("#dossierBack").onclick=closeDossier;$("#dossierRefresh").onclick=async function(){try{await loadDirectoryListings();root.innerHTML='<div class="dossier-toolbar"><button type="button" class="dossier-back" id="dossierBack">← Volver a edición impresa</button><span class="dossier-status">Actualizando contenido…</span><button type="button" id="dossierExport">Exportar PDF</button></div>'+build();$("#dossierBack").onclick=closeDossier;$("#dossierExport").onclick=exportPDF;}catch(e){alert(e.message);}};
+ $("#dossierBack").onclick=closeDossier;
+ $("#dossierRefresh").onclick=async function(){
+  var button=$("#dossierRefresh"),status=$("#dossierStatus");
+  if(button.disabled)return;
+  button.disabled=true;button.textContent="Actualizando…";
+  if(status)status.textContent="Actualizando contenido…";
+  try{
+   await loadDirectoryListings();
+   var updatedPages=build();
+   root.querySelectorAll(".dossier-page").forEach(function(node){node.remove();});
+   root.insertAdjacentHTML("beforeend",updatedPages);
+   if(status)status.textContent=window.EvofordDirectoryLoadError?"Dossier actualizado · directorio no disponible":"Dossier actualizado · 12 páginas";
+  }catch(error){
+   if(status)status.textContent="No se pudo actualizar: "+(error.message||"Error inesperado");
+   console.error("Evoford dossier refresh:",error);
+  }finally{
+   button.disabled=false;button.textContent="Actualizar contenido";
+  }
+ };
  $("#dossierExport").onclick=exportPDF;
  window.scrollTo(0,0);
 }

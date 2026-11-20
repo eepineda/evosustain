@@ -120,10 +120,13 @@ function showAccessPanel(message){
  accessPanel.hidden=false;
  accessPanel.querySelector("#editionAccessMessage").textContent=message||"";
  $("backLink").hidden=true;$("newspaper").hidden=true;document.querySelector(".toolbar").hidden=true;
+ const socialHub=$("socialHub");if(socialHub){socialHub.hidden=true;socialHub.style.display="none";}
+ const campaignPanel=$("editionCampaignPanel");if(campaignPanel)campaignPanel.hidden=true;
 }
 function hideAccessPanel(){
  if(accessPanel)accessPanel.hidden=true;
  $("backLink").hidden=false;$("newspaper").hidden=false;document.querySelector(".toolbar").hidden=false;
+ const socialHub=$("socialHub");if(socialHub){socialHub.hidden=false;socialHub.style.display="";}
 }
 async function load(){
  try{

@@ -35,7 +35,8 @@ Deno.serve(async (req: Request) => {
   if (authError || !user?.email) return json({ error: "La sesión no es válida. Vuelve a iniciar sesión." }, 401);
 
   const email = user.email.trim().toLowerCase();
-  const adminEmail = "eepinedacarrasco@gmail.com";
+  const adminEmails = ["eepinedacarrasco@gmail.com", "speepineda@gmail.com"];
+  const isAdmin = adminEmails.includes(email);
   const db = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } });
 
   let payload: Record<string, unknown> = {};
@@ -43,7 +44,7 @@ Deno.serve(async (req: Request) => {
   const action = String(payload.action || "load");
 
   if (action === "load") {
-    if (email !== adminEmail) return json({ error: "La edición impresa está reservada al administrador." }, 403);
+    if (!isAdmin) return json({ error: "La edición impresa está reservada al administrador." }, 403);
 
     const [articlesResult, adsResult] = await Promise.all([
       db.from("articles")
@@ -62,7 +63,7 @@ Deno.serve(async (req: Request) => {
     });
   }
 
-  if (email !== adminEmail) return json({ error: "No tienes permiso para administrar accesos." }, 403);
+  if (!isAdmin) return json({ error: "No tienes permiso para administrar accesos." }, 403);
 
   if (action === "list_access") {
     const { data, error } = await db.from("print_edition_access").select("email,approved,created_at,updated_at").order("email");
@@ -82,7 +83,7 @@ Deno.serve(async (req: Request) => {
 
   if (action === "delete_access") {
     const target = String(payload.email || "").trim().toLowerCase();
-    if (!target || target === adminEmail) return json({ error: "No se puede eliminar el correo del administrador." }, 400);
+    if (!target || adminEmails.includes(target)) return json({ error: "No se puede eliminar el correo de un administrador." }, 400);
     const { error } = await db.from("print_edition_access").delete().eq("email", target);
     if (error) return json({ error: "No se pudo eliminar el correo autorizado." }, 500);
     return json({ ok: true });

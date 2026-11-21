@@ -703,7 +703,8 @@ async function showAcademyProgress(userId,courseSlug){
  const lessons=(data.lessons||[]).map(x=>"Lección "+(x.lesson_index+1)+" · "+new Date(x.completed_at).toLocaleDateString("es-GB")).join("\n");
  alert("Progreso de "+(item.full_name||item.email)+"\n"+item.course_title+"\n\n"+(lessons||"Todavía no hay lecciones completadas."));
 }
-\nlet courseEnquiries=[];
+
+let courseEnquiries=[];
 let courseEnquiryById=new Map();
 let courseEnquiryPage=1;
 const COURSE_ENQUIRIES_PER_PAGE=20;
@@ -1064,7 +1065,11 @@ function wire(){
   $("sourceForm").addEventListener("submit",addSource);
   $("refreshSubmissionsBtn").addEventListener("click",loadSubmissions);
   $("refreshDirectoryBtn").addEventListener("click",loadDirectoryAdmin);
-  $("refreshCoursesBtn").addEventListener("click",loadCourses);\n  $("refreshAcademyStudentsBtn")?.addEventListener("click",loadAcademyStudents);\n  $("academyStudentSearch")?.addEventListener("input",filterAcademyStudents);\n  $("academyStudentStatus")?.addEventListener("change",filterAcademyStudents);\n  $("academyStudentList")?.addEventListener("change",e=>{const s=e.target.closest("[data-academy-enrollment]");if(s)updateAcademyEnrollment(s.dataset.academyEnrollment,s.value);});\n  $("academyStudentList")?.addEventListener("click",e=>{const b=e.target.closest("[data-academy-progress]");if(b)showAcademyProgress(b.dataset.academyProgress,b.dataset.course);});
+  $("refreshCoursesBtn").addEventListener("click",loadCourses);
+  $("refreshAcademyStudentsBtn")?.addEventListener("click",loadAcademyStudents);\n  $("academyStudentSearch")?.addEventListener("input",filterAcademyStudents);
+  $("academyStudentStatus")?.addEventListener("change",filterAcademyStudents);
+  $("academyStudentList")?.addEventListener("change",e=>{const s=e.target.closest("[data-academy-enrollment]");if(s)updateAcademyEnrollment(s.dataset.academyEnrollment,s.value);});
+  $("academyStudentList")?.addEventListener("click",e=>{const b=e.target.closest("[data-academy-progress]");if(b)showAcademyProgress(b.dataset.academyProgress,b.dataset.course);});
   $("newAdBtn").addEventListener("click",()=>editAd(null));
   $("adForm").addEventListener("submit",saveAd);
   $("adCreativeMobileFile").addEventListener("change",()=>updateMobileCreativePreview($("adCreativeMobileFile").files[0]));

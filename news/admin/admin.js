@@ -678,7 +678,44 @@ async function saveAd(event){
  const r=id?await client.from("ad_campaigns").update(p).eq("id",id):await client.from("ad_campaigns").insert(p);if(r.error){say("adMessage",r.error.message);return;}say("adMessage","Campaña guardada.");$("adForm").hidden=true;$("adForm").reset();$("adId").value="";await loadAds();
 }
 
+
+function insertArticleFormat(textarea,format){
+  const start=textarea.selectionStart,end=textarea.selectionEnd,value=textarea.value;
+  const selected=value.slice(start,end);
+  let before="",after="",replacement=selected||"Texto";
+  if(format==="bold"){before="<strong>";after="</strong>";}
+  else if(format==="italic"){before="<em>";after="</em>";}
+  else if(format==="h2"){before="<h2>";after="</h2>";}
+  else if(format==="h3"){before="<h3>";after="</h3>";}
+  else if(format==="quote"){before="<blockquote>";after="</blockquote>";}
+  else if(format==="ul"){
+    const items=(selected||"Elemento de lista").split(/\r?\n/).filter(Boolean);
+    replacement="<ul>"+items.map(item=>"<li>"+item+"</li>").join("")+"</ul>";
+  }else if(format==="link"){
+    const url=window.prompt("Dirección del enlace (https://…)");
+    if(!url)return;
+    if(!/^https:\/\//i.test(url)){window.alert("Introduce una dirección https:// válida.");return;}
+    before='<a href="'+url.replace(/&/g,"&amp;").replace(/"/g,"&quot;")+'">';
+    after="</a>";
+  }
+  const insert=before+replacement+after;
+  textarea.setRangeText(insert,start,end,"select");
+  textarea.focus();
+  textarea.dispatchEvent(new Event("input",{bubbles:true}));
+}
+function wireArticleFormatters(){
+  document.querySelectorAll(".rich-toolbar").forEach(toolbar=>{
+    toolbar.addEventListener("click",event=>{
+      const button=event.target.closest("button[data-format]");
+      if(!button)return;
+      const editor=document.getElementById(toolbar.dataset.editor);
+      if(editor)insertArticleFormat(editor,button.dataset.format);
+    });
+  });
+}
+
 function wire(){
+  wireArticleFormatters();
   $("maintenanceToggleBtn").addEventListener("click",toggleMaintenance);
   $("loginForm").addEventListener("submit",login);
   $("logoutBtn").addEventListener("click",()=>client.auth.signOut());

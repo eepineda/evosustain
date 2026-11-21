@@ -73,3 +73,66 @@ footer{margin-top:34px;background:#fff}
 #articleList .item{scroll-margin-top:170px}
 @media(max-width:900px){.article-filters{grid-template-columns:repeat(3,minmax(0,1fr))}.article-filters .filter-search{grid-column:span 2}.article-filters .muted{grid-column:span 3}}
 @media(max-width:600px){.article-management{top:4px;padding:9px}.article-quick-filters{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}.article-quick{flex:0 0 auto}.article-filters{grid-template-columns:1fr 1fr}.article-filters .filter-search{grid-column:1/-1}.article-filters .muted{grid-column:1/-1}.article-pagination{align-items:flex-start}.article-page-actions{width:100%;justify-content:space-between}.article-page-jump{margin:0}.article-page-actions button{padding:8px 9px}}
+
+
+/* EVOFORD NEWS · resumen editorial más claro y accionable */
+#overviewTab>.section-head{
+  position:relative;overflow:hidden;align-items:center;margin:0 0 18px;padding:25px 28px;
+  border:1px solid #dce6ef;border-radius:16px;
+  background:radial-gradient(circle at 92% 10%,#dceafa 0,transparent 34%),linear-gradient(120deg,#fff 0%,#f4f8fc 100%);
+  box-shadow:0 10px 28px #1836530b
+}
+#overviewTab>.section-head:after{
+  content:"";position:absolute;right:0;bottom:0;width:7px;height:100%;
+  background:linear-gradient(180deg,#c70000 0 28%,#f0c94b 28% 58%,#12365a 58% 100%)
+}
+#overviewTab>.section-head h2{font-size:clamp(25px,3vw,32px);margin:4px 0 7px}
+#overviewTab>.section-head .eyebrow{color:#b42332}
+#overviewTab>.section-head .muted{margin:0;max-width:560px;line-height:1.5}
+#overviewTab>.section-head button{box-shadow:0 5px 14px #12365a22}
+.overview-controls{padding:0 2px}
+.overview-controls label{color:#38536d}
+.overview-controls select{border-radius:9px}
+.overview-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:14px 0 22px}
+.overview-kpi{
+  position:relative;isolation:isolate;overflow:hidden;min-height:130px;
+  padding:19px 20px 17px 22px;border:1px solid #e0e7ef;border-top:0;
+  border-left:4px solid var(--kpi-color,#315f83);border-radius:13px;
+  background:linear-gradient(145deg,#fff 0%,var(--kpi-tint,#f7f9fc) 145%);
+  box-shadow:0 5px 18px #1836530a;transition:transform .16s,box-shadow .16s
+}
+.overview-kpi:hover{transform:translateY(-2px);box-shadow:0 10px 24px #18365312}
+.overview-kpi:after{content:"";position:absolute;z-index:-1;right:-20px;top:-28px;width:92px;height:92px;border-radius:50%;background:var(--kpi-tint,#edf3f8)}
+.overview-kpi span{font-size:12px;color:#52677d;line-height:1.35}
+.overview-kpi strong{font:700 34px Georgia,serif;color:var(--kpi-color,#183b5b);font-variant-numeric:tabular-nums}
+.overview-kpi small{font-size:11px;color:#69798a;line-height:1.4}
+.overview-kpi.tone-success{--kpi-color:#16734b;--kpi-tint:#e8f6ef}
+.overview-kpi.tone-info{--kpi-color:#245b87;--kpi-tint:#eaf2fa}
+.overview-kpi.tone-warning{--kpi-color:#a86608;--kpi-tint:#fff4df}
+.overview-kpi.tone-danger{--kpi-color:#b42332;--kpi-tint:#fdecef}
+.overview-panel{padding:22px;background:linear-gradient(160deg,#fff,#fbfcfe)}
+.overview-panel>.eyebrow{color:#b42332}
+.overview-panel h3{font-size:20px;color:#173958}
+.overview-status-group{padding:13px 0}
+.overview-status-group>strong{font-size:13px}
+.overview-status-group span{align-items:center;padding:3px 0}
+.overview-status-group span b{display:inline-grid;place-items:center;min-width:27px;height:24px;padding:0 7px;border-radius:999px;background:#edf2f7;color:#31506b;font-variant-numeric:tabular-nums}
+.overview-status-group span:has(b){ }
+.overview-status-group span b{background:#edf2f7}
+.overview-day{margin:12px 0}
+.overview-bar{height:10px;background:#edf2f7;border-radius:99px}
+.overview-bar i{background:linear-gradient(90deg,#1d4c76,#4e8bb8)}
+.overview-legend span:nth-child(2):before{background:#d49a32}
+.overview-legend span:nth-child(3):before{background:#b94a56}
+.overview-rank{margin:14px 0}
+.overview-rank .overview-bar i{background:linear-gradient(90deg,#245b87,#6c9fc4)}
+.overview-operation-row{padding:14px 0}
+@media(max-width:900px){.overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){
+ #overviewTab>.section-head{align-items:flex-start;padding:20px 19px}
+ #overviewTab>.section-head button{width:100%}
+ .overview-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .overview-kpi{min-height:112px;padding:14px 12px 13px 15px}
+ .overview-kpi strong{font-size:28px}
+ .overview-kpi span{font-size:11px}
+}

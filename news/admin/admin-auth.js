@@ -700,8 +700,15 @@ async function showAcademyProgress(userId,courseSlug){
  const item=academyStudents.find(x=>x.user_id===userId&&x.course_slug===courseSlug);if(!item)return;
  const {data,error}=await client.functions.invoke("academy-admin",{body:{action:"progress",user_id:userId,course_slug:courseSlug}});
  if(error||data?.error){say("globalMessage","No se pudo consultar el progreso: "+(data?.error||error?.message));return;}
- const lessons=(data.lessons||[]).map(x=>"Lección "+(x.lesson_index+1)+" · "+new Date(x.completed_at).toLocaleDateString("es-GB")).join("\n");
- alert("Progreso de "+(item.full_name||item.email)+"\n"+item.course_title+"\n\n"+(lessons||"Todavía no hay lecciones completadas."));
+ const lessons=data.lessons||[],completed=lessons.length,total=40,pct=Math.min(100,Math.round(completed/total*100));
+ item.completed_lessons=completed;
+ const dialog=$("academyProgressDialog");if(!dialog)return;
+ $("academyProgressTitle").textContent=item.full_name||item.email||"Alumno";
+ $("academyProgressCourse").textContent=item.course_title||"Curso";
+ $("academyProgressSummary").innerHTML='<div class="academy-progress-kpis"><div><strong>'+completed+'</strong><span>Lecciones completadas</span></div><div><strong>'+pct+'%</strong><span>Progreso del curso</span></div></div><div class="academy-progress-track"><span style="width:'+pct+'%"></span></div>';
+ $("academyProgressLessons").innerHTML=lessons.length?'<h4>Lecciones completadas</h4>'+lessons.map(x=>'<div class="academy-lesson-row"><span><i></i>Lección '+(x.lesson_index+1)+'</span><time>'+new Date(x.completed_at).toLocaleDateString("es-GB")+'</time></div>').join(""):'<p class="muted">Todavía no hay lecciones completadas.</p>';
+ dialog.hidden=false;document.body.classList.add("academy-dialog-open");
+ filterAcademyStudents();
 }
 
 let courseEnquiries=[];
@@ -1071,6 +1078,8 @@ function wire(){
   $("academyStudentStatus")?.addEventListener("change",filterAcademyStudents);
   $("academyStudentList")?.addEventListener("change",e=>{const s=e.target.closest("[data-academy-enrollment]");if(s)updateAcademyEnrollment(s.dataset.academyEnrollment,s.value);});
   $("academyStudentList")?.addEventListener("click",e=>{const b=e.target.closest("[data-academy-progress]");if(b)showAcademyProgress(b.dataset.academyProgress,b.dataset.course);});
+  $("academyProgressDialog")?.addEventListener("click",e=>{if(e.target.closest("[data-close-academy-progress]")){$("academyProgressDialog").hidden=true;document.body.classList.remove("academy-dialog-open");}});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("academyProgressDialog")&&!$("academyProgressDialog").hidden){$("academyProgressDialog").hidden=true;document.body.classList.remove("academy-dialog-open");}});
   $("newAdBtn").addEventListener("click",()=>editAd(null));
   $("adForm").addEventListener("submit",saveAd);
   $("adCreativeMobileFile").addEventListener("change",()=>updateMobileCreativePreview($("adCreativeMobileFile").files[0]));

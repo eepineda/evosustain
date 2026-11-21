@@ -76,8 +76,10 @@
       if(typeof window.evofordAcademyStart==="function")window.evofordAcademyStart();
       else throw new Error("No se pudo iniciar el contenido del curso.");
     }catch(err){
+      console.error("[EVOFORD ACADEMY] Error al abrir el curso:",err);
       view("dashboard");
-      message("academyDashboardMessage",tr("No se pudo abrir el curso. Comprueba tu conexión y vuelve a intentarlo.","The course could not be opened. Check your connection and try again."),true);
+      const detail=err?.message?String(err.message).slice(0,180):"Error desconocido";
+      message("academyDashboardMessage",tr("No se pudo abrir el curso: ","Could not open the course: ")+detail,true);
     }finally{
       if(button){button.disabled=false;button.textContent=tr("Entrar al curso","Open course");}
     }

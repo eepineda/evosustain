@@ -160,29 +160,42 @@ async function renderOverview(){
 }[label]||"info");
  kpis.innerHTML=cards.map(([label,value,note])=>'<article class="overview-kpi tone-'+kpiTone(label)+'"><span>'+safe(label)+'</span><strong>'+value+'</strong><small>'+safe(note)+'</small></article>').join("");
  const bins=range===7?7:range===30?10:12;
- const unitDays=range/bins;
- const binStarts=Array.from({length:bins},(_,i)=>new Date(Date.now()-(bins-1-i)*unitDays*86400000));
+ const rangeEnd=Date.now();
+ const rangeStart=rangeEnd-range*86400000;
+ const bucketMs=(rangeEnd-rangeStart)/bins;
+ const binStarts=Array.from({length:bins},(_,i)=>new Date(rangeStart+i*bucketMs));
  const dailyTables=[["Editorial","article_submissions"],["Formación","course_enquiries"],["Directorio","directory_submissions"]];
  const dailyResults=await Promise.all(dailyTables.map(async ([label,table])=>{
-  const counts=await Promise.all(binStarts.map(async (d,i)=>{
-   const from=new Date(d);from.setHours(0,0,0,0);
-   const to=i===bins-1?new Date():new Date(binStarts[i+1]);
-   to.setHours(0,0,0,0);
-   try{
-    const q=client.from(table).select("id",{count:"exact",head:true}).gte("created_at",from.toISOString()).lt("created_at",to.toISOString());
-    const r=await withTimeout(q,10000,{count:0,error:true});
-    return r.count??0;
-   }catch{return 0;}
-  }));
-  return {label,counts};
+  const counts=Array(bins).fill(0);
+  let offset=0,error=null;
+  try{
+   while(true){
+    const result=await withTimeout(
+     client.from(table).select("created_at").gte("created_at",new Date(rangeStart).toISOString()).lt("created_at",new Date(rangeEnd).toISOString()).order("created_at",{ascending:true}).range(offset,offset+999),
+     12000,
+     {data:null,error:{message:"Tiempo de espera agotado"}}
+    );
+    if(result.error)throw result.error;
+    const rows=result.data||[];
+    for(const row of rows){
+     const timestamp=Date.parse(row.created_at);
+     if(!Number.isFinite(timestamp))continue;
+     const index=Math.min(bins-1,Math.max(0,Math.floor((timestamp-rangeStart)/bucketMs)));
+     counts[index]++;
+    }
+    if(rows.length<1000)break;
+    offset+=rows.length;
+   }
+  }catch(err){error=err;}
+  return {label,counts,error};
  }));
-  const max=dailyResults.reduce((current,result)=>result.counts.reduce((value,count)=>Math.max(value,count),current),1);
+ const activityErrors=dailyResults.filter(result=>result.error);
+ const max=dailyResults.reduce((current,result)=>result.counts.reduce((value,count)=>Math.max(value,count),current),1);
  activity.innerHTML='<div class="overview-legend"><span>Editorial</span><span>Formación</span><span>Directorio</span></div>'+binStarts.map((d,i)=>{
   const nums=dailyResults.map(x=>x.counts[i]),total=nums.reduce((a,b)=>a+b,0);
-  const end=new Date(d.getTime()+unitDays*86400000);
   const label=range===7?d.toLocaleDateString("es-ES",{weekday:"short",day:"2-digit"}):d.toLocaleDateString("es-ES",{day:"2-digit",month:"short"});
   return '<div class="overview-day"><span>'+label+'</span><div class="overview-bar"><i style="width:'+Math.round(total/max*100)+'%"></i></div><b>'+total+'</b><small>'+nums.join(" / ")+'</small></div>';
- }).join("");
+ }).join("")+(activityErrors.length?'<p class="message">No se pudo cargar la actividad de: '+safe(activityErrors.map(x=>x.label).join(", "))+'</p>':'');
  const groups=[
   ["Envíos editoriales",[["Recibidos",val("submissionsReceived")],["Descartados",val("submissionsRejected")]]],
   ["Formación",[["Recibidas",val("coursesReceived")],["Contactadas",val("coursesContacted")],["Matriculadas",val("coursesEnrolled")],["Cerradas",val("coursesClosed")],["Descartadas",val("coursesDiscarded")]]],

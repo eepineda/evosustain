@@ -107,12 +107,6 @@
     if (!doc) throw new Error("No se pudo preparar el documento de la edición.");
     window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
     const pdf = await window.pdfjsLib.getDocument({ data: new Uint8Array(doc.output("arraybuffer")) }).promise;
-    if (pdf.numPages > 10) {
-      if (pdf.destroy) await pdf.destroy();
-      throw new Error(currentLanguage === "en"
-        ? "This edition has " + pdf.numPages + " pages. Instagram carousels support up to 10 pages; reduce the edition to 10 pages or fewer before promoting it."
-        : "Esta edición tiene " + pdf.numPages + " páginas. Instagram admite carruseles de hasta 10 páginas; reduce la edición a 10 páginas o menos antes de promocionarla.");
-    }
     const pages = [];
     const instagramPages = [];
     for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
@@ -304,8 +298,8 @@
         instagramPages: previewPages.instagramPages.filter((_, index) => selectedPages.has(index))
       };
       if (savedImage.pages.length > 10) throw new Error(currentLanguage === "en" ? "Instagram supports up to 10 carousel pages. Select 10 or fewer." : "Instagram admite hasta 10 páginas por carrusel. Selecciona 10 o menos.");
-      showPagePreviews(savedImage.pages);
       selectedPages = new Set(savedImage.pages.map((_, index) => index));
+      showPagePreviews(savedImage.pages);
       updateSelectionCount(savedImage.pages.length);
       status(copy[currentLanguage].saving);
       const { data, error } = await client.functions.invoke("print-edition-campaign", {

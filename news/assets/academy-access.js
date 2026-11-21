@@ -56,18 +56,38 @@
       const button=document.createElement("button");button.type="button";button.className="academy-course-open";
       button.textContent=isIa?tr("Entrar al curso","Open course"):tr("Contenido próximamente","Content coming soon");
       button.disabled=!isIa;
-      if(isIa)button.addEventListener("click",()=>openCourse(enrollment.course_slug));
+      if(isIa)button.dataset.courseSlug=enrollment.course_slug;
       card.append(button);host.append(card);
     });
   };
   const openCourse = async slug => {
+    if(!currentUser){view("login");message("academyLoginMessage",tr("Tu sesión ha caducado. Vuelve a iniciar sesión.","Your session has expired. Please sign in again."),true);return;}
     if(slug!==COURSE){message("academyDashboardMessage",tr("Este curso todavía no tiene contenido publicado.","This course content has not been published yet."),true);return;}
-    currentCourseSlug=slug;
-    const {data:rows,error}=await client.from("academy_progress").select("lesson_index").eq("user_id",currentUser.id).eq("course_slug",slug);
-    if(error){view("dashboard");message("academyDashboardMessage",tr("No se pudo cargar el progreso de este curso.","Could not load this course progress."),true);return;}
-    window.evofordAcademySetProgress((rows||[]).map(x=>Number(x.lesson_index)));
-    showCourse();window.evofordAcademyStart?.();
+    const buttons=Array.from($("academyCourseCards")?.querySelectorAll("[data-course-slug]")||[]);
+    const button=buttons.find(el=>el.dataset.courseSlug===slug);
+    if(button){button.disabled=true;button.textContent=tr("Abriendo el curso…","Opening course…");}
+    message("academyDashboardMessage",tr("Cargando tus lecciones…","Loading your lessons…"));
+    try{
+      currentCourseSlug=slug;
+      const {data:rows,error}=await client.from("academy_progress").select("lesson_index").eq("user_id",currentUser.id).eq("course_slug",slug);
+      if(error)throw error;
+      window.evofordAcademySetProgress((rows||[]).map(x=>Number(x.lesson_index)));
+      showCourse();
+      if(typeof window.evofordAcademyStart==="function")window.evofordAcademyStart();
+      else throw new Error("No se pudo iniciar el contenido del curso.");
+    }catch(err){
+      view("dashboard");
+      message("academyDashboardMessage",tr("No se pudo abrir el curso. Comprueba tu conexión y vuelve a intentarlo.","The course could not be opened. Check your connection and try again."),true);
+    }finally{
+      if(button){button.disabled=false;button.textContent=tr("Entrar al curso","Open course");}
+    }
   };
+  $("academyCourseCards")?.addEventListener("click",event=>{
+    const button=event.target.closest("[data-course-slug]");
+    if(!button||button.disabled)return;
+    event.preventDefault();
+    openCourse(button.dataset.courseSlug);
+  });
   const showDashboard = async () => {
     view("checking");
     const {data:enrollments,error}=await client.from("academy_enrollments").select("course_slug,course_title,status").eq("user_id",currentUser.id).eq("status","active").order("approved_at",{ascending:false});

@@ -256,7 +256,10 @@
       campaignId = item.id;
       $("campaignTitle").value = item.title;
       $("campaignCaption").value = item.caption;
-      previewPages = null;\n      const loadedUrls = Array.isArray(item.image_urls) && item.image_urls.length ? item.image_urls : [item.image_url];\n      selectedPages = new Set(loadedUrls.map((_, index) => index));\n      showPagePreviews(loadedUrls);
+      previewPages = null;
+      const loadedUrls = Array.isArray(item.image_urls) && item.image_urls.length ? item.image_urls : [item.image_url];
+      selectedPages = new Set(loadedUrls.map((_, index) => index));
+      showPagePreviews(loadedUrls);
       currentCampaignStatus = item.status;
       instagramAlreadyFailedAfterFacebook = item.facebook_status === "published" && item.instagram_status === "failed";
       const editable = item.status === "draft" || instagramAlreadyFailedAfterFacebook;

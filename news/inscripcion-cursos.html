@@ -114,7 +114,7 @@ window.evofordCourseCopy=()=>T[lang];render();
   if(document.getElementById("courseWebsite").value)return;
   button.disabled=true;msg.textContent=window.evofordCourseCopy().sending;
   try{
-   const payload={full_name:document.getElementById("courseName").value.trim(),email:document.getElementById("courseEmail").value.trim(),course_interest:document.getElementById("courseChoice").value,message:"País: "+document.getElementById("courseCountry").value.trim()+"\\nCiudad: "+document.getElementById("courseCity").value.trim()+"\\n\\n"+document.getElementById("courseMessage").value.trim()};
+   const payload={full_name:document.getElementById("courseName").value.trim(),email:document.getElementById("courseEmail").value.trim(),course_interest:document.getElementById("courseChoice").value,status:"received",message:"País: "+document.getElementById("courseCountry").value.trim()+"\nCiudad: "+document.getElementById("courseCity").value.trim()+"\n\n"+document.getElementById("courseMessage").value.trim()};
    const {error}=await client.from("course_enquiries").insert(payload);
    if(error)throw error;
    form.reset();msg.textContent=window.evofordCourseCopy().success;

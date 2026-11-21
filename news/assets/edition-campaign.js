@@ -52,8 +52,16 @@
   };
   const status = (message) => { $("campaignStatus").textContent = message; };
   function setLanguage(language) {
-    currentLanguage = language === "en" ? "en" : "es";
+    const previousLanguage = currentLanguage;
+    const nextLanguage = language === "en" ? "en" : "es";
+    const caption = $("campaignCaption").value.trim();
+    const title = $("campaignTitle").value.trim();
+    const wasDefaultCaption = !caption || caption === defaultCaption[previousLanguage].trim();
+    const wasDefaultTitle = !title || title === defaultTitle[previousLanguage];
+    currentLanguage = nextLanguage;
     const t = copy[currentLanguage];
+    if (wasDefaultCaption) $("campaignCaption").value = defaultCaption[currentLanguage];
+    if (wasDefaultTitle) $("campaignTitle").value = defaultTitle[currentLanguage];
     const panel = $("editionCampaignPanel");
     panel.setAttribute("aria-label", t.heading);
     panel.querySelector("h2").textContent = t.heading;
@@ -70,9 +78,6 @@
     $("campaignPublishBtn").textContent = t.publish;
     const select = $("campaignDrafts");
     if (select.options.length) select.options[0].textContent = t.fresh;
-    if ($("campaignTitle").value === defaultTitle[language === "en" ? "es" : "en"] || !$("campaignTitle").value) $("campaignTitle").value = defaultTitle[currentLanguage];
-    const previousCaption = defaultCaption[language === "en" ? "es" : "en"];
-    if ($("campaignCaption").value.trim() === previousCaption.trim() || !$("campaignCaption").value.trim()) $("campaignCaption").value = defaultCaption[currentLanguage];
   }
   document.addEventListener("edition:languagechange", event => setLanguage(event.detail?.language));
   setLanguage(currentLanguage);

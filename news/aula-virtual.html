@@ -91,6 +91,6 @@ try{const saved=localStorage.getItem('evoford-academy-language');if(saved==='en'
 window.evofordAcademySetLanguage=next=>{if(next!=='en'&&next!=='es')return;lang=next;try{localStorage.setItem('evoford-academy-language',lang)}catch(e){}render()};
 document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>window.evofordAcademySetLanguage(b.dataset.lang)));
 window.evofordAcademyGetLanguage=()=>lang;
-render();window.evofordAcademySetProgress=rows=>{completed=Array.isArray(rows)?rows:[];progress()};window.evofordAcademyStart=()=>render();
+window.evofordAcademySetProgress=rows=>{completed=Array.isArray(rows)?rows:[];progress()};window.evofordAcademyStart=()=>render();render();
 })();
 </script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="/news/assets/academy-access.js?v=20261121-2"></script></body></html>

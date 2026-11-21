@@ -101,6 +101,15 @@ async function init(){
 }
 function showLogin(){ currentUser=null; $("loginView").hidden=false; $("appView").hidden=true; }
 
+const overviewQueryCache=new Map();
+const OVERVIEW_QUERY_CACHE_TTL_MS=30_000;
+async function cachedOverviewQuery(key,query,force=false){
+ const cached=overviewQueryCache.get(key);
+ if(!force&&cached&&Date.now()-cached.at<OVERVIEW_QUERY_CACHE_TTL_MS)return cached.value;
+ const value=await query();
+ overviewQueryCache.set(key,{at:Date.now(),value});
+ return value;
+}
 async function renderOverview(){
  const $id=id=>$(id);
  const kpis=$id("overviewKpis"),activity=$id("overviewActivity"),statusRoot=$id("overviewStatus"),operations=$id("overviewOperations");
@@ -124,13 +133,14 @@ async function renderOverview(){
    if(table==="rss_sources"&&typeof status==="boolean")query=query.eq("active",status);
    else if(status)query=query.eq("status",status);
    if(since)query=query.gte("created_at",since);
-   const result=await withTimeout(query,12000,{count:null,error:{message:"Tiempo de espera agotado"}});
+   const run=()=>withTimeout(query,12000,{count:null,error:{message:"Tiempo de espera agotado"}});
+   const result=since?await run():await cachedOverviewQuery("count:"+key,run);
    return {key,table,count:result.count??0,error:result.error||null};
   }catch(error){return {key,table,count:0,error};}
  }));
  const by=Object.fromEntries(results.map(x=>[x.key,x])),val=key=>by[key]?.count??0;
  const adSpecs=[["adCampaignsTotal","ad_campaigns"],["adCampaignsActive","ad_campaigns","active"],["adCampaignsPaid","ad_campaigns",null,null,"paid"],["adCampaignsUnpaid","ad_campaigns",null,null,"unpaid"],["adEnquiriesTotal","ad_enquiries"],["adEnquiriesReceived","ad_enquiries","received"],["adEnquiriesPeriod","ad_enquiries",null,cutoff]];
- const adResults=await Promise.all(adSpecs.map(async ([key,table,status,since,payment])=>{try{let q=client.from(table).select("id",{count:"exact",head:true});if(status)q=q.eq("status",status);if(payment)q=q.eq("payment_status",payment);if(since)q=q.gte("created_at",since);const r=await withTimeout(q,12000,{count:null,error:{message:"Tiempo de espera agotado"}});return {key,count:r.count??0,error:r.error||null};}catch(error){return {key,count:0,error};}}));
+ const adResults=await Promise.all(adSpecs.map(async ([key,table,status,since,payment])=>{try{let q=client.from(table).select("id",{count:"exact",head:true});if(status)q=q.eq("status",status);if(payment)q=q.eq("payment_status",payment);if(since)q=q.gte("created_at",since);const run=()=>withTimeout(q,12000,{count:null,error:{message:"Tiempo de espera agotado"}});const r=since?await run():await cachedOverviewQuery("count:"+key,run);return {key,count:r.count??0,error:r.error||null};}catch(error){return {key,count:0,error};}}));
  const adBy=Object.fromEntries(adResults.map(x=>[x.key,x])),adVal=key=>adBy[key]?.count??0;
  const cards=[
   ["Artículos publicados",val("articlesPublished"),"de "+val("articlesTotal")+" artículos"],
@@ -204,8 +214,8 @@ async function renderOverview(){
  ];
  statusRoot.innerHTML=groups.map(([name,states])=>'<div class="overview-status-group"><strong>'+name+'</strong>'+states.map(([label,n])=>'<span>'+label+' <b>'+n+'</b></span>').join("")+'</div>').join("");
  const [articleRows,rssRows]=await Promise.all([
-  client.from("articles").select("category,status").limit(500),
-  client.from("imported_items").select("status").limit(1500)
+  cachedOverviewQuery("overview:categories",()=>client.from("articles").select("category,status").limit(500)),
+  cachedOverviewQuery("overview:rss-status",()=>client.from("imported_items").select("status").limit(1500))
  ]);
  const categoryRoot=$id("overviewCategories");
  if(articleRows.error)categoryRoot.innerHTML='<p class="muted">No se pudieron consultar las secciones: '+safe(articleRows.error.message)+'</p>';

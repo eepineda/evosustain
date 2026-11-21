@@ -215,3 +215,18 @@ body.print-edition{background:#e7e9ec;color:var(--ei-ink)}
   .social-hub #socialGraphicPanel>div>div{grid-template-columns:minmax(0,1fr)!important;gap:20px!important}
   .social-hub #socialGraphicPanel>div>div>div:last-child{max-width:320px;justify-self:center}
 }
+
+
+/* Selección visual de páginas para la promoción de la edición */
+.campaign-studio__selection-actions{margin:0 0 8px}
+.campaign-studio__selection-actions button{min-height:36px;padding:8px 12px;border:1px solid #cbd5df;border-radius:7px;background:#fff;color:#183653;font:700 12px Arial,sans-serif;cursor:pointer}
+.campaign-studio__selection-actions button:disabled{opacity:.45;cursor:not-allowed}
+.campaign-studio__preview #campaignPreview{grid-template-columns:repeat(2,minmax(0,1fr));align-content:start}
+.campaign-page-choice{position:relative;margin:0;min-width:0;padding:7px;border:2px solid #cbd5df;border-radius:9px;background:#fff;cursor:pointer;transition:border-color .15s,box-shadow .15s,opacity .15s}
+.campaign-page-choice img{display:block;width:100%;height:auto;border:1px solid #e1e6eb;background:#fff;box-shadow:0 1px 3px #0001}
+.campaign-page-choice figcaption{display:flex;align-items:center;justify-content:center;gap:6px;padding:7px 2px 2px;color:#536477;font:700 11px Arial,sans-serif}
+.campaign-page-check{display:grid;place-items:center;width:18px;height:18px;border:1px solid #9aa9b8;border-radius:50%;color:transparent;background:#fff;font-size:11px}
+.campaign-page-choice.is-selected{border-color:#12365a;box-shadow:0 0 0 2px #12365a18}
+.campaign-page-choice.is-selected .campaign-page-check{border-color:#12365a;background:#12365a;color:#fff}
+.campaign-page-choice:not(.is-selected){opacity:.62}
+.campaign-page-choice:focus-visible{outline:3px solid #d7a928;outline-offset:2px}

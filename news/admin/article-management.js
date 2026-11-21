@@ -28,7 +28,7 @@
       </div>`;
   }
 
-  window.filterArticles = function () {
+  window.renderArticlePage = function () {
     const list = $("articleList");
     if (!list) return;
     const query = ($("articleSearch")?.value || "").trim().toLocaleLowerCase("es");
@@ -95,7 +95,7 @@
     else if (action === "next") currentPage = Math.min(pages,currentPage+1);
     else if (action === "last") currentPage = pages;
     else if (action === "jump") currentPage = Math.min(pages,Math.max(1,Number(inputValue)||1));
-    window.filterArticles();
+    window.renderArticlePage();
   }
 
   function setup() {
@@ -126,17 +126,17 @@
     };
 
     const list = $("articleList");
-    $("articleSearch")?.addEventListener("input",()=>{currentPage=1;window.filterArticles();});
-    filters.addEventListener("change",()=>{currentPage=1;window.filterArticles();});
-    $("articlePageSize")?.addEventListener("change",event=>{pageSize=Number(event.target.value)||10;currentPage=1;window.filterArticles();});
-    $("articleSort")?.addEventListener("change",()=>{currentPage=1;window.filterArticles();});
-    $("articleCategoryFilter")?.addEventListener("change",()=>{currentPage=1;window.filterArticles();});
+    $("articleSearch")?.addEventListener("input",()=>{currentPage=1;window.renderArticlePage();});
+    filters.addEventListener("change",()=>{currentPage=1;window.renderArticlePage();});
+    $("articlePageSize")?.addEventListener("change",event=>{pageSize=Number(event.target.value)||10;currentPage=1;window.renderArticlePage();});
+    $("articleSort")?.addEventListener("change",()=>{currentPage=1;window.renderArticlePage();});
+    $("articleCategoryFilter")?.addEventListener("change",()=>{currentPage=1;window.renderArticlePage();});
     document.querySelectorAll("[data-article-quick]").forEach(button=>button.addEventListener("click",()=>{
       filters.value=button.dataset.articleQuick||"";
       if($("articleCategoryFilter"))$("articleCategoryFilter").value="";
       $("articleSearch").value="";
       currentPage=1;
-      window.filterArticles();
+      window.renderArticlePage();
     }));
 
     ["articlePaginationTop","articlePaginationBottom"].forEach(id=>{
@@ -151,7 +151,7 @@
         if(event.target.matches("[data-page-input]")&&event.key==="Enter"){event.preventDefault();changePage("jump",event.target.value);}
       });
     });
-    window.filterArticles();
+    window.renderArticlePage();
   }
 
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",setup,{once:true});

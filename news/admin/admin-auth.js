@@ -1066,7 +1066,8 @@ function wire(){
   $("refreshSubmissionsBtn").addEventListener("click",loadSubmissions);
   $("refreshDirectoryBtn").addEventListener("click",loadDirectoryAdmin);
   $("refreshCoursesBtn").addEventListener("click",loadCourses);
-  $("refreshAcademyStudentsBtn")?.addEventListener("click",loadAcademyStudents);\n  $("academyStudentSearch")?.addEventListener("input",filterAcademyStudents);
+  $("refreshAcademyStudentsBtn")?.addEventListener("click",loadAcademyStudents);
+  $("academyStudentSearch")?.addEventListener("input",filterAcademyStudents);
   $("academyStudentStatus")?.addEventListener("change",filterAcademyStudents);
   $("academyStudentList")?.addEventListener("change",e=>{const s=e.target.closest("[data-academy-enrollment]");if(s)updateAcademyEnrollment(s.dataset.academyEnrollment,s.value);});
   $("academyStudentList")?.addEventListener("click",e=>{const b=e.target.closest("[data-academy-progress]");if(b)showAcademyProgress(b.dataset.academyProgress,b.dataset.course);});

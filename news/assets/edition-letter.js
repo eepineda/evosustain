@@ -12,7 +12,7 @@ function panel(){
  document.body.appendChild(root);
  $("#letterClose").onclick=close;
  $("#letterPreview").onclick=render;
- $("#letterExport").onclick=function(){if(!render())return;var recipient=$("#letterRecipient").value.trim().normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").replace(/[^a-zA-Z0-9]+/g,"_").replace(/^_+|_+$/g,"").slice(0,60)||"Destinatario";var date=$("#letterDate").value||dateISO();document.title="Carta_Presentacion_EVOFORD_NEWS_"+recipient+"_"+date;document.body.classList.add("letter-printing");window.print();};var recipient=$("#letterRecipient").value.trim().replace(/[\\/:*?"<>|]+/g," ").replace(/\\s+/g," ").slice(0,70);document.title="Carta - "+recipient+" - EVOFORD NEWS";document.body.classList.add("letter-printing");window.print();};
+ $("#letterExport").onclick=function(){if(!render())return;var recipient=$("#letterRecipient").value.trim().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zA-Z0-9]+/g,"_").replace(/^_+|_+$/g,"").slice(0,60)||"Destinatario";var date=$("#letterDate").value||dateISO();document.title="Carta_Presentacion_EVOFORD_NEWS_"+recipient+"_"+date;document.body.classList.add("letter-printing");window.print();};
  $("#letterRecipient").addEventListener("input",render);
  $("#letterDate").addEventListener("change",render);
  return root;

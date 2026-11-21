@@ -9,6 +9,8 @@
   if (!panel || !open) return;
   let campaignId = null;
   let savedImage = null;
+  let previewPages = null;
+  let selectedPages = new Set();
   let currentCampaignStatus = null;
   let instagramAlreadyFailedAfterFacebook = false;
 
@@ -22,8 +24,8 @@
     es: {
       heading:"Promoción de esta edición", intro:"Campaña independiente. No publica ni modifica los artículos individuales.",
       drafts:"Borradores anteriores", fresh:"Nueva campaña", load:"Cargar", title:"Título de la campaña",
-      caption:"Texto para Facebook e Instagram", preview:"Vista previa de todas las páginas",
-      previewNote:"Se incluyen todas las páginas reales de la edición maquetada.", close:"Cerrar",
+      caption:"Texto para Facebook e Instagram", preview:"Vista previa: selecciona las páginas que quieres publicar",
+      previewNote:"Haz clic en cada página para incluirla o excluirla de la campaña.", close:"Cerrar",
       save:"Preparar y guardar borrador", update:"Actualizar borrador", publish:"Aprobar y publicar",
       savingCover:"Generando la portada real de la edición…", saving:"Guardando la campaña como borrador…",
       saved:"Borrador guardado. Revisa la portada y el texto; todavía no se ha publicado en ninguna red.",
@@ -36,8 +38,8 @@
     en: {
       heading:"Promote this edition", intro:"Separate campaign. It does not publish or modify individual articles.",
       drafts:"Previous drafts", fresh:"New campaign", load:"Load", title:"Campaign title",
-      caption:"Facebook and Instagram caption", preview:"Edition pages preview",
-      previewNote:"Includes every actual page of the laid-out edition.", close:"Close",
+      caption:"Facebook and Instagram caption", preview:"Preview: choose the pages to publish",
+      previewNote:"Click each page to include it in or exclude it from the campaign.", close:"Close",
       save:"Prepare and save draft", update:"Update draft", publish:"Approve and publish",
       savingCover:"Generating the actual edition cover…", saving:"Saving campaign as a draft…",
       saved:"Draft saved. Review the cover and caption; nothing has been published to social media yet.",
@@ -143,24 +145,71 @@
     return { pages, instagramPages };
   }
 
+  function updateSelectionCount(total) {
+    const chosen = selectedPages.size;
+    $("campaignPageCount").textContent = currentLanguage === "en"
+      ? chosen + " of " + total + " pages selected for this campaign"
+      : chosen + " de " + total + " páginas seleccionadas para esta campaña";
+    $("campaignSelectAllBtn").disabled = !total || chosen === total;
+    $("campaignSelectNoneBtn").disabled = !chosen;
+    $("campaignSaveBtn").disabled = !chosen || (!!campaignId && currentCampaignStatus !== "draft" && !instagramAlreadyFailedAfterFacebook);
+  }
+
   function showPagePreviews(urls) {
     const holder = $("campaignPreview");
     holder.innerHTML = "";
     (urls || []).forEach((url, index) => {
       const figure = document.createElement("figure");
-      figure.style.cssText = "margin:0;min-width:0";
+      figure.className = "campaign-page-choice" + (selectedPages.has(index) ? " is-selected" : "");
+      figure.tabIndex = 0;
+      figure.setAttribute("role", "checkbox");
+      figure.setAttribute("aria-checked", selectedPages.has(index) ? "true" : "false");
+      figure.setAttribute("aria-label", (currentLanguage === "en" ? "Include page " : "Incluir página ") + (index + 1));
       const img = document.createElement("img");
       img.src = url;
       img.alt = (currentLanguage === "en" ? "Edition page " : "Página de edición ") + (index + 1);
-      img.style.cssText = "display:block;width:100%;height:auto;border:1px solid #d8e0e8;background:#fff;box-shadow:0 1px 3px #0001";
       const caption = document.createElement("figcaption");
-      caption.textContent = (currentLanguage === "en" ? "Page " : "Página ") + (index + 1);
-      caption.style.cssText = "font-size:11px;text-align:center;color:#64748b;padding:3px";
+      caption.innerHTML = '<span class="campaign-page-check" aria-hidden="true">✓</span><span>' +
+        (currentLanguage === "en" ? "Page " : "Página ") + (index + 1) + '</span>';
       figure.append(img, caption);
+      const toggle = () => {
+        if (selectedPages.has(index)) selectedPages.delete(index); else selectedPages.add(index);
+        figure.classList.toggle("is-selected", selectedPages.has(index));
+        figure.setAttribute("aria-checked", selectedPages.has(index) ? "true" : "false");
+        updateSelectionCount(urls.length);
+      };
+      figure.addEventListener("click", toggle);
+      figure.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") { event.preventDefault(); toggle(); }
+      });
       holder.appendChild(figure);
     });
-    $("campaignPageCount").textContent = (currentLanguage === "en" ? urls.length + " pages included" : urls.length + " páginas incluidas");
+    updateSelectionCount((urls || []).length);
   }
+
+  $("campaignSelectAllBtn").addEventListener("click", () => {
+    const urls = previewPages?.pages || [];
+    selectedPages = new Set(urls.map((_, index) => index));
+    showPagePreviews(urls);
+  });
+  $("campaignSelectNoneBtn").addEventListener("click", () => {
+    selectedPages.clear();
+    showPagePreviews(previewPages?.pages || []);
+  });
+  $("campaignPreviewBtn").addEventListener("click", async () => {
+    try {
+      $("campaignPreviewBtn").disabled = true;
+      status(currentLanguage === "en" ? "Preparing page previews…" : "Preparando las páginas para seleccionar…");
+      previewPages = await makeEditionPages();
+      selectedPages = new Set(previewPages.pages.map((_, index) => index));
+      showPagePreviews(previewPages.pages);
+      status(currentLanguage === "en" ? "Choose the pages to include. Click a page to toggle it." : "Elige las páginas que quieres incluir. Pulsa una página para marcarla o quitarla.");
+    } catch (error) {
+      status(error.message || (currentLanguage === "en" ? "Could not prepare the preview." : "No se pudo preparar la vista previa."));
+    } finally {
+      $("campaignPreviewBtn").disabled = false;
+    }
+  });
 
   async function loadCampaignList() {
     const { data: { session } } = await client.auth.getSession();
@@ -195,7 +244,7 @@
   $("campaignLoadBtn").addEventListener("click", async () => {
     const id = $("campaignDrafts").value;
     if (!id) {
-      campaignId = null; savedImage = null; currentCampaignStatus = null; instagramAlreadyFailedAfterFacebook = false;
+      campaignId = null; savedImage = null; previewPages = null; selectedPages = new Set(); currentCampaignStatus = null; instagramAlreadyFailedAfterFacebook = false;
       $("campaignTitle").value = "Nueva edición de EVOFORD NEWS";
       showPagePreviews([]);
       $("campaignPublishBtn").disabled = true;
@@ -213,7 +262,7 @@
       campaignId = item.id;
       $("campaignTitle").value = item.title;
       $("campaignCaption").value = item.caption;
-      showPagePreviews(Array.isArray(item.image_urls) && item.image_urls.length ? item.image_urls : [item.image_url]);
+      previewPages = null;\n      const loadedUrls = Array.isArray(item.image_urls) && item.image_urls.length ? item.image_urls : [item.image_url];\n      selectedPages = new Set(loadedUrls.map((_, index) => index));\n      showPagePreviews(loadedUrls);
       currentCampaignStatus = item.status;
       instagramAlreadyFailedAfterFacebook = item.facebook_status === "published" && item.instagram_status === "failed";
       const editable = item.status === "draft" || instagramAlreadyFailedAfterFacebook;
@@ -243,9 +292,21 @@
     try {
       const { data: { session } } = await client.auth.getSession();
       if (!session) throw new Error(copy[currentLanguage].login);
-      status(copy[currentLanguage].savingCover);
-      savedImage = await makeEditionPages();
+      if (!previewPages) {
+        status(copy[currentLanguage].savingCover);
+        previewPages = await makeEditionPages();
+        selectedPages = new Set(previewPages.pages.map((_, index) => index));
+        showPagePreviews(previewPages.pages);
+      }
+      if (!selectedPages.size) throw new Error(currentLanguage === "en" ? "Select at least one page for the campaign." : "Selecciona al menos una página para la campaña.");
+      savedImage = {
+        pages: previewPages.pages.filter((_, index) => selectedPages.has(index)),
+        instagramPages: previewPages.instagramPages.filter((_, index) => selectedPages.has(index))
+      };
+      if (savedImage.pages.length > 10) throw new Error(currentLanguage === "en" ? "Instagram supports up to 10 carousel pages. Select 10 or fewer." : "Instagram admite hasta 10 páginas por carrusel. Selecciona 10 o menos.");
       showPagePreviews(savedImage.pages);
+      selectedPages = new Set(savedImage.pages.map((_, index) => index));
+      updateSelectionCount(savedImage.pages.length);
       status(copy[currentLanguage].saving);
       const { data, error } = await client.functions.invoke("print-edition-campaign", {
         body: {

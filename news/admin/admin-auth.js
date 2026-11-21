@@ -1,3 +1,10 @@
+const ADMIN_LIST_PAGE_SIZE=20;
+let submissionRows=[],submissionPage=1,directorySubmissionRows=[],directorySubmissionPage=1,directoryListingRows=[],directoryListingPage=1,inboxRows=[],inboxSources=[],inboxArticles=[],inboxPage=1;
+function adminPager(page,total,attribute){
+ const pages=Math.max(1,Math.ceil(total/ADMIN_LIST_PAGE_SIZE));
+ if(total<=ADMIN_LIST_PAGE_SIZE)return "";
+ return '<nav class="admin-pagination" aria-label="Paginación"><button type="button" class="secondary" data-'+attribute+'="'+(page-1)+'" '+(page<=1?'disabled':'')+'>Anterior</button><span>Página '+page+' / '+pages+' · '+total+' registros</span><button type="button" class="secondary" data-'+attribute+'="'+(page+1)+'" '+(page>=pages?'disabled':'')+'>Siguiente</button></nav>';
+}
 /*
   Evoford News admin panel.
   Configure the two public Supabase values below before deployment.
@@ -101,6 +108,15 @@ async function init(){
 }
 function showLogin(){ currentUser=null; $("loginView").hidden=false; $("appView").hidden=true; }
 
+const overviewQueryCache=new Map();
+const OVERVIEW_QUERY_CACHE_TTL_MS=30_000;
+async function cachedOverviewQuery(key,query,force=false){
+ const cached=overviewQueryCache.get(key);
+ if(!force&&cached&&Date.now()-cached.at<OVERVIEW_QUERY_CACHE_TTL_MS)return cached.value;
+ const value=await query();
+ overviewQueryCache.set(key,{at:Date.now(),value});
+ return value;
+}
 async function renderOverview(){
  const $id=id=>$(id);
  const kpis=$id("overviewKpis"),activity=$id("overviewActivity"),statusRoot=$id("overviewStatus"),operations=$id("overviewOperations");
@@ -124,13 +140,14 @@ async function renderOverview(){
    if(table==="rss_sources"&&typeof status==="boolean")query=query.eq("active",status);
    else if(status)query=query.eq("status",status);
    if(since)query=query.gte("created_at",since);
-   const result=await withTimeout(query,12000,{count:null,error:{message:"Tiempo de espera agotado"}});
+   const run=()=>withTimeout(query,12000,{count:null,error:{message:"Tiempo de espera agotado"}});
+   const result=since?await run():await cachedOverviewQuery("count:"+key,run);
    return {key,table,count:result.count??0,error:result.error||null};
   }catch(error){return {key,table,count:0,error};}
  }));
  const by=Object.fromEntries(results.map(x=>[x.key,x])),val=key=>by[key]?.count??0;
  const adSpecs=[["adCampaignsTotal","ad_campaigns"],["adCampaignsActive","ad_campaigns","active"],["adCampaignsPaid","ad_campaigns",null,null,"paid"],["adCampaignsUnpaid","ad_campaigns",null,null,"unpaid"],["adEnquiriesTotal","ad_enquiries"],["adEnquiriesReceived","ad_enquiries","received"],["adEnquiriesPeriod","ad_enquiries",null,cutoff]];
- const adResults=await Promise.all(adSpecs.map(async ([key,table,status,since,payment])=>{try{let q=client.from(table).select("id",{count:"exact",head:true});if(status)q=q.eq("status",status);if(payment)q=q.eq("payment_status",payment);if(since)q=q.gte("created_at",since);const r=await withTimeout(q,12000,{count:null,error:{message:"Tiempo de espera agotado"}});return {key,count:r.count??0,error:r.error||null};}catch(error){return {key,count:0,error};}}));
+ const adResults=await Promise.all(adSpecs.map(async ([key,table,status,since,payment])=>{try{let q=client.from(table).select("id",{count:"exact",head:true});if(status)q=q.eq("status",status);if(payment)q=q.eq("payment_status",payment);if(since)q=q.gte("created_at",since);const run=()=>withTimeout(q,12000,{count:null,error:{message:"Tiempo de espera agotado"}});const r=since?await run():await cachedOverviewQuery("count:"+key,run);return {key,count:r.count??0,error:r.error||null};}catch(error){return {key,count:0,error};}}));
  const adBy=Object.fromEntries(adResults.map(x=>[x.key,x])),adVal=key=>adBy[key]?.count??0;
  const cards=[
   ["Artículos publicados",val("articlesPublished"),"de "+val("articlesTotal")+" artículos"],
@@ -160,29 +177,42 @@ async function renderOverview(){
 }[label]||"info");
  kpis.innerHTML=cards.map(([label,value,note])=>'<article class="overview-kpi tone-'+kpiTone(label)+'"><span>'+safe(label)+'</span><strong>'+value+'</strong><small>'+safe(note)+'</small></article>').join("");
  const bins=range===7?7:range===30?10:12;
- const unitDays=range/bins;
- const binStarts=Array.from({length:bins},(_,i)=>new Date(Date.now()-(bins-1-i)*unitDays*86400000));
+ const rangeEnd=Date.now();
+ const rangeStart=rangeEnd-range*86400000;
+ const bucketMs=(rangeEnd-rangeStart)/bins;
+ const binStarts=Array.from({length:bins},(_,i)=>new Date(rangeStart+i*bucketMs));
  const dailyTables=[["Editorial","article_submissions"],["Formación","course_enquiries"],["Directorio","directory_submissions"]];
  const dailyResults=await Promise.all(dailyTables.map(async ([label,table])=>{
-  const counts=await Promise.all(binStarts.map(async (d,i)=>{
-   const from=new Date(d);from.setHours(0,0,0,0);
-   const to=i===bins-1?new Date():new Date(binStarts[i+1]);
-   to.setHours(0,0,0,0);
-   try{
-    const q=client.from(table).select("id",{count:"exact",head:true}).gte("created_at",from.toISOString()).lt("created_at",to.toISOString());
-    const r=await withTimeout(q,10000,{count:0,error:true});
-    return r.count??0;
-   }catch{return 0;}
-  }));
-  return {label,counts};
+  const counts=Array(bins).fill(0);
+  let offset=0,error=null;
+  try{
+   while(true){
+    const result=await withTimeout(
+     client.from(table).select("created_at").gte("created_at",new Date(rangeStart).toISOString()).lt("created_at",new Date(rangeEnd).toISOString()).order("created_at",{ascending:true}).range(offset,offset+999),
+     12000,
+     {data:null,error:{message:"Tiempo de espera agotado"}}
+    );
+    if(result.error)throw result.error;
+    const rows=result.data||[];
+    for(const row of rows){
+     const timestamp=Date.parse(row.created_at);
+     if(!Number.isFinite(timestamp))continue;
+     const index=Math.min(bins-1,Math.max(0,Math.floor((timestamp-rangeStart)/bucketMs)));
+     counts[index]++;
+    }
+    if(rows.length<1000)break;
+    offset+=rows.length;
+   }
+  }catch(err){error=err;}
+  return {label,counts,error};
  }));
-  const max=dailyResults.reduce((current,result)=>result.counts.reduce((value,count)=>Math.max(value,count),current),1);
+ const activityErrors=dailyResults.filter(result=>result.error);
+ const max=dailyResults.reduce((current,result)=>result.counts.reduce((value,count)=>Math.max(value,count),current),1);
  activity.innerHTML='<div class="overview-legend"><span>Editorial</span><span>Formación</span><span>Directorio</span></div>'+binStarts.map((d,i)=>{
   const nums=dailyResults.map(x=>x.counts[i]),total=nums.reduce((a,b)=>a+b,0);
-  const end=new Date(d.getTime()+unitDays*86400000);
   const label=range===7?d.toLocaleDateString("es-ES",{weekday:"short",day:"2-digit"}):d.toLocaleDateString("es-ES",{day:"2-digit",month:"short"});
   return '<div class="overview-day"><span>'+label+'</span><div class="overview-bar"><i style="width:'+Math.round(total/max*100)+'%"></i></div><b>'+total+'</b><small>'+nums.join(" / ")+'</small></div>';
- }).join("");
+ }).join("")+(activityErrors.length?'<p class="message">No se pudo cargar la actividad de: '+safe(activityErrors.map(x=>x.label).join(", "))+'</p>':'');
  const groups=[
   ["Envíos editoriales",[["Recibidos",val("submissionsReceived")],["Descartados",val("submissionsRejected")]]],
   ["Formación",[["Recibidas",val("coursesReceived")],["Contactadas",val("coursesContacted")],["Matriculadas",val("coursesEnrolled")],["Cerradas",val("coursesClosed")],["Descartadas",val("coursesDiscarded")]]],
@@ -191,8 +221,8 @@ async function renderOverview(){
  ];
  statusRoot.innerHTML=groups.map(([name,states])=>'<div class="overview-status-group"><strong>'+name+'</strong>'+states.map(([label,n])=>'<span>'+label+' <b>'+n+'</b></span>').join("")+'</div>').join("");
  const [articleRows,rssRows]=await Promise.all([
-  client.from("articles").select("category,status").limit(500),
-  client.from("imported_items").select("status").limit(1500)
+  cachedOverviewQuery("overview:categories",()=>client.from("articles").select("category,status").limit(500)),
+  cachedOverviewQuery("overview:rss-status",()=>client.from("imported_items").select("status").limit(1500))
  ]);
  const categoryRoot=$id("overviewCategories");
  if(articleRows.error)categoryRoot.innerHTML='<p class="muted">No se pudieron consultar las secciones: '+safe(articleRows.error.message)+'</p>';
@@ -217,6 +247,7 @@ let overviewLoadedAt=0;
 let overviewLoadPromise=null;
 const OVERVIEW_CACHE_TTL_MS=30_000;
 async function loadOverview(force=false){
+ if(force)overviewQueryCache.clear();
  if(!force&&overviewLoadedAt&&Date.now()-overviewLoadedAt<OVERVIEW_CACHE_TTL_MS)return;
  if(overviewLoadPromise)return overviewLoadPromise;
  overviewLoadPromise=(async()=>{
@@ -227,6 +258,14 @@ async function loadOverview(force=false){
  finally{overviewLoadPromise=null;}
 }
 
+const adminTabLoadPromises=new Map();
+function loadAdminTabOnce(tab,loader){
+ const pending=adminTabLoadPromises.get(tab);
+ if(pending)return pending;
+ const task=Promise.resolve().then(loader).finally(()=>{if(adminTabLoadPromises.get(tab)===task)adminTabLoadPromises.delete(tab);});
+ adminTabLoadPromises.set(tab,task);
+ return task;
+}
 async function showApp(user){
   if(!isAdminEmail(user.email)){
     await client.auth.signOut();
@@ -479,34 +518,41 @@ function editorialSuggestion(item){
   return {category,country,region};
 }
 
-async function loadInbox(){
-  const [{data,error},{data:sources},{data:articles,error:articlesError}] = await Promise.all([
-    client.from("imported_items").select("id,title,source_id,article_url,status,summary,suggested_category,country,region,created_at").order("created_at",{ascending:false}),
-    client.from("rss_sources").select("id,name"),
-    client.from("articles").select("id,source_url,status")
-  ]);
-  if(error){$("inboxList").innerHTML=`<p class="muted">${safe(error.message)}</p>`;return;}
-  if(articlesError){$("inboxList").innerHTML=`<p class="muted">No se pudo comprobar la relación con los borradores: ${safe(articlesError.message)}</p>`;return;}
-  const sourceMap=new Map();
-  for(const source of sources||[])sourceMap.set(String(source.id),source);
-  const articleBySource=new Map();
-  for(const article of articles||[])if(article.source_url)articleBySource.set(article.source_url,article);
-  $("inboxList").innerHTML=data.length?data.map(n=>{
-    const source=sourceMap.get(String(n.source_id));
-    const linkedArticle=articleBySource.get(n.article_url);
-    const guess=editorialSuggestion(n);
-    const suggested=n.suggested_category||guess.category;
-    const country=n.country||guess.country;
-    const region=n.region||guess.region;
-    const workflowLabel=linkedArticle?"Borrador vinculado · "+({draft:"Borrador",pending:"En revisión",approved:"Aprobado",published:"Publicado",rejected:"Descartado"}[linkedArticle.status]||linkedArticle.status):"Pendiente de borrador";
-    const action=linkedArticle
-      ?`<button type="button" class="secondary" data-open-article="${linkedArticle.id}">Abrir borrador</button>`
-      :`<button type="button" class="secondary" data-draft="${n.id}">Pasar extracto al editor</button>`;
-    return `<article class="item"><div><h3>${safe(n.title)}</h3><p>${safe(source?.name||"Fuente RSS")} · Sección sugerida: ${safe(suggested)} · <a href="${safe(n.article_url)}" target="_blank" rel="noopener noreferrer">Consultar fuente original</a> · <span class="pill">${safe(n.status)}</span> · <span class="rss-workflow-pill ${linkedArticle?"linked":"waiting"}">${safe(workflowLabel)}</span></p>${n.summary?`<p class="rss-extract"><strong>Extracto disponible del RSS (${n.summary.length} caracteres):</strong> ${safe(n.summary)}</p><p class="muted">Este texto es material de consulta de la fuente; no cuenta como redacción propia para aprobar.</p>`:"<p class='muted'>El RSS no proporciona un extracto de texto.</p>"}<p>Clasificación orientativa: ${safe(country||"País por verificar")} · ${safe(region||"Región por verificar")}</p></div><div class="item-actions">${action}<button class="secondary" data-reject="${n.id}">Descartar</button></div></article>`;
-  }).join(""):'<p class="muted">No hay noticias importadas. Añade fuentes RSS activas e inicia una importación.</p>';
+function renderInbox(){
+ const data=inboxRows.slice((inboxPage-1)*ADMIN_LIST_PAGE_SIZE,inboxPage*ADMIN_LIST_PAGE_SIZE);
+ const sourceMap=new Map((inboxSources||[]).map(x=>[String(x.id),x]));
+ const articleBySource=new Map();for(const article of inboxArticles||[])if(article.source_url)articleBySource.set(article.source_url,article);
+ const html=data.map(n=>{
+  const source=sourceMap.get(String(n.source_id)),linkedArticle=articleBySource.get(n.article_url),guess=editorialSuggestion(n);
+  const suggested=n.suggested_category||guess.category,country=n.country||guess.country,region=n.region||guess.region;
+  const workflowLabel=linkedArticle?"Borrador vinculado · "+({draft:"Borrador",pending:"En revisión",approved:"Aprobado",published:"Publicado",rejected:"Descartado"}[linkedArticle.status]||linkedArticle.status):"Pendiente de borrador";
+  const action=linkedArticle?'<button type="button" class="secondary" data-open-article="'+linkedArticle.id+'">Abrir borrador</button>':'<button type="button" class="secondary" data-draft="'+n.id+'">Pasar extracto al editor</button>';
+  return '<article class="item"><div><h3>'+safe(n.title)+'</h3><p>'+safe(source?.name||"Fuente RSS")+' · Sección sugerida: '+safe(suggested)+' · <a href="'+safe(n.article_url)+'" target="_blank" rel="noopener noreferrer">Consultar fuente original</a> · <span class="pill">'+safe(n.status)+'</span> · <span class="rss-workflow-pill '+(linkedArticle?"linked":"waiting")+'">'+safe(workflowLabel)+'</span></p>'+(n.summary?'<p class="rss-extract"><strong>Extracto disponible del RSS ('+n.summary.length+' caracteres):</strong> '+safe(n.summary)+'</p><p class="muted">Este texto es material de consulta de la fuente; no cuenta como redacción propia para aprobar.</p>':"<p class='muted'>El RSS no proporciona un extracto de texto.</p>")+'<p>Clasificación orientativa: '+safe(country||"País por verificar")+' · '+safe(region||"Región por verificar")+'</p></div><div class="item-actions">'+action+'<button class="secondary" data-reject="'+n.id+'">Descartar</button></div></article>';
+ }).join("");
+ $("inboxList").innerHTML=(html||'<p class="muted">No hay noticias importadas. Añade fuentes RSS activas e inicia una importación.</p>')+adminPager(inboxPage,inboxRows.length,"inbox-page");
 }
-
-async function loadSubmissions(){const {data,error}=await client.from("article_submissions").select("id,title,sender_name,sender_email,submission_type,created_at,status,body,attachment_paths").order("created_at",{ascending:false});if(error){$("submissionsList").innerHTML='<p class="muted">No se pudieron cargar: '+safe(error.message)+'</p>';return;}$("submissionsList").innerHTML=data.length?data.map(s=>'<article class="item"><div><h3>'+safe(s.title)+'</h3><p>'+safe(s.sender_name)+' · '+safe(s.sender_email)+' · '+safe(s.submission_type)+' · '+new Date(s.created_at).toLocaleString("es-ES")+' · <span class="pill">'+safe(s.status)+'</span></p><p>'+safe(s.body.slice(0,240))+(s.body.length>240?"…":"")+'</p><p class="muted">'+(s.attachment_paths||[]).length+' adjunto(s)</p></div><div class="item-actions">'+(s.status==="received"?'<button class="secondary" data-convert-sub="'+s.id+'">Convertir en borrador</button><button class="secondary" data-reject-sub="'+s.id+'">Descartar</button>':'')+((s.attachment_paths||[]).length?'<button class="secondary" data-files-sub="'+s.id+'">Ver adjuntos</button>':'')+'<button class="secondary danger" data-delete-sub="'+s.id+'">Eliminar</button></div></article>').join(""):'<p class="muted">No hay envíos recibidos.</p>';}
+async function loadInbox(){
+ const [{data,error},{data:sources},{data:articles,error:articlesError}]=await Promise.all([
+  client.from("imported_items").select("id,title,source_id,article_url,status,summary,suggested_category,country,region,created_at").order("created_at",{ascending:false}),
+  client.from("rss_sources").select("id,name"),
+  client.from("articles").select("id,source_url,status").not("source_url","is",null)
+ ]);
+ if(error){$("inboxList").innerHTML='<p class="muted">'+safe(error.message)+'</p>';return;}
+ if(articlesError){$("inboxList").innerHTML='<p class="muted">No se pudo comprobar la relación con los borradores: '+safe(articlesError.message)+'</p>';return;}
+ inboxRows=data||[];inboxSources=sources||[];inboxArticles=articles||[];inboxPage=1;renderInbox();
+}
+function renderSubmissions(){
+ const root=$("submissionsList"),pages=Math.max(1,Math.ceil(submissionRows.length/ADMIN_LIST_PAGE_SIZE));
+ submissionPage=Math.min(Math.max(1,submissionPage),pages);
+ const rows=submissionRows.slice((submissionPage-1)*ADMIN_LIST_PAGE_SIZE,submissionPage*ADMIN_LIST_PAGE_SIZE);
+ root.innerHTML=(rows.length?rows.map(x=>'<article class="item"><div><h3>'+safe(x.title)+'</h3><p>'+safe(x.sender_name)+' · '+safe(x.sender_email)+' · '+safe(x.submission_type)+' · '+new Date(x.created_at).toLocaleString("es-ES")+' · <span class="pill">'+safe(x.status)+'</span></p><p>'+safe((x.body||"").slice(0,240))+((x.body||"").length>240?"…":"")+'</p><p class="muted">'+(x.attachment_paths||[]).length+' adjunto(s)</p></div><div class="item-actions">'+(x.status==="received"?'<button class="secondary" data-convert-sub="'+x.id+'">Convertir en borrador</button><button class="secondary" data-reject-sub="'+x.id+'">Descartar</button>':'')+((x.attachment_paths||[]).length?'<button class="secondary" data-files-sub="'+x.id+'">Ver adjuntos</button>':'')+'<button class="secondary danger" data-delete-sub="'+x.id+'">Eliminar</button></div></article>').join(""):'<p class="muted">No hay envíos recibidos.</p>')+adminPager(submissionPage,submissionRows.length,"submission-page");
+}
+async function loadSubmissions(){
+ const root=$("submissionsList");root.innerHTML='<p class="muted">Cargando envíos…</p>';
+ const {data,error}=await client.from("article_submissions").select("id,title,sender_name,sender_email,submission_type,created_at,status,body,attachment_paths").order("created_at",{ascending:false});
+ if(error){root.innerHTML='<p class="muted">No se pudieron cargar: '+safe(error.message)+'</p>';return;}
+ submissionRows=data||[];submissionPage=1;renderSubmissions();
+}
 async function handleSubmissionAction(e){const c=e.target.closest("[data-convert-sub]"),r=e.target.closest("[data-reject-sub]"),f=e.target.closest("[data-files-sub]"),d=e.target.closest("[data-delete-sub]");if(d){if(!window.confirm("¿Eliminar definitivamente este envío y sus archivos adjuntos? Esta acción no se puede deshacer."))return;d.disabled=true;const {data:record,error:readError}=await client.from("article_submissions").select("attachment_paths").eq("id",d.dataset.deleteSub).single();if(readError){say("globalMessage","No se pudo leer el envío: "+readError.message);d.disabled=false;return;}const paths=record.attachment_paths||[];if(paths.length){const {error:storageError}=await client.storage.from("news-submissions").remove(paths);if(storageError){say("globalMessage","No se pudieron eliminar los adjuntos: "+storageError.message);d.disabled=false;return;}}const {error:deleteError}=await client.from("article_submissions").delete().eq("id",d.dataset.deleteSub);if(deleteError){say("globalMessage","No se pudo eliminar el envío: "+deleteError.message);d.disabled=false;return;}say("globalMessage","Envío y adjuntos eliminados definitivamente.");await loadSubmissions();return;}if(c){const {data:s,error}=await client.from("article_submissions").select("id,title,sender_name,sender_email,submission_type,body").eq("id",c.dataset.convertSub).single();if(error){say("globalMessage",error.message);return;}const {data:a,error:ie}=await client.from("articles").insert({title:s.title,slug:slugify(s.title)+"-"+s.id.slice(0,8),category:s.submission_type==="opinion"?"Opinión":"Internacional",author:s.sender_name,summary:"Envío recibido de "+s.sender_name+" ("+s.sender_email+"). Pendiente de edición y verificación.",content:s.body,language:"es",source_title:"Envío externo",status:"draft",updated_at:new Date().toISOString()}).select("id").single();if(ie){say("globalMessage","No se pudo crear el borrador: "+ie.message);return;}const {error:ue}=await client.from("article_submissions").update({status:"converted",article_id:a.id}).eq("id",s.id);if(ue){say("globalMessage","Borrador creado, pero no se pudo vincular: "+ue.message);return;}await loadSubmissions();document.querySelector('[data-tab="articles"]').click();const {data:created}=await client.from("articles").select("*").eq("id",a.id).single();if(created)editArticle(created);say("globalMessage","Envío convertido en borrador. Revísalo antes de aprobarlo.");return;}if(r){if(!confirm("¿Descartar este envío?"))return;const {error}=await client.from("article_submissions").update({status:"rejected"}).eq("id",r.dataset.rejectSub);if(error)say("globalMessage",error.message);await loadSubmissions();return;}if(f){const {data:s}=await client.from("article_submissions").select("attachment_paths").eq("id",f.dataset.filesSub).single();let count=0;for(const path of s.attachment_paths||[]){const {data,error}=await client.storage.from("news-submissions").createSignedUrl(path,300);if(!error){window.open(data.signedUrl,"_blank","noopener");count++;}}if(!count)say("globalMessage","No se pudieron abrir los adjuntos.");}}
 
 function closeRssEdit(){ $("rssEditModal").hidden=true; $("rssEditForm").reset(); $("rssEditMessage").textContent=""; }
@@ -631,6 +677,8 @@ $("directoryEditForm")?.addEventListener("submit",async event=>{
 
 let courseEnquiries=[];
 let courseEnquiryById=new Map();
+let courseEnquiryPage=1;
+const COURSE_ENQUIRIES_PER_PAGE=20;
 function courseStatusLabel(status){return ({received:"Recibida",contacted:"Contactada",enrolled:"Matriculada",closed:"Cerrada",discarded:"Descartada"})[status]||status;}
 function indexCourseSearch(item){item._searchText=String(item.full_name||"").toLocaleLowerCase("es")+" "+String(item.email||"").toLocaleLowerCase("es")+" "+String(item.course_interest||"").toLocaleLowerCase("es")+" "+String(item.message||"").toLocaleLowerCase("es")+" "+String(item.internal_notes||"").toLocaleLowerCase("es");return item;}
 function filterCourses(){
@@ -642,12 +690,17 @@ function filterCourses(){
   if(counts[item.status]!==undefined)counts[item.status]++;
   if((!status||item.status===status)&&(!q||(item._searchText||"").includes(q)))filtered.push(item);
  }
- $("courseCount").textContent=filtered.length+" de "+courseEnquiries.length+" solicitudes";
+ const totalPages=Math.max(1,Math.ceil(filtered.length/COURSE_ENQUIRIES_PER_PAGE));
+ courseEnquiryPage=Math.min(Math.max(1,courseEnquiryPage),totalPages);
+ const pageItems=filtered.slice((courseEnquiryPage-1)*COURSE_ENQUIRIES_PER_PAGE,courseEnquiryPage*COURSE_ENQUIRIES_PER_PAGE);
+ $("courseCount").textContent=filtered.length+" de "+courseEnquiries.length+" solicitudes · Página "+courseEnquiryPage+" de "+totalPages;
  $("courseStats").innerHTML=[["Recibidas",counts.received],["Contactadas",counts.contacted],["Matriculadas",counts.enrolled],["Cerradas",counts.closed],["Descartadas",counts.discarded]].map(([label,n])=>'<div class="course-stat"><strong>'+n+'</strong><span>'+label+'</span></div>').join("");
- $("courseEnquiryList").innerHTML=filtered.length?filtered.map(x=>{
+ const cards=pageItems.map(x=>{
   const date=x.created_at?new Date(x.created_at).toLocaleString("es-GB",{dateStyle:"medium",timeStyle:"short"}):"Fecha no disponible";
   return '<article class="item course-enquiry-card"><div class="course-enquiry-main"><p class="eyebrow">'+safe(date)+' · '+safe(courseStatusLabel(x.status))+'</p><h3>'+safe(x.full_name)+'</h3><p><a href="mailto:'+safe(x.email)+'">'+safe(x.email)+'</a></p><p><strong>Curso:</strong> '+safe(x.course_interest)+'</p><p>'+safe(x.message).replace(/\n/g,"<br>")+'</p></div><div class="course-enquiry-manage"><label>Estado<select class="course-card-status" data-course-id="'+safe(x.id)+'"><option value="received" '+(x.status==="received"?"selected":"")+'>Recibida</option><option value="contacted" '+(x.status==="contacted"?"selected":"")+'>Contactada</option><option value="enrolled" '+(x.status==="enrolled"?"selected":"")+'>Matriculada</option><option value="closed" '+(x.status==="closed"?"selected":"")+'>Cerrada</option><option value="discarded" '+(x.status==="discarded"?"selected":"")+'>Descartada</option></select></label><label>Notas internas<textarea class="course-card-notes" data-course-notes="'+safe(x.id)+'" rows="3" maxlength="3000" placeholder="Ej.: enviar precio, llamar el viernes, pendiente de financiación…">'+safe(x.internal_notes||"")+'</textarea></label><button type="button" class="secondary" data-save-course-notes="'+safe(x.id)+'">Guardar notas</button><div class="course-danger-actions"><button type="button" class="secondary" data-discard-course="'+safe(x.id)+'">Descartar solicitud</button><button type="button" class="danger" data-delete-course="'+safe(x.id)+'">Eliminar definitivamente</button></div></div></article>';
- }).join(""):'<p class="muted">No hay solicitudes que coincidan con estos filtros.</p>';
+ }).join("");
+ const pager=filtered.length>COURSE_ENQUIRIES_PER_PAGE?'<nav class="admin-pagination" aria-label="Páginas de solicitudes"><button type="button" class="secondary" data-course-page="'+(courseEnquiryPage-1)+'" '+(courseEnquiryPage===1?'disabled':'')+'>Anterior</button><span>Página '+courseEnquiryPage+' / '+totalPages+'</span><button type="button" class="secondary" data-course-page="'+(courseEnquiryPage+1)+'" '+(courseEnquiryPage===totalPages?'disabled':'')+'>Siguiente</button></nav>':"";
+ $("courseEnquiryList").innerHTML=cards+pager+(filtered.length?"":'<p class="muted">No hay solicitudes que coincidan con estos filtros.</p>');
 }
 
 function exportCoursesCsv(){
@@ -693,18 +746,26 @@ async function saveCourseNotes(id){
  say("globalMessage","Notas internas guardadas.");
 }
 
-async function loadDirectoryAdmin(){
-  const [sub,items]=await Promise.all([
-    client.from("directory_submissions").select("id,listing_name,category,listing_type,contact_name,contact_email,status,description").order("created_at",{ascending:false}),
-    client.from("directory_listings").select("id,name,category,city,status,sponsored").order("created_at",{ascending:false})
-  ]);
-  const subRoot=$("directorySubmissionList"),listRoot=$("directoryAdminList");
-  if(sub.error)subRoot.innerHTML='<p class="muted">'+safe(sub.error.message)+'</p>';
-  else subRoot.innerHTML=sub.data.length?sub.data.map(x=>'<article class="item"><div><h3>'+safe(x.listing_name)+'</h3><p>'+safe(x.category)+' · '+safe(x.listing_type)+' · '+safe(x.contact_name)+' · '+safe(x.contact_email)+' · '+safe(x.status)+'</p><p>'+safe(x.description)+'</p></div><div class="item-actions">'+(x.status==='received'?'<button class="secondary" data-directory-convert="'+x.id+'">Crear ficha</button><button class="secondary" data-directory-reject="'+x.id+'">Descartar</button>':'')+'</div></article>').join(""):'<p class="muted">No hay solicitudes pendientes.</p>';
-  if(items.error)listRoot.innerHTML='<p class="muted">'+safe(items.error.message)+'</p>';
-  else listRoot.innerHTML=items.data.length?items.data.map(x=>'<article class="item"><div><h3>'+safe(x.name)+'</h3><p>'+safe(x.category)+' · '+safe(x.city)+' · '+safe(x.status)+(x.sponsored?' · Patrocinado':'')+'</p></div><div class="item-actions"><button type="button" class="secondary" data-directory-edit="'+x.id+'">Editar</button><button class="secondary" data-directory-toggle="'+x.id+'" data-status="'+x.status+'">'+(x.status==='published'?'Retirar':'Publicar')+'</button><button class="secondary" data-directory-delete="'+x.id+'">Eliminar</button></div></article>').join(""):'<p class="muted">Todavía no hay fichas creadas.</p>';
+function renderDirectoryAdmin(){
+ const subRoot=$("directorySubmissionList"),listRoot=$("directoryAdminList");
+ const sp=Math.max(1,Math.ceil(directorySubmissionRows.length/ADMIN_LIST_PAGE_SIZE)),lp=Math.max(1,Math.ceil(directoryListingRows.length/ADMIN_LIST_PAGE_SIZE));
+ directorySubmissionPage=Math.min(Math.max(1,directorySubmissionPage),sp);directoryListingPage=Math.min(Math.max(1,directoryListingPage),lp);
+ const subs=directorySubmissionRows.slice((directorySubmissionPage-1)*ADMIN_LIST_PAGE_SIZE,directorySubmissionPage*ADMIN_LIST_PAGE_SIZE);
+ const items=directoryListingRows.slice((directoryListingPage-1)*ADMIN_LIST_PAGE_SIZE,directoryListingPage*ADMIN_LIST_PAGE_SIZE);
+ subRoot.innerHTML=(subs.length?subs.map(x=>'<article class="item"><div><h3>'+safe(x.listing_name)+'</h3><p>'+safe(x.category)+' · '+safe(x.listing_type)+' · '+safe(x.contact_name)+' · '+safe(x.contact_email)+' · '+safe(x.status)+'</p><p>'+safe(x.description)+'</p></div><div class="item-actions">'+(x.status==='received'?'<button class="secondary" data-directory-convert="'+x.id+'">Crear ficha</button><button class="secondary" data-directory-reject="'+x.id+'">Descartar</button>':'')+'</div></article>').join(""):'<p class="muted">No hay solicitudes pendientes.</p>')+adminPager(directorySubmissionPage,directorySubmissionRows.length,"directory-sub-page");
+ listRoot.innerHTML=(items.length?items.map(x=>'<article class="item"><div><h3>'+safe(x.name)+'</h3><p>'+safe(x.category)+' · '+safe(x.city)+' · '+safe(x.status)+(x.sponsored?' · Patrocinado':'')+'</p></div><div class="item-actions"><button type="button" class="secondary" data-directory-edit="'+x.id+'">Editar</button><button class="secondary" data-directory-toggle="'+x.id+'" data-status="'+x.status+'">'+(x.status==='published'?'Retirar':'Publicar')+'</button><button class="secondary" data-directory-delete="'+x.id+'">Eliminar</button></div></article>').join(""):'<p class="muted">Todavía no hay fichas creadas.</p>')+adminPager(directoryListingPage,directoryListingRows.length,"directory-list-page");
 }
-async function handleDirectoryAction(e){
+async function loadDirectoryAdmin(){
+ const [sub,items]=await Promise.all([
+  client.from("directory_submissions").select("id,listing_name,category,listing_type,contact_name,contact_email,status,description,created_at").order("created_at",{ascending:false}),
+  client.from("directory_listings").select("id,name,category,city,status,sponsored,created_at").order("created_at",{ascending:false})
+ ]);
+ if(sub.error){$("directorySubmissionList").innerHTML='<p class="muted">'+safe(sub.error.message)+'</p>';directorySubmissionRows=[];}
+ else directorySubmissionRows=sub.data||[];
+ if(items.error){$("directoryAdminList").innerHTML='<p class="muted">'+safe(items.error.message)+'</p>';directoryListingRows=[];}
+ else directoryListingRows=items.data||[];
+ directorySubmissionPage=1;directoryListingPage=1;renderDirectoryAdmin();
+}async function handleDirectoryAction(e){
  const b=e.target.closest("button");if(!b)return;
  if(b.dataset.directoryEdit){
   const {data:item,error}=await client.from("directory_listings").select("*").eq("id",b.dataset.directoryEdit).single();
@@ -801,8 +862,8 @@ async function loadAds(){
  }
  const enquiries=e.data||[];
  const enquiryById=new Map(enquiries.map(item=>[String(item.id),item]));
- enquiryRoot.innerHTML=enquiries.length?enquiries.map(x=>'<article class="item ad-enquiry" data-enquiry-id="'+x.id+'"><div class="ad-enquiry-main"><h3>'+safe(x.company_name)+'</h3><p>'+(x.advertiser_type==="individual"?"Particular":"Empresa")+"</p><p>"+safe(x.contact_name)+' · <a href="mailto:'+encodeURIComponent(x.email)+'">'+safe(x.email)+'</a>'+(x.phone?' · '+safe(x.phone):'')+'</p>'+(x.website?'<p><a href="'+safe(x.website)+'" target="_blank" rel="noopener">Web de la empresa</a></p>':'')+(x.attachment_path?'<p class="ad-attachment" data-attachment="'+x.id+'">Adjunto: '+safe(x.attachment_name||"Ver archivo")+' · Preparando enlace seguro…</p>':'<p>Sin material adjunto</p>')+'<p>Presupuesto: '+safe(x.budget||"No indicado")+' · Formato: '+safe(x.placement_interest||"No indicado")+'</p><p class="ad-enquiry-message">'+safe(x.message)+'</p><p>Estado: <strong>'+safe(adEnquiryStatusText(x.status))+'</strong> · '+new Date(x.created_at).toLocaleString("es-GB")+'</p>'+(x.internal_notes?'<p><strong>Notas internas:</strong> '+safe(x.internal_notes)+'</p>':'')+'</div><div class="item-actions ad-enquiry-actions"><button type="button" class="secondary" data-enquiry-edit="'+x.id+'">Editar</button><button type="button" class="secondary" data-enquiry-campaign="'+x.id+'">Preparar campaña</button><a class="secondary" href="'+adReplyHref(x)+'">Responder por correo</a><button type="button" class="secondary" data-enquiry-delete="'+x.id+'">Eliminar</button></div><form class="panel ad-enquiry-edit" data-enquiry-form="'+x.id+'" hidden><div class="form-grid"><div class="field"><label>Empresa</label><input name="company_name" required maxlength="180" value="'+safe(x.company_name)+'"></div><div class="field"><label>Persona de contacto</label><input name="contact_name" required maxlength="120" value="'+safe(x.contact_name)+'"></div><div class="field"><label>Correo</label><input name="email" type="email" required maxlength="254" value="'+safe(x.email)+'"></div><div class="field"><label>Teléfono</label><input name="phone" value="'+safe(x.phone||"")+'"></div><div class="field"><label>Web</label><input name="website" type="url" value="'+safe(x.website||"")+'"></div><div class="field"><label>Presupuesto</label><input name="budget" value="'+safe(x.budget||"")+'"></div><div class="field"><label>Formato de interés</label><input name="placement_interest" value="'+safe(x.placement_interest||"")+'"></div><div class="field"><label>Estado</label><select name="status">'+adEnquiryStatusOptions(x.status)+'</select></div><div class="field full"><label>Mensaje recibido</label><textarea name="message" rows="4" required>'+safe(x.message)+'</textarea></div><div class="field full"><label>Notas internas (solo equipo editorial)</label><textarea name="internal_notes" rows="3">'+safe(x.internal_notes||"")+'</textarea></div></div><p class="message" data-enquiry-message></p><div class="actions"><button type="submit">Guardar cambios</button><button type="button" class="secondary" data-enquiry-cancel>Cancelar</button></div></form></article>').join(""):'<p class="muted">No hay solicitudes comerciales.</p>';
- enquiries.forEach(async x=>{if(!x.attachment_path)return;const {data,error}=await client.storage.from("news-submissions").createSignedUrl(x.attachment_path,3600);const node=enquiryRoot.querySelector('[data-attachment="'+x.id+'"]');if(node){if(error)node.textContent="Adjunto guardado, pero no se pudo generar el enlace: "+error.message;else node.innerHTML='Adjunto: <a href="'+safe(data.signedUrl)+'" target="_blank" rel="noopener">'+safe(x.attachment_name||"Ver archivo")+'</a> (enlace válido durante 1 hora)';}});
+ enquiryRoot.innerHTML=enquiries.length?enquiries.map(x=>'<article class="item ad-enquiry" data-enquiry-id="'+x.id+'"><div class="ad-enquiry-main"><h3>'+safe(x.company_name)+'</h3><p>'+(x.advertiser_type==="individual"?"Particular":"Empresa")+"</p><p>"+safe(x.contact_name)+' · <a href="mailto:'+encodeURIComponent(x.email)+'">'+safe(x.email)+'</a>'+(x.phone?' · '+safe(x.phone):'')+'</p>'+(x.website?'<p><a href="'+safe(x.website)+'" target="_blank" rel="noopener">Web de la empresa</a></p>':'')+(x.attachment_path?'<p class="ad-attachment"><button type="button" class="secondary" data-ad-attachment="'+x.id+'">Abrir adjunto: '+safe(x.attachment_name||"Ver archivo")+'</button></p>':'<p>Sin material adjunto</p>')+'<p>Presupuesto: '+safe(x.budget||"No indicado")+' · Formato: '+safe(x.placement_interest||"No indicado")+'</p><p class="ad-enquiry-message">'+safe(x.message)+'</p><p>Estado: <strong>'+safe(adEnquiryStatusText(x.status))+'</strong> · '+new Date(x.created_at).toLocaleString("es-GB")+'</p>'+(x.internal_notes?'<p><strong>Notas internas:</strong> '+safe(x.internal_notes)+'</p>':'')+'</div><div class="item-actions ad-enquiry-actions"><button type="button" class="secondary" data-enquiry-edit="'+x.id+'">Editar</button><button type="button" class="secondary" data-enquiry-campaign="'+x.id+'">Preparar campaña</button><a class="secondary" href="'+adReplyHref(x)+'">Responder por correo</a><button type="button" class="secondary" data-enquiry-delete="'+x.id+'">Eliminar</button></div><form class="panel ad-enquiry-edit" data-enquiry-form="'+x.id+'" hidden><div class="form-grid"><div class="field"><label>Empresa</label><input name="company_name" required maxlength="180" value="'+safe(x.company_name)+'"></div><div class="field"><label>Persona de contacto</label><input name="contact_name" required maxlength="120" value="'+safe(x.contact_name)+'"></div><div class="field"><label>Correo</label><input name="email" type="email" required maxlength="254" value="'+safe(x.email)+'"></div><div class="field"><label>Teléfono</label><input name="phone" value="'+safe(x.phone||"")+'"></div><div class="field"><label>Web</label><input name="website" type="url" value="'+safe(x.website||"")+'"></div><div class="field"><label>Presupuesto</label><input name="budget" value="'+safe(x.budget||"")+'"></div><div class="field"><label>Formato de interés</label><input name="placement_interest" value="'+safe(x.placement_interest||"")+'"></div><div class="field"><label>Estado</label><select name="status">'+adEnquiryStatusOptions(x.status)+'</select></div><div class="field full"><label>Mensaje recibido</label><textarea name="message" rows="4" required>'+safe(x.message)+'</textarea></div><div class="field full"><label>Notas internas (solo equipo editorial)</label><textarea name="internal_notes" rows="3">'+safe(x.internal_notes||"")+'</textarea></div></div><p class="message" data-enquiry-message></p><div class="actions"><button type="submit">Guardar cambios</button><button type="button" class="secondary" data-enquiry-cancel>Cancelar</button></div></form></article>').join(""):'<p class="muted">No hay solicitudes comerciales.</p>';
+ enquiryRoot.querySelectorAll("[data-ad-attachment]").forEach(button=>button.addEventListener("click",async()=>{const item=enquiryById.get(button.dataset.adAttachment);if(!item?.attachment_path)return;button.disabled=true;const originalLabel=button.textContent;button.textContent="Preparando enlace seguro…";try{const {data,error}=await client.storage.from("news-submissions").createSignedUrl(item.attachment_path,3600);if(error)throw error;const link=document.createElement("a");link.href=data.signedUrl;link.target="_blank";link.rel="noopener";link.textContent=originalLabel.replace("Abrir adjunto: ","");link.className="secondary";link.textContent="Descargar: "+link.textContent;button.replaceWith(link);}catch(error){button.disabled=false;button.textContent=originalLabel;say("globalMessage","No se pudo abrir el adjunto: "+(error?.message||"error de Storage"));}}));
  enquiryRoot.querySelectorAll("[data-enquiry-campaign]").forEach(b=>b.addEventListener("click",()=>prepareAdFromEnquiry(enquiryById.get(b.dataset.enquiryCampaign))));
  enquiryRoot.querySelectorAll("[data-enquiry-edit]").forEach(b=>b.addEventListener("click",()=>{const form=enquiryRoot.querySelector('[data-enquiry-form="'+b.dataset.enquiryEdit+'"]');form.hidden=!form.hidden;}));
  enquiryRoot.querySelectorAll("[data-enquiry-cancel]").forEach(b=>b.addEventListener("click",()=>{b.closest("form").hidden=true;}));
@@ -974,11 +1035,12 @@ function wire(){
   $("cancelAdBtn").addEventListener("click",()=>{$("adForm").hidden=true;});
   $("cancelAdBtn2").addEventListener("click",()=>{$("adForm").hidden=true;});
   $("exportCoursesBtn").addEventListener("click",exportCoursesCsv);
-  $("courseSearch").addEventListener("input",filterCourses);
-  $("courseStatusFilter").addEventListener("change",filterCourses);
+  $("courseSearch").addEventListener("input",()=>{courseEnquiryPage=1;filterCourses();});
+  $("courseStatusFilter").addEventListener("change",()=>{courseEnquiryPage=1;filterCourses();});
   $("courseEnquiryList").addEventListener("change",e=>{const select=e.target.closest(".course-card-status");if(select)updateCourseStatus(select.dataset.courseId,select.value);});
   $("courseEnquiryList").addEventListener("click",e=>{
    const b=e.target.closest("button");if(!b)return;
+   if(b.dataset.coursePage){courseEnquiryPage=Number(b.dataset.coursePage);filterCourses();return;}
    if(b.dataset.saveCourseNotes){saveCourseNotes(b.dataset.saveCourseNotes);return;}
    if(b.dataset.discardCourse){discardCourse(b.dataset.discardCourse);return;}
    if(b.dataset.deleteCourse){deleteCourse(b.dataset.deleteCourse);return;}
@@ -986,9 +1048,15 @@ function wire(){
   $("directorySubmissionList").addEventListener("click",handleDirectoryAction);
   $("directoryAdminList").addEventListener("click",handleDirectoryAction);
   $("submissionsList").addEventListener("click",handleSubmissionAction);
+  $("submissionsList").addEventListener("click",e=>{const b=e.target.closest("[data-submission-page]");if(b){submissionPage=Number(b.dataset.submissionPage);renderSubmissions();}});
+  $("directorySubmissionList").addEventListener("click",e=>{const b=e.target.closest("[data-directory-sub-page]");if(b){directorySubmissionPage=Number(b.dataset.directorySubPage);renderDirectoryAdmin();}});
+  $("directoryAdminList").addEventListener("click",e=>{const b=e.target.closest("[data-directory-list-page]");if(b){directoryListingPage=Number(b.dataset.directoryListPage);renderDirectoryAdmin();}});
+
   $("uploadImageBtn").addEventListener("click",uploadArticleImage);
   $("refreshInboxBtn").addEventListener("click",loadInbox);
   $("inboxList").addEventListener("click",async e=>{
+    const pageButton=e.target.closest("[data-inbox-page]");
+    if(pageButton){inboxPage=Number(pageButton.dataset.inboxPage);renderInbox();return;}
     const draftButton=e.target.closest("[data-draft]");
     const openArticleButton=e.target.closest("[data-open-article]");
     const rejectButton=e.target.closest("[data-reject]");
@@ -1038,17 +1106,9 @@ function wire(){
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
     ["overview","articles","opinionAuthors","briefing","inbox","sources","submissions","directory","courses","ads","printEdition"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!==b.dataset.tab;});
-    if(b.dataset.tab==="articles")loadArticles();
-    if(b.dataset.tab==="opinionAuthors")loadOpinionAuthorsAdmin();
-    if(b.dataset.tab==="briefing")loadBriefings();
-    if(b.dataset.tab==="inbox")loadInbox();
-    if(b.dataset.tab==="sources")loadSources();
-    if(b.dataset.tab==="submissions")loadSubmissions();
-    if(b.dataset.tab==="overview")loadOverview();
-    if(b.dataset.tab==="directory")loadDirectoryAdmin();
-    if(b.dataset.tab==="courses")loadCourses();
-    if(b.dataset.tab==="ads")loadAds();
-    if(b.dataset.tab==="printEdition")loadPrintAccess();
+    const tabLoaders={articles:loadArticles,opinionAuthors:loadOpinionAuthorsAdmin,briefing:loadBriefings,inbox:loadInbox,sources:loadSources,submissions:loadSubmissions,overview:loadOverview,directory:loadDirectoryAdmin,courses:loadCourses,ads:loadAds,printEdition:loadPrintAccess};
+    const loader=tabLoaders[b.dataset.tab];
+    if(loader)loadAdminTabOnce(b.dataset.tab,loader);
   }));
 }
 window.addEventListener("error",event=>{

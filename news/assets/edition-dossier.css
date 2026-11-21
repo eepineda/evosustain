@@ -315,3 +315,28 @@
  body.dossier-printing #dossierRoot .dossier-directory-page .dossier-card{padding:2mm 3mm!important;margin:1.5mm 0 0!important;}
  body.dossier-printing #dossierRoot .dossier-directory-page .dossier-card p{font-size:7.3pt!important;line-height:1.2!important;}
 }
+
+
+/* Página de contacto: reservar espacio real para el pie y compactar el contenido */
+#dossierRoot .dossier-contact-page .dossier-content{flex:1 1 0;min-height:0;overflow:hidden;padding-bottom:3mm;}
+#dossierRoot .dossier-contact-page .dossier-kicker{margin-bottom:1.5mm;font-size:6.5pt;}
+#dossierRoot .dossier-contact-page h1{font-size:22pt!important;line-height:1.02!important;margin-bottom:2mm!important;}
+#dossierRoot .dossier-contact-page .dossier-deck{font-size:9pt!important;line-height:1.2!important;padding-bottom:2mm!important;margin-bottom:2.5mm!important;}
+#dossierRoot .dossier-contact-page h2{font-size:11pt!important;line-height:1.1!important;margin:2.5mm 0 1.2mm!important;padding-top:1.5mm!important;}
+#dossierRoot .dossier-contact-page p{font-size:8pt!important;line-height:1.25!important;margin-bottom:1.5mm!important;}
+#dossierRoot .dossier-contact-page .dossier-list{margin:1mm 0 2mm!important;padding-left:4mm!important;}
+#dossierRoot .dossier-contact-page .dossier-list li{font-size:7.8pt!important;line-height:1.2!important;margin-bottom:.7mm!important;}
+#dossierRoot .dossier-contact-page .dossier-card{padding:2mm 3mm!important;margin:2mm 0!important;}
+#dossierRoot .dossier-contact-page .dossier-card p{font-size:7.5pt!important;line-height:1.2!important;margin:0!important;}
+#dossierRoot .dossier-contact-page .dossier-quote{font-size:13pt!important;line-height:1.15!important;margin:3mm 0!important;padding:2mm 0 2mm 4mm!important;}
+#dossierRoot .dossier-contact-page .dossier-footer{position:static!important;flex:0 0 auto!important;margin-top:auto!important;min-height:5mm!important;padding-top:2mm!important;padding-bottom:1mm!important;background:#fff!important;z-index:1;}
+@media print{
+ body.dossier-printing #dossierRoot .dossier-contact-page .dossier-content{flex:1 1 0!important;min-height:0!important;overflow:hidden!important;padding-bottom:3mm!important;}
+ body.dossier-printing #dossierRoot .dossier-contact-page h1{font-size:22pt!important;}
+ body.dossier-printing #dossierRoot .dossier-contact-page .dossier-deck{font-size:9pt!important;}
+ body.dossier-printing #dossierRoot .dossier-contact-page h2{font-size:11pt!important;}
+ body.dossier-printing #dossierRoot .dossier-contact-page p{font-size:8pt!important;line-height:1.25!important;}
+ body.dossier-printing #dossierRoot .dossier-contact-page .dossier-list li{font-size:7.8pt!important;line-height:1.2!important;}
+ body.dossier-printing #dossierRoot .dossier-contact-page .dossier-quote{font-size:13pt!important;margin:3mm 0!important;}
+ body.dossier-printing #dossierRoot .dossier-contact-page .dossier-footer{position:static!important;flex:0 0 auto!important;margin-top:auto!important;background:#fff!important;}
+}

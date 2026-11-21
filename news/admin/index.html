@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#102b4e">
   <meta name="robots" content="noindex,nofollow">
   <title>Acceso editorial | Evoford News</title>
-  <link rel="stylesheet" href="./admin.css?v=20261114-briefing1">
+  <link rel="stylesheet" href="./admin.css?v=20261121-richtext1">
   <link rel="stylesheet" href="./modern-admin.css?v=1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="/news/admin/admin-auth.js?v=20261120-dual-admins1"></script>
@@ -103,14 +103,41 @@
             <div class="field"><label for="category">Sección</label><select id="category"><option>Internacional</option><option>Política</option><option>Economía</option><option>Seguridad</option><option>Tecnología</option><option>Opinión</option><option>Clima</option><option>Sociedad</option><option>Evoford Briefing</option></select></div>
             <div class="field"><label for="author">Autor</label><input id="author" value="EDWIN PINEDA CARRASCO"></div><div class="field full"><label><input id="isFeatured" type="checkbox" style="width:auto;vertical-align:middle"> Destacar en portada</label><small class="muted">Si está marcado, el artículo podrá ocupar uno de los dos espacios principales de la portada. Si no, seguirá en su sección y en el listado de noticias.</small></div>
             <div class="field full"><label for="summary">Resumen</label><textarea id="summary" rows="2"></textarea></div>
-            <div class="field full"><label for="content">Texto del artículo</label><textarea id="content" rows="12" required></textarea><small class="muted">Para aprobar y publicar: redacta al menos 500 caracteres propios, elimina las instrucciones del borrador e identifica al autor.</small></div>
+            <div class="field full"><label for="content">Texto del artículo</label><div class="rich-toolbar" role="toolbar" aria-label="Formato del artículo" data-editor="content">
+  <button type="button" data-format="bold" title="Negrita"><strong>B</strong></button>
+  <button type="button" data-format="italic" title="Cursiva"><em>I</em></button>
+  <button type="button" data-format="h2" title="Subtítulo">H2</button>
+  <button type="button" data-format="h3" title="Subtítulo pequeño">H3</button>
+  <button type="button" data-format="ul" title="Lista">• Lista</button>
+  <button type="button" data-format="quote" title="Cita">“ ”</button>
+  <button type="button" data-format="link" title="Enlace">Enlace</button>
+</div>
+<textarea id="content" rows="12" required></textarea><small class="muted">Para aprobar y publicar: redacta al menos 500 caracteres propios, elimina las instrucciones del borrador e identifica al autor.</small></div>
             <div class="field"><label for="country">País principal</label><input id="country" placeholder="Por verificar"></div>
             <div class="field"><label for="region">Región</label><input id="region" placeholder="Europe, Americas…"></div>
             <div class="field"><label for="language">Idioma principal</label><select id="language"><option value="es">Español</option><option value="en">English</option></select></div>
             <div class="field full"><label for="summaryEn">Resumen en inglés</label><textarea id="summaryEn" rows="2"></textarea></div>
             <div class="field full"><label for="summaryEs">Resumen en español</label><textarea id="summaryEs" rows="2"></textarea></div>
-            <div class="field full"><label for="contentEn">Article text (English)</label><textarea id="contentEn" rows="10"></textarea></div>
-            <div class="field full"><label for="contentEs">Texto del artículo en español</label><textarea id="contentEs" rows="10"></textarea></div>
+            <div class="field full"><label for="contentEn">Article text (English)</label><div class="rich-toolbar" role="toolbar" aria-label="Formato del artículo" data-editor="contentEn">
+  <button type="button" data-format="bold" title="Negrita"><strong>B</strong></button>
+  <button type="button" data-format="italic" title="Cursiva"><em>I</em></button>
+  <button type="button" data-format="h2" title="Subtítulo">H2</button>
+  <button type="button" data-format="h3" title="Subtítulo pequeño">H3</button>
+  <button type="button" data-format="ul" title="Lista">• Lista</button>
+  <button type="button" data-format="quote" title="Cita">“ ”</button>
+  <button type="button" data-format="link" title="Enlace">Enlace</button>
+</div>
+<textarea id="contentEn" rows="10"></textarea></div>
+            <div class="field full"><label for="contentEs">Texto del artículo en español</label><div class="rich-toolbar" role="toolbar" aria-label="Formato del artículo" data-editor="contentEs">
+  <button type="button" data-format="bold" title="Negrita"><strong>B</strong></button>
+  <button type="button" data-format="italic" title="Cursiva"><em>I</em></button>
+  <button type="button" data-format="h2" title="Subtítulo">H2</button>
+  <button type="button" data-format="h3" title="Subtítulo pequeño">H3</button>
+  <button type="button" data-format="ul" title="Lista">• Lista</button>
+  <button type="button" data-format="quote" title="Cita">“ ”</button>
+  <button type="button" data-format="link" title="Enlace">Enlace</button>
+</div>
+<textarea id="contentEs" rows="10"></textarea></div>
             <div class="field full translation-check"><p class="eyebrow">CONTROL DE IDIOMAS</p><p id="translationStatus" class="message" role="status">Completa titular y texto en español e inglés. El estado se actualizará al abrir un artículo guardado.</p><small class="muted">El panel conserva ambas versiones. Completa y revisa la traducción antes de aprobar o publicar; el sistema bloqueará la publicación si falta un idioma.</small></div>
             <div class="field full"><label for="imageFile">Fotografía desde tu dispositivo (JPG, PNG o WebP; máximo 8 MB)</label><input id="imageFile" type="file" accept="image/jpeg,image/png,image/webp"><button type="button" id="uploadImageBtn" class="secondary">Subir fotografía</button><p id="imageMessage" class="message" role="status"></p><img id="imagePreview" alt="Vista previa de la fotografía" hidden style="max-width:100%;max-height:320px;object-fit:contain;margin-top:12px"><label for="imageUrl">O utiliza una URL de imagen</label><input id="imageUrl" type="url" placeholder="https://…"></div>
             <div class="field"><label for="sourceTitle">Medio original</label><input id="sourceTitle" placeholder="El País, BBC, Reuters…"></div>

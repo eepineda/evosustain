@@ -240,6 +240,7 @@ let overviewLoadedAt=0;
 let overviewLoadPromise=null;
 const OVERVIEW_CACHE_TTL_MS=30_000;
 async function loadOverview(force=false){
+ if(force)overviewQueryCache.clear();
  if(!force&&overviewLoadedAt&&Date.now()-overviewLoadedAt<OVERVIEW_CACHE_TTL_MS)return;
  if(overviewLoadPromise)return overviewLoadPromise;
  overviewLoadPromise=(async()=>{

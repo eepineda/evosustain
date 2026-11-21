@@ -154,7 +154,10 @@ async function loadArticle(){
  // Render the article's editorial HTML with a strict allow-list. Older code escaped
  // every tag and printed the markup to readers instead of rendering its structure.
  function renderArticleBody(raw){
-   const source=String(raw||"").replace(/\\(?=<\/?[a-z])/gi,"").trim();
+   const encoded=String(raw||"").replace(/\\(?=<\/?[a-z])/gi,"").trim();
+   const decoder=document.createElement("textarea");
+   decoder.innerHTML=encoded;
+   const source=decoder.value;
    const parsed=new DOMParser().parseFromString("<div>"+source+"</div>","text/html");
    const allowed=new Set(["P","H2","H3","UL","OL","LI","STRONG","B","EM","I","BLOCKQUOTE","A","BR","HR"]);
    function cleanNode(node){

@@ -13,34 +13,77 @@
     node.textContent=value||"";
     node.classList.toggle("is-error",!!bad);
   };
+  let currentCourseSlug = COURSE;
   const view = name => {
     gate.querySelectorAll("[data-academy-view]").forEach(el => el.hidden=el.dataset.academyView!==name);
     gate.hidden=false;
+    gate.querySelector(".academy-gate-card").classList.toggle("academy-gate-card-wide",name==="dashboard");
     document.querySelector(".virtual-shell").style.display="none";
   };
   const showCourse = () => {
     gate.hidden=true;
     document.querySelector(".virtual-shell").style.display="block";
   };
+  const renderCourseCards = (enrollments, progressRows) => {
+    const host=$("academyCourseCards");
+    host.replaceChildren();
+    if(!enrollments.length){
+      const empty=document.createElement("div");
+      empty.className="academy-dashboard-empty";
+      empty.textContent="Todavía no tienes cursos con acceso activo. Puedes solicitar admisión desde la página de acceso.";
+      host.append(empty);return;
+    }
+    const counts={};
+    (progressRows||[]).forEach(row=>{counts[row.course_slug]=(counts[row.course_slug]||0)+1;});
+    enrollments.forEach(enrollment=>{
+      const card=document.createElement("article");card.className="academy-course-card";
+      const tag=document.createElement("span");tag.className="academy-course-tag";tag.textContent="MATRÍCULA ACTIVA";
+      const title=document.createElement("h2");title.textContent=enrollment.course_title||enrollment.course_slug;
+      const description=document.createElement("p");
+      const isIa=enrollment.course_slug==="ia-practica";
+      description.textContent=isIa?"Formación práctica en inteligencia artificial aplicada. Diez módulos, ejercicios y proyecto final.":"Curso autorizado en tu cuenta. El contenido se habilitará en este espacio cuando esté publicado.";
+      card.append(tag,title,description);
+      const count=counts[enrollment.course_slug]||0;
+      const total=isIa?20:null;
+      if(total!==null){
+        const bar=document.createElement("div");bar.className="academy-course-progress";
+        const fill=document.createElement("span");fill.style.width=Math.min(100,Math.round(count/total*100))+"%";bar.append(fill);
+        const label=document.createElement("div");label.className="academy-course-progress-label";label.textContent=count+" de "+total+" lecciones completadas";
+        card.append(bar,label);
+      }
+      const button=document.createElement("button");button.type="button";button.className="academy-course-open";
+      button.textContent=isIa?"Entrar al curso":"Contenido próximamente";
+      button.disabled=!isIa;
+      if(isIa)button.addEventListener("click",()=>openCourse(enrollment.course_slug));
+      card.append(button);host.append(card);
+    });
+  };
+  const openCourse = async slug => {
+    if(slug!==COURSE){message("academyDashboardMessage","Este curso todavía no tiene contenido publicado.",true);return;}
+    currentCourseSlug=slug;
+    const {data:rows,error}=await client.from("academy_progress").select("lesson_index").eq("user_id",currentUser.id).eq("course_slug",slug);
+    if(error){view("dashboard");message("academyDashboardMessage","No se pudo cargar el progreso de este curso.",true);return;}
+    window.evofordAcademySetProgress((rows||[]).map(x=>Number(x.lesson_index)));
+    showCourse();window.evofordAcademyStart?.();
+  };
+  const showDashboard = async () => {
+    view("checking");
+    const {data:enrollments,error}=await client.from("academy_enrollments").select("course_slug,course_title,status").eq("user_id",currentUser.id).eq("status","active").order("approved_at",{ascending:false});
+    if(error){view("login");message("academyLoginMessage","No se pudieron cargar tus cursos. Vuelve a iniciar sesión.",true);return;}
+    const {data:progressRows,error:progressError}=await client.from("academy_progress").select("course_slug,lesson_index").eq("user_id",currentUser.id);
+    if(progressError){view("login");message("academyLoginMessage","No se pudo cargar tu progreso. Vuelve a iniciar sesión.",true);return;}
+    renderCourseCards(enrollments||[],progressRows||[]);
+    view("dashboard");
+  };
   const checkAccess = async user => {
     currentUser=user;
     if(inviteFlow){view("password");return;}
-    view("checking");
-    const {data,error}=await client.from("academy_enrollments").select("id,status,course_slug")
-      .eq("user_id",user.id).eq("course_slug",COURSE).maybeSingle();
-    if(error){view("login");message("academyLoginMessage","No se pudo comprobar tu autorización. Inténtalo de nuevo.",true);return;}
-    if(!data || data.status!=="active"){view("pending");$("academyPendingEmail").textContent=user.email||"";return;}
-    const {data:rows,error:progressError}=await client.from("academy_progress").select("lesson_index")
-      .eq("user_id",user.id).eq("course_slug",COURSE);
-    if(progressError){view("login");message("academyLoginMessage","No se pudo cargar tu progreso. Vuelve a iniciar sesión.",true);return;}
-    window.evofordAcademySetProgress((rows||[]).map(x=>Number(x.lesson_index)));
-    showCourse();
-    window.evofordAcademyStart?.();
+    await showDashboard();
   };
   window.evofordAcademySaveLesson = async index => {
     if(!currentUser)return;
     const {error}=await client.from("academy_progress").upsert({
-      user_id:currentUser.id,course_slug:COURSE,lesson_index:Number(index),completed_at:new Date().toISOString()
+      user_id:currentUser.id,course_slug:currentCourseSlug,lesson_index:Number(index),completed_at:new Date().toISOString()
     },{onConflict:"user_id,course_slug,lesson_index"});
     if(error) message("academyRuntimeMessage","No se pudo guardar el avance. Comprueba tu conexión.",true);
     else message("academyRuntimeMessage","Progreso guardado en tu cuenta.");
@@ -81,6 +124,8 @@
     const {data}=await client.auth.getUser();if(data.user)await checkAccess(data.user);
   });
   $("academyLogoutButton")?.addEventListener("click",async()=>{await client.auth.signOut();currentUser=null;view("login");});
+  $("academyMyCourses")?.addEventListener("click",showDashboard);
+  $("academyDashboardLogout")?.addEventListener("click",async()=>{await client.auth.signOut();currentUser=null;view("login");});
   $("academyRequestToggle").addEventListener("click",()=>view("request"));
   $("academyBackLogin").addEventListener("click",()=>view("login"));
   $("academyForgotToggle").addEventListener("click",()=>view("forgot"));

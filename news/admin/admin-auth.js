@@ -277,6 +277,10 @@ async function loadPrintAccess(){const list=$("printAccessList");if(!list)return
 async function addPrintAccess(event){event.preventDefault();const email=$("newPrintAccessEmail").value.trim().toLowerCase();try{await invokePrintEdition("add_access",{email});$("newPrintAccessEmail").value="";printAccessMessage("Correo aprobado.");await loadPrintAccess();}catch(error){printAccessMessage(error.message||"No se pudo aprobar el correo.");}}
 async function deletePrintAccess(email,button){if(!confirm("¿Eliminar "+email+" de la lista de correos autorizados?"))return;button.disabled=true;try{await invokePrintEdition("delete_access",{email});printAccessMessage("Correo eliminado.");await loadPrintAccess();}catch(error){printAccessMessage(error.message||"No se pudo eliminar el correo.");button.disabled=false;}}
 function filterArticles(){
+  if(typeof window.filterArticles==="function" && window.filterArticles!==filterArticles){
+    window.filterArticles();
+    return;
+  }
   const query=($("articleSearch")?.value||"").trim().toLocaleLowerCase("es");
   const status=$("articleStatusFilter")?.value||"";
   const items=$("articleList").querySelectorAll("[data-article-item]");

@@ -301,13 +301,24 @@ function opinionAuthorText(author,field){
  if(field==="bio")return "Edwin Pineda Carrasco is a columnist, entrepreneur and information technology professional. He holds university qualifications from Spain and is currently pursuing a BSc (Hons) in Cyber Security in London, United Kingdom. His interests include innovation, entrepreneurship, technology, digital transformation, cybersecurity and current affairs. Through Evoford News, he shares perspectives on the technological, economic and social challenges shaping our time.";
  return author[field]||"";
 }
-async function loadOpinionAuthors(){
- const root=document.getElementById("opinionAuthors");if(!root||!window.supabase)return;
- const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
- const {data,error}=await client.from("opinion_authors").select("name,profession,bio,photo_url").eq("active",true).order("display_order",{ascending:true}).order("name",{ascending:true});
- if(error){root.innerHTML='<p class="muted">'+(currentLanguage==="en"?"Authors could not be loaded.":"No se pudieron cargar los autores.")+'</p>';console.error("Evoford News authors:",error.message);return;}
+let opinionAuthorsCache=null;
+let opinionAuthorsLoadPromise=null;
+function renderOpinionAuthors(root,data){
  if(!data?.length){root.innerHTML='<p class="muted">'+(currentLanguage==="en"?"Author profiles will appear here soon.":"Los perfiles de los autores aparecerán aquí próximamente.")+'</p>';return;}
  root.innerHTML='<div class="opinion-authors-heading">'+(currentLanguage==="en"?"AUTHORS & CONTRIBUTORS":"AUTORES Y COLABORADORES")+'</div>'+data.map(author=>'<article class="opinion-author">'+(author.photo_url&&/^https:\/\//i.test(author.photo_url)?'<img class="opinion-author-photo" src="'+escapeHtml(author.photo_url)+'" alt="Retrato de '+escapeHtml(author.name)+'" loading="lazy">':'<span class="opinion-author-placeholder" aria-hidden="true">'+escapeHtml(author.name.trim().slice(0,1).toUpperCase())+'</span>')+'<div class="opinion-author-copy"><h3>'+escapeHtml(author.name)+'</h3>'+(opinionAuthorText(author,"profession")?'<p class="opinion-author-profession">'+escapeHtml(opinionAuthorText(author,"profession"))+'</p>':'')+(opinionAuthorText(author,"bio")?'<p>'+escapeHtml(opinionAuthorText(author,"bio"))+'</p>':'')+'</div></article>').join("");
+}
+async function loadOpinionAuthors(){
+ const root=document.getElementById("opinionAuthors");if(!root||!window.supabase)return;
+ if(opinionAuthorsCache){renderOpinionAuthors(root,opinionAuthorsCache);return;}
+ if(opinionAuthorsLoadPromise){await opinionAuthorsLoadPromise;return;}
+ opinionAuthorsLoadPromise=(async()=>{
+  const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+  const {data,error}=await client.from("opinion_authors").select("name,profession,bio,photo_url").eq("active",true).order("display_order",{ascending:true}).order("name",{ascending:true});
+  if(error){root.innerHTML='<p class="muted">'+(currentLanguage==="en"?"Authors could not be loaded.":"No se pudieron cargar los autores.")+'</p>';console.error("Evoford News authors:",error.message);return;}
+  opinionAuthorsCache=data||[];
+  renderOpinionAuthors(root,opinionAuthorsCache);
+ })();
+ try{await opinionAuthorsLoadPromise;}finally{opinionAuthorsLoadPromise=null;}
 }
 
 const EVO_FAV_KEY="evoford-news-favorites-v1";

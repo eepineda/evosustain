@@ -127,7 +127,7 @@
     message("academyRequestMessage",tr("Enviando solicitud…","Submitting application…"));
     try{
       const payload={full_name:$("academyRequestName").value.trim(),email:$("academyRequestEmail").value.trim().toLowerCase(),
-        course_interest:"Aprender a utilizar la inteligencia artificial · EVOFORD ACADEMY",message:$("academyRequestMessageText").value.trim()};
+        course_interest:"Aprender a utilizar la inteligencia artificial · EVOFORD ACADEMY",message:"País: "+$("academyRequestCountry").value.trim()+"\\nCiudad: "+$("academyRequestCity").value.trim()+"\\n\\n"+$("academyRequestMessageText").value.trim()};
       const {error}=await client.from("course_enquiries").insert(payload);
       if(error)throw error;
       e.target.reset();message("academyRequestMessage",tr("Solicitud recibida. El equipo revisará tus datos y te contactará por correo.","Application received. Our team will review your details and contact you by email."));

@@ -663,6 +663,8 @@ $("directoryEditForm")?.addEventListener("submit",async event=>{
 
 let courseEnquiries=[];
 let courseEnquiryById=new Map();
+let courseEnquiryPage=1;
+const COURSE_ENQUIRIES_PER_PAGE=20;
 function courseStatusLabel(status){return ({received:"Recibida",contacted:"Contactada",enrolled:"Matriculada",closed:"Cerrada",discarded:"Descartada"})[status]||status;}
 function indexCourseSearch(item){item._searchText=String(item.full_name||"").toLocaleLowerCase("es")+" "+String(item.email||"").toLocaleLowerCase("es")+" "+String(item.course_interest||"").toLocaleLowerCase("es")+" "+String(item.message||"").toLocaleLowerCase("es")+" "+String(item.internal_notes||"").toLocaleLowerCase("es");return item;}
 function filterCourses(){
@@ -674,12 +676,17 @@ function filterCourses(){
   if(counts[item.status]!==undefined)counts[item.status]++;
   if((!status||item.status===status)&&(!q||(item._searchText||"").includes(q)))filtered.push(item);
  }
- $("courseCount").textContent=filtered.length+" de "+courseEnquiries.length+" solicitudes";
+ const totalPages=Math.max(1,Math.ceil(filtered.length/COURSE_ENQUIRIES_PER_PAGE));
+ courseEnquiryPage=Math.min(Math.max(1,courseEnquiryPage),totalPages);
+ const pageItems=filtered.slice((courseEnquiryPage-1)*COURSE_ENQUIRIES_PER_PAGE,courseEnquiryPage*COURSE_ENQUIRIES_PER_PAGE);
+ $("courseCount").textContent=filtered.length+" de "+courseEnquiries.length+" solicitudes · Página "+courseEnquiryPage+" de "+totalPages;
  $("courseStats").innerHTML=[["Recibidas",counts.received],["Contactadas",counts.contacted],["Matriculadas",counts.enrolled],["Cerradas",counts.closed],["Descartadas",counts.discarded]].map(([label,n])=>'<div class="course-stat"><strong>'+n+'</strong><span>'+label+'</span></div>').join("");
- $("courseEnquiryList").innerHTML=filtered.length?filtered.map(x=>{
+ const cards=pageItems.map(x=>{
   const date=x.created_at?new Date(x.created_at).toLocaleString("es-GB",{dateStyle:"medium",timeStyle:"short"}):"Fecha no disponible";
   return '<article class="item course-enquiry-card"><div class="course-enquiry-main"><p class="eyebrow">'+safe(date)+' · '+safe(courseStatusLabel(x.status))+'</p><h3>'+safe(x.full_name)+'</h3><p><a href="mailto:'+safe(x.email)+'">'+safe(x.email)+'</a></p><p><strong>Curso:</strong> '+safe(x.course_interest)+'</p><p>'+safe(x.message).replace(/\n/g,"<br>")+'</p></div><div class="course-enquiry-manage"><label>Estado<select class="course-card-status" data-course-id="'+safe(x.id)+'"><option value="received" '+(x.status==="received"?"selected":"")+'>Recibida</option><option value="contacted" '+(x.status==="contacted"?"selected":"")+'>Contactada</option><option value="enrolled" '+(x.status==="enrolled"?"selected":"")+'>Matriculada</option><option value="closed" '+(x.status==="closed"?"selected":"")+'>Cerrada</option><option value="discarded" '+(x.status==="discarded"?"selected":"")+'>Descartada</option></select></label><label>Notas internas<textarea class="course-card-notes" data-course-notes="'+safe(x.id)+'" rows="3" maxlength="3000" placeholder="Ej.: enviar precio, llamar el viernes, pendiente de financiación…">'+safe(x.internal_notes||"")+'</textarea></label><button type="button" class="secondary" data-save-course-notes="'+safe(x.id)+'">Guardar notas</button><div class="course-danger-actions"><button type="button" class="secondary" data-discard-course="'+safe(x.id)+'">Descartar solicitud</button><button type="button" class="danger" data-delete-course="'+safe(x.id)+'">Eliminar definitivamente</button></div></div></article>';
- }).join(""):'<p class="muted">No hay solicitudes que coincidan con estos filtros.</p>';
+ }).join("");
+ const pager=filtered.length>COURSE_ENQUIRIES_PER_PAGE?'<nav class="admin-pagination" aria-label="Páginas de solicitudes"><button type="button" class="secondary" data-course-page="'+(courseEnquiryPage-1)+'" '+(courseEnquiryPage===1?'disabled':'')+'>Anterior</button><span>Página '+courseEnquiryPage+' / '+totalPages+'</span><button type="button" class="secondary" data-course-page="'+(courseEnquiryPage+1)+'" '+(courseEnquiryPage===totalPages?'disabled':'')+'>Siguiente</button></nav>':"";
+ $("courseEnquiryList").innerHTML=cards+pager+(filtered.length?"":'<p class="muted">No hay solicitudes que coincidan con estos filtros.</p>');
 }
 
 function exportCoursesCsv(){
@@ -1006,11 +1013,12 @@ function wire(){
   $("cancelAdBtn").addEventListener("click",()=>{$("adForm").hidden=true;});
   $("cancelAdBtn2").addEventListener("click",()=>{$("adForm").hidden=true;});
   $("exportCoursesBtn").addEventListener("click",exportCoursesCsv);
-  $("courseSearch").addEventListener("input",filterCourses);
-  $("courseStatusFilter").addEventListener("change",filterCourses);
+  $("courseSearch").addEventListener("input",()=>{courseEnquiryPage=1;filterCourses();});
+  $("courseStatusFilter").addEventListener("change",()=>{courseEnquiryPage=1;filterCourses();});
   $("courseEnquiryList").addEventListener("change",e=>{const select=e.target.closest(".course-card-status");if(select)updateCourseStatus(select.dataset.courseId,select.value);});
   $("courseEnquiryList").addEventListener("click",e=>{
    const b=e.target.closest("button");if(!b)return;
+   if(b.dataset.coursePage){courseEnquiryPage=Number(b.dataset.coursePage);filterCourses();return;}
    if(b.dataset.saveCourseNotes){saveCourseNotes(b.dataset.saveCourseNotes);return;}
    if(b.dataset.discardCourse){discardCourse(b.dataset.discardCourse);return;}
    if(b.dataset.deleteCourse){deleteCourse(b.dataset.deleteCourse);return;}

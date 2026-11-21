@@ -26,6 +26,23 @@
         <button type="button" class="secondary" data-page="next" ${page===pages?"disabled":""}>Siguiente</button>
         <button type="button" class="secondary" data-page="last" ${page===pages?"disabled":""} aria-label="Última página">»</button>
       </div>`;
+    // Bind controls directly after each render; pagination remains functional
+    // even if another panel script replaces or intercepts a parent listener.
+    root.querySelectorAll("[data-page]").forEach(button => {
+      button.addEventListener("click", event => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!button.disabled) changePage(button.dataset.page);
+      });
+    });
+    const pageInput = root.querySelector("[data-page-input]");
+    pageInput?.addEventListener("change", () => changePage("jump", pageInput.value));
+    pageInput?.addEventListener("keydown", event => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        changePage("jump", pageInput.value);
+      }
+    });
   }
 
   window.renderArticlePage = function () {

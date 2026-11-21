@@ -1,38 +1,38 @@
 /* EVOFORD NEWS · membrete institucional A4 alineado con la identidad de la web */
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap');
-.letter-studio{max-width:1120px;margin:22px auto;padding:24px;background:#fff;border:1px solid #d9dee5;border-radius:12px;color:#171717;font-family:'DM Sans',Arial,sans-serif;box-sizing:border-box}
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Libre+Baskerville:wght@600;700;800&display=swap');
+.letter-studio{max-width:1120px;margin:22px auto;padding:24px;background:#fff;border:1px solid #d9dee5;border-radius:12px;color:#171717;font-family:'Source Sans 3',Arial,sans-serif;box-sizing:border-box}
 .letter-studio[hidden]{display:none!important}
 .letter-studio__head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;border-bottom:1px solid #d9dee5;padding-bottom:16px}
 .letter-studio__eyebrow{margin:0 0 6px;color:#c70000;font-size:10px;font-weight:700;letter-spacing:.15em}
-.letter-studio__head h2{margin:0;color:#052962;font:700 28px/1.15 'Playfair Display',Georgia,serif}
+.letter-studio__head h2{margin:0;color:#052962;font:700 28px/1.15 'Libre Baskerville',Georgia,serif}
 .letter-studio__head p:last-child{color:#626b75;font-size:14px;line-height:1.5}
 .letter-studio__form{max-width:520px;display:grid;gap:8px;padding:20px 0}
 .letter-studio__form label{margin-top:5px;color:#171717;font-size:13px;font-weight:700}
-.letter-studio__form input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbd4dd;border-radius:7px;background:#fff;color:#171717;font:15px 'DM Sans',Arial,sans-serif}
+.letter-studio__form input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbd4dd;border-radius:7px;background:#fff;color:#171717;font:15px 'Source Sans 3',Arial,sans-serif}
 .letter-studio__form input:focus{outline:2px solid #b7c7d8;border-color:#1b64a5}
 .letter-studio__actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.letter-studio__actions button,.letter-secondary{padding:11px 15px;border:1px solid #052962;border-radius:6px;background:#052962;color:#fff;font:700 13px 'DM Sans',Arial,sans-serif;cursor:pointer}
+.letter-studio__actions button,.letter-secondary{padding:11px 15px;border:1px solid #052962;border-radius:6px;background:#052962;color:#fff;font:700 13px 'Source Sans 3',Arial,sans-serif;cursor:pointer}
 .letter-studio__actions button+button{background:#c70000;border-color:#c70000}
 .letter-secondary{background:#fff;color:#052962}
 .letter-studio__hint{color:#626b75;font-size:12px;line-height:1.5}
-.letter-paper{width:210mm;min-height:297mm;box-sizing:border-box;margin:10px auto;padding:15mm 19mm 14mm;background:#fff;border:1px solid #d9dee5;box-shadow:0 5px 24px #05296214;color:#171717;font-family:'DM Sans',Arial,sans-serif}
+.letter-paper{width:210mm;min-height:297mm;box-sizing:border-box;margin:10px auto;padding:15mm 19mm 14mm;background:#fff;border:1px solid #d9dee5;box-shadow:0 5px 24px #05296214;color:#171717;font-family:'Source Sans 3',Arial,sans-serif}
 .letter-masthead{border-bottom:0;padding-bottom:0}
-.letter-topline{display:flex;justify-content:space-between;gap:12px;padding-bottom:2.5mm;border-bottom:1px solid #d9dee5;color:#626b75;font:700 6.5pt 'DM Sans',Arial,sans-serif;letter-spacing:.13em;text-transform:uppercase}
-.letter-brand{display:block;margin:4mm 0 0;padding:2mm 0 1mm;text-align:center;color:#052962;font:800 39pt/1 'Playfair Display',Georgia,serif;letter-spacing:-2.2pt}.letter-brand span{color:#c70000;font-style:normal}
+.letter-topline{display:flex;justify-content:space-between;gap:12px;padding-bottom:2.5mm;border-bottom:1px solid #d9dee5;color:#626b75;font:700 6.5pt 'Source Sans 3',Arial,sans-serif;letter-spacing:.13em;text-transform:uppercase}
+.letter-brand{display:block;margin:4mm 0 0;padding:2mm 0 1mm;text-align:center;color:#052962;font:800 39pt/1 'Libre Baskerville',Georgia,serif;letter-spacing:-2.2pt}.letter-brand span{color:#c70000;font-style:normal}
 .letter-brand span{color:#c70000}
-.letter-tagline{margin-top:2mm;color:#626b75;font:700 7pt 'DM Sans',Arial,sans-serif;letter-spacing:.17em}
+.letter-tagline{margin-top:2mm;color:#626b75;font:700 7pt 'Source Sans 3',Arial,sans-serif;letter-spacing:.17em}
 .letter-rule{height:3px;width:100%;margin-top:3.5mm;background:linear-gradient(90deg,#052962 0 78%,#c70000 78% 100%)}
-.letter-document-title{margin:5mm 0 0;color:#052962;font:700 11pt 'DM Sans',Arial,sans-serif;letter-spacing:.09em;text-transform:uppercase}
-.letter-date{text-align:right;margin:6mm 0 5mm;color:#626b75;font:9pt 'DM Sans',Arial,sans-serif}
+.letter-document-title{margin:5mm 0 0;color:#052962;font:700 11pt 'Source Sans 3',Arial,sans-serif;letter-spacing:.09em;text-transform:uppercase}
+.letter-date{text-align:right;margin:6mm 0 5mm;color:#626b75;font:9pt 'Source Sans 3',Arial,sans-serif}
 .letter-recipient{margin-bottom:5mm}
-.letter-recipient span{display:block;margin-bottom:1.5mm;color:#c70000;font:700 7pt 'DM Sans',Arial,sans-serif;letter-spacing:.14em}
-.letter-recipient strong{font:700 11pt 'DM Sans',Arial,sans-serif;color:#052962}
-.letter-body{font:9pt/1.43 'DM Sans',Arial,sans-serif;color:#252b33;text-align:justify}
+.letter-recipient span{display:block;margin-bottom:1.5mm;color:#c70000;font:700 7pt 'Source Sans 3',Arial,sans-serif;letter-spacing:.14em}
+.letter-recipient strong{font:700 11pt 'Source Sans 3',Arial,sans-serif;color:#052962}
+.letter-body{font:9pt/1.43 'Source Sans 3',Arial,sans-serif;color:#252b33;text-align:justify}
 .letter-body p{margin:0 0 2.7mm}
 .letter-body ul{margin:0 0 2.7mm;padding-left:5mm}
 .letter-body li{margin:0 0 1.25mm;padding-left:1mm}
 .letter-url{font-weight:700;color:#c70000!important;text-align:left}
-.letter-signature{margin-top:5mm;padding-top:3mm;border-top:1px solid #d9dee5;display:grid;gap:1.2mm;color:#626b75;font:7.5pt/1.35 'DM Sans',Arial,sans-serif}
+.letter-signature{margin-top:5mm;padding-top:3mm;border-top:1px solid #d9dee5;display:grid;gap:1.2mm;color:#626b75;font:7.5pt/1.35 'Source Sans 3',Arial,sans-serif}
 .letter-signature strong{color:#052962;font-size:9pt;letter-spacing:.08em}
 @page{size:A4 portrait;margin:0}
 @media(max-width:760px){.letter-studio{margin:10px;padding:15px}.letter-studio__head{display:block}.letter-paper{width:100%;min-height:0;padding:8%;font-size:90%}.letter-brand{font-size:clamp(24px,7vw,31pt)}.letter-topline{font-size:6pt}.letter-document-title{font-size:9pt}}
@@ -47,7 +47,7 @@
 /* Redes sociales en la carta institucional */
 .letter-social-intro{margin-top:1.5mm!important;margin-bottom:1.2mm!important}
 .letter-social{display:flex;align-items:center;gap:5mm;margin:0 0 2.7mm!important;text-align:left!important}
-.letter-social a{display:inline-flex;align-items:center;gap:1.5mm;color:#052962!important;font:700 8.5pt 'DM Sans',Arial,sans-serif;text-decoration:none}
+.letter-social a{display:inline-flex;align-items:center;gap:1.5mm;color:#052962!important;font:700 8.5pt 'Source Sans 3',Arial,sans-serif;text-decoration:none}
 .letter-social-icon{display:inline-flex;width:6mm;height:6mm;align-items:center;justify-content:center;border-radius:50%;color:#fff;font:700 10pt Arial,sans-serif}
 .letter-facebook{background:#1877f2}
 .letter-instagram{background:#c13584;font-size:13pt}

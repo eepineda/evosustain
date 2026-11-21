@@ -68,7 +68,13 @@
       <textarea id="campaignCaption" rows="7" maxlength="2200">📰 Ya está disponible la nueva edición de EVOFORD NEWS. Información, opinión y análisis para entender la actualidad.
 
 #EvofordNews #Actualidad #Noticias</textarea>
-      <div class="campaign-step campaign-step--second"><span>02</span><div><strong>Revisión y publicación</strong><small>Primero guarda el borrador. Publicar requiere aprobación expresa.</small></div></div>
+      <div class="campaign-step campaign-step--second"><span>02</span><div><strong>Selecciona el contenido</strong><small>Genera la vista previa y marca solo las páginas que quieres incluir.</small></div></div>
+      <div class="campaign-studio__actions campaign-studio__selection-actions">
+        <button id="campaignPreviewBtn" type="button" class="secondary-tool">Generar vista previa para elegir</button>
+        <button id="campaignSelectAllBtn" type="button" class="secondary-tool" disabled>Seleccionar todas</button>
+        <button id="campaignSelectNoneBtn" type="button" class="secondary-tool" disabled>Quitar selección</button>
+      </div>
+      <div class="campaign-step"><span>03</span><div><strong>Revisión y publicación</strong><small>Guarda el borrador. Publicar requiere aprobación expresa.</small></div></div>
       <div class="campaign-studio__actions">
         <button id="campaignSaveBtn" type="button">Preparar y guardar borrador</button>
         <button id="campaignPublishBtn" type="button" disabled>Aprobar y publicar</button>
@@ -109,7 +115,7 @@ window.addEventListener("unhandledrejection",function(event){
 <script src="/news/assets/edition-print-v13.js?v=14"></script>
 <script src="/news/assets/edition-png.js?v=5"></script>
 <script src="/news/assets/edition.js?v=38"></script>
-<script src="/news/assets/edition-campaign.js?v=13"></script>
+<script src="/news/assets/edition-campaign.js?v=14"></script>
 <script src="/news/assets/social-graphic.js?v=14"></script>
 <script src="/news/assets/social-hub.js?v=2"></script>
 <script src="/news/assets/edition-dossier.js?v=12"></script>

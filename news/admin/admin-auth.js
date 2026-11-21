@@ -675,7 +675,35 @@ $("directoryEditForm")?.addEventListener("submit",async event=>{
   say("globalMessage","Ficha actualizada correctamente.");closeDirectoryEdit();await loadDirectoryAdmin();
 });
 
-let courseEnquiries=[];
+
+let academyStudents=[];
+async function loadAcademyStudents(){
+ const root=$("academyStudentList");if(!root)return;
+ root.innerHTML='<p class="muted">Consultando alumnos y progreso…</p>';
+ const {data,error}=await client.functions.invoke("academy-admin",{body:{action:"list"}});
+ if(error||data?.error){root.innerHTML='<p class="muted">No se pudieron cargar los alumnos: '+safe(data?.error||error?.message||"error desconocido")+'</p>';return;}
+ academyStudents=data?.students||[];filterAcademyStudents();
+}
+function filterAcademyStudents(){
+ const q=($("academyStudentSearch")?.value||"").trim().toLocaleLowerCase("es"),status=$("academyStudentStatus")?.value||"";
+ const rows=academyStudents.filter(x=>(!status||x.status===status)&&[x.full_name,x.email,x.course_title,x.course_slug].some(v=>String(v||"").toLocaleLowerCase("es").includes(q)));
+ $("academyStudentCount").textContent=rows.length+" de "+academyStudents.length+" matrículas";
+ $("academyStudentList").innerHTML=rows.length?rows.map(x=>'<article class="item"><div><p class="eyebrow">'+safe(x.status_label)+' · '+safe(x.course_title)+'</p><h3>'+safe(x.full_name||"Alumno")+'</h3><p><a href="mailto:'+safe(x.email||"")+'">'+safe(x.email||"Correo no disponible")+'</a></p><p class="muted">Matrícula: '+safe(x.created_at?new Date(x.created_at).toLocaleDateString("es-GB"):"—")+' · '+x.completed_lessons+' lecciones completadas</p><div class="progress-track" style="height:8px;background:#e8edf4;border-radius:8px;overflow:hidden;max-width:420px"><span style="display:block;height:100%;width:'+Math.min(100,Math.round(x.completed_lessons/40*100))+'%;background:#28618e"></span></div><p class="muted">'+Math.min(40,x.completed_lessons)+' / 40 lecciones · '+Math.min(100,Math.round(x.completed_lessons/40*100))+'%</p></div><div class="item-actions"><label>Estado<select data-academy-enrollment="'+safe(x.id)+'"><option value="active" '+(x.status==="active"?"selected":"")+'>Activo</option><option value="suspended" '+(x.status==="suspended"?"selected":"")+'>Suspendido</option><option value="completed" '+(x.status==="completed"?"selected":"")+'>Finalizado</option></select></label><button type="button" class="secondary" data-academy-progress="'+safe(x.user_id)+'" data-course="'+safe(x.course_slug)+'">Ver progreso</button></div></article>').join(""):'<p class="muted">No hay matrículas que coincidan con estos filtros.</p>';
+}
+async function updateAcademyEnrollment(id,status){
+ const {data,error}=await client.functions.invoke("academy-admin",{body:{action:"update_status",enrollment_id:id,status}});
+ if(error||data?.error){say("globalMessage","No se pudo actualizar la matrícula: "+(data?.error||error?.message));await loadAcademyStudents();return;}
+ const item=academyStudents.find(x=>x.id===id);if(item)item.status=status;
+ filterAcademyStudents();say("globalMessage","Estado de matrícula actualizado.");
+}
+async function showAcademyProgress(userId,courseSlug){
+ const item=academyStudents.find(x=>x.user_id===userId&&x.course_slug===courseSlug);if(!item)return;
+ const {data,error}=await client.functions.invoke("academy-admin",{body:{action:"progress",user_id:userId,course_slug:courseSlug}});
+ if(error||data?.error){say("globalMessage","No se pudo consultar el progreso: "+(data?.error||error?.message));return;}
+ const lessons=(data.lessons||[]).map(x=>"Lección "+(x.lesson_index+1)+" · "+new Date(x.completed_at).toLocaleDateString("es-GB")).join("\n");
+ alert("Progreso de "+(item.full_name||item.email)+"\n"+item.course_title+"\n\n"+(lessons||"Todavía no hay lecciones completadas."));
+}
+\nlet courseEnquiries=[];
 let courseEnquiryById=new Map();
 let courseEnquiryPage=1;
 const COURSE_ENQUIRIES_PER_PAGE=20;
@@ -1036,7 +1064,7 @@ function wire(){
   $("sourceForm").addEventListener("submit",addSource);
   $("refreshSubmissionsBtn").addEventListener("click",loadSubmissions);
   $("refreshDirectoryBtn").addEventListener("click",loadDirectoryAdmin);
-  $("refreshCoursesBtn").addEventListener("click",loadCourses);
+  $("refreshCoursesBtn").addEventListener("click",loadCourses);\n  $("refreshAcademyStudentsBtn")?.addEventListener("click",loadAcademyStudents);\n  $("academyStudentSearch")?.addEventListener("input",filterAcademyStudents);\n  $("academyStudentStatus")?.addEventListener("change",filterAcademyStudents);\n  $("academyStudentList")?.addEventListener("change",e=>{const s=e.target.closest("[data-academy-enrollment]");if(s)updateAcademyEnrollment(s.dataset.academyEnrollment,s.value);});\n  $("academyStudentList")?.addEventListener("click",e=>{const b=e.target.closest("[data-academy-progress]");if(b)showAcademyProgress(b.dataset.academyProgress,b.dataset.course);});
   $("newAdBtn").addEventListener("click",()=>editAd(null));
   $("adForm").addEventListener("submit",saveAd);
   $("adCreativeMobileFile").addEventListener("change",()=>updateMobileCreativePreview($("adCreativeMobileFile").files[0]));
@@ -1116,7 +1144,7 @@ function wire(){
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
     ["overview","articles","opinionAuthors","briefing","inbox","sources","submissions","directory","courses","ads","printEdition"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!==b.dataset.tab;});
-    const tabLoaders={articles:loadArticles,opinionAuthors:loadOpinionAuthorsAdmin,briefing:loadBriefings,inbox:loadInbox,sources:loadSources,submissions:loadSubmissions,overview:loadOverview,directory:loadDirectoryAdmin,courses:loadCourses,ads:loadAds,printEdition:loadPrintAccess};
+    const tabLoaders={articles:loadArticles,opinionAuthors:loadOpinionAuthorsAdmin,briefing:loadBriefings,inbox:loadInbox,sources:loadSources,submissions:loadSubmissions,overview:loadOverview,directory:loadDirectoryAdmin,courses:async()=>{await Promise.all([loadCourses(),loadAcademyStudents()]);},ads:loadAds,printEdition:loadPrintAccess};
     const loader=tabLoaders[b.dataset.tab];
     if(loader)loadAdminTabOnce(b.dataset.tab,loader);
   }));

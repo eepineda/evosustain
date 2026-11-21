@@ -136,3 +136,6 @@ footer{margin-top:34px;background:#fff}
  .overview-kpi strong{font-size:28px}
  .overview-kpi span{font-size:11px}
 }
+
+/* Ensure the page-size control remains directly interactive above the sticky toolbar. */
+.article-management .article-filters select#articlePageSize{position:relative;z-index:32;pointer-events:auto;appearance:auto;-webkit-appearance:menulist;cursor:pointer;}

@@ -145,7 +145,17 @@
     const list = $("articleList");
     $("articleSearch")?.addEventListener("input",()=>{currentPage=1;window.renderArticlePage();});
     filters.addEventListener("change",()=>{currentPage=1;window.renderArticlePage();});
-    $("articlePageSize")?.addEventListener("change",event=>{pageSize=Number(event.target.value)||10;currentPage=1;window.renderArticlePage();});
+    const pageSizeSelect = $("articlePageSize");
+    if (pageSizeSelect) {
+      const applyPageSize = () => {
+        const selected = Number(pageSizeSelect.value);
+        pageSize = [10,25,50,100].includes(selected) ? selected : 10;
+        currentPage = 1;
+        window.renderArticlePage();
+      };
+      pageSizeSelect.addEventListener("change", applyPageSize);
+      pageSizeSelect.addEventListener("input", applyPageSize);
+    }
     $("articleSort")?.addEventListener("change",()=>{currentPage=1;window.renderArticlePage();});
     $("articleCategoryFilter")?.addEventListener("change",()=>{currentPage=1;window.renderArticlePage();});
     document.querySelectorAll("[data-article-quick]").forEach(button=>button.addEventListener("click",()=>{

@@ -17,8 +17,8 @@
   let currentLanguage = document.documentElement.lang === "en" ? "en" : "es";
   const defaultTitle = { es: "Nueva edición de EVOFORD NEWS", en: "New EVOFORD NEWS edition" };
   const defaultCaption = {
-    es: "📰 Ya está disponible la nueva edición de EVOFORD NEWS. Información, opinión y análisis para entender la actualidad.\n\n#EvofordNews #Actualidad #Noticias",
-    en: "📰 The new edition of EVOFORD NEWS is now available. News, opinion and analysis to understand current affairs.\n\n#EvofordNews #News #CurrentAffairs"
+    es: "📰 Ya está disponible la nueva edición de EVOFORD NEWS. Información, opinión y análisis para entender la actualidad. Lee, comenta y comparte.\n\n#EvofordNews #RepublicaDominicana #DominicanosEnElExterior #NoticiasRD #Actualidad #ComunidadDominicana #ReinoUnido #Espana",
+    en: "📰 The new edition of EVOFORD NEWS is now available. News, opinion and analysis to understand current affairs. Read, comment and share.\n\n#EvofordNews #DominicanRepublic #DominicansAbroad #DominicanNews #CurrentAffairs #DominicanCommunity #UnitedKingdom #Spain"
   };
   const copy = {
     es: {

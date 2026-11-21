@@ -201,3 +201,27 @@ body.academy-dialog-open{overflow:hidden}
  #academyStudentList .item-actions{grid-template-columns:minmax(0,1fr) auto}
  .academy-progress-window{padding:23px 18px}
 }
+
+/* Academy admissions workspace */
+#coursesTab .course-stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:18px 0}
+#coursesTab .course-stat{display:flex;align-items:center;gap:10px;text-align:left;min-height:58px;padding:12px 14px;border:1px solid #dce5ee;border-top:3px solid #2b638f;border-radius:11px;background:#fff;color:#42566b;cursor:pointer}
+#coursesTab .course-stat strong{font:700 23px Georgia,serif;color:#12365a}#coursesTab .course-stat span{font-size:12px}
+#coursesTab .course-stat:hover,#coursesTab .course-stat.is-active{border-color:#7da4c3;background:#f1f7fc;box-shadow:0 4px 14px #163e5c12}
+#coursesTab .course-bulk-toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:13px 15px;margin:12px 0;border:1px solid #e0e8f0;border-radius:12px;background:#f7f9fc}
+#coursesTab .course-bulk-toolbar>div{display:flex;gap:8px;flex-wrap:wrap}#coursesTab .course-bulk-toolbar button{font-size:12px;padding:9px 12px}#coursesTab .course-bulk-toolbar button:disabled{opacity:.45;cursor:not-allowed}
+#coursesTab .course-select-all,#coursesTab .course-row-select{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:650;color:#42566b}
+#coursesTab .course-select-all input,#coursesTab .course-row-select input{width:16px;height:16px;accent-color:#245b87}
+#coursesTab .course-enquiry-card{grid-template-columns:minmax(0,1fr) minmax(230px,270px);gap:22px;padding:19px 20px;border-radius:14px}
+#coursesTab .course-enquiry-card.is-selected{border-color:#6b9fc6;background:#f8fbfe}
+#coursesTab .course-card-top{display:flex;align-items:center;gap:10px}#coursesTab .course-card-top .eyebrow{margin:0}
+#coursesTab .course-enquiry-main h3{margin:7px 0;font:700 21px Georgia,serif;color:#173958}
+#coursesTab .course-enquiry-main p{margin:5px 0;font-size:13px;line-height:1.5;overflow-wrap:anywhere}
+#coursesTab .course-location{display:inline-block;padding:5px 9px;border-radius:7px;background:#f0f5f9;color:#45617b}#coursesTab .course-message{color:#65778a}
+#coursesTab .course-enquiry-manage{display:grid;gap:10px;padding:14px;border:1px solid #e3eaf1;border-radius:11px;background:#f8fafc}
+#coursesTab .course-enquiry-manage>label{font-size:11px;font-weight:700;color:#38516a}#coursesTab .course-enquiry-manage textarea{margin-top:5px;background:#fff}#coursesTab .course-enquiry-manage button{width:100%}
+#coursesTab .course-enquiry-manage .course-danger-actions{display:flex;gap:7px;flex-wrap:wrap;padding-top:9px;border-top:1px solid #dfe7ee}
+#coursesTab .course-enquiry-manage .course-danger-actions button{width:auto;flex:1;font-size:11px;padding:8px}
+#coursesTab .article-filters:has(#coursePageSize){grid-template-columns:minmax(220px,1.4fr) minmax(150px,.7fr) minmax(145px,.65fr) auto}
+#coursesTab #courseCount{align-self:end;padding-bottom:8px;white-space:nowrap}
+#coursesTab .admin-pagination{display:flex;justify-content:center;align-items:center;gap:14px;padding:18px}
+@media(max-width:760px){#coursesTab .course-stats{grid-template-columns:repeat(2,minmax(0,1fr))}#coursesTab .course-enquiry-card{grid-template-columns:1fr;padding:15px}#coursesTab .article-filters:has(#coursePageSize){grid-template-columns:1fr}#coursesTab #courseCount{white-space:normal;padding:0}#coursesTab .course-bulk-toolbar{align-items:flex-start;flex-direction:column}#coursesTab .course-enquiry-manage .course-danger-actions button{flex:1}}

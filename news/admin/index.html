@@ -9,9 +9,9 @@
   <meta name="robots" content="noindex,nofollow">
   <title>Acceso editorial | Evoford News</title>
   <link rel="stylesheet" href="./admin.css?v=20261121-richtext1">
-  <link rel="stylesheet" href="./modern-admin.css?v=20261121-academy2">
+  <link rel="stylesheet" href="./modern-admin.css?v=20261122-admissions1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="/news/admin/admin-auth.js?v=20261121-academy2"></script>
+  <script defer src="/news/admin/admin-auth.js?v=20261122-admissions1"></script>
   <script defer src="/news/admin/article-management.js?v=20261121-5"></script>
 </head>
 <body>
@@ -201,7 +201,8 @@
       <section id="coursesTab" class="tabview" hidden>
         <div class="section-head"><div><p class="eyebrow">EVOFORD ACADEMY</p><h2>Admisiones y alumnos</h2></div><button id="refreshCoursesBtn" class="secondary">Actualizar</button></div>
         <p class="muted">Revisa las solicitudes de admisión. Al aprobar una solicitud, se crea la cuenta del alumno y se envía una invitación segura por correo.</p>
-        <div id="courseStats" class="course-stats" aria-live="polite"></div><div class="section-head course-tools"><span class="muted">Puedes descargar una copia para seguimiento interno.</span><button type="button" id="exportCoursesBtn" class="secondary">Exportar CSV</button></div><div class="article-filters"><label class="filter-search" for="courseSearch">Buscar solicitud<input id="courseSearch" type="search" placeholder="Nombre, correo o curso…"></label><label class="filter-status" for="courseStatusFilter">Estado<select id="courseStatusFilter"><option value="">Todos los estados</option><option value="received">Recibida</option><option value="contacted">Contactada</option><option value="enrolled">Matriculada</option><option value="closed">Cerrada</option><option value="discarded">Descartada</option></select></label><p id="courseCount" class="muted" aria-live="polite">Cargando solicitudes…</p></div>
+        <div id="courseStats" class="course-stats" aria-live="polite"></div><div class="section-head course-tools"><span class="muted">Puedes descargar una copia para seguimiento interno.</span><button type="button" id="exportCoursesBtn" class="secondary">Exportar CSV</button></div><div class="article-filters"><label class="filter-search" for="courseSearch">Buscar solicitud<input id="courseSearch" type="search" placeholder="Nombre, correo, curso, país o ciudad…"></label><label class="filter-status" for="courseStatusFilter">Estado<select id="courseStatusFilter"><option value="">Todos los estados</option><option value="received">Recibida</option><option value="contacted">Contactada</option><option value="enrolled">Matriculada</option><option value="closed">Cerrada</option><option value="discarded">Descartada</option></select></label><label class="filter-status" for="coursePageSize">Mostrar<select id="coursePageSize"><option value="20">20 por página</option><option value="50">50 por página</option><option value="100">100 por página</option></select></label><p id="courseCount" class="muted" aria-live="polite">Cargando solicitudes…</p></div>
+        <div id="courseBulkToolbar" class="course-bulk-toolbar"><label class="course-select-all"><input type="checkbox" id="courseSelectPage"> Seleccionar página</label><span id="courseSelectedCount">0 seleccionadas</span><div><button type="button" class="secondary" id="courseBulkContact" disabled>Marcar contactadas</button><button type="button" class="secondary" id="courseBulkClose" disabled>Cerrar seleccionadas</button><button type="button" class="secondary" id="courseClearSelection" disabled>Limpiar selección</button></div></div>
         <div id="courseEnquiryList" class="list"><p class="muted">Cargando solicitudes…</p></div>
         <section class="panel" style="margin-top:24px">
           <div class="section-head"><div><p class="eyebrow">EVOFORD ACADEMY</p><h3>Alumnos matriculados</h3><p class="muted">Consulta cuentas, cursos asignados y progreso. Puedes activar, suspender o finalizar una matrícula.</p></div><button type="button" id="refreshAcademyStudentsBtn" class="secondary">Actualizar alumnos</button></div>

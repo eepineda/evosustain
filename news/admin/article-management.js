@@ -2,7 +2,7 @@
 (() => {
   const $ = id => document.getElementById(id);
   let currentPage = 1;
-  let pageSize = 25;
+  let pageSize = 10;
 
   function getItems() {
     return [...($("articleList")?.querySelectorAll("[data-article-item]") || [])];
@@ -128,7 +128,7 @@
     const list = $("articleList");
     $("articleSearch")?.addEventListener("input",()=>{currentPage=1;window.filterArticles();});
     filters.addEventListener("change",()=>{currentPage=1;window.filterArticles();});
-    $("articlePageSize")?.addEventListener("change",event=>{pageSize=Number(event.target.value)||25;currentPage=1;window.filterArticles();});
+    $("articlePageSize")?.addEventListener("change",event=>{pageSize=Number(event.target.value)||10;currentPage=1;window.filterArticles();});
     $("articleSort")?.addEventListener("change",()=>{currentPage=1;window.filterArticles();});
     $("articleCategoryFilter")?.addEventListener("change",()=>{currentPage=1;window.filterArticles();});
     document.querySelectorAll("[data-article-quick]").forEach(button=>button.addEventListener("click",()=>{

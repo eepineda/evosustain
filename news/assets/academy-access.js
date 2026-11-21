@@ -56,7 +56,7 @@
     finally{button.disabled=false;}
   });
   $("academyRequestForm").addEventListener("submit",async e=>{
-    e.preventDefault();const button=$("academyRequestButton");button.disabled=true;
+    e.preventDefault();if($("academyWebsite")?.value)return;const button=$("academyRequestButton");button.disabled=true;
     message("academyRequestMessage","Enviando solicitud…");
     try{
       const payload={full_name:$("academyRequestName").value.trim(),email:$("academyRequestEmail").value.trim().toLowerCase(),

@@ -7,6 +7,8 @@
   if (!gate || !window.supabase) return;
   const client = window.supabase.createClient(URL, KEY);
   let currentUser = null;
+  const language = () => window.evofordAcademyGetLanguage?.() || "es";
+  const tr = (es,en) => language()==="en"?en:es;
   let inviteFlow = /type=(invite|recovery)/.test(location.hash);
   const message = (id, value, bad=false) => {
     const node=$(id); if(!node)return;
@@ -30,48 +32,48 @@
     if(!enrollments.length){
       const empty=document.createElement("div");
       empty.className="academy-dashboard-empty";
-      empty.textContent="Todavía no tienes cursos con acceso activo. Puedes solicitar admisión desde la página de acceso.";
+      empty.textContent=tr("Todavía no tienes cursos con acceso activo. Puedes solicitar admisión desde la página de acceso.","You do not have any active courses yet. You can apply for admission from the sign-in page.");
       host.append(empty);return;
     }
     const counts={};
     (progressRows||[]).forEach(row=>{counts[row.course_slug]=(counts[row.course_slug]||0)+1;});
     enrollments.forEach(enrollment=>{
       const card=document.createElement("article");card.className="academy-course-card";
-      const tag=document.createElement("span");tag.className="academy-course-tag";tag.textContent="MATRÍCULA ACTIVA";
+      const tag=document.createElement("span");tag.className="academy-course-tag";tag.textContent=tr("MATRÍCULA ACTIVA","ACTIVE ENROLMENT");
       const title=document.createElement("h2");title.textContent=enrollment.course_title||enrollment.course_slug;
       const description=document.createElement("p");
       const isIa=enrollment.course_slug==="ia-practica";
-      description.textContent=isIa?"Formación práctica en inteligencia artificial aplicada. Diez módulos, ejercicios y proyecto final.":"Curso autorizado en tu cuenta. El contenido se habilitará en este espacio cuando esté publicado.";
+      description.textContent=isIa?tr("Formación práctica en inteligencia artificial aplicada. Diez módulos, ejercicios y proyecto final.","Practical training in applied artificial intelligence. Ten modules, exercises and a final project.") : tr("Curso autorizado en tu cuenta. El contenido se habilitará en este espacio cuando esté publicado.","This course is authorised for your account. Its content will be available here when published.");
       card.append(tag,title,description);
       const count=counts[enrollment.course_slug]||0;
       const total=isIa?20:null;
       if(total!==null){
         const bar=document.createElement("div");bar.className="academy-course-progress";
         const fill=document.createElement("span");fill.style.width=Math.min(100,Math.round(count/total*100))+"%";bar.append(fill);
-        const label=document.createElement("div");label.className="academy-course-progress-label";label.textContent=count+" de "+total+" lecciones completadas";
+        const label=document.createElement("div");label.className="academy-course-progress-label";label.textContent=language()==="en"?count+" of "+total+" lessons completed":count+" de "+total+" lecciones completadas";
         card.append(bar,label);
       }
       const button=document.createElement("button");button.type="button";button.className="academy-course-open";
-      button.textContent=isIa?"Entrar al curso":"Contenido próximamente";
+      button.textContent=isIa?tr("Entrar al curso","Open course"):tr("Contenido próximamente","Content coming soon");
       button.disabled=!isIa;
       if(isIa)button.addEventListener("click",()=>openCourse(enrollment.course_slug));
       card.append(button);host.append(card);
     });
   };
   const openCourse = async slug => {
-    if(slug!==COURSE){message("academyDashboardMessage","Este curso todavía no tiene contenido publicado.",true);return;}
+    if(slug!==COURSE){message("academyDashboardMessage",tr("Este curso todavía no tiene contenido publicado.","This course content has not been published yet."),true);return;}
     currentCourseSlug=slug;
     const {data:rows,error}=await client.from("academy_progress").select("lesson_index").eq("user_id",currentUser.id).eq("course_slug",slug);
-    if(error){view("dashboard");message("academyDashboardMessage","No se pudo cargar el progreso de este curso.",true);return;}
+    if(error){view("dashboard");message("academyDashboardMessage",tr("No se pudo cargar el progreso de este curso.","Could not load this course progress."),true);return;}
     window.evofordAcademySetProgress((rows||[]).map(x=>Number(x.lesson_index)));
     showCourse();window.evofordAcademyStart?.();
   };
   const showDashboard = async () => {
     view("checking");
     const {data:enrollments,error}=await client.from("academy_enrollments").select("course_slug,course_title,status").eq("user_id",currentUser.id).eq("status","active").order("approved_at",{ascending:false});
-    if(error){view("login");message("academyLoginMessage","No se pudieron cargar tus cursos. Vuelve a iniciar sesión.",true);return;}
+    if(error){view("login");message("academyLoginMessage",tr("No se pudieron cargar tus cursos. Vuelve a iniciar sesión.","Could not load your courses. Please sign in again."),true);return;}
     const {data:progressRows,error:progressError}=await client.from("academy_progress").select("course_slug,lesson_index").eq("user_id",currentUser.id);
-    if(progressError){view("login");message("academyLoginMessage","No se pudo cargar tu progreso. Vuelve a iniciar sesión.",true);return;}
+    if(progressError){view("login");message("academyLoginMessage",tr("No se pudo cargar tu progreso. Vuelve a iniciar sesión.","Could not load your progress. Please sign in again."),true);return;}
     renderCourseCards(enrollments||[],progressRows||[]);
     view("dashboard");
   };
@@ -85,12 +87,12 @@
     const {error}=await client.from("academy_progress").upsert({
       user_id:currentUser.id,course_slug:currentCourseSlug,lesson_index:Number(index),completed_at:new Date().toISOString()
     },{onConflict:"user_id,course_slug,lesson_index"});
-    if(error) message("academyRuntimeMessage","No se pudo guardar el avance. Comprueba tu conexión.",true);
-    else message("academyRuntimeMessage","Progreso guardado en tu cuenta.");
+    if(error) message("academyRuntimeMessage",tr("No se pudo guardar el avance. Comprueba tu conexión.","Could not save your progress. Check your connection."),true);
+    else message("academyRuntimeMessage",tr("Progreso guardado en tu cuenta.","Progress saved to your account."));
   };
   $("academyLoginForm").addEventListener("submit",async e=>{
     e.preventDefault();const button=$("academyLoginButton");button.disabled=true;
-    message("academyLoginMessage","Comprobando acceso…");
+    message("academyLoginMessage",tr("Comprobando acceso…","Checking access…"));
     try{
       const {data,error}=await client.auth.signInWithPassword({email:$("academyLoginEmail").value.trim().toLowerCase(),password:$("academyLoginPassword").value});
       if(error)throw error;
@@ -100,27 +102,27 @@
   });
   $("academyRequestForm").addEventListener("submit",async e=>{
     e.preventDefault();if($("academyWebsite")?.value)return;const button=$("academyRequestButton");button.disabled=true;
-    message("academyRequestMessage","Enviando solicitud…");
+    message("academyRequestMessage",tr("Enviando solicitud…","Submitting application…"));
     try{
       const payload={full_name:$("academyRequestName").value.trim(),email:$("academyRequestEmail").value.trim().toLowerCase(),
         course_interest:"Aprender a utilizar la inteligencia artificial · EVOFORD ACADEMY",message:$("academyRequestMessageText").value.trim()};
       const {error}=await client.from("course_enquiries").insert(payload);
       if(error)throw error;
-      e.target.reset();message("academyRequestMessage","Solicitud recibida. El equipo revisará tus datos y te contactará por correo.");
-    }catch(err){message("academyRequestMessage","No se pudo enviar la solicitud. Revisa los datos e inténtalo de nuevo.",true);}
+      e.target.reset();message("academyRequestMessage",tr("Solicitud recibida. El equipo revisará tus datos y te contactará por correo.","Application received. Our team will review your details and contact you by email."));
+    }catch(err){message("academyRequestMessage",tr("No se pudo enviar la solicitud. Revisa los datos e inténtalo de nuevo.","Could not submit your application. Check the details and try again."),true);}
     finally{button.disabled=false;}
   });
   $("academyForgotForm").addEventListener("submit",async e=>{
     e.preventDefault();const email=$("academyForgotEmail").value.trim().toLowerCase();
     const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo:"https://evoford.com/news/aula-virtual.html"});
-    message("academyForgotMessage",error?"No se pudo enviar el enlace de recuperación.":"Si la cuenta existe, recibirás un enlace para restablecer la contraseña.",!!error);
+    message("academyForgotMessage",error?tr("No se pudo enviar el enlace de recuperación.","Could not send the password reset link."):tr("Si la cuenta existe, recibirás un enlace para restablecer la contraseña.","If the account exists, you will receive a password reset link."),!!error);
   });
   $("academyPasswordForm").addEventListener("submit",async e=>{
     e.preventDefault();const password=$("academyNewPassword").value;
-    if(password.length<10){message("academyPasswordMessage","Utiliza al menos 10 caracteres.",true);return;}
+    if(password.length<10){message("academyPasswordMessage",tr("Utiliza al menos 10 caracteres.","Use at least 10 characters."),true);return;}
     const {error}=await client.auth.updateUser({password});
     if(error){message("academyPasswordMessage",error.message,true);return;}
-    inviteFlow=false;message("academyPasswordMessage","Contraseña configurada. Abriendo tu aula…");
+    inviteFlow=false;message("academyPasswordMessage",tr("Contraseña configurada. Abriendo tu aula…","Password set. Opening your classroom…"));
     const {data}=await client.auth.getUser();if(data.user)await checkAccess(data.user);
   });
   $("academyLogoutButton")?.addEventListener("click",async()=>{await client.auth.signOut();currentUser=null;view("login");});
@@ -134,7 +136,7 @@
   (async()=>{
     view("checking");
     const {data,error}=await client.auth.getSession();
-    if(error){view("login");message("academyLoginMessage","No se pudo iniciar el servicio de acceso.",true);return;}
+    if(error){view("login");message("academyLoginMessage",tr("No se pudo iniciar el servicio de acceso.","The sign-in service could not be started."),true);return;}
     if(data.session)await checkAccess(data.session.user);
     else if(inviteFlow)view("password");
     else view("login");

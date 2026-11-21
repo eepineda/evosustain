@@ -139,3 +139,65 @@ footer{margin-top:34px;background:#fff}
 
 /* Ensure the page-size control remains directly interactive above the sticky toolbar. */
 .article-management .article-filters select#articlePageSize{position:relative;z-index:32;pointer-events:auto;appearance:auto;-webkit-appearance:menulist;cursor:pointer;}
+
+
+/* EVOFORD Academy · vista de gestión de alumnos */
+#coursesTab> .panel:has(#academyStudentList){
+  margin-top:28px!important;padding:26px;border:1px solid #dce6ef;border-radius:18px;
+  background:linear-gradient(145deg,#fff 0%,#fbfdff 100%);box-shadow:0 14px 34px #1739570c
+}
+#coursesTab> .panel:has(#academyStudentList)>.section-head{align-items:center;margin-bottom:20px}
+#coursesTab> .panel:has(#academyStudentList)>.section-head h3{font-size:22px;color:#173958;margin:4px 0 6px}
+#coursesTab> .panel:has(#academyStudentList)>.section-head .muted{max-width:620px;line-height:1.55}
+#coursesTab> .panel:has(#academyStudentList)>.article-filters{
+ display:grid;grid-template-columns:minmax(220px,1.4fr) minmax(160px,.65fr) auto;align-items:end;
+ gap:12px;padding:15px 16px;margin:18px 0 14px;background:#f5f8fc;border:1px solid #e4ebf2;border-radius:13px
+}
+#academyStudentCount{font-size:12px;font-weight:700;color:#50677e;padding-bottom:9px}
+#academyStudentList{display:grid;gap:12px}
+#academyStudentList .item{
+ display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,260px);gap:22px;align-items:center;
+ padding:20px 22px;border:1px solid #e0e8f0;border-radius:14px;background:#fff;
+ box-shadow:0 4px 16px #18365308;transition:border-color .18s,box-shadow .18s
+}
+#academyStudentList .item:hover{border-color:#b9cddd;box-shadow:0 9px 24px #18365310}
+#academyStudentList .item h3{font:700 21px Georgia,serif;margin:4px 0 5px;color:#173958}
+#academyStudentList .item .eyebrow{font-size:10px;letter-spacing:.13em;color:#52728d}
+#academyStudentList .item p{margin:5px 0;font-size:13px}
+#academyStudentList .item a{font-weight:600;color:#245b87;text-decoration:none}
+#academyStudentList .item a:hover{text-decoration:underline}
+#academyStudentList .item>div:first-child{min-width:0}
+#academyStudentList .item-actions{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:9px}
+#academyStudentList .item-actions label{font-size:11px;font-weight:700}
+#academyStudentList .item-actions select{width:100%;margin-top:6px}
+#academyStudentList .item-actions button{height:44px;white-space:nowrap}
+#academyStudentList .progress-track{height:7px!important;max-width:460px!important;margin-top:10px}
+#academyStudentList .progress-track span{border-radius:99px}
+.academy-progress-dialog[hidden]{display:none}
+.academy-progress-dialog{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:20px}
+.academy-progress-backdrop{position:absolute;inset:0;background:#0d2238a8;backdrop-filter:blur(5px)}
+.academy-progress-window{position:relative;width:min(100%,590px);max-height:min(82vh,760px);overflow:auto;padding:30px;border:1px solid #e0e8f0;border-radius:20px;background:#fff;box-shadow:0 25px 80px #071b3040}
+.academy-progress-window h3{font:700 25px Georgia,serif;color:#173958;margin:5px 40px 4px 0}
+.academy-progress-close{position:absolute;right:18px;top:16px;width:36px;height:36px;padding:0;border-radius:50%;font-size:24px;background:#edf2f7;color:#28445f}
+.academy-progress-kpis{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0 13px}
+.academy-progress-kpis>div{padding:16px;border:1px solid #e3eaf1;border-radius:12px;background:#f7f9fc}
+.academy-progress-kpis strong{display:block;font:700 30px Georgia,serif;color:#17456b}
+.academy-progress-kpis span{font-size:12px;color:#62758a}
+.academy-progress-track{height:9px;background:#e8eef4;border-radius:99px;overflow:hidden}
+.academy-progress-track span{display:block;height:100%;background:linear-gradient(90deg,#1c527e,#5a91b7);border-radius:99px}
+.academy-progress-lessons{margin-top:22px}
+.academy-progress-lessons h4{font-size:13px;color:#36536e;margin-bottom:10px}
+.academy-lesson-row{display:flex;justify-content:space-between;gap:12px;padding:11px 2px;border-bottom:1px solid #edf1f5;font-size:13px}
+.academy-lesson-row span{display:flex;align-items:center;gap:9px;color:#263e54}
+.academy-lesson-row i{width:8px;height:8px;border-radius:50%;background:#23936a;box-shadow:0 0 0 3px #e6f5ee}
+.academy-lesson-row time{color:#718195;font-size:12px;white-space:nowrap}
+.academy-progress-window .actions{justify-content:flex-end;margin-top:20px}
+body.academy-dialog-open{overflow:hidden}
+@media(max-width:720px){
+ #coursesTab> .panel:has(#academyStudentList){padding:17px}
+ #coursesTab> .panel:has(#academyStudentList)>.article-filters{grid-template-columns:1fr}
+ #academyStudentCount{padding:0}
+ #academyStudentList .item{grid-template-columns:1fr;gap:15px;padding:17px}
+ #academyStudentList .item-actions{grid-template-columns:minmax(0,1fr) auto}
+ .academy-progress-window{padding:23px 18px}
+}

@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="./modern-admin.css?v=1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="/news/admin/admin-auth.js?v=20261121-richtext1"></script>
+  <script defer src="/news/admin/article-management.js?v=20261121-1"></script>
 </head>
 <body>
   <header class="topbar">
@@ -87,12 +88,26 @@
       </section>
       <section id="articlesTab" class="tabview" hidden>
         <div class="section-head"><div><p class="eyebrow">REDACCIÓN PROPIA</p><h2>Artículos y borradores</h2></div><button id="newArticleBtn">Nuevo artículo</button></div>
-        <div class="article-filters" aria-label="Filtros de artículos">
+        <div class="article-management" aria-label="Herramientas de gestión de artículos">
+          <div class="article-quick-filters" role="group" aria-label="Acceso rápido por estado">
+            <button type="button" class="article-quick active" data-article-quick="">Todos</button>
+            <button type="button" class="article-quick" data-article-quick="draft">Borradores</button>
+            <button type="button" class="article-quick" data-article-quick="pending">En revisión</button>
+            <button type="button" class="article-quick" data-article-quick="approved">Aprobados</button>
+            <button type="button" class="article-quick" data-article-quick="published">Publicados</button>
+            <button type="button" class="article-quick" data-article-quick="rejected">Descartados</button>
+          </div>
+          <div class="article-filters" aria-label="Filtros de artículos">
           <label class="filter-search" for="articleSearch">Buscar artículo<input id="articleSearch" type="search" placeholder="Titular, autor o sección…"></label>
           <label class="filter-status" for="articleStatusFilter">Estado<select id="articleStatusFilter"><option value="">Todos los estados</option><option value="draft">Borrador</option><option value="pending">En revisión</option><option value="approved">Aprobado</option><option value="published">Publicado</option><option value="rejected">Descartado</option></select></label>
-          <p id="articleFilterCount" class="muted" aria-live="polite">Todos los artículos</p>
+          <label class="filter-size" for="articlePageSize">Por página<select id="articlePageSize"><option value="25" selected>25</option><option value="50">50</option><option value="100">100</option></select></label>
+            <label class="filter-sort" for="articleSort">Ordenar<select id="articleSort"><option value="newest">Más recientes</option><option value="oldest">Más antiguas</option><option value="title">Título A–Z</option></select></label>
+            <p id="articleFilterCount" class="muted" aria-live="polite">Todos los artículos</p>
+          </div>
         </div>
+        <div id="articlePaginationTop" class="article-pagination" aria-label="Paginación de artículos"></div>
         <div id="articleList" class="list"><p class="muted">Cargando artículos…</p></div>
+        <div id="articlePaginationBottom" class="article-pagination" aria-label="Paginación de artículos"></div>
         <form id="articleForm" class="panel editor" hidden>
           <div class="section-head"><h2 id="formHeading">Nuevo artículo</h2><button type="button" id="cancelEdit" class="secondary">Cerrar</button></div>
           <input id="articleId" type="hidden">

@@ -889,7 +889,42 @@ async function saveAd(event){
 }
 
 
+
+function insertArticleFormat(textarea,format){
+  const start=textarea.selectionStart,end=textarea.selectionEnd,value=textarea.value;
+  const selected=value.slice(start,end);
+  let before="",after="",replacement=selected||"Texto";
+  if(format==="bold"){before="<strong>";after="</strong>";}
+  else if(format==="italic"){before="<em>";after="</em>";}
+  else if(format==="h2"){before="<h2>";after="</h2>";}
+  else if(format==="h3"){before="<h3>";after="</h3>";}
+  else if(format==="quote"){before="<blockquote>";after="</blockquote>";}
+  else if(format==="ul"){
+    replacement="<ul>"+(selected||"Elemento de lista").split(/\r?\n/).filter(Boolean).map(item=>"<li>"+item+"</li>").join("")+"</ul>";
+  }else if(format==="link"){
+    const url=window.prompt("Dirección del enlace (https://…)");
+    if(!url)return;
+    if(!/^https:\/\//i.test(url)){window.alert("Introduce una dirección https:// válida.");return;}
+    before='<a href="'+url.replace(/&/g,"&amp;").replace(/"/g,"&quot;")+'">';
+    after="</a>";
+  }
+  textarea.setRangeText(before+replacement+after,start,end,"select");
+  textarea.focus();
+  textarea.dispatchEvent(new Event("input",{bubbles:true}));
+}
+function wireArticleFormatters(){
+  document.querySelectorAll(".rich-toolbar").forEach(toolbar=>{
+    toolbar.addEventListener("click",event=>{
+      const button=event.target.closest("button[data-format]");
+      if(!button)return;
+      const editor=document.getElementById(toolbar.dataset.editor);
+      if(editor)insertArticleFormat(editor,button.dataset.format);
+    });
+  });
+}
+
 function wire(){
+  wireArticleFormatters();
   $("maintenanceToggleBtn").addEventListener("click",toggleMaintenance);
   $("refreshPrintAccessBtn")?.addEventListener("click",loadPrintAccess);
   $("addPrintAccessForm")?.addEventListener("submit",addPrintAccess);

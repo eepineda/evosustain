@@ -145,7 +145,20 @@ async function renderOverview(){
   ["Solicitudes comerciales",adVal("adEnquiriesTotal"),adVal("adEnquiriesReceived")+" recibidas"],
   ["Campañas pagadas",adVal("adCampaignsPaid"),adVal("adCampaignsUnpaid")+" sin pagar"]
  ];
- kpis.innerHTML=cards.map(([label,value,note])=>'<article class="overview-kpi"><span>'+safe(label)+'</span><strong>'+value+'</strong><small>'+safe(note)+'</small></article>').join("");
+ const kpiTone=label=>({
+  "Artículos publicados":"success",
+  "Envíos editoriales":"info",
+  "Solicitudes de formación":"warning",
+  "Solicitudes de directorio":"warning",
+  "Fichas del directorio":"success",
+  "Noticias RSS pendientes":"danger",
+  "Artículos en revisión":"danger",
+  "Solicitudes en el periodo":"info",
+  "Campañas publicitarias":"info",
+  "Solicitudes comerciales":"warning",
+  "Campañas pagadas":"success"
+}[label]||"info");
+ kpis.innerHTML=cards.map(([label,value,note])=>'<article class="overview-kpi tone-'+kpiTone(label)+'"><span>'+safe(label)+'</span><strong>'+value+'</strong><small>'+safe(note)+'</small></article>').join("");
  const bins=range===7?7:range===30?10:12;
  const unitDays=range/bins;
  const binStarts=Array.from({length:bins},(_,i)=>new Date(Date.now()-(bins-1-i)*unitDays*86400000));

@@ -33,9 +33,16 @@
     if (!list) return;
     const query = ($("articleSearch")?.value || "").trim().toLocaleLowerCase("es");
     const status = $("articleStatusFilter")?.value || "";
-    const category = $("articleCategoryFilter")?.value || "";
-    const sort = $("articleSort")?.value || "newest";
+    const categorySelect = $("articleCategoryFilter");
+    const selectedCategory = categorySelect?.value || "";
     const items = getItems();
+    if (categorySelect) {
+      const categories = [...new Set(items.map(item => item.dataset.category).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"es"));
+      categorySelect.innerHTML = '<option value="">Todas las secciones</option>' + categories.map(value => '<option value="' + value.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])) + '">' + value.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])) + '</option>').join("");
+      categorySelect.value = selectedCategory;
+    }
+    const category = categorySelect?.value || "";
+    const sort = $("articleSort")?.value || "newest";
 
     const filtered = items.filter(item =>
       (!query || (item.dataset.search || "").includes(query)) &&
@@ -65,10 +72,10 @@
       const value = button.dataset.articleQuick || "";
       button.classList.toggle("active", value === status && !category && !query);
       const total = value ? items.filter(item => item.dataset.status === value).length : items.length;
-      button.querySelector("small")?.remove();
+      button.textContent = ({"":"Todos","draft":"Borradores","pending":"En revisión","approved":"Aprobados","published":"Publicados","rejected":"Descartados"}[value] || value) + " ";
       const countNode = document.createElement("small");
       countNode.textContent = total;
-      button.append(" ", countNode);
+      button.appendChild(countNode);
     });
   };
 
@@ -119,7 +126,6 @@
     };
 
     const list = $("articleList");
-    new MutationObserver(() => { refreshCategories(); window.filterArticles(); }).observe(list,{childList:true});
     $("articleSearch")?.addEventListener("input",()=>{currentPage=1;window.filterArticles();});
     filters.addEventListener("change",()=>{currentPage=1;window.filterArticles();});
     $("articlePageSize")?.addEventListener("change",event=>{pageSize=Number(event.target.value)||25;currentPage=1;window.filterArticles();});
@@ -145,7 +151,6 @@
         if(event.target.matches("[data-page-input]")&&event.key==="Enter"){event.preventDefault();changePage("jump",event.target.value);}
       });
     });
-    refreshCategories();
     window.filterArticles();
   }
 

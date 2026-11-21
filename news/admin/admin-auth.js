@@ -697,7 +697,7 @@ function filterCourses(){
  $("courseStats").innerHTML=[["Recibidas",counts.received],["Contactadas",counts.contacted],["Matriculadas",counts.enrolled],["Cerradas",counts.closed],["Descartadas",counts.discarded]].map(([label,n])=>'<div class="course-stat"><strong>'+n+'</strong><span>'+label+'</span></div>').join("");
  const cards=pageItems.map(x=>{
   const date=x.created_at?new Date(x.created_at).toLocaleString("es-GB",{dateStyle:"medium",timeStyle:"short"}):"Fecha no disponible";
-  return '<article class="item course-enquiry-card"><div class="course-enquiry-main"><p class="eyebrow">'+safe(date)+' · '+safe(courseStatusLabel(x.status))+'</p><h3>'+safe(x.full_name)+'</h3><p><a href="mailto:'+safe(x.email)+'">'+safe(x.email)+'</a></p><p><strong>Curso:</strong> '+safe(x.course_interest)+'</p><p>'+safe(x.message).replace(/\n/g,"<br>")+'</p></div><div class="course-enquiry-manage"><label>Estado<select class="course-card-status" data-course-id="'+safe(x.id)+'"><option value="received" '+(x.status==="received"?"selected":"")+'>Recibida</option><option value="contacted" '+(x.status==="contacted"?"selected":"")+'>Contactada</option><option value="enrolled" '+(x.status==="enrolled"?"selected":"")+'>Matriculada</option><option value="closed" '+(x.status==="closed"?"selected":"")+'>Cerrada</option><option value="discarded" '+(x.status==="discarded"?"selected":"")+'>Descartada</option></select></label><label>Notas internas<textarea class="course-card-notes" data-course-notes="'+safe(x.id)+'" rows="3" maxlength="3000" placeholder="Ej.: enviar precio, llamar el viernes, pendiente de financiación…">'+safe(x.internal_notes||"")+'</textarea></label><button type="button" class="secondary" data-save-course-notes="'+safe(x.id)+'">Guardar notas</button><div class="course-danger-actions"><button type="button" class="secondary" data-discard-course="'+safe(x.id)+'">Descartar solicitud</button><button type="button" class="danger" data-delete-course="'+safe(x.id)+'">Eliminar definitivamente</button></div></div></article>';
+  return '<article class="item course-enquiry-card"><div class="course-enquiry-main"><p class="eyebrow">'+safe(date)+' · '+safe(courseStatusLabel(x.status))+'</p><h3>'+safe(x.full_name)+'</h3><p><a href="mailto:'+safe(x.email)+'">'+safe(x.email)+'</a></p><p><strong>Curso:</strong> '+safe(x.course_interest)+'</p><p>'+safe(x.message).replace(/\n/g,"<br>")+'</p></div><div class="course-enquiry-manage"><label>Estado<select class="course-card-status" data-course-id="'+safe(x.id)+'"><option value="received" '+(x.status==="received"?"selected":"")+'>Recibida</option><option value="contacted" '+(x.status==="contacted"?"selected":"")+'>Contactada</option><option value="enrolled" '+(x.status==="enrolled"?"selected":"")+'>Matriculada</option><option value="closed" '+(x.status==="closed"?"selected":"")+'>Cerrada</option><option value="discarded" '+(x.status==="discarded"?"selected":"")+'>Descartada</option></select></label><label>Notas internas<textarea class="course-card-notes" data-course-notes="'+safe(x.id)+'" rows="3" maxlength="3000" placeholder="Ej.: enviar precio, llamar el viernes, pendiente de financiación…">'+safe(x.internal_notes||"")+'</textarea></label>'+(x.status!=="enrolled"&&x.status!=="discarded"&&x.status!=="closed"?'<button type="button" class="secondary" data-approve-course-access="'+safe(x.id)+'">Aprobar acceso y enviar invitación</button>':'')+'<button type="button" class="secondary" data-save-course-notes="'+safe(x.id)+'">Guardar notas</button><div class="course-danger-actions"><button type="button" class="secondary" data-discard-course="'+safe(x.id)+'">Descartar solicitud</button><button type="button" class="danger" data-delete-course="'+safe(x.id)+'">Eliminar definitivamente</button></div></div></article>';
  }).join("");
  const pager=filtered.length>COURSE_ENQUIRIES_PER_PAGE?'<nav class="admin-pagination" aria-label="Páginas de solicitudes"><button type="button" class="secondary" data-course-page="'+(courseEnquiryPage-1)+'" '+(courseEnquiryPage===1?'disabled':'')+'>Anterior</button><span>Página '+courseEnquiryPage+' / '+totalPages+'</span><button type="button" class="secondary" data-course-page="'+(courseEnquiryPage+1)+'" '+(courseEnquiryPage===totalPages?'disabled':'')+'>Siguiente</button></nav>':"";
  $("courseEnquiryList").innerHTML=cards+pager+(filtered.length?"":'<p class="muted">No hay solicitudes que coincidan con estos filtros.</p>');
@@ -723,6 +723,15 @@ async function updateCourseStatus(id,status){
  if(error){say("globalMessage","No se pudo actualizar el estado: "+error.message);return;}
  const item=courseEnquiryById.get(String(id));if(item)item.status=status;
  filterCourses();
+}
+async function approveCourseAccess(id){
+ const item=courseEnquiryById.get(String(id));if(!item)return;
+ if(!confirm("¿Aprobar el acceso de "+item.full_name+" y enviarle una invitación por correo?"))return;
+ say("globalMessage","Creando cuenta e invitación para "+item.email+"…");
+ const {data,error}=await client.functions.invoke("academy-access",{body:{request_id:id}});
+ if(error||data?.error){say("globalMessage","No se pudo autorizar el acceso: "+(data?.error||error?.message||"error desconocido"));return;}
+ item.status="enrolled";filterCourses();
+ say("globalMessage","Acceso aprobado. Se ha enviado la invitación a "+item.email+".");
 }
 async function discardCourse(id){
  const item=courseEnquiryById.get(String(id));if(!item)return;
@@ -1040,6 +1049,7 @@ function wire(){
   $("courseEnquiryList").addEventListener("change",e=>{const select=e.target.closest(".course-card-status");if(select)updateCourseStatus(select.dataset.courseId,select.value);});
   $("courseEnquiryList").addEventListener("click",e=>{
    const b=e.target.closest("button");if(!b)return;
+   if(b.dataset.approveCourseAccess){approveCourseAccess(b.dataset.approveCourseAccess);return;}
    if(b.dataset.coursePage){courseEnquiryPage=Number(b.dataset.coursePage);filterCourses();return;}
    if(b.dataset.saveCourseNotes){saveCourseNotes(b.dataset.saveCourseNotes);return;}
    if(b.dataset.discardCourse){discardCourse(b.dataset.discardCourse);return;}

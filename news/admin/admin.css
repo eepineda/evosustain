@@ -159,3 +159,8 @@
 @media(max-width:380px){.rss-source-summary{gap:8px}.rss-source-stat{padding:12px}.rss-source-stat strong{font-size:21px}}
 
 .briefing-guidance{margin:18px 0;padding:18px 20px;background:#f7f9fc;border-left:3px solid #102b4e}.briefing-guidance p{margin:8px 0 0;line-height:1.55}.briefing-guidance strong{color:#102b4e}
+
+.rich-toolbar{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 7px;padding:8px;background:#f5f7fa;border:1px solid var(--line);border-radius:4px}
+.rich-toolbar button{min-width:36px;padding:7px 10px;background:#fff;color:var(--navy);border:1px solid #cbd5df;border-radius:3px;font-size:12px}
+.rich-toolbar button:hover{background:#eaf0f7}
+.rich-toolbar button:focus-visible{outline:2px solid var(--red);outline-offset:2px}

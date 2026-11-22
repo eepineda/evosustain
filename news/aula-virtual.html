@@ -102,41 +102,11 @@ return '<details class="v-practical-lab" open><summary>'+ (es?'LABORATORIO GUIAD
 '</ul></article>'+
 '<article><b>2 · '+(es?'Primero prueba sin código':'Try it without code first')+'</b><ol>'+
 '<li>'+(es?'Abre ChatGPT.':'Open ChatGPT.')+'</li><li>'+(es?'Copia el prompt de abajo.':'Copy the prompt below.')+'</li><li>'+(es?'Pega el texto de preguntas frecuentes ficticias.':'Paste fictional FAQ text.')+'</li><li>'+(es?'Comprueba si responde solo con esa información y reconoce lo que desconoce.':'Check it answers only from that information and admits what it does not know.')+'</li></ol></article>'+
-'<article><b>3 · '+(es?'Prepara el entorno técnico':'Prepare the technical environment')+'</b><p>'+(es?'Instala Python 3.10 o superior. Abre Terminal (macOS/Linux) o PowerShell (Windows), crea una carpeta y ejecuta:':'Install Python 3.10 or later. Open Terminal or PowerShell, create a folder and run:')+'</p><pre>mkdir asistente-academy
-cd asistente-academy
-python -m venv .venv
-# macOS / Linux
-source .venv/bin/activate
-# Windows PowerShell
-.venv\\Scripts\\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install openai</pre></article>'+
-'<article><b>4 · '+(es?'Configura la clave de API':'Set your API key')+'</b><p>'+(es?'Crea una clave desde la plataforma del proveedor y guárdala como variable de entorno. Nunca la pegues en el código, en GitHub ni en un chat.':'Create an API key in the provider platform and store it as an environment variable. Never paste it into code, GitHub or a chat.')+'</p><pre># macOS / Linux
-export OPENAI_API_KEY="tu_clave"
-# Windows PowerShell
-$env:OPENAI_API_KEY="tu_clave"</pre><p>'+(es?'La API puede generar costes según el uso y el modelo. Comprueba límites y facturación antes de hacer pruebas.':'API usage may incur charges depending on model and usage. Check billing and limits before testing.')+'</p></article>'+
+'<article><b>3 · '+(es?'Prepara el entorno técnico':'Prepare the technical environment')+'</b><p>'+(es?'Instala Python 3.10 o superior. Abre Terminal (macOS/Linux) o PowerShell (Windows), crea una carpeta y ejecuta:':'Install Python 3.10 or later. Open Terminal or PowerShell, create a folder and run:')+'</p><pre>mkdir asistente-academy\ncd asistente-academy\npython -m venv .venv\n# macOS / Linux\nsource .venv/bin/activate\n# Windows PowerShell\n.venv\\Scripts\\Activate.ps1\npython -m pip install --upgrade pip\npython -m pip install openai</pre></article>'+
+'<article><b>4 · '+(es?'Configura la clave de API':'Set your API key')+'</b><p>'+(es?'Crea una clave desde la plataforma del proveedor y guárdala como variable de entorno. Nunca la pegues en el código, en GitHub ni en un chat.':'Create an API key in the provider platform and store it as an environment variable. Never paste it into code, GitHub or a chat.')+'</p><pre># macOS / Linux\nexport OPENAI_API_KEY="tu_clave"\n# Windows PowerShell\n$env:OPENAI_API_KEY="tu_clave"</pre><p>'+(es?'La API puede generar costes según el uso y el modelo. Comprueba límites y facturación antes de hacer pruebas.':'API usage may incur charges depending on model and usage. Check billing and limits before testing.')+'</p></article>'+
 '</div>'+
 '<div class="v-example"><b>5 · '+(es?'Prompt listo para copiar y probar':'Prompt ready to copy and test')+'</b><pre id="academyLabPrompt">'+(es?'Actúa como asistente de EVOFORD Academy. Responde únicamente con la información incluida en la base de conocimiento que aparece abajo. Si la respuesta no está, di: “No tengo ese dato; consulta con el equipo académico”. No inventes fechas, precios, certificados ni políticas. Responde en español claro, en pasos numerados cuando sea útil.\n\nBASE DE CONOCIMIENTO DE PRUEBA:\n- Horario de atención: lunes a viernes, 09:00–17:00.\n- El alumno puede consultar su progreso desde su cuenta.\n- Las entregas finales las revisa una persona del equipo académico.\n\nPREGUNTA DEL ALUMNO: ¿Quién corrige mi proyecto final?':'Act as the EVOFORD Academy assistant. Answer only from the knowledge base below. If the answer is missing, say: “I do not have that information; please contact the academic team”. Never invent dates, prices, certificates or policies. Use clear English and numbered steps when useful.\n\nTEST KNOWLEDGE BASE:\n- Support hours: Monday to Friday, 09:00–17:00.\n- Students can check progress in their account.\n- Final submissions are reviewed by a human member of the academic team.\n\nSTUDENT QUESTION: Who reviews my final project?')+'</pre><button class="v-btn secondary" type="button" data-copy-lab="academyLabPrompt">'+(es?'Copiar prompt':'Copy prompt')+'</button></div>'+
-'<div class="v-example"><b>6 · '+(es?'Crea el archivo app.py':'Create app.py')+'</b><pre id="academyLabCode">from openai import OpenAI
-
-client = OpenAI()
-
-knowledge = """Horario: lunes a viernes, 09:00–17:00.
-El progreso se consulta desde la cuenta del alumno.
-Los proyectos finales los revisa una persona del equipo académico."""
-
-question = "¿Quién corrige mi proyecto final?"
-
-response = client.responses.create(
-    model="gpt-6.2-astra",
-    instructions=(
-        "Responde solo con la base de conocimiento. "
-        "Si falta el dato, dilo claramente. No inventes."
-    ),
-    input=f"BASE DE CONOCIMIENTO:\\n{knowledge}\\n\\nPREGUNTA: {question}"
-)
-
-print(response.output_text)</pre><button class="v-btn secondary" type="button" data-copy-lab="academyLabCode">'+(es?'Copiar código Python':'Copy Python code')+'</button></div>'+
+'<div class="v-example"><b>6 · '+(es?'Crea el archivo app.py':'Create app.py')+'</b><pre id="academyLabCode">from openai import OpenAI\n\nclient = OpenAI()\n\nknowledge = """Horario: lunes a viernes, 09:00–17:00.\nEl progreso se consulta desde la cuenta del alumno.\nLos proyectos finales los revisa una persona del equipo académico."""\n\nquestion = "¿Quién corrige mi proyecto final?"\n\nresponse = client.responses.create(\n    model="gpt-6.2-astra",\n    instructions=(\n        "Responde solo con la base de conocimiento. "\n        "Si falta el dato, dilo claramente. No inventes."\n    ),\n    input=f"BASE DE CONOCIMIENTO:\\n{knowledge}\\n\\nPREGUNTA: {question}"\n)\n\nprint(response.output_text)</pre><button class="v-btn secondary" type="button" data-copy-lab="academyLabCode">'+(es?'Copiar código Python':'Copy Python code')+'</button></div>'+
 '<div class="v-example"><b>7 · '+(es?'Ejecuta el programa':'Run the program')+'</b><pre>python app.py</pre><p>'+(es?'Resultado esperado: una respuesta que indique que el equipo académico revisa el proyecto. Si pregunta por un dato no incluido, debe reconocer que no lo sabe.':'Expected result: an answer saying the academic team reviews the project. If asked for information not included, it must admit it does not know.')+'</p></div>'+
 '<div class="v-example"><b>8 · '+(es?'Prueba la API directamente con curl (opcional)':'Test the API directly with curl (optional)')+'</b><pre>curl https://api.openai.com/v1/responses \\\n  -H "Content-Type: application/json" \\\n  -H "Authorization: Bearer $OPENAI_API_KEY" \\\n  -d &#39;{"model":"gpt-6.2-astra","input":"Responde solo: prueba correcta"}&#39;</pre></div>'+
 '<div class="v-task"><b>9 · '+(es?'Entrega y mide el resultado':'Submit and measure the result')+'</b><ul>'+

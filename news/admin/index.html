@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="./editorial-command-center.css?v=20261122-premium1">
   <link rel="stylesheet" href="./academy-workspace.css?v=20261122-workspace1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="/news/admin/admin-auth.js?v=20261122-project-review1"></script>
+  <script defer src="/news/admin/admin-auth.js?v=20261122-maintenance-schedule1"></script>
   <script defer src="/news/admin/article-management.js?v=20261121-5"></script>
   <script defer src="/news/admin/academy-workspace.js?v=20261122-workspace1"></script>
 </head>
@@ -41,7 +41,22 @@
         <div><p class="eyebrow">EVOFORD NEWS</p><h1>Panel editorial</h1><p id="signedInAs" class="muted"></p></div>
         <button id="logoutBtn" class="secondary">Cerrar sesión</button>
       </div>
-      <section class="panel maintenance-panel"><div><p class="eyebrow">VISIBILIDAD DEL SITIO</p><h2>Modo mantenimiento</h2><p id="maintenanceStatus" class="muted">Comprobando estado…</p></div><button type="button" id="maintenanceToggleBtn" class="secondary" disabled>Comprobando…</button></section>
+      <section class="panel maintenance-panel">
+        <div class="maintenance-panel-heading"><p class="eyebrow">VISIBILIDAD DEL SITIO</p><h2>Modo mantenimiento</h2><p id="maintenanceStatus" class="muted">Comprobando estado…</p></div>
+        <button type="button" id="maintenanceToggleBtn" class="secondary" disabled>Comprobando…</button>
+        <div class="maintenance-schedule">
+          <div><p class="eyebrow">PROGRAMACIÓN AUTOMÁTICA</p><h3>Definir periodo de mantenimiento</h3><p class="muted">Las fechas se interpretan según la hora local del administrador y se guardan de forma segura en Supabase.</p></div>
+          <div class="maintenance-schedule-fields">
+            <label for="maintenanceStartAt">Inicio <input id="maintenanceStartAt" type="datetime-local" required></label>
+            <label for="maintenanceEndAt">Finalización <input id="maintenanceEndAt" type="datetime-local" required></label>
+          </div>
+          <div class="maintenance-schedule-actions">
+            <button type="button" id="saveMaintenanceScheduleBtn" disabled>Guardar programación</button>
+            <button type="button" id="cancelMaintenanceScheduleBtn" class="secondary" disabled>Cancelar programación</button>
+          </div>
+          <p class="maintenance-schedule-note">La web activará el aviso al llegar la hora de inicio y lo retirará al llegar la hora de finalización. El panel editorial permanecerá accesible.</p>
+        </div>
+      </section>
       <nav class="tabs" aria-label="Secciones del panel">
         <button class="tab active" data-tab="overview">Resumen</button>
         <button class="tab" data-tab="articles">Artículos</button>

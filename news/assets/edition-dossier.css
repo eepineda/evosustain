@@ -340,3 +340,50 @@
  body.dossier-printing #dossierRoot .dossier-contact-page .dossier-quote{font-size:13pt!important;margin:3mm 0!important;}
  body.dossier-printing #dossierRoot .dossier-contact-page .dossier-footer{position:static!important;flex:0 0 auto!important;margin-top:auto!important;background:#fff!important;}
 }
+
+
+/* EVOFORD NEWS · acabado editorial profesional para exportación A4 */
+#dossierRoot{background:#e9edf2;color:#203247;font-family:Georgia,"Times New Roman",serif}
+#dossierRoot .dossier-page{border-top:3px solid #b21f32;padding:15mm 16mm 13mm;background:#fff}
+#dossierRoot .dossier-top{font:600 6.5pt Arial,sans-serif;letter-spacing:.12em;color:#64758a;border-bottom:1px solid #d7dee7;padding-bottom:3mm;margin-bottom:5mm}
+#dossierRoot .dossier-brand{font-size:32pt;letter-spacing:-.8pt;color:#102b46}
+#dossierRoot .dossier-tagline{font-size:8.5pt;color:#738195;letter-spacing:.03em}
+#dossierRoot .dossier-rule{height:2px;background:linear-gradient(90deg,#102b46 0 78%,#b21f32 78% 100%);margin:2mm 0 3mm}
+#dossierRoot .dossier-sections{font:700 6.2pt/1.8 Arial,sans-serif;letter-spacing:.1em;color:#34506e;border-bottom:1px solid #dce2e9;padding-bottom:3mm}
+#dossierRoot .dossier-content{padding-top:5mm}
+#dossierRoot .dossier-kicker{font:700 7pt Arial,sans-serif;letter-spacing:.15em;color:#a52a3b;margin-bottom:2.5mm}
+#dossierRoot .dossier-page:not(.dossier-cover) h1{font-size:25pt;line-height:1.06;letter-spacing:-.45pt;color:#102b46;margin:0 0 3mm}
+#dossierRoot .dossier-page:not(.dossier-cover) .dossier-deck{font-size:11pt;line-height:1.35;color:#607187!important;border-bottom:1px solid #dce2e9;padding-bottom:4mm;margin-bottom:5mm!important}
+#dossierRoot .dossier-page:not(.dossier-cover) h2{font-size:14pt;line-height:1.15;color:#102b46;border-top:1px solid #d7dee7;padding-top:2.5mm;margin:5mm 0 2mm}
+#dossierRoot .dossier-page:not(.dossier-cover) h3{font:700 7.4pt Arial,sans-serif;letter-spacing:.12em;color:#a52a3b}
+#dossierRoot .dossier-page:not(.dossier-cover) p{font-size:9.3pt;line-height:1.48;color:#29394a;margin-bottom:3mm}
+#dossierRoot .dossier-grid{gap:4mm;margin-top:4mm}
+#dossierRoot .dossier-grid article{background:#f5f7f9;border:1px solid #e0e6ed;border-top:2px solid #294866;border-radius:2mm;padding:4.5mm}
+#dossierRoot .dossier-card{background:#f4f6f8;border-left:3px solid #b21f32;padding:4mm 5mm;margin:4mm 0}
+#dossierRoot .dossier-card p{font-size:8.8pt;line-height:1.4}
+#dossierRoot .dossier-list{padding-left:5mm;margin:2mm 0 4mm}
+#dossierRoot .dossier-list li{font-size:9pt;line-height:1.45;margin-bottom:1.8mm;color:#29394a}
+#dossierRoot .dossier-article-image{height:58mm;max-height:58mm;object-fit:cover;border-radius:1.5mm;margin:4mm 0}
+#dossierRoot .dossier-article-copy{font-size:9pt!important;line-height:1.48!important}
+#dossierRoot .dossier-quote{font-size:17pt;line-height:1.28;color:#173653;border-left:3px solid #b21f32;padding:3mm 0 3mm 5mm;margin:6mm 0}
+#dossierRoot .dossier-directory-card{border:1px solid #dce3eb;border-top:2px solid #294866;border-radius:2mm;background:#f7f8fa;padding:3.5mm}
+#dossierRoot .dossier-directory-card h3{font-size:8pt;color:#102b46;letter-spacing:.03em}
+#dossierRoot .dossier-footer{border-top:1px solid #d7dee7;color:#788596;font:6.2pt Arial,sans-serif;letter-spacing:.04em;padding-top:2.5mm}
+#dossierRoot .dossier-cover{background:#102b46;border-top:0;padding:23mm 16mm 14mm;color:#fff}
+#dossierRoot .dossier-cover .dossier-top{border-color:#627991;color:#dce5ee}
+#dossierRoot .dossier-cover .dossier-brand{font-size:38pt;letter-spacing:-1.2pt;color:#fff;text-align:left;margin-top:10mm}
+#dossierRoot .dossier-cover .dossier-tagline{text-align:left;color:#dce5ee;font-size:10pt}
+#dossierRoot .dossier-cover .dossier-rule{width:48mm;height:3px;background:#b21f32;margin:9mm 0}
+#dossierRoot .dossier-cover h1{font-size:39pt;line-height:1.02;letter-spacing:-.7pt;margin-top:24mm;max-width:155mm}
+#dossierRoot .dossier-cover .dossier-deck{font-size:14pt;line-height:1.45;color:#e3eaf1!important;max-width:150mm}
+#dossierRoot .dossier-cover .dossier-cover-meta{border-color:#627991;color:#dce5ee;line-height:1.8}
+#dossierRoot .dossier-cover .dossier-cover-meta strong{letter-spacing:.15em}
+#dossierRoot .dossier-cover .dossier-footer{border-color:#627991;color:#dce5ee}
+@media print{
+ body.dossier-printing #dossierRoot{background:#fff!important}
+ body.dossier-printing #dossierRoot .dossier-page{padding:15mm 16mm 13mm!important;border-top:3px solid #b21f32!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+ body.dossier-printing #dossierRoot .dossier-cover{padding:23mm 16mm 14mm!important;border-top:0!important}
+ body.dossier-printing #dossierRoot .dossier-cover .dossier-brand{font-size:38pt!important}
+ body.dossier-printing #dossierRoot .dossier-cover h1{font-size:39pt!important}
+ body.dossier-printing #dossierRoot .dossier-article-image{height:58mm!important;max-height:58mm!important}
+}

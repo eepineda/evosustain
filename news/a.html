@@ -93,7 +93,7 @@
 <a href="tu-republica.html" aria-label="Tu República"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0-18"/></svg></span><span>Tu República</span></a>
 <a href="directory.html" aria-label="Directorio"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span><span>Directorio</span></a>
 </nav>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = "https://poywsdigujbarvnzbfnz.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_1t7gv1Y9-6HHwMqW5E343A_51GH_L7f";
@@ -250,7 +250,7 @@ async function loadArticle(){
  // Printing is delegated at document level so it remains available even if
  // optional article widgets (sharing/comments) fail to initialise.
 }
-loadArticle();
+window.addEventListener("DOMContentLoaded",loadArticle,{once:true});
 </script>
 <script src="assets/ads.js?v=20261116-popup5"></script>
 

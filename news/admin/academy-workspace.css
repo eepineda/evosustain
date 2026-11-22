@@ -94,3 +94,12 @@
  .academy-nav-item{font-size:11px;padding-inline:9px}
 }
 @media(prefers-reduced-motion:reduce){.academy-view{animation:none}}
+
+.academy-course-editor{margin:0 0 18px;padding:22px}
+.academy-course-editor .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.academy-course-editor .field{display:grid;gap:7px;min-width:0}
+.academy-course-editor .field.full{grid-column:1/-1}
+.academy-course-editor textarea{width:100%;min-height:76px}
+.academy-course-editor #academyCourseCurriculum{font-family:ui-monospace,monospace;line-height:1.65}
+.academy-course-editor small{display:block;color:#64748b;font-size:12px}
+@media(max-width:640px){.academy-course-editor .form-grid{grid-template-columns:1fr}.academy-course-editor .field.full{grid-column:auto}}

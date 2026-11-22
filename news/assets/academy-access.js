@@ -43,10 +43,10 @@
       const title=document.createElement("h2");title.textContent=enrollment.course_title||enrollment.course_slug;
       const description=document.createElement("p");
       const isIa=enrollment.course_slug==="ia-practica";
-      description.textContent=isIa?tr("Formación práctica en inteligencia artificial aplicada. Quince módulos, treinta lecciones, práctica de recuperación y proyecto profesional final.","Practical training in applied artificial intelligence. Fifteen modules, thirty lessons, retrieval practice and a professional capstone.") : tr("Curso autorizado en tu cuenta. El contenido se habilitará en este espacio cuando esté publicado.","This course is authorised for your account. Its content will be available here when published.");
+      description.textContent=isIa?tr("Formación práctica en inteligencia artificial aplicada. Quince módulos, treinta lecciones, práctica de recuperación y proyecto profesional final.","Practical training in applied artificial intelligence. Twenty modules, forty lessons, practical cases and a professional capstone.") : tr("Curso autorizado en tu cuenta. El contenido se habilitará en este espacio cuando esté publicado.","This course is authorised for your account. Its content will be available here when published.");
       card.append(tag,title,description);
       const count=counts[enrollment.course_slug]||0;
-      const total=isIa?30:null;
+      const total=isIa?40:null;
       if(total!==null){
         const bar=document.createElement("div");bar.className="academy-course-progress";
         const fill=document.createElement("span");fill.style.width=Math.min(100,Math.round(count/total*100))+"%";bar.append(fill);

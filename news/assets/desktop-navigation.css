@@ -449,3 +449,99 @@ html[data-evo-theme="dark"]:not(.evo-high-contrast) footer{background:#07111c!im
 html.evo-high-contrast .story,html.evo-high-contrast .brief,html.evo-high-contrast .country-card,html.evo-high-contrast .opinion,html.evo-high-contrast .opinion-latest,html.evo-high-contrast .reader-tools,html.evo-high-contrast .reader-results,html.evo-high-contrast .saved-stories-panel{background:#fff!important;color:#000!important;border-color:#000!important}
 html.evo-high-contrast h1,html.evo-high-contrast h2,html.evo-high-contrast h3,html.evo-high-contrast p,html.evo-high-contrast li,html.evo-high-contrast .story-copy,html.evo-high-contrast .feature-copy{color:#000!important}
 html.evo-high-contrast a,html.evo-high-contrast .kicker,html.evo-high-contrast .read-link{color:#003b73!important;text-decoration:underline!important}
+
+
+/* Final contrast repair for dynamically rendered Evoford News content. */
+html[data-evo-theme="light"] body,
+html[data-evo-theme="light"] main,
+html[data-evo-theme="light"] .wrap{background:#f7f6f2!important;color:#172536!important}
+html[data-evo-theme="light"] .story,
+html[data-evo-theme="light"] .brief,
+html[data-evo-theme="light"] .country-card,
+html[data-evo-theme="light"] .opinion,
+html[data-evo-theme="light"] .opinion-latest,
+html[data-evo-theme="light"] .reader-tools,
+html[data-evo-theme="light"] .reader-results,
+html[data-evo-theme="light"] .saved-stories-panel,
+html[data-evo-theme="light"] #publishedArticles .story,
+html[data-evo-theme="light"] .category-section .story{background:#fff!important;color:#172536!important;border-color:#cbd2da!important}
+html[data-evo-theme="light"] .story-copy,
+html[data-evo-theme="light"] .story-copy h3,
+html[data-evo-theme="light"] .story-copy h3 a,
+html[data-evo-theme="light"] .feature-copy,
+html[data-evo-theme="light"] .feature-copy h1,
+html[data-evo-theme="light"] .feature-copy h1 a,
+html[data-evo-theme="light"] .country-title h3,
+html[data-evo-theme="light"] .country-story,
+html[data-evo-theme="light"] .country-story b,
+html[data-evo-theme="light"] .opinion h2,
+html[data-evo-theme="light"] .opinion-article-link,
+html[data-evo-theme="light"] .opinion-article-link h3,
+html[data-evo-theme="light"] .brief-link b,
+html[data-evo-theme="light"] .section-head h2,
+html[data-evo-theme="light"] .topics a{color:#102b4e!important}
+html[data-evo-theme="light"] .story-copy p,
+html[data-evo-theme="light"] .feature-copy .dek,
+html[data-evo-theme="light"] .opinion p,
+html[data-evo-theme="light"] .opinion-article-link p,
+html[data-evo-theme="light"] .brief-link p,
+html[data-evo-theme="light"] .country-empty,
+html[data-evo-theme="light"] .section-head span,
+html[data-evo-theme="light"] .feature-meta{color:#465568!important;opacity:1!important}
+html[data-evo-theme="light"] .kicker,
+html[data-evo-theme="light"] .brief-category,
+html[data-evo-theme="light"] .read-link{color:#9f1d20!important;opacity:1!important}
+html[data-evo-theme="light"] input,
+html[data-evo-theme="light"] select,
+html[data-evo-theme="light"] textarea{background:#fff!important;color:#172536!important;border:1px solid #8795a5!important}
+html[data-evo-theme="light"] input::placeholder,
+html[data-evo-theme="light"] textarea::placeholder{color:#536273!important;opacity:1!important}
+
+html[data-evo-theme="dark"] body{background:#0b1724!important;color:#f1f5f9!important}
+html[data-evo-theme="dark"] main,
+html[data-evo-theme="dark"] .wrap{background:transparent!important;color:#f1f5f9!important}
+html[data-evo-theme="dark"] .story,
+html[data-evo-theme="dark"] .brief,
+html[data-evo-theme="dark"] .country-card,
+html[data-evo-theme="dark"] .opinion,
+html[data-evo-theme="dark"] .opinion-latest,
+html[data-evo-theme="dark"] .reader-tools,
+html[data-evo-theme="dark"] .reader-results,
+html[data-evo-theme="dark"] .saved-stories-panel,
+html[data-evo-theme="dark"] #publishedArticles .story,
+html[data-evo-theme="dark"] .category-section .story{background:#162a3d!important;color:#f1f5f9!important;border-color:#40566b!important}
+html[data-evo-theme="dark"] .story-copy,
+html[data-evo-theme="dark"] .story-copy h3,
+html[data-evo-theme="dark"] .story-copy h3 a,
+html[data-evo-theme="dark"] .feature-copy,
+html[data-evo-theme="dark"] .feature-copy h1,
+html[data-evo-theme="dark"] .feature-copy h1 a,
+html[data-evo-theme="dark"] .country-title h3,
+html[data-evo-theme="dark"] .country-story,
+html[data-evo-theme="dark"] .country-story b,
+html[data-evo-theme="dark"] .opinion h2,
+html[data-evo-theme="dark"] .opinion-article-link,
+html[data-evo-theme="dark"] .opinion-article-link h3,
+html[data-evo-theme="dark"] .brief-link b,
+html[data-evo-theme="dark"] .section-head h2,
+html[data-evo-theme="dark"] .topics a{color:#f1f5f9!important}
+html[data-evo-theme="dark"] .story-copy p,
+html[data-evo-theme="dark"] .feature-copy .dek,
+html[data-evo-theme="dark"] .opinion p,
+html[data-evo-theme="dark"] .opinion-article-link p,
+html[data-evo-theme="dark"] .brief-link p,
+html[data-evo-theme="dark"] .country-empty,
+html[data-evo-theme="dark"] .section-head span,
+html[data-evo-theme="dark"] .feature-meta{color:#c5d1dd!important;opacity:1!important}
+html[data-evo-theme="dark"] .kicker,
+html[data-evo-theme="dark"] .brief-category,
+html[data-evo-theme="dark"] .read-link{color:#ff9298!important;opacity:1!important}
+html[data-evo-theme="dark"] input,
+html[data-evo-theme="dark"] select,
+html[data-evo-theme="dark"] textarea{background:#0c1b29!important;color:#f1f5f9!important;border:1px solid #64798d!important}
+html[data-evo-theme="dark"] input::placeholder,
+html[data-evo-theme="dark"] textarea::placeholder{color:#c0ccd8!important;opacity:1!important}
+html[data-evo-theme] a:focus-visible,
+html[data-evo-theme] button:focus-visible,
+html[data-evo-theme] input:focus-visible,
+html[data-evo-theme] select:focus-visible{outline:3px solid #d49a27!important;outline-offset:3px!important}

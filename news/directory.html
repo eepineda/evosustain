@@ -47,6 +47,9 @@
 @media(max-width:680px){.directory-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.directory-card{padding:12px}}
 @media(max-width:440px){.directory-grid{grid-template-columns:1fr}}
 
+/* Directory is a service destination, not a news-submission entry point. */
+.directory-header .directory-nav a[href*="participa"],.directory-header .directory-nav a[href*="enviar"],.directory-header .directory-nav a[href*="admin"]{display:none!important}
+@media(min-width:761px){html body nav.app-bottom-nav{display:none!important}html body{padding-bottom:0!important}}
 html.evo-pwa .directory-header,html.evo-pwa body>footer{display:none!important}
 html.evo-pwa .directory-wrap{max-width:780px!important;margin:12px auto 30px!important;padding:0 16px!important}
 html.evo-pwa .directory-hero{padding:22px 18px!important;border-radius:16px!important;background:#fff!important;border:1px solid #e1e6ec!important;border-left:4px solid #102b4e!important}
@@ -94,7 +97,7 @@ html.evo-pwa .directory-form .full{grid-column:auto!important}
 <!-- End Google Tag Manager (noscript) -->
 
 <header class="masthead"><div class="topline"><span>Londres · Reino Unido</span><span>INFORMACIÓN · OPINIÓN · ANÁLISIS</span></div><a class="brand" href="a.html?i=aW5kZXguaHRtbA">EVOFORD <em>NEWS</em></a></header>
-<header class="directory-header"><div class="directory-brandrow"><a class="directory-brand" href="a.html?i=aW5kZXguaHRtbA">EVOFORD <em>NEWS</em><small>DIRECTORIO</small></a><span class="directory-tag">REINO UNIDO · ESPAÑA · EUROPA · REPÚBLICA DOMINICANA</span><div class="directory-language-switch" aria-label="Language"><button type="button" data-language="es" aria-pressed="true">ES</button><button type="button" data-language="en" aria-pressed="false">EN</button></div></div><nav class="directory-nav" aria-label="Navegación"><a href="a.html?i=aW5kZXguaHRtbA">PORTADA</a><a href="a.html?i=ZGlyZWN0b3J5Lmh0bWw" aria-current="page">DIRECTORIO</a><a href="a.html?i=dHUtcmVwdWJsaWNhLmh0bWw" class="directory-subnav">↳ TU REPÚBLICA</a><a href="admin/">ACCESO EDITORIAL</a></nav></header>
+<header class="directory-header"><div class="directory-brandrow"><a class="directory-brand" href="a.html?i=aW5kZXguaHRtbA">EVOFORD <em>NEWS</em><small>DIRECTORIO</small></a><span class="directory-tag">REINO UNIDO · ESPAÑA · EUROPA · REPÚBLICA DOMINICANA</span><div class="directory-language-switch" aria-label="Language"><button type="button" data-language="es" aria-pressed="true">ES</button><button type="button" data-language="en" aria-pressed="false">EN</button></div></div><nav class="directory-nav" aria-label="Navegación"><a href="a.html?i=aW5kZXguaHRtbA">PORTADA</a><a href="a.html?i=ZGlyZWN0b3J5Lmh0bWw" aria-current="page">DIRECTORIO</a><a href="a.html?i=dHUtcmVwdWJsaWNhLmh0bWw" class="directory-subnav">↳ TU REPÚBLICA</a></nav></header>
 <main class="directory-wrap"><section class="directory-hero"><span class="kicker">GUÍA DE SERVICIOS · DIÁSPORA DOMINICANA</span><h1>Servicios para dominicanos en el exterior</h1><p>Una guía de instituciones, servicios públicos, educación, vivienda, hipotecas, banca, empleo y apoyo comunitario para dominicanos en Reino Unido, España, Europa y República Dominicana.</p></section>
 <section class="directory-origin" aria-label="Origen y alcance del directorio"><div><span class="directory-tag">NUESTRAS RAÍCES</span><h2>La comunidad dominicana, en el centro</h2><p>Este directorio nace para apoyar a los dominicanos dentro y fuera del país: desde quienes llegan a Londres hasta quienes necesitan orientación, servicios o mantener sus vínculos con República Dominicana y España.</p></div><div><span class="directory-tag">UNA COMUNIDAD ABIERTA</span><p>La cobertura incluye Reino Unido, España y otros países europeos, además de República Dominicana. Priorizamos recursos prácticos y entidades que puedan ayudar directamente a la comunidad dominicana.</p></div></section>
 
@@ -163,4 +166,8 @@ html.evo-pwa .directory-form .full{grid-column:auto!important}
 <script src="assets/pwa.js?v=3" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/directory-language.js?v=2"></script><script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script><script src="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script><script src="assets/directory.js?v=10"></script>
 
+<script>
+/* Defensive cleanup for stale or inherited navigation markup on the directory page. */
+(()=>{const nav=document.querySelector(".directory-header .directory-nav");if(nav){nav.querySelectorAll("a").forEach(a=>{const label=(a.textContent||"").trim().toLowerCase(),href=(a.getAttribute("href")||"").toLowerCase();if(/env[ií]a tu noticia|participa|submit news/.test(label)||/participa|enviar\.html/.test(href))a.remove();});}if(window.matchMedia("(min-width: 761px)").matches){document.querySelectorAll("nav.app-bottom-nav").forEach(n=>n.remove());}})();
+</script>
 </body></html>

@@ -812,7 +812,9 @@ function editAcademyCourse(course){
  ["Title","TitleEn","Category","Summary","SummaryEn","Objectives","ObjectivesEn","Requirements","RequirementsEn"].forEach(k=>{const id="academyCourse"+k;const prop=k.replace(/[A-Z]/g,m=>"_"+m.toLowerCase()).replace(/^_/,"");$(id).value=course?.[prop]||"";});
  $("academyCourseLanguage").value=course?.language||"es";
  $("academyCourseStatus").value=course?.status||"draft";
- $("academyCourseOrder").value=course?.display_order??100;\n $("academyCourseModuleCount").value=course?.module_count??course?.curriculum?.length??0;\n $("academyCourseLessonCount").value=course?.lesson_count??(course?.curriculum||[]).reduce((n,m)=>n+(m.lessons?.length||0),0);
+ $("academyCourseOrder").value=course?.display_order??100;
+ $("academyCourseModuleCount").value=course?.module_count??course?.curriculum?.length??0;
+ $("academyCourseLessonCount").value=course?.lesson_count??(course?.curriculum||[]).reduce((n,m)=>n+(m.lessons?.length||0),0);
  $("academyCourseCurriculum").value=curriculumToText(course?.curriculum);
  $("academyCourseForm").scrollIntoView({behavior:"smooth",block:"start"});
 }
@@ -826,7 +828,8 @@ async function saveAcademyCourse(event){
  say("academyCourseMessage","Curso y programa guardados correctamente.");
  $("academyCourseForm").hidden=true;await loadAcademyCatalog();
 }
-\nasync function loadCourses(){
+
+async function loadCourses(){
  const root=$("courseEnquiryList");if(!root)return;
  root.innerHTML='<p class="muted">Cargando solicitudes…</p>';
  const {data,error}=await client.from("course_enquiries").select("id,full_name,email,course_interest,message,internal_notes,status,created_at").order("created_at",{ascending:false});
@@ -1153,7 +1156,11 @@ function wire(){
   $("sourceForm").addEventListener("submit",addSource);
   $("refreshSubmissionsBtn").addEventListener("click",loadSubmissions);
   $("refreshDirectoryBtn").addEventListener("click",loadDirectoryAdmin);
-  $("refreshCoursesBtn").addEventListener("click",()=>{loadCourses();loadAcademyCatalog();});\n  $("newAcademyCourseBtn")?.addEventListener("click",()=>editAcademyCourse(null));\n  $("cancelAcademyCourseBtn")?.addEventListener("click",()=>{$("academyCourseForm").hidden=true;});\n  $("academyCourseForm")?.addEventListener("submit",saveAcademyCourse);\n  $("academyCatalogList")?.addEventListener("click",e=>{const b=e.target.closest("[data-academy-course-edit]");if(b)editAcademyCourse(academyCatalogRows.find(x=>String(x.id)===b.dataset.academyCourseEdit));});
+  $("refreshCoursesBtn").addEventListener("click",()=>{loadCourses();loadAcademyCatalog();});
+  $("newAcademyCourseBtn")?.addEventListener("click",()=>editAcademyCourse(null));
+  $("cancelAcademyCourseBtn")?.addEventListener("click",()=>{$("academyCourseForm").hidden=true;});
+  $("academyCourseForm")?.addEventListener("submit",saveAcademyCourse);
+  $("academyCatalogList")?.addEventListener("click",e=>{const b=e.target.closest("[data-academy-course-edit]");if(b)editAcademyCourse(academyCatalogRows.find(x=>String(x.id)===b.dataset.academyCourseEdit));});
   $("refreshAcademyProjectsBtn")?.addEventListener("click",loadAcademyProjects);
   $("academyProjectSearch")?.addEventListener("input",filterAcademyProjects);
   $("academyProjectStatus")?.addEventListener("change",filterAcademyProjects);

@@ -62,27 +62,100 @@ function editorialGate(payload){
 
 
 let maintenanceEnabled=false;
+let maintenanceSchedule={enabled:false,startAt:"",endAt:""};
+let maintenanceScheduleActive=false;
+function formatLocalDateTime(value){
+  if(!value)return "";
+  const date=new Date(value);
+  if(Number.isNaN(date.getTime()))return "";
+  const pad=n=>String(n).padStart(2,"0");
+  return date.getFullYear()+"-"+pad(date.getMonth()+1)+"-"+pad(date.getDate())+"T"+pad(date.getHours())+":"+pad(date.getMinutes());
+}
 async function loadMaintenanceControl(){
   const button=$("maintenanceToggleBtn");
   const {data,error}=await client.from("site_settings").select("value").eq("key","maintenance").maybeSingle();
-  if(error){$("maintenanceStatus").textContent="No se pudo leer el estado. Ejecuta la migración de mantenimiento en Supabase.";button.textContent="No disponible";button.disabled=true;return;}
-  maintenanceEnabled=data?.value?.enabled===true;
-  $("maintenanceStatus").textContent=maintenanceEnabled?"La web pública está en mantenimiento. El panel editorial sigue disponible.":"La web pública está visible.";
-  button.textContent=maintenanceEnabled?"Desactivar mantenimiento":"Activar mantenimiento";
-  button.classList.toggle("maintenance-active",maintenanceEnabled);
+  if(error){
+    $("maintenanceStatus").textContent="No se pudo leer la configuración de mantenimiento.";
+    button.textContent="No disponible";button.disabled=true;return;
+  }
+  const value=data?.value||{};
+  maintenanceEnabled=value.enabled===true;
+  maintenanceSchedule={
+    enabled:value.scheduleEnabled===true,
+    startAt:typeof value.startAt==="string"?value.startAt:"",
+    endAt:typeof value.endAt==="string"?value.endAt:""
+  };
+  const now=Date.now(),start=Date.parse(maintenanceSchedule.startAt),end=Date.parse(maintenanceSchedule.endAt);
+  maintenanceScheduleActive=maintenanceSchedule.enabled&&Number.isFinite(start)&&Number.isFinite(end)&&now>=start&&now<end;
+  $("maintenanceStartAt").value=formatLocalDateTime(maintenanceSchedule.startAt);
+  $("maintenanceEndAt").value=formatLocalDateTime(maintenanceSchedule.endAt);
+  const scheduleText=maintenanceSchedule.enabled
+    ?(maintenanceScheduleActive?"Programación activa ahora. Finaliza "+new Date(end).toLocaleString():"Programado para "+new Date(start).toLocaleString()+" y finalizará "+new Date(end).toLocaleString())
+    :"No hay ningún mantenimiento programado.";
+  $("maintenanceStatus").textContent=maintenanceEnabled
+    ?"Mantenimiento activado manualmente. El panel editorial sigue disponible. "+scheduleText
+    :maintenanceScheduleActive
+      ?"Mantenimiento programado activo. El panel editorial sigue disponible. "+scheduleText
+      :"La web pública está visible. "+scheduleText;
+  button.textContent=(maintenanceEnabled||maintenanceScheduleActive)?"Desactivar mantenimiento":"Activar ahora";
+  button.classList.toggle("maintenance-active",maintenanceEnabled||maintenanceScheduleActive);
   button.disabled=false;
+  $("saveMaintenanceScheduleBtn").disabled=false;
+  $("cancelMaintenanceScheduleBtn").disabled=!maintenanceSchedule.enabled;
+}
+async function persistMaintenanceValue(value,message){
+  const result=await client.from("site_settings").update({value,updated_at:new Date().toISOString()}).eq("key","maintenance");
+  if(result.error){say("globalMessage","No se pudo guardar el mantenimiento: "+result.error.message);return false;}
+  try{sessionStorage.removeItem("evoford-maintenance-state");}catch(_){}
+  await loadMaintenanceControl();
+  say("globalMessage",message);
+  return true;
 }
 async function toggleMaintenance(){
-  const next=!maintenanceEnabled;
-  const prompt=next
-    ?"La web completa dejará de estar visible para el público. ¿Quieres activar el mantenimiento?"
-    :"La web volverá a estar visible para todos. ¿Quieres desactivar el mantenimiento?";
+  const button=$("maintenanceToggleBtn");
+  const nextEnabled=!(maintenanceEnabled||maintenanceScheduleActive);
+  const prompt=nextEnabled
+    ?"La web pública dejará de estar visible inmediatamente. ¿Quieres activar el mantenimiento ahora?"
+    :"La web volverá a estar visible y se cancelará también cualquier programación activa. ¿Quieres continuar?";
   if(!window.confirm(prompt))return;
-  const button=$("maintenanceToggleBtn");button.disabled=true;
-  const {error}=await client.from("site_settings").update({value:{enabled:next},updated_at:new Date().toISOString()}).eq("key","maintenance");
-  if(error){say("globalMessage","No se pudo cambiar el mantenimiento: "+error.message);button.disabled=false;return;}
-  await loadMaintenanceControl();
-  say("globalMessage",next?"Mantenimiento activado. La web pública mostrará el aviso.":"Mantenimiento desactivado. La web vuelve a estar visible.");
+  button.disabled=true;
+  const value={
+    enabled:nextEnabled,
+    scheduleEnabled:nextEnabled?maintenanceSchedule.enabled:false,
+    startAt:maintenanceSchedule.startAt,
+    endAt:maintenanceSchedule.endAt
+  };
+  await persistMaintenanceValue(value,nextEnabled
+    ?"Mantenimiento activado inmediatamente."
+    :"Mantenimiento desactivado. La web vuelve a estar visible y la programación activa ha quedado cancelada.");
+}
+async function saveMaintenanceSchedule(){
+  const startValue=$("maintenanceStartAt").value,endValue=$("maintenanceEndAt").value;
+  if(!startValue||!endValue){say("globalMessage","Indica la fecha y hora de inicio y de finalización.");return;}
+  const start=new Date(startValue),end=new Date(endValue),now=Date.now();
+  if(!Number.isFinite(start.getTime())||!Number.isFinite(end.getTime())||end<=start){
+    say("globalMessage","La fecha de finalización debe ser posterior al inicio.");return;
+  }
+  if(end.getTime()<=now){say("globalMessage","La fecha de finalización debe estar en el futuro.");return;}
+  if(!window.confirm("Se programará el mantenimiento desde "+start.toLocaleString()+" hasta "+end.toLocaleString()+". ¿Confirmas?"))return;
+  const button=$("saveMaintenanceScheduleBtn");button.disabled=true;
+  await persistMaintenanceValue({
+    enabled:maintenanceEnabled,
+    scheduleEnabled:true,
+    startAt:start.toISOString(),
+    endAt:end.toISOString()
+  },"Programación guardada. El mantenimiento se activará y finalizará automáticamente.");
+}
+async function cancelMaintenanceSchedule(){
+  if(!maintenanceSchedule.enabled)return;
+  if(!window.confirm("¿Cancelar la programación? La web quedará visible salvo que el mantenimiento manual esté activado."))return;
+  const button=$("cancelMaintenanceScheduleBtn");button.disabled=true;
+  await persistMaintenanceValue({
+    enabled:maintenanceEnabled,
+    scheduleEnabled:false,
+    startAt:"",
+    endAt:""
+  },"Programación cancelada.");
 }
 
 async function init(){
@@ -1133,6 +1206,8 @@ function wireArticleFormatters(){
 function wire(){
   wireArticleFormatters();
   $("maintenanceToggleBtn").addEventListener("click",toggleMaintenance);
+  $("saveMaintenanceScheduleBtn")?.addEventListener("click",saveMaintenanceSchedule);
+  $("cancelMaintenanceScheduleBtn")?.addEventListener("click",cancelMaintenanceSchedule);
   $("refreshPrintAccessBtn")?.addEventListener("click",loadPrintAccess);
   $("addPrintAccessForm")?.addEventListener("submit",addPrintAccess);
   $("printAccessList")?.addEventListener("click",event=>{const button=event.target.closest("[data-delete-print-access]");if(button)deletePrintAccess(button.dataset.deletePrintAccess,button);});

@@ -20,7 +20,7 @@ const PRECACHE = [
   "/news/assets/home-print.css?v=1",
   "/news/assets/app-shell.css?v=11",
   "/news/assets/news-core.js?v=1",
-  "/news/assets/site.js?v=20261117-reader-en2",
+  "/news/assets/site.js?v=20261122-anchorfix1",
   "/news/assets/ads.js?v=20261117-editorial2",
   "/news/assets/pwa.js?v=6"
 ];

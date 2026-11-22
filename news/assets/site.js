@@ -291,7 +291,21 @@ function renderPublishedArticles(articles) {
       const academyPromo=section.id==="tecnologia"?(currentLanguage==="en"?'<aside class="technology-academy-promo"><div class="technology-academy-mark">EVOFORD ACADEMY</div><div class="technology-academy-copy"><h3>Learn beyond the headlines</h3><p>Explore practical courses and learning pathways connected to technology, artificial intelligence, cybersecurity and digital innovation.</p></div><a href="aula-innovacion.html">Explore Academy <span aria-hidden="true">↗</span></a></aside>':'<aside class="technology-academy-promo"><div class="technology-academy-mark">EVOFORD ACADEMY</div><div class="technology-academy-copy"><h3>Aprende más allá de las noticias</h3><p>Explora cursos prácticos e itinerarios formativos vinculados con tecnología, inteligencia artificial, ciberseguridad e innovación digital.</p></div><a href="aula-innovacion.html">Explorar Academy <span aria-hidden="true">↗</span></a></aside>'):"";
       return '<section class="section category-section" id="section-'+section.id+'"><div class="section-head"><h2>'+section.name+'</h2><span>'+(currentLanguage==="en"?"LATEST STORIES":"ÚLTIMAS PUBLICACIONES")+'</span></div><div class="cards">'+sectionContent+'</div>'+academyPromo+'</section>';
     }).join("");
-    if(location.hash){const anchorId=decodeURIComponent(location.hash.slice(1));const scrollToSection=()=>{const target=document.getElementById(anchorId);if(!target)return false;const top=target.getBoundingClientRect().top+window.scrollY-88;window.scrollTo({top:Math.max(0,top),behavior:"auto"});return true;};const waitForImages=Array.from(document.images).filter(img=>!img.complete&&sectionRoot.compareDocumentPosition(img)&Node.DOCUMENT_POSITION_PRECEDING).map(img=>new Promise(resolve=>{img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true});}));Promise.all(waitForImages).then(()=>{requestAnimationFrame(()=>requestAnimationFrame(()=>{if(!scrollToSection())setTimeout(scrollToSection,250);}));});}
+    if(location.hash){
+      const anchorId=decodeURIComponent(location.hash.slice(1));
+      const scrollToSection=()=>{
+        const target=document.getElementById(anchorId);
+        if(!target)return false;
+        const top=target.getBoundingClientRect().top+window.scrollY-88;
+        window.scrollTo({top:Math.max(0,top),behavior:"smooth"});
+        return true;
+      };
+      // Do not wait for images above the target: lazy-loaded images may never
+      // load until the page scrolls, which would deadlock section navigation.
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        if(!scrollToSection())window.setTimeout(scrollToSection,180);
+      }));
+    }
   }
 
 }

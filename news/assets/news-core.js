@@ -13,13 +13,13 @@
       home: "Portada", international: "Internacional", politics: "Política",
       economy: "Economía", security: "Seguridad", startups: "Startups e innovación",
       opinion: "Opinión y análisis", directory: "Directorio",
-      submit: "Envía tu noticia", menu: "Menú", language: "Idioma"
+      submit: "Participa", menu: "Menú", language: "Idioma"
     },
     en: {
       home: "Home", international: "International", politics: "Politics",
       economy: "Economy", security: "Security", startups: "Startups & innovation",
       opinion: "Opinion & analysis", directory: "Directory",
-      submit: "Submit a story", menu: "Menu", language: "Language"
+      submit: "Participate", menu: "Menu", language: "Language"
     }
   });
 

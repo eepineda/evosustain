@@ -41,7 +41,7 @@
 <header class="masthead">
  <div class="topline"><span>Londres · Reino Unido</span><span>INFORMACIÓN · CONTEXTO · ANÁLISIS</span></div>
  <a class="brand" href="a.html?i=aW5kZXguaHRtbA">EVOFORD <em>NEWS</em></a>
- <nav class="nav" aria-label="Secciones"><a href="a.html?i=aW5kZXguaHRtbA">Portada</a><a href="a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLXBvbGl0aWNh">Política</a><a href="a.html?i=c3RhcnR1cHMuaHRtbA">Startups e innovación</a><a href="a.html?i=YnJpZWZpbmcuaHRtbA" aria-current="page">Evoford Briefing</a><a href="a.html?i=ZGlyZWN0b3J5Lmh0bWw">Directorio</a></nav>
+ <nav class="nav" aria-label="Secciones"><a href="a.html?i=aW5kZXguaHRtbA">Portada</a><a href="a.html?i=aW5kZXguaHRtbCNzZWN0aW9uLXBvbGl0aWNh">Política</a><a href="a.html?i=c3RhcnR1cHMuaHRtbA">Startups e innovación</a><a href="briefing.html" aria-current="page">Evoford Briefing</a><a href="a.html?i=ZGlyZWN0b3J5Lmh0bWw">Directorio</a></nav>
 </header>
 <main class="wrap">
  <div class="briefing-language" aria-label="Language"><a href="?lang=es" data-lang="es">ES</a><a href="?lang=en" data-lang="en">EN</a></div>
@@ -80,4 +80,5 @@ function setLanguage(lang){language=lang;try{localStorage.setItem("evoford-news-
 document.querySelectorAll(".briefing-language a").forEach(a=>a.addEventListener("click",event=>{event.preventDefault();setLanguage(a.dataset.lang);history.replaceState(null,"","?lang="+a.dataset.lang);}));
 (async()=>{try{const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);const {data,error}=await client.from("articles").select("id,title,title_en,slug,summary,summary_en,author,updated_at,created_at").eq("category","Evoford Briefing").eq("status","published").order("updated_at",{ascending:false}).limit(30);if(error)throw error;editions=data||[];setLanguage(language);}catch(error){box.innerHTML='<div class="briefing-empty">'+translations[language].error+'</div>';console.error("Evoford Briefing:",error);}})();
 </script>
+<script src="/news/assets/app-navigation.js?v=20261122-nav5" defer></script>
 </body></html>

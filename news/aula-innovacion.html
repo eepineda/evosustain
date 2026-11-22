@@ -59,6 +59,23 @@
 @media(max-width:900px){.academy-course-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.academy-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.academy-home{padding-left:17px!important;padding-right:17px!important}.academy-hero{padding:26px 0}.academy-hero h1{font-size:clamp(39px,11vw,54px)}.academy-local-nav{position:static;gap:17px;overflow-x:auto;white-space:nowrap}.academy-section{padding:29px 0}.academy-section-head{display:block}.academy-section-head>p{margin-top:9px}.academy-featured-course{padding:17px}.course-feature-body{grid-template-columns:1fr;gap:8px}.academy-course-grid,.academy-area-grid,.academy-steps{grid-template-columns:1fr}.academy-final-cta{display:block;padding:20px}.academy-final-cta .academy-primary{margin-top:16px}.academy-actions a{flex:1 1 auto}}
 
+
+/* Learning journey: connected vertical timeline */
+.academy-steps{position:relative;display:grid;grid-template-columns:1fr;gap:0;margin:8px 0 0;padding:4px 0}
+.academy-steps::before{content:"";position:absolute;left:27px;top:28px;bottom:30px;width:2px;background:linear-gradient(to bottom,#d7b16d 0%,#cbd5df 100%)}
+.academy-steps article{position:relative;display:grid;grid-template-columns:56px minmax(0,1fr);grid-template-rows:auto auto;column-gap:22px;align-items:start;padding:20px 22px 22px 0;border:0;border-bottom:1px solid #e5e9ee;border-radius:0;background:transparent}
+.academy-steps article:last-child{border-bottom:0}
+.academy-steps article>span{z-index:1;grid-column:1;grid-row:1 / span 2;display:grid;place-items:center;width:56px;height:56px;border:2px solid #d7b16d;border-radius:50%;background:#fff;color:#102b4e;font:700 15px Georgia,serif;box-shadow:0 0 0 6px #fff}
+.academy-steps h3{grid-column:2;margin:3px 0 7px;color:#102b4e;font:700 21px/1.2 Georgia,serif}
+.academy-steps p{grid-column:2;max-width:720px;margin:0;color:#647184;font:13px/1.7 Arial,sans-serif}
+@media(max-width:760px){
+ .academy-steps::before{left:21px;top:24px;bottom:25px}
+ .academy-steps article{grid-template-columns:44px minmax(0,1fr);column-gap:16px;padding:17px 0 20px}
+ .academy-steps article>span{width:44px;height:44px;font-size:13px;box-shadow:0 0 0 5px #fff}
+ .academy-steps h3{margin-top:2px;font-size:19px}
+ .academy-steps p{font-size:12px}
+}
+
 </style><script src="/maintenance.js"></script>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <script id="evo-pwa-mode-detect">(()=>{const m=window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches;if(m||navigator.standalone===true)document.documentElement.classList.add("evo-pwa");})();</script>

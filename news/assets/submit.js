@@ -16,9 +16,12 @@ const courseRequest=submissionParams.get("curso")==="interes";
 if(courseRequest){
  const courseIntro=document.getElementById("course-intro");
  if(courseIntro){courseIntro.hidden=false;courseIntro.style.display="block";}
+ const courseField=document.getElementById("courseField"),courseChoice=document.getElementById("courseChoice");
+ if(courseField)courseField.hidden=false;
  document.getElementById("kind").value="otro";
  document.getElementById("title").value="Solicitud de información e inscripción en cursos";
- document.getElementById("body").value="Me interesa recibir información sobre los cursos del Aula de Innovación Evoford.\n\nCurso o cursos que me interesan:\n\nMi consulta o disponibilidad:\n";
+ const updateCourseBody=()=>{const selected=courseChoice?.selectedOptions?.[0]?.textContent||"Curso no seleccionado";document.getElementById("body").value="Me interesa recibir información y solicitar admisión en el siguiente curso de EVOFORD Academy:\n\nCurso seleccionado: "+selected+"\n\nMi consulta o disponibilidad:\n";};
+ courseChoice?.addEventListener("change",updateCourseBody);updateCourseBody();
 }
 
 const types=["image/jpeg","image/png","image/webp","application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document"];

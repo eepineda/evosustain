@@ -477,7 +477,48 @@
       .maintenance-countdown-unit span { font-size: 7px; letter-spacing: .03em; }
     }
   `;
+  // Isolate the maintenance screen from site-wide header/body rules.
+  // The same script runs on EvoSustain and Evoford News, which load different CSS.
+  style.textContent += `
+    html.evo-maintenance-active,
+    html.evo-maintenance-active body {
+      min-height: 100%;
+      margin: 0 !important;
+      padding: 0 !important;
+      background: #f7f8fa !important;
+      color: #162b43 !important;
+    }
+    .maintenance-shell {
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100svh;
+      isolation: isolate;
+    }
+    .maintenance-shell .maintenance-header {
+      position: static !important;
+      inset: auto !important;
+      z-index: auto !important;
+      display: flex !important;
+      width: 100% !important;
+      min-height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+    .maintenance-shell .maintenance-header::before,
+    .maintenance-shell .maintenance-header::after { content: none !important; }
+    .maintenance-shell .maintenance-header a,
+    .maintenance-shell .maintenance-header span { text-decoration: none; }
+  `;
+
   document.head.appendChild(style);
+  document.documentElement.classList.add("evo-maintenance-active");
+  document.body.className = "maintenance-page";
 
   const MAINTENANCE_CACHE_KEY = "evoford-maintenance-state";
   const MAINTENANCE_CACHE_TTL_MS = 10_000;

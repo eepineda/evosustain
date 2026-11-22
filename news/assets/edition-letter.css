@@ -57,3 +57,12 @@
 .letter-contact{display:flex;gap:2mm;align-items:center;color:#626b75}
 .letter-contact a{color:#052962;text-decoration:none;font-weight:600}
 @media print{.letter-contact a{color:#052962!important;text-decoration:none!important}}
+
+/* Selector previo del modelo de carta */
+.letter-type-chooser{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:24px 0}
+.letter-type-card{display:grid;gap:10px;text-align:left;padding:20px;border:1px solid #cbd4dd;border-radius:9px;background:#fff;color:#17212b;cursor:pointer;font:inherit}
+.letter-type-card:hover,.letter-type-card:focus{border-color:#052962;box-shadow:0 4px 16px #05296218;outline:none}
+.letter-type-card strong{font:700 17px 'Source Sans 3',Arial,sans-serif;color:#052962}
+.letter-type-card span{font-size:14px;line-height:1.45}
+.letter-type-card em{font-size:13px;line-height:1.4;color:#626b75}
+@media(max-width:650px){.letter-type-chooser{grid-template-columns:1fr}}

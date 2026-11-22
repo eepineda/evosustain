@@ -529,3 +529,86 @@ html.evo-pwa button:focus-visible,html.evo-pwa a:focus-visible{
 @media (prefers-reduced-motion:reduce) {
   html.evo-pwa .app-bottom-nav a {transition:none!important}
 }
+
+
+/* EVOFORD NEWS — larger native-feel navigation for mobile PWA.
+   Scoped to installed-app pages; website and page content remain unchanged. */
+@media(max-width:760px){
+  html.evo-pwa body{
+    padding-bottom:calc(100px + env(safe-area-inset-bottom))!important;
+  }
+  html.evo-pwa .app-bottom-nav{
+    position:fixed!important;
+    z-index:2147483000!important;
+    inset:auto 0 0!important;
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    align-items:stretch!important;
+    gap:4px!important;
+    min-height:84px!important;
+    padding:9px 8px calc(9px + env(safe-area-inset-bottom))!important;
+    box-sizing:border-box!important;
+    background:rgba(255,255,255,.98)!important;
+    border:0!important;
+    border-top:1px solid rgba(16,43,78,.10)!important;
+    border-radius:19px 19px 0 0!important;
+    box-shadow:0 -8px 28px rgba(16,43,78,.13)!important;
+    -webkit-backdrop-filter:blur(22px)!important;
+    backdrop-filter:blur(22px)!important;
+  }
+  html.evo-pwa .app-bottom-nav>a{
+    display:flex!important;
+    min-width:0!important;
+    min-height:64px!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:5px!important;
+    padding:5px 2px!important;
+    border:0!important;
+    border-radius:15px!important;
+    background:transparent!important;
+    color:#65758a!important;
+    text-align:center!important;
+    text-decoration:none!important;
+    font:750 11px/1.2 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+    -webkit-tap-highlight-color:transparent!important;
+    transition:background-color .18s ease,color .18s ease,transform .18s ease!important;
+  }
+  html.evo-pwa .app-bottom-nav .nav-icon{
+    display:grid!important;
+    place-items:center!important;
+    width:38px!important;
+    height:34px!important;
+    border-radius:12px!important;
+    color:currentColor!important;
+    font-size:25px!important;
+    line-height:1!important;
+  }
+  html.evo-pwa .app-bottom-nav .nav-icon svg{
+    display:block!important;
+    width:26px!important;
+    height:26px!important;
+    fill:none!important;
+    stroke:currentColor!important;
+    stroke-width:1.9!important;
+    stroke-linecap:round!important;
+    stroke-linejoin:round!important;
+  }
+  html.evo-pwa .app-bottom-nav>a[aria-current="page"]{
+    background:#f8ecee!important;
+    color:#a9232d!important;
+  }
+  html.evo-pwa .app-bottom-nav>a[aria-current="page"] .nav-icon{
+    background:#f1dce0!important;
+  }
+  html.evo-pwa .app-bottom-nav>a:active{transform:scale(.96)!important}
+}
+@media(max-width:360px){
+  html.evo-pwa .app-bottom-nav{gap:1px!important;padding-left:4px!important;padding-right:4px!important}
+  html.evo-pwa .app-bottom-nav>a{font-size:10px!important}
+  html.evo-pwa .app-bottom-nav .nav-icon svg{width:24px!important;height:24px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html.evo-pwa .app-bottom-nav>a{transition:none!important}
+}

@@ -545,3 +545,11 @@ html[data-evo-theme] a:focus-visible,
 html[data-evo-theme] button:focus-visible,
 html[data-evo-theme] input:focus-visible,
 html[data-evo-theme] select:focus-visible{outline:3px solid #d49a27!important;outline-offset:3px!important}
+
+/* Keep the complete EVOFORD NEWS masthead visible in every theme and article view. */
+.masthead .brand .brand-name{display:inline!important;visibility:visible!important;opacity:1!important;color:#102b4e!important;-webkit-text-fill-color:#102b4e!important}
+.masthead .brand em{display:inline!important;visibility:visible!important;opacity:1!important;color:#a9232d!important;-webkit-text-fill-color:#a9232d!important}
+html[data-evo-theme="dark"] .masthead .brand .brand-name{color:#f1f5f9!important;-webkit-text-fill-color:#f1f5f9!important}
+html[data-evo-theme="dark"] .masthead .brand em{color:#ff7b83!important;-webkit-text-fill-color:#ff7b83!important}
+html.evo-high-contrast .masthead .brand .brand-name{color:#102b4e!important;-webkit-text-fill-color:#102b4e!important}
+html.evo-high-contrast .masthead .brand em{color:#a0001b!important;-webkit-text-fill-color:#a0001b!important}

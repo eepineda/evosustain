@@ -3,7 +3,33 @@ es:{pageTitle:"Participa en EVOFORD NEWS | Evoford News",news:"Evoford News",adm
 en:{pageTitle:"Participate in EVOFORD NEWS | Evoford News",news:"Evoford News",admin:"Editorial login",kicker:"CONTRIBUTE TO EVOFORD NEWS",title:"Participate in EVOFORD NEWS",intro:"Share a news story, press release or opinion article. Every submission is reviewed by the newsroom. Submission does not guarantee publication.",name:"Full name",email:"Email address",kind:"Content type",headline:"Title",body:"Text",bodyHelp:"Between 50 and 30,000 characters.",files:"Attachments (optional)",filesHelp:"Up to 3 files, maximum 8 MB each.",honeypot:"Do not fill in",submit:"Send to the newsroom",newsType:"News story",pressType:"Press release",opinionType:"Opinion article",otherType:"Other",courseChoiceLabel:"Published course you are interested in",courseChoiceHelp:"Only published courses currently open for requests are listed.",expertType:"Expert collaboration / other proposal",expertIntro:"Tell us about your experience, area of expertise, proposed subject and preferred format. The newsroom will review your proposal and contact you if it fits our editorial approach.",expertPlaceholder:"Describe your experience, area of expertise, proposed subject and preferred format (interview, analysis, opinion column or conversation).",footer:"EVOFORD NEWS · Newsroom"}
 };
 
-const expertMode=new URLSearchParams(location.search).get("colaboracion")==="experta";
+const params=new URLSearchParams(location.search);
+const expertMode=params.get("colaboracion")==="experta";
+const courseMode=params.get("curso")==="interes";
+if(courseMode){
+ dict.es.pageTitle="Solicitar un curso | EVOFORD Academy";
+ dict.es.kicker="EVOFORD ACADEMY · SOLICITUD DE CURSO";
+ dict.es.title="Solicita información o admisión";
+ dict.es.intro="Has seleccionado un curso del catálogo de EVOFORD Academy. Completa tus datos y el equipo recibirá tu solicitud.";
+ dict.es.kind="Tipo de solicitud";
+ dict.es.headline="Solicitud de información e inscripción en cursos";
+ dict.es.body="Consulta o disponibilidad";
+ dict.es.bodyHelp="Cuéntanos si necesitas información adicional o cuál es tu disponibilidad.";
+ dict.es.submit="Enviar solicitud de curso";
+ dict.es.footer="EVOFORD ACADEMY · EVOFORD NEWS";
+ dict.en.pageTitle="Request a course | EVOFORD Academy";
+ dict.en.kicker="EVOFORD ACADEMY · COURSE REQUEST";
+ dict.en.title="Request information or admission";
+ dict.en.intro="You selected a course from the EVOFORD Academy catalogue. Complete your details and your request will be received by the team.";
+ dict.en.kind="Request type";
+ dict.en.headline="Course information and enrolment request";
+ dict.en.body="Enquiry or availability";
+ dict.en.bodyHelp="Tell us if you need further information or describe your availability.";
+ dict.en.submit="Send course request";
+ dict.en.footer="EVOFORD ACADEMY · EVOFORD NEWS";
+ const courseIntro=document.getElementById("course-intro");if(courseIntro){courseIntro.hidden=false;courseIntro.style.display="block";}
+ const kindField=document.getElementById("kindField");if(kindField)kindField.hidden=true;
+}
 if(expertMode){
  dict.es.pageTitle="Propón una colaboración experta | Evoford News";
  dict.es.kicker="PARTICIPA CON TU EXPERIENCIA";

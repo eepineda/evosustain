@@ -778,7 +778,55 @@ async function saveAcademyProjectReview(id){
  say("globalMessage",status==="approved"?"Proyecto aprobado. El resultado ya está disponible para el alumno.":status==="revision_requested"?"Se han guardado las indicaciones de mejora para el alumno.":"Revisión guardada.");
  await loadAcademyProjects();
 }
-async function loadCourses(){
+
+let academyCatalogRows=[];
+function curriculumToText(curriculum){
+ return (Array.isArray(curriculum)?curriculum:[]).map((m,i)=>'Módulo '+(i+1)+': '+(m.title||'')+'\\n'+(m.lessons||[]).map((lesson,j)=>'- Lección '+(j+1)+': '+(typeof lesson==='string'?lesson:lesson.title||'')).join('\\n')).join('\\n\\n');
+}
+function curriculumFromText(value){
+ const modules=[];let current=null;
+ String(value||'').split(/\\r?\\n/).forEach(line=>{
+  const text=line.trim();if(!text)return;
+  const m=text.match(/^(?:m[oó]dulo|module)\\s*(?:\\d+)?\\s*[:.-]\\s*(.+)$/i);
+  const l=text.match(/^(?:[-•]\\s*)?(?:lecci[oó]n|lesson)\\s*(?:\\d+)?\\s*[:.-]\\s*(.+)$/i);
+  if(m){current={title:m[1].trim(),lessons:[]};modules.push(current);}
+  else if(l){if(!current)throw new Error('Añade primero un módulo antes de sus lecciones.');current.lessons.push({title:l[1].trim()});}
+  else throw new Error('Formato no reconocido: "'+text+'". Usa «Módulo 1: título» y «- Lección 1: título».');
+ });
+ return modules;
+}
+function renderAcademyCatalog(){
+ const root=$("academyCatalogList");if(!root)return;
+ root.innerHTML=academyCatalogRows.length?academyCatalogRows.map(x=>'<article class="item"><div><h3>'+safe(x.title)+'</h3><p>'+safe(x.category||'Sin categoría')+' · '+safe(({draft:"Borrador",coming_soon:"Próximamente",available:"Disponible",closed:"Cerrado"})[x.status]||x.status)+' · '+(Array.isArray(x.curriculum)?x.curriculum.length:0)+' módulos</p><p>'+safe(x.summary||"Sin descripción")+'</p></div><div class="item-actions"><button type="button" class="secondary" data-academy-course-edit="'+x.id+'">Editar programa</button></div></article>').join(""):'<p class="muted">Todavía no hay cursos creados. Puedes crear el primero con «Crear curso».</p>';
+}
+async function loadAcademyCatalog(){
+ const root=$("academyCatalogList");if(!root)return;
+ const {data,error}=await client.from("academy_courses").select("*").order("display_order").order("created_at",{ascending:false});
+ if(error){root.innerHTML='<p class="muted">No se pudo cargar el catálogo: '+safe(error.message)+'</p>';return;}
+ academyCatalogRows=data||[];renderAcademyCatalog();
+}
+function editAcademyCourse(course){
+ $("academyCourseForm").hidden=false;$("academyCourseMessage").textContent="";
+ $("academyCourseFormTitle").textContent=course?"Editar curso y programa":"Nuevo curso";
+ $("academyCourseId").value=course?.id||"";
+ ["Title","TitleEn","Category","Summary","SummaryEn","Objectives","ObjectivesEn","Requirements","RequirementsEn"].forEach(k=>{const id="academyCourse"+k;const prop=k.replace(/[A-Z]/g,m=>"_"+m.toLowerCase()).replace(/^_/,"");$(id).value=course?.[prop]||"";});
+ $("academyCourseLanguage").value=course?.language||"es";
+ $("academyCourseStatus").value=course?.status||"draft";
+ $("academyCourseOrder").value=course?.display_order??100;
+ $("academyCourseCurriculum").value=curriculumToText(course?.curriculum);
+ $("academyCourseForm").scrollIntoView({behavior:"smooth",block:"start"});
+}
+async function saveAcademyCourse(event){
+ event.preventDefault();
+ let curriculum;try{curriculum=curriculumFromText($("academyCourseCurriculum").value);}catch(error){say("academyCourseMessage",error.message);return;}
+ const title=$("academyCourseTitle").value.trim();if(!title){say("academyCourseMessage","Escribe el título del curso.");return;}
+ const payload={title,title_en:$("academyCourseTitleEn").value.trim(),slug:slugify(title),category:$("academyCourseCategory").value.trim(),summary:$("academyCourseSummary").value.trim(),summary_en:$("academyCourseSummaryEn").value.trim(),objectives:$("academyCourseObjectives").value.trim(),objectives_en:$("academyCourseObjectivesEn").value.trim(),requirements:$("academyCourseRequirements").value.trim(),requirements_en:$("academyCourseRequirementsEn").value.trim(),language:$("academyCourseLanguage").value,status:$("academyCourseStatus").value,display_order:Number($("academyCourseOrder").value)||100,curriculum,updated_at:new Date().toISOString()};
+ const id=$("academyCourseId").value;const query=id?client.from("academy_courses").update(payload).eq("id",id):client.from("academy_courses").insert(payload);
+ const {error}=await query;if(error){say("academyCourseMessage","No se pudo guardar: "+error.message);return;}
+ say("academyCourseMessage","Curso y programa guardados correctamente.");
+ $("academyCourseForm").hidden=true;await loadAcademyCatalog();
+}
+\nasync function loadCourses(){
  const root=$("courseEnquiryList");if(!root)return;
  root.innerHTML='<p class="muted">Cargando solicitudes…</p>';
  const {data,error}=await client.from("course_enquiries").select("id,full_name,email,course_interest,message,internal_notes,status,created_at").order("created_at",{ascending:false});
@@ -1105,7 +1153,7 @@ function wire(){
   $("sourceForm").addEventListener("submit",addSource);
   $("refreshSubmissionsBtn").addEventListener("click",loadSubmissions);
   $("refreshDirectoryBtn").addEventListener("click",loadDirectoryAdmin);
-  $("refreshCoursesBtn").addEventListener("click",loadCourses);
+  $("refreshCoursesBtn").addEventListener("click",()=>{loadCourses();loadAcademyCatalog();});\n  $("newAcademyCourseBtn")?.addEventListener("click",()=>editAcademyCourse(null));\n  $("cancelAcademyCourseBtn")?.addEventListener("click",()=>{$("academyCourseForm").hidden=true;});\n  $("academyCourseForm")?.addEventListener("submit",saveAcademyCourse);\n  $("academyCatalogList")?.addEventListener("click",e=>{const b=e.target.closest("[data-academy-course-edit]");if(b)editAcademyCourse(academyCatalogRows.find(x=>String(x.id)===b.dataset.academyCourseEdit));});
   $("refreshAcademyProjectsBtn")?.addEventListener("click",loadAcademyProjects);
   $("academyProjectSearch")?.addEventListener("input",filterAcademyProjects);
   $("academyProjectStatus")?.addEventListener("change",filterAcademyProjects);
@@ -1202,7 +1250,7 @@ function wire(){
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
     ["overview","articles","opinionAuthors","briefing","inbox","sources","submissions","directory","courses","ads","printEdition"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!==b.dataset.tab;});
-    const tabLoaders={articles:loadArticles,opinionAuthors:loadOpinionAuthorsAdmin,briefing:loadBriefings,inbox:loadInbox,sources:loadSources,submissions:loadSubmissions,overview:loadOverview,directory:loadDirectoryAdmin,courses:async()=>{await Promise.all([loadCourses(),loadAcademyStudents(),loadAcademyProjects()]);},ads:loadAds,printEdition:loadPrintAccess};
+    const tabLoaders={articles:loadArticles,opinionAuthors:loadOpinionAuthorsAdmin,briefing:loadBriefings,inbox:loadInbox,sources:loadSources,submissions:loadSubmissions,overview:loadOverview,directory:loadDirectoryAdmin,courses:async()=>{await Promise.all([loadCourses(),loadAcademyCatalog(),loadAcademyStudents(),loadAcademyProjects()]);},ads:loadAds,printEdition:loadPrintAccess};
     const loader=tabLoaders[b.dataset.tab];
     if(loader)loadAdminTabOnce(b.dataset.tab,loader);
   }));

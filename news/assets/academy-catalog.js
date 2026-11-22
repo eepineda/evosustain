@@ -1,7 +1,7 @@
 (() => {
  const URL="https://poywsdigujbarvnzbfnz.supabase.co",KEY="sb_publishable_1t7gv1Y9-6HHwMqW5E343A_51GH_L7f";
  const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
- const en=()=>document.documentElement.lang==="en", title=c=>(en()?c.title_en:c.title_en)||c.title, summary=c=>(en()?c.summary_en:c.summary_en)||c.summary||"", status=s=>en()?(s==="available"?"AVAILABLE":"COMING SOON"):(s==="available"?"DISPONIBLE":"PRÓXIMAMENTE");
+ const en=()=>document.documentElement.lang==="en", title=c=>(en()?c.title_en:c.title)||c.title_en||c.title, summary=c=>(en()?c.summary_en:c.summary)||c.summary_en||c.summary||"", status=s=>en()?(s==="available"?"AVAILABLE":"COMING SOON"):(s==="available"?"DISPONIBLE":"PRÓXIMAMENTE");
  const href=s=>"enviar.html?curso=interes&course="+encodeURIComponent(s);
  let rows=[];
  function programme(c){const ms=Array.isArray(c.curriculum)?c.curriculum:[];return ms.length?'<details class="academy-program-details"><summary>'+(en()?"View course programme":"Ver programa del curso")+'</summary><ol>'+ms.map(m=>'<li><strong>'+esc(m.title)+'</strong>'+(m.lessons?.length?'<ul>'+m.lessons.map(l=>'<li>'+esc(typeof l==="string"?l:l.title)+'</li>').join("")+'</ul>':'')+'</li>').join("")+'</ol></details>':"";}

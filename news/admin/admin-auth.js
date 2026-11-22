@@ -812,7 +812,7 @@ function editAcademyCourse(course){
  ["Title","TitleEn","Category","Summary","SummaryEn","Objectives","ObjectivesEn","Requirements","RequirementsEn"].forEach(k=>{const id="academyCourse"+k;const prop=k.replace(/[A-Z]/g,m=>"_"+m.toLowerCase()).replace(/^_/,"");$(id).value=course?.[prop]||"";});
  $("academyCourseLanguage").value=course?.language||"es";
  $("academyCourseStatus").value=course?.status||"draft";
- $("academyCourseOrder").value=course?.display_order??100;
+ $("academyCourseOrder").value=course?.display_order??100;\n $("academyCourseModuleCount").value=course?.module_count??course?.curriculum?.length??0;\n $("academyCourseLessonCount").value=course?.lesson_count??(course?.curriculum||[]).reduce((n,m)=>n+(m.lessons?.length||0),0);
  $("academyCourseCurriculum").value=curriculumToText(course?.curriculum);
  $("academyCourseForm").scrollIntoView({behavior:"smooth",block:"start"});
 }
@@ -820,7 +820,7 @@ async function saveAcademyCourse(event){
  event.preventDefault();
  let curriculum;try{curriculum=curriculumFromText($("academyCourseCurriculum").value);}catch(error){say("academyCourseMessage",error.message);return;}
  const title=$("academyCourseTitle").value.trim();if(!title){say("academyCourseMessage","Escribe el título del curso.");return;}
- const payload={title,title_en:$("academyCourseTitleEn").value.trim(),slug:slugify(title),category:$("academyCourseCategory").value.trim(),summary:$("academyCourseSummary").value.trim(),summary_en:$("academyCourseSummaryEn").value.trim(),objectives:$("academyCourseObjectives").value.trim(),objectives_en:$("academyCourseObjectivesEn").value.trim(),requirements:$("academyCourseRequirements").value.trim(),requirements_en:$("academyCourseRequirementsEn").value.trim(),language:$("academyCourseLanguage").value,status:$("academyCourseStatus").value,display_order:Number($("academyCourseOrder").value)||100,curriculum,updated_at:new Date().toISOString()};
+ const payload={title,title_en:$("academyCourseTitleEn").value.trim(),slug:slugify(title),category:$("academyCourseCategory").value.trim(),summary:$("academyCourseSummary").value.trim(),summary_en:$("academyCourseSummaryEn").value.trim(),objectives:$("academyCourseObjectives").value.trim(),objectives_en:$("academyCourseObjectivesEn").value.trim(),requirements:$("academyCourseRequirements").value.trim(),requirements_en:$("academyCourseRequirementsEn").value.trim(),language:$("academyCourseLanguage").value,status:$("academyCourseStatus").value,display_order:Number($("academyCourseOrder").value)||100,module_count:Number($("academyCourseModuleCount").value)||curriculum.length,lesson_count:Number($("academyCourseLessonCount").value)||curriculum.reduce((n,m)=>n+m.lessons.length,0),curriculum,updated_at:new Date().toISOString()};
  const id=$("academyCourseId").value;const query=id?client.from("academy_courses").update(payload).eq("id",id):client.from("academy_courses").insert(payload);
  const {error}=await query;if(error){say("academyCourseMessage","No se pudo guardar: "+error.message);return;}
  say("academyCourseMessage","Curso y programa guardados correctamente.");

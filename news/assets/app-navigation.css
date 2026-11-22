@@ -1,44 +1,37 @@
 /* EVOFORD NEWS — unified five-section PWA navigation */
-:root{--evo-nav-ink:#102b4e;--evo-nav-red:#ad2938;--evo-nav-muted:#758396;--evo-nav-line:#e5e9ef}
-nav.app-bottom-nav{
- position:fixed!important;z-index:2147483000!important;left:50%!important;right:auto!important;bottom:18px!important;top:auto!important;
- transform:translateX(-50%)!important;display:grid!important;grid-template-columns:repeat(5,minmax(112px,1fr))!important;
- align-items:stretch!important;gap:5px!important;width:min(900px,calc(100% - 40px))!important;min-height:76px!important;height:auto!important;
- margin:0!important;padding:8px!important;box-sizing:border-box!important;border:1px solid rgba(16,43,78,.1)!important;
- border-radius:22px!important;background:rgba(255,255,255,.94)!important;box-shadow:0 12px 38px rgba(16,43,78,.13)!important;
- -webkit-backdrop-filter:blur(20px)!important;backdrop-filter:blur(20px)!important
-}
-nav.app-bottom-nav>a{
- position:relative!important;display:flex!important;min-width:0!important;min-height:58px!important;flex-direction:column!important;
- align-items:center!important;justify-content:center!important;gap:5px!important;padding:5px 7px!important;
- border:0!important;border-radius:15px!important;background:transparent!important;color:var(--evo-nav-muted)!important;
- text-decoration:none!important;text-align:center!important;font:650 12px/1.15 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
- transition:background .18s ease,color .18s ease,transform .18s ease!important
-}
-nav.app-bottom-nav>a:hover{background:#f5f7fa!important;color:var(--evo-nav-ink)!important}
-nav.app-bottom-nav>a[aria-current="page"]{background:#f9eef0!important;color:var(--evo-nav-red)!important}
-nav.app-bottom-nav .nav-icon{display:grid!important;place-items:center!important;width:31px!important;height:29px!important;border-radius:10px!important}
-nav.app-bottom-nav>a[aria-current="page"] .nav-icon{background:#f5dfe3!important}
-nav.app-bottom-nav .nav-icon svg{display:block!important;width:23px!important;height:23px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.85!important;stroke-linecap:round!important;stroke-linejoin:round!important}
-nav.app-bottom-nav>a>span:last-child{display:block!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
-html body{padding-bottom:112px!important}
+/* Desktop web: keep the page navigation clean; this dock is mobile-app UI only. */
+nav.app-bottom-nav{display:none!important}
+html body{padding-bottom:0!important}
 @media(max-width:760px){
  nav.app-bottom-nav{
-  left:0!important;right:0!important;bottom:0!important;transform:none!important;width:100%!important;min-height:66px!important;
-  grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:2px!important;padding:7px 5px calc(7px + env(safe-area-inset-bottom))!important;
+  position:fixed!important;z-index:2147483000!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;
+  transform:none!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  align-items:stretch!important;gap:2px!important;width:100%!important;min-height:66px!important;height:auto!important;
+  margin:0!important;padding:7px 5px calc(7px + env(safe-area-inset-bottom))!important;box-sizing:border-box!important;
   border:0!important;border-top:1px solid rgba(16,43,78,.1)!important;border-radius:18px 18px 0 0!important;
-  background:rgba(255,255,255,.97)!important;box-shadow:0 -8px 30px rgba(16,43,78,.11)!important
+  background:rgba(255,255,255,.97)!important;box-shadow:0 -8px 30px rgba(16,43,78,.11)!important;
+  -webkit-backdrop-filter:blur(20px)!important;backdrop-filter:blur(20px)!important
  }
- nav.app-bottom-nav>a{min-height:53px!important;gap:3px!important;padding:4px 2px!important;border-radius:13px!important;font-size:10px!important}
- nav.app-bottom-nav .nav-icon{width:28px!important;height:27px!important}
- nav.app-bottom-nav .nav-icon svg{width:22px!important;height:22px!important}
+ nav.app-bottom-nav>a{
+  position:relative!important;display:flex!important;min-width:0!important;min-height:53px!important;flex-direction:column!important;
+  align-items:center!important;justify-content:center!important;gap:3px!important;padding:4px 2px!important;
+  border:0!important;border-radius:13px!important;background:transparent!important;color:#758396!important;
+  text-decoration:none!important;text-align:center!important;font:650 10px/1.15 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  transition:background .18s ease,color .18s ease,transform .18s ease!important
+ }
+ nav.app-bottom-nav>a:hover{background:#f5f7fa!important;color:#102b4e!important}
+ nav.app-bottom-nav>a[aria-current="page"]{background:#f9eef0!important;color:#ad2938!important}
+ nav.app-bottom-nav .nav-icon{display:grid!important;place-items:center!important;width:28px!important;height:27px!important;border-radius:10px!important}
+ nav.app-bottom-nav>a[aria-current="page"] .nav-icon{background:#f5dfe3!important}
+ nav.app-bottom-nav .nav-icon svg{display:block!important;width:22px!important;height:22px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.85!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+ nav.app-bottom-nav>a>span:last-child{display:block!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
  html body{padding-bottom:calc(82px + env(safe-area-inset-bottom))!important}
 }
 @media(max-width:360px){
  nav.app-bottom-nav>a{font-size:9px!important}
  nav.app-bottom-nav .nav-icon svg{width:20px!important;height:20px!important}
 }
-@media(display-mode:standalone){
+@media(display-mode:standalone) and (max-width:760px){
  nav.app-bottom-nav{padding-bottom:calc(8px + env(safe-area-inset-bottom))!important}
 }
 @media print{nav.app-bottom-nav{display:none!important}html body{padding-bottom:0!important}}

@@ -361,6 +361,122 @@
       .maintenance-shell * { scroll-behavior: auto !important; }
     }
   `;
+
+  style.textContent += `
+    .maintenance-shell {
+      --maintenance-navy: #102b4e;
+      --maintenance-ink: #162b43;
+      --maintenance-muted: #68788a;
+      --maintenance-red: #c51f3a;
+      min-height: 100svh;
+      padding: clamp(24px, 5vw, 58px);
+      background:
+        radial-gradient(circle at 85% 8%, rgba(197,31,58,.07), transparent 25rem),
+        linear-gradient(145deg, #f7f8fa 0%, #edf1f5 100%);
+      color: var(--maintenance-ink);
+    }
+    .maintenance-orbit { border-color: rgba(16,43,78,.055); }
+    .maintenance-wordmark { color: var(--maintenance-navy); }
+    .maintenance-mark {
+      border: 0;
+      border-radius: 11px 11px 11px 3px;
+      background: var(--maintenance-red);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(197,31,58,.18);
+    }
+    .maintenance-status {
+      border-color: #dce2e9;
+      background: rgba(255,255,255,.72);
+      color: #52657a;
+    }
+    .maintenance-status i { background: #c51f3a; box-shadow: 0 0 0 4px rgba(197,31,58,.10); }
+    .maintenance-intro {
+      max-width: 820px;
+      padding: clamp(54px, 8vw, 82px) 0 34px;
+    }
+    .maintenance-eyebrow, .maintenance-kicker { color: var(--maintenance-red); }
+    .maintenance-intro h1 { color: var(--maintenance-navy); }
+    .maintenance-lead { color: #53657a; }
+    .maintenance-thanks { color: var(--maintenance-ink); }
+    .maintenance-countdown {
+      margin-top: 30px;
+      padding: 20px;
+      border: 1px solid #e0e5eb;
+      border-radius: 16px;
+      background: rgba(255,255,255,.78);
+      box-shadow: 0 12px 35px rgba(16,43,78,.055);
+    }
+    .maintenance-countdown-label {
+      margin: 0 0 14px;
+      color: #68788a;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .14em;
+    }
+    .maintenance-countdown-units {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .maintenance-countdown-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      padding: 14px 8px 12px;
+      border: 1px solid #e7ebf0;
+      border-radius: 11px;
+      background: #f5f7fa;
+    }
+    .maintenance-countdown-unit strong {
+      color: var(--maintenance-navy);
+      font-size: clamp(25px, 4vw, 36px);
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+    .maintenance-countdown-unit span {
+      color: #77869a;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+    .maintenance-countdown-finished {
+      margin: 12px 0 0;
+      color: var(--maintenance-red);
+      font-weight: 700;
+    }
+    .maintenance-language-grid { gap: 16px; }
+    .maintenance-language {
+      min-height: 230px;
+      border: 1px solid #e0e5eb;
+      border-radius: 15px;
+      background: #fff;
+      box-shadow: 0 14px 38px rgba(16,43,78,.06);
+      backdrop-filter: none;
+    }
+    .maintenance-spanish { border-top: 3px solid var(--maintenance-red); }
+    .maintenance-english { border-top: 3px solid #9ba9b8; }
+    .maintenance-language-code {
+      background: #edf1f5;
+      color: var(--maintenance-navy);
+    }
+    .maintenance-language-label { color: #758397; }
+    .maintenance-language h2 { color: var(--maintenance-navy); }
+    .maintenance-language > p:not(.maintenance-kicker) { color: #5c6d80; }
+    .maintenance-language-foot { color: var(--maintenance-ink); }
+    .maintenance-footer { border-top-color: #dce2e9; }
+    .maintenance-footer-note { color: #758397; }
+    .maintenance-contact { color: var(--maintenance-navy); }
+    .maintenance-contact:hover { color: var(--maintenance-red); }
+    .maintenance-contact-icon { border-color: #d6dde6; }
+    @media (max-width: 680px) {
+      .maintenance-shell { padding: 22px 17px 26px; }
+      .maintenance-countdown { padding: 15px; }
+      .maintenance-countdown-units { gap: 6px; }
+      .maintenance-countdown-unit { padding: 12px 3px 10px; }
+      .maintenance-countdown-unit span { font-size: 7px; letter-spacing: .03em; }
+    }
+  `;
   document.head.appendChild(style);
 
   const MAINTENANCE_CACHE_KEY = "evoford-maintenance-state";

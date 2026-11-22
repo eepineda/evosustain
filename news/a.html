@@ -68,6 +68,7 @@
   .app-install .install-dismiss{padding:2px 4px;font-size:18px}
 }
 </style>
+<link rel="stylesheet" href="/news/assets/app-navigation.css?v=1">
 </head>
 <body class="article-page">
 <!-- Google Tag Manager (noscript) -->
@@ -84,12 +85,12 @@
 <div class="ad-slot ad-slot-banner" data-ad-slot="banner" hidden aria-label="Publicidad" style="width:min(814px,calc(100% - 36px));max-width:814px;margin:18px auto;padding:0;box-sizing:border-box"></div>
 <main id="articleView" class="wrap" style="max-width:850px;padding-top:40px;padding-bottom:70px"><p class="muted">Cargando artículo…</p></main>
 <footer><a class="footer-brand" href="a.html?i=aW5kZXguaHRtbA">EVOFORD NEWS</a><span id="articleFooter">Noticias · Opinión · Análisis</span><span>© <span id="year"></span> Evoford</span><a href="a.html?i=c29icmUtZXZvZm9yZC5odG1s">Sobre / About Evoford News</a></footer>
-<nav class="app-bottom-nav" aria-label="Navegación de la aplicación">
-<a href="a.html?i=aW5kZXguaHRtbA"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></span><span>Portada</span></a>
-<a href="/news/aula-innovacion.html" aria-label="Academy · Catálogo de cursos del Aula de Innovación Evoford"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 0 4 22z"/><path d="M4 5.5v16.5M8 7h8M8 11h7M8 15h6"/></svg></span><span>Academy</span></a>
-<a href="a.html?i=c3RhcnR1cHMuaHRtbA"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9 4.9 19.1"/></svg></span><span>Startups</span></a>
-<a href="a.html?i=dHUtcmVwdWJsaWNhLmh0bWw"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><span>Tu República</span></a>
-<a href="a.html?i=ZGlyZWN0b3J5Lmh0bWw"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span><span>Directorio</span></a>
+<nav class="app-bottom-nav" aria-label="Navegación principal de EVOFORD NEWS">
+<a href="a.html?i=aW5kZXguaHRtbA" aria-current="page" aria-label="Portada"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></span><span>Portada</span></a>
+<a href="/news/aula-innovacion.html" aria-label="Academy"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 0 4 22z"/><path d="M4 5.5v16.5M8 7h8M8 11h7M8 15h6"/></svg></span><span>Academy</span></a>
+<a href="a.html?i=c3RhcnR1cHMuaHRtbA" aria-label="Startups"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9 4.9 19.1"/></svg></span><span>Startups</span></a>
+<a href="a.html?i=dHUtcmVwdWJsaWNhLmh0bWw" aria-label="Tu República"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0-18"/></svg></span><span>Tu República</span></a>
+<a href="a.html?i=ZGlyZWN0b3J5Lmh0bWw" aria-label="Directorio"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span><span>Directorio</span></a>
 </nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -253,4 +254,7 @@ loadArticle();
 <script src="assets/ads.js?v=20261116-popup5"></script>
 
 <script src="assets/pwa.js?v=6" defer></script>
+<script>
+(()=>{const token=new URLSearchParams(location.search).get("i");let target="home";try{const decoded=atob((token||"").replace(/-/g,"+").replace(/_/g,"/"));if(decoded.includes("startups.html"))target="startup";else if(decoded.includes("tu-republica.html"))target="republic";else if(decoded.includes("directory.html"))target="directory";}catch(_){}const nav=document.querySelector("nav.app-bottom-nav");if(nav){nav.querySelectorAll("a").forEach(a=>a.removeAttribute("aria-current"));const links={home:"aW5kZXguaHRtbA",startup:"c3RhcnR1cHMuaHRtbA",republic:"dHUtcmVwdWJsaWNhLmh0bWw",directory:"ZGlyZWN0b3J5Lmh0bWw"};const active=target==="home"?nav.querySelector('a[href*="'+links.home+'"]'):nav.querySelector('a[href*="'+links[target]+'"]');if(active)active.setAttribute("aria-current","page");}})();
+</script>
 </body></html>

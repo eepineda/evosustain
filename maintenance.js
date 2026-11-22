@@ -12,7 +12,7 @@
     document.documentElement.classList.remove("evo-maintenance-checking");
   };
 
-  const showMaintenancePage = () => {
+  const showMaintenancePage = (config = {}) => {
     document.body.innerHTML = `
       <main class="maintenance-shell">
         <div class="maintenance-orbit maintenance-orbit-one" aria-hidden="true"></div>
@@ -32,6 +32,17 @@
             <h1 id="maintenance-title">Estamos realizando mejoras<span>.</span></h1>
             <p class="maintenance-lead">Estamos trabajando en nuestra web para ofrecerte una mejor experiencia. Volveremos a estar disponibles próximamente.</p>
             <p class="maintenance-thanks">Gracias por tu paciencia.</p>
+            ${config?.scheduleEnabled === true && Number.isFinite(Date.parse(config.endAt || "")) ? `
+              <section class="maintenance-countdown" aria-label="Cuenta atrás para la reapertura" aria-live="polite">
+                <p class="maintenance-countdown-label">TIEMPO PARA VOLVER · TIME UNTIL WE RETURN</p>
+                <div class="maintenance-countdown-units" id="maintenanceCountdown">
+                  <div class="maintenance-countdown-unit"><strong data-countdown-days>--</strong><span>DÍAS · DAYS</span></div>
+                  <div class="maintenance-countdown-unit"><strong data-countdown-hours>--</strong><span>HORAS · HOURS</span></div>
+                  <div class="maintenance-countdown-unit"><strong data-countdown-minutes>--</strong><span>MIN · MIN</span></div>
+                  <div class="maintenance-countdown-unit"><strong data-countdown-seconds>--</strong><span>SEG · SEC</span></div>
+                </div>
+                <p class="maintenance-countdown-finished" id="maintenanceCountdownFinished" hidden>Estamos restableciendo el servicio · We are restoring the service</p>
+              </section>` : ""}
           </section>
 
           <div class="maintenance-language-grid">
@@ -70,7 +81,39 @@
     `;
 
     document.documentElement.classList.remove("evo-maintenance-checking");
+    startMaintenanceCountdown(config);
   };
+
+  let maintenanceCountdownTimer = null;
+  function startMaintenanceCountdown(config) {
+    if (maintenanceCountdownTimer) window.clearInterval(maintenanceCountdownTimer);
+    const endAt = Date.parse(config?.endAt || "");
+    const countdown = document.getElementById("maintenanceCountdown");
+    if (!countdown || !Number.isFinite(endAt)) return;
+    const fields = {
+      days: countdown.querySelector("[data-countdown-days]"),
+      hours: countdown.querySelector("[data-countdown-hours]"),
+      minutes: countdown.querySelector("[data-countdown-minutes]"),
+      seconds: countdown.querySelector("[data-countdown-seconds]")
+    };
+    const finished = document.getElementById("maintenanceCountdownFinished");
+    const pad = value => String(value).padStart(2, "0");
+    const update = () => {
+      const remaining = Math.max(0, endAt - Date.now());
+      const totalSeconds = Math.floor(remaining / 1000);
+      fields.days.textContent = String(Math.floor(totalSeconds / 86400));
+      fields.hours.textContent = pad(Math.floor((totalSeconds % 86400) / 3600));
+      fields.minutes.textContent = pad(Math.floor((totalSeconds % 3600) / 60));
+      fields.seconds.textContent = pad(totalSeconds % 60);
+      if (remaining <= 0) {
+        finished.hidden = false;
+        countdown.hidden = true;
+        window.clearInterval(maintenanceCountdownTimer);
+      }
+    };
+    update();
+    maintenanceCountdownTimer = window.setInterval(update, 1000);
+  }
 
   const style = document.createElement("style");
   style.textContent = `
@@ -302,7 +345,7 @@
       .maintenance-shell { padding: 22px 18px 26px; }
       .maintenance-header { align-items: flex-start; }
       .maintenance-status { padding: 8px 9px; font-size: 8px; }
-      .maintenance-intro { padding: 54px 0 27px; }
+      .maintenance-intro { padding: 54px 0 27px; }\n      .maintenance-countdown { margin-top: 23px; }\n      .maintenance-countdown-units { gap: 6px; }\n      .maintenance-countdown-unit { padding: 11px 4px 9px; }\n      .maintenance-countdown-unit span { font-size: 7px; letter-spacing: .04em; }
       .maintenance-language-grid { grid-template-columns: 1fr; }
       .maintenance-language { min-height: 0; padding: 23px; }
       .maintenance-language-top { margin-bottom: 18px; }
@@ -334,8 +377,8 @@
 
   function applyMaintenanceState(config) {
     if (isMaintenanceActive(config)) {
-      if (document.body) showMaintenancePage();
-      else document.addEventListener("DOMContentLoaded", showMaintenancePage, { once: true });
+      if (document.body) showMaintenancePage(config);
+      else document.addEventListener("DOMContentLoaded", () => showMaintenancePage(config), { once: true });
     } else {
       revealSite();
     }

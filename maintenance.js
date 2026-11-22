@@ -578,6 +578,14 @@
     return;
   }
 
+  // Never hold the public page blank while the maintenance setting is slow.
+  // If Supabase does not answer promptly, fail open and let the site render.
+  const maintenanceController = new AbortController();
+  const maintenanceTimeout = window.setTimeout(() => {
+    maintenanceController.abort();
+    revealSite();
+  }, 2000);
+
   fetch(
     SUPABASE_URL + "/rest/v1/site_settings?key=eq.maintenance&select=value",
     {
@@ -585,10 +593,12 @@
         apikey: SUPABASE_KEY,
         Authorization: "Bearer " + SUPABASE_KEY
       },
-      cache: "no-store"
+      cache: "no-store",
+      signal: maintenanceController.signal
     }
   )
     .then(response => {
+      window.clearTimeout(maintenanceTimeout);
       if (!response.ok) throw new Error("Maintenance settings unavailable");
       return response.json();
     })
@@ -604,5 +614,5 @@
       }
       applyMaintenanceState(config);
     })
-    .catch(revealSite);
+    .catch(() => { window.clearTimeout(maintenanceTimeout); revealSite(); });
 })();

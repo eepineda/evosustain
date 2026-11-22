@@ -160,7 +160,7 @@ html.evo-pwa .app-bottom-nav a{display:flex!important;min-width:0!important;flex
 html.evo-pwa .app-bottom-nav .nav-icon svg{width:22px!important;height:22px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
 html.evo-pwa .app-bottom-nav a[aria-current=page]{color:#a9232d!important}
 html.evo-pwa .app-bottom-nav a[aria-current=page] .nav-icon{color:#a9232d!important}
-html.evo-pwa a[href*="ZWRpdGlvbi5odG1s"]{display:none!important}
+/* Keep the Print Edition destination visible in the PWA navigation, regardless of language. */
 @media(min-width:700px){html.evo-pwa .app-bottom-nav{max-width:700px!important;left:50%!important;right:auto!important;width:100%!important;transform:translateX(-50%)!important;border:1px solid #e1e6ed!important;border-bottom:0!important;border-radius:18px 18px 0 0!important}}
 @media print{html.evo-pwa .app-bottom-nav{display:none!important}}
 

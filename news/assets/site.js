@@ -17,8 +17,8 @@ function renderStaticLanguage(){
  set(".topline span:last-child",en?"NEWS · OPINION · ANALYSIS":"INFORMACIÓN · OPINIÓN · ANÁLISIS");
  document.querySelectorAll("[data-pwa-tu-label]").forEach(el=>el.textContent=en?"Your Republic":"Tu República");
  const mainNavLabels=en
-  ? ["International","Politics","Economy","Security","Startups & innovation","Evoford Briefing","Opinion","Directory","Submit a story","Print edition"]
-  : ["Internacional","Política","Economía","Seguridad","Startups e innovación","Evoford Briefing","Opinión","Directorio","Envía tu noticia","Edición impresa"];
+  ? ["International","Politics","Economy","Security","Startups & innovation","Evoford Briefing","Opinion","Directory","Participate","Print edition"]
+  : ["Internacional","Política","Economía","Seguridad","Startups e innovación","Evoford Briefing","Opinión","Directorio","Participa","Edición impresa"];
  const mainNav=document.querySelector(".masthead .nav");
  if(mainNav){
   mainNav.querySelectorAll("a").forEach((el,i)=>{

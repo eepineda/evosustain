@@ -323,38 +323,54 @@
   const MAINTENANCE_CACHE_KEY = "evoford-maintenance-state";
   const MAINTENANCE_CACHE_TTL_MS = 10_000;
 
-  function applyMaintenanceState(enabled) {
-    if (enabled) {
-      if (document.body) {
-        showMaintenancePage();
-      } else {
-        document.addEventListener("DOMContentLoaded", showMaintenancePage, { once: true });
-      }
+  function isMaintenanceActive(config) {
+    if (config?.enabled === true) return true;
+    if (config?.scheduleEnabled !== true) return false;
+    const start = Date.parse(config.startAt || "");
+    const end = Date.parse(config.endAt || "");
+    const now = Date.now();
+    return Number.isFinite(start) && Number.isFinite(end) && end > start && now >= start && now < end;
+  }
+
+  function applyMaintenanceState(config) {
+    if (isMaintenanceActive(config)) {
+      if (document.body) showMaintenancePage();
+      else document.addEventListener("DOMContentLoaded", showMaintenancePage, { once: true });
     } else {
       revealSite();
     }
+    scheduleMaintenanceBoundary(config);
   }
 
-  function readRecentMaintenanceState() {
+  function scheduleMaintenanceBoundary(config) {
+    if (config?.scheduleEnabled !== true) return;
+    const start = Date.parse(config.startAt || "");
+    const end = Date.parse(config.endAt || "");
+    const now = Date.now();
+    const nextBoundary = [start, end].filter(value => Number.isFinite(value) && value > now).sort((a,b)=>a-b)[0];
+    if (nextBoundary) {
+      const delay = Math.min(nextBoundary - now + 300, 2147483000);
+      window.setTimeout(() => window.location.reload(), delay);
+    }
+  }
+
+  function readRecentMaintenanceConfig() {
     try {
       const cached = JSON.parse(sessionStorage.getItem(MAINTENANCE_CACHE_KEY) || "null");
       if (
-        cached &&
-        typeof cached.enabled === "boolean" &&
+        cached && cached.config && typeof cached.config === "object" &&
         Number.isFinite(cached.savedAt) &&
         Date.now() - cached.savedAt < MAINTENANCE_CACHE_TTL_MS
-      ) {
-        return cached.enabled;
-      }
+      ) return cached.config;
     } catch (_) {
       // Storage may be unavailable; fall back to the live setting.
     }
     return null;
   }
 
-  const recentState = readRecentMaintenanceState();
-  if (recentState !== null) {
-    applyMaintenanceState(recentState);
+  const recentConfig = readRecentMaintenanceConfig();
+  if (recentConfig !== null) {
+    applyMaintenanceState(recentConfig);
     return;
   }
 
@@ -373,16 +389,16 @@
       return response.json();
     })
     .then(rows => {
-      const enabled = rows[0]?.value?.enabled === true;
+      const config = rows[0]?.value || {};
       try {
         sessionStorage.setItem(MAINTENANCE_CACHE_KEY, JSON.stringify({
-          enabled,
+          config,
           savedAt: Date.now()
         }));
       } catch (_) {
         // The live setting still applies when storage is unavailable.
       }
-      applyMaintenanceState(enabled);
+      applyMaintenanceState(config);
     })
     .catch(revealSite);
 })();

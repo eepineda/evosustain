@@ -58,6 +58,37 @@ h1{max-width:780px;margin:20px 0 18px;font-size:clamp(44px,7vw,82px);line-height
 html[lang=es] [data-lang=es],html[lang=en] [data-lang=en]{display:initial}
 @media(max-width:760px){.shell{width:min(100% - 30px,var(--max))}.topbar{min-height:68px;flex-wrap:wrap;padding:13px 0;gap:12px}.nav{order:3;width:100%;justify-content:space-between;gap:10px;font-size:10px}.actions{margin-left:auto}.hero{grid-template-columns:1fr;gap:25px;padding:54px 0 38px}.hero-note{max-width:600px}.cards{grid-template-columns:1fr}.card{min-height:245px;padding:22px}.section-head{align-items:flex-start;flex-direction:column;gap:7px}.footer{align-items:flex-start;flex-direction:column}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card{transition:none}}
+
+/* Professional visual system: restrained surfaces, clear contrast and deliberate typography */
+:root{color-scheme:dark;--bg:#101b27;--panel:#172635;--panel2:#1c3041;--ink:#edf2f4;--muted:#aab8c2;--line:#304252;--mint:#78b9a9;--gold:#c8aa76;--blue:#8eafcc;--max:1180px}
+body{background:var(--bg);color:var(--ink)}
+.hero-note,.card{background:var(--panel);border:1px solid var(--line);box-shadow:none}
+.card:hover{transform:translateY(-2px);background:var(--panel2);border-color:var(--mint)}
+.card:after{display:none}
+.hero-note p,.card p{color:var(--muted)}
+.nav{color:var(--muted)}
+.action{background:var(--mint);color:#10251f}
+.action.secondary{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.lang button{color:var(--muted);border-color:var(--line)}
+.lang button[aria-pressed=true]{background:var(--mint);color:#10251f;border-color:var(--mint)}
+.theme-toggle{width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--ink);cursor:pointer;font-size:15px}
+.theme-toggle:hover{border-color:var(--mint)}
+html[data-theme="light"]{color-scheme:light;--bg:#f4f6f5;--panel:#fff;--panel2:#f0f4f2;--ink:#172a35;--muted:#5c6c74;--line:#d9e1de;--mint:#287c6a;--gold:#9b7439;--blue:#456f91}
+html[data-theme="light"] body{background:var(--bg);color:var(--ink)}
+html[data-theme="light"] .topbar,html[data-theme="light"] .footer{border-color:var(--line)}
+html[data-theme="light"] .nav,html[data-theme="light"] .hero p,html[data-theme="light"] .hero-note p,html[data-theme="light"] .card p{color:var(--muted)}
+html[data-theme="light"] .hero-note,html[data-theme="light"] .card{background:var(--panel);border-color:var(--line);box-shadow:0 8px 24px rgba(22,43,52,.045)}
+html[data-theme="light"] .card:hover{background:var(--panel2);border-color:#9dbdb2}
+html[data-theme="light"] .symbol{background:#f4f7f5;border-color:var(--line)}
+html[data-theme="light"] .action{background:#1f6e5e;color:#fff}
+html[data-theme="light"] .action.secondary{color:var(--ink);border-color:var(--line);background:transparent}
+html[data-theme="light"] .lang button{color:var(--muted);border-color:var(--line)}
+html[data-theme="light"] .lang button[aria-pressed=true]{background:#1f6e5e;color:#fff;border-color:#1f6e5e}
+html[data-theme="light"] .theme-toggle{color:var(--ink);border-color:var(--line)}
+html[data-theme="light"] .footer{color:#718087}
+html[data-theme="light"] .footer a{color:#334b56}
+@media(max-width:760px){.theme-toggle{width:32px;height:32px}}
+
 </style>
 </head>
 <body>
@@ -67,8 +98,11 @@ html[lang=es] [data-lang=es],html[lang=en] [data-lang=en]{display:initial}
 <nav class="nav" aria-label="Ecosystem navigation">
 <a href="index.html">EvoSustain</a><a href="hub.html" aria-current="page">Hub</a><a href="news/index.html">Evoford News</a><a href="edwin-portfolio/">Edwin Pineda</a>
 </nav>
-<div class="actions lang" aria-label="Language">
+<div class="actions">
+<button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch to light mode" title="Switch theme">☼</button>
+<div class="lang" aria-label="Language">
 <button type="button" data-set-lang="es" aria-pressed="true">ES</button><button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+</div>
 </div>
 </header>
 <main>
@@ -128,6 +162,21 @@ html[lang=es] [data-lang=es],html[lang=en] [data-lang=en]{display:initial}
 <script>
 (function(){
 const buttons=[...document.querySelectorAll("[data-set-lang]")];
+const themeButton=document.getElementById("theme-toggle");
+const themeMeta=document.querySelector('meta[name="theme-color"]');
+function setTheme(theme){
+ document.documentElement.dataset.theme=theme;
+ const light=theme==="light";
+ themeButton.textContent=light?"☾":"☼";
+ themeButton.setAttribute("aria-label",light?"Switch to dark mode":"Switch to light mode");
+ themeButton.title=light?"Dark mode":"Light mode";
+ if(themeMeta) themeMeta.content=light?"#f4f6f5":"#101b27";
+ try{localStorage.setItem("evoford-hub-theme",theme)}catch(e){}
+}
+let savedTheme=null;
+try{savedTheme=localStorage.getItem("evoford-hub-theme")}catch(e){}
+setTheme(savedTheme==="light"||savedTheme==="dark"?savedTheme:"dark");
+themeButton.addEventListener("click",()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark"));
 function setLanguage(lang){
  document.documentElement.lang=lang;
  buttons.forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.setLang===lang)));

@@ -69,7 +69,7 @@
 }
 </style>
 <link rel="stylesheet" href="/news/assets/app-navigation.css?v=20261122-nav2">
-<link rel="stylesheet" href="/news/assets/desktop-navigation.css?v=20261122-1">
+<link rel="stylesheet" href="/news/assets/desktop-navigation.css?v=20261122-fix2">
 </head>
 <body class="article-page">
 <!-- Google Tag Manager (noscript) -->
@@ -259,5 +259,5 @@ loadArticle();
 (()=>{const token=new URLSearchParams(location.search).get("i");let target="home";try{const decoded=atob((token||"").replace(/-/g,"+").replace(/_/g,"/"));if(decoded.includes("startups.html"))target="startup";else if(decoded.includes("tu-republica.html"))target="republic";else if(decoded.includes("directory.html"))target="directory";}catch(_){}const nav=document.querySelector("nav.app-bottom-nav");if(nav){nav.querySelectorAll("a").forEach(a=>a.removeAttribute("aria-current"));const links={home:"aW5kZXguaHRtbA",startup:"c3RhcnR1cHMuaHRtbA",republic:"dHUtcmVwdWJsaWNhLmh0bWw",directory:"ZGlyZWN0b3J5Lmh0bWw"};const active=target==="home"?nav.querySelector('a[href*="'+links.home+'"]'):nav.querySelector('a[href*="'+links[target]+'"]');if(active)active.setAttribute("aria-current","page");}})();
 </script>
 <script src="/news/assets/app-navigation.js?v=20261122-nav6-tu-republica" defer></script>
-<script src="/news/assets/desktop-navigation.js?v=20261122-1" defer></script>
+<script src="/news/assets/desktop-navigation.js?v=20261122-fix2" defer></script>
 </body></html>

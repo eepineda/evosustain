@@ -16,15 +16,9 @@ function renderStaticLanguage(){
  set(".topline span:first-child",en?"LONDON · UNITED KINGDOM":"LONDRES · REINO UNIDO");
  set(".topline span:last-child",en?"NEWS · OPINION · ANALYSIS":"INFORMACIÓN · OPINIÓN · ANÁLISIS");
  document.querySelectorAll("[data-pwa-tu-label]").forEach(el=>el.textContent=en?"Your Republic":"Tu República");
- const mainNavLabels=en
-  ? ["Home","International","Politics","Economy","Security","Startups & innovation","Evoford Briefing","Opinion","Your Republic","Directory","Participate","Print edition"]
-  : ["Portada","Internacional","Política","Economía","Seguridad","Startups e innovación","Evoford Briefing","Opinión","Tu República","Directorio","Participa","Edición impresa"];
- const mainNav=document.querySelector(".masthead .nav");
- if(mainNav){
-  mainNav.querySelectorAll("a").forEach((el,i)=>{
-   if(mainNavLabels[i])el.textContent=mainNavLabels[i];
-  });
- }
+ // El menú principal lo traduce app-navigation.js mediante data-es/data-en.
+ // No traducir por posición: el número de enlaces puede variar entre vistas y
+ // desplazaría la etiqueta de Edición impresa a otro destino.
  const topicLabels=en
   ? ["Politics","Security & defence","Economy","Startups & innovation","Innovation Academy","International","Opinion & analysis"]
   : ["Política","Seguridad y defensa","Economía","Startups e innovación","Aula de Innovación","Internacional","Opinión y análisis"];

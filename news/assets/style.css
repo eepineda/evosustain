@@ -677,3 +677,14 @@ footer a:not(.footer-brand){color:#e6c98b;border-bottom-color:rgba(230,201,139,.
 
 /* Hide the per-article print control; keep browser printing available from its own menu. */
 .print-article-btn{display:none!important}
+
+
+/* Academy entry embedded in the Technology editorial section */
+.technology-academy-promo{display:grid;grid-template-columns:minmax(130px,.32fr) minmax(0,1fr) auto;align-items:center;gap:22px;margin:24px 0 4px;padding:24px 26px;background:linear-gradient(115deg,#102b4e,#173e5f);color:#fff;border-left:4px solid #b78a45}
+.technology-academy-mark{font:800 10px/1.5 Arial,sans-serif;letter-spacing:.16em;color:#e8c98d}
+.technology-academy-copy h3{margin:0 0 7px;font:700 clamp(20px,2.4vw,27px)/1.12 Georgia,serif;color:#fff}
+.technology-academy-copy p{margin:0;max-width:680px;color:#d7e1eb;font:13px/1.6 Arial,sans-serif}
+.technology-academy-promo>a{display:inline-flex;align-items:center;gap:12px;padding:12px 15px;background:#fff;color:#102b4e;text-decoration:none;font:800 10px Arial,sans-serif;letter-spacing:.07em;white-space:nowrap}
+.technology-academy-promo>a:hover{background:#f1e5d1}
+@media(max-width:760px){.technology-academy-promo{grid-template-columns:1fr;gap:10px;margin:18px 0 0;padding:20px}.technology-academy-promo>a{justify-self:start}.technology-academy-mark{font-size:9px}}
+@media print{.technology-academy-promo{break-inside:avoid;background:#102b4e!important}}

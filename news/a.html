@@ -68,7 +68,7 @@
   .app-install .install-dismiss{padding:2px 4px;font-size:18px}
 }
 </style>
-<link rel="stylesheet" href="/news/assets/app-navigation.css?v=1">
+<link rel="stylesheet" href="/news/assets/app-navigation.css?v=20261122-nav1">
 </head>
 <body class="article-page">
 <!-- Google Tag Manager (noscript) -->
@@ -253,7 +253,7 @@ loadArticle();
 </script>
 <script src="assets/ads.js?v=20261116-popup5"></script>
 
-<script src="assets/pwa.js?v=6" defer></script>
+<script src="assets/pwa.js?v=20261122-cache1" defer></script>
 <script>
 (()=>{const token=new URLSearchParams(location.search).get("i");let target="home";try{const decoded=atob((token||"").replace(/-/g,"+").replace(/_/g,"/"));if(decoded.includes("startups.html"))target="startup";else if(decoded.includes("tu-republica.html"))target="republic";else if(decoded.includes("directory.html"))target="directory";}catch(_){}const nav=document.querySelector("nav.app-bottom-nav");if(nav){nav.querySelectorAll("a").forEach(a=>a.removeAttribute("aria-current"));const links={home:"aW5kZXguaHRtbA",startup:"c3RhcnR1cHMuaHRtbA",republic:"dHUtcmVwdWJsaWNhLmh0bWw",directory:"ZGlyZWN0b3J5Lmh0bWw"};const active=target==="home"?nav.querySelector('a[href*="'+links.home+'"]'):nav.querySelector('a[href*="'+links[target]+'"]');if(active)active.setAttribute("aria-current","page");}})();
 </script>

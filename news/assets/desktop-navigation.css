@@ -31,5 +31,64 @@
  html.evo-high-contrast a,html.evo-high-contrast .kicker{color:#ffeb00!important}
  html.evo-high-contrast .evo-drawer{background:#000;color:#fff;border-right:2px solid #ffeb00}
  html.evo-high-contrast .evo-drawer-links a,html.evo-high-contrast .evo-drawer-brand,html.evo-high-contrast .evo-drawer-close{color:#fff}
+ /* Final accessibility pass: themes must cover the complete newspaper, not just the shell. */
+ html[data-evo-theme="dark"] body,
+ html[data-evo-theme="dark"] main,
+ html[data-evo-theme="dark"] .wrap{background:#0b1724!important;color:#edf2f7!important}
+ html[data-evo-theme="dark"] h1,html[data-evo-theme="dark"] h2,html[data-evo-theme="dark"] h3,
+ html[data-evo-theme="dark"] .story h1,html[data-evo-theme="dark"] .story h2,
+ html[data-evo-theme="dark"] .story h3,html[data-evo-theme="dark"] .story a,
+ html[data-evo-theme="dark"] .opinion h1,html[data-evo-theme="dark"] .opinion h2,
+ html[data-evo-theme="dark"] .opinion a,html[data-evo-theme="dark"] .brief a,
+ html[data-evo-theme="dark"] .section-head a,html[data-evo-theme="dark"] #articleView a{color:#f2f5f8!important}
+ html[data-evo-theme="dark"] .story,html[data-evo-theme="dark"] .brief,
+ html[data-evo-theme="dark"] .opinion,html[data-evo-theme="dark"] .article-card,
+ html[data-evo-theme="dark"] .story-card,html[data-evo-theme="dark"] .section-card,
+ html[data-evo-theme="dark"] .directory-card,html[data-evo-theme="dark"] .newsletter,
+ html[data-evo-theme="dark"] .newsletter-form,html[data-evo-theme="dark"] .reader-tools,
+ html[data-evo-theme="dark"] .reader-results,html[data-evo-theme="dark"] .saved-stories-panel,
+ html[data-evo-theme="dark"] #articleView .article-body,
+ html[data-evo-theme="dark"] #articleView .dek{background:#142638!important;color:#eaf0f6!important;border-color:#344b60!important}
+ html[data-evo-theme="dark"] p,html[data-evo-theme="dark"] li,
+ html[data-evo-theme="dark"] .story-copy,html[data-evo-theme="dark"] .brief p,
+ html[data-evo-theme="dark"] .opinion p,html[data-evo-theme="dark"] #articleView p{color:#c5d0dc}
+ html[data-evo-theme="dark"] input,html[data-evo-theme="dark"] select,
+ html[data-evo-theme="dark"] textarea{background:#0c1a28!important;color:#f3f6fa!important;border-color:#52677b!important}
+ html[data-evo-theme="dark"] .evo-drawer-tools>button,
+ html[data-evo-theme="dark"] .evo-drawer-languages button{background:#17334b!important;color:#f4f7fa!important;border-color:#456078!important}
+ /* High contrast: white paper, black ink, strong blue links and yellow focus accents.
+    Avoid yellow body copy and avoid dimming the entire page behind the drawer. */
+ html.evo-high-contrast body,html.evo-high-contrast main,
+ html.evo-high-contrast .wrap{background:#fff!important;color:#000!important}
+ html.evo-high-contrast h1,html.evo-high-contrast h2,html.evo-high-contrast h3,
+ html.evo-high-contrast p,html.evo-high-contrast li,
+ html.evo-high-contrast .story,html.evo-high-contrast .brief,
+ html.evo-high-contrast .opinion,html.evo-high-contrast .article-body,
+ html.evo-high-contrast .section-head h2{color:#000!important}
+ html.evo-high-contrast .story,html.evo-high-contrast .brief,
+ html.evo-high-contrast .opinion,html.evo-high-contrast .article-card,
+ html.evo-high-contrast .story-card,html.evo-high-contrast .section-card,
+ html.evo-high-contrast .directory-card,html.evo-high-contrast .newsletter,
+ html.evo-high-contrast .reader-tools,html.evo-high-contrast .reader-results,
+ html.evo-high-contrast .saved-stories-panel,html.evo-high-contrast #articleView .dek{
+   background:#fff!important;color:#000!important;border:1px solid #111!important;box-shadow:none!important
+ }
+ html.evo-high-contrast a,html.evo-high-contrast .kicker,
+ html.evo-high-contrast .story a,html.evo-high-contrast .brief a,
+ html.evo-high-contrast .opinion a,html.evo-high-contrast #articleView a{
+   color:#003b73!important;text-decoration:underline!important;text-decoration-thickness:1px!important
+ }
+ html.evo-high-contrast .evo-scrollbar{background:#000!important;color:#fff!important;border-bottom:3px solid #f0c400}
+ html.evo-high-contrast .evo-scrollbar a,html.evo-high-contrast .evo-menu-trigger{color:#fff!important}
+ html.evo-high-contrast .evo-drawer{background:#fff!important;color:#000!important;border-right:3px solid #000;box-shadow:12px 0 35px #0004}
+ html.evo-high-contrast .evo-drawer-brand,html.evo-high-contrast .evo-drawer-close,
+ html.evo-high-contrast .evo-drawer-links a,html.evo-high-contrast .evo-drawer-foot,
+ html.evo-high-contrast .evo-drawer-caption{background:transparent!important;color:#000!important}
+ html.evo-high-contrast .evo-drawer-tools>button,
+ html.evo-high-contrast .evo-drawer-languages button,
+ html.evo-high-contrast .evo-drawer-search{background:#fff!important;color:#000!important;border:2px solid #000!important}
+ html.evo-high-contrast button:focus-visible,html.evo-high-contrast a:focus-visible,
+ html.evo-high-contrast input:focus-visible{outline:3px solid #c18b00!important;outline-offset:3px!important}
+
 }
 @media(max-width:760px),(display-mode:standalone){.evo-scrollbar,.evo-drawer,.evo-drawer-overlay{display:none!important}}

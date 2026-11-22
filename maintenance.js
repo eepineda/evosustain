@@ -483,12 +483,16 @@
   const MAINTENANCE_CACHE_TTL_MS = 10_000;
 
   function isMaintenanceActive(config) {
-    if (config?.enabled === true) return true;
-    if (config?.scheduleEnabled !== true) return false;
-    const start = Date.parse(config.startAt || "");
-    const end = Date.parse(config.endAt || "");
-    const now = Date.now();
-    return Number.isFinite(start) && Number.isFinite(end) && end > start && now >= start && now < end;
+    // Scheduled maintenance takes precedence over the manual toggle.
+    // Once the configured interval ends, the public site reopens automatically.
+    if (config?.scheduleEnabled === true) {
+      const start = Date.parse(config.startAt || "");
+      const end = Date.parse(config.endAt || "");
+      const now = Date.now();
+      return Number.isFinite(start) && Number.isFinite(end) && end > start && now >= start && now < end;
+    }
+    // Manual maintenance applies only when no schedule is enabled.
+    return config?.enabled === true;
   }
 
   function applyMaintenanceState(config) {

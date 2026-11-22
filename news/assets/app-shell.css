@@ -639,3 +639,48 @@ html.evo-pwa button:focus-visible,html.evo-pwa a:focus-visible{
   html.evo-pwa nav.app-bottom-nav>a {font-size:10px!important}
   html.evo-pwa nav.app-bottom-nav>a .nav-icon svg {width:25px!important;height:25px!important}
 }
+
+
+/* PWA mobile app navigation: larger icons, labels and touch targets.
+   This only applies to installed standalone/fullscreen apps. */
+@media (display-mode:standalone) and (max-width:760px),
+       (display-mode:fullscreen) and (max-width:760px) {
+  html.evo-pwa body {
+    padding-bottom:calc(104px + env(safe-area-inset-bottom))!important;
+  }
+  html.evo-pwa .app-bottom-nav {
+    min-height:88px!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:5px!important;
+    padding:9px 9px calc(9px + env(safe-area-inset-bottom))!important;
+    background:rgba(255,255,255,.985)!important;
+    border-top:1px solid #e2e7ee!important;
+    border-radius:20px 20px 0 0!important;
+    box-shadow:0 -9px 30px rgba(16,43,78,.13)!important;
+  }
+  html.evo-pwa .app-bottom-nav>a {
+    min-height:68px!important;
+    padding:7px 3px!important;
+    gap:5px!important;
+    border-radius:15px!important;
+    font:750 11px/1.2 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+    color:#64748b!important;
+  }
+  html.evo-pwa .app-bottom-nav>a .nav-icon {
+    width:40px!important;height:36px!important;border-radius:13px!important;
+  }
+  html.evo-pwa .app-bottom-nav>a .nav-icon svg {
+    width:27px!important;height:27px!important;stroke-width:1.9!important;
+  }
+  html.evo-pwa .app-bottom-nav>a[aria-current="page"] {
+    color:#a9232d!important;background:#faeef0!important;
+  }
+  html.evo-pwa .app-bottom-nav>a[aria-current="page"] .nav-icon {
+    background:#f3dfe3!important;
+  }
+}
+@media (display-mode:standalone) and (max-width:380px),
+       (display-mode:fullscreen) and (max-width:380px) {
+  html.evo-pwa .app-bottom-nav>a {font-size:10px!important}
+  html.evo-pwa .app-bottom-nav>a .nav-icon svg {width:25px!important;height:25px!important}
+}

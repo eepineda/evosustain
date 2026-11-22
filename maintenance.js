@@ -480,8 +480,8 @@
   // Isolate the maintenance screen from site-wide header/body rules.
   // The same script runs on EvoSustain and Evoford News, which load different CSS.
   style.textContent += `
-    html:has(.maintenance-shell),
-    html:has(.maintenance-shell) body {
+    html.evo-maintenance-active,
+    html.evo-maintenance-active body {
       min-height: 100%;
       margin: 0 !important;
       padding: 0 !important;
@@ -517,6 +517,7 @@
   `;
 
   document.head.appendChild(style);
+  document.documentElement.classList.add("evo-maintenance-active");
   document.body.className = "maintenance-page";
 
   const MAINTENANCE_CACHE_KEY = "evoford-maintenance-state";

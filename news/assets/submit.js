@@ -18,6 +18,7 @@ if(courseRequest){
  if(courseIntro){courseIntro.hidden=false;courseIntro.style.display="block";}
  const courseField=document.getElementById("courseField"),courseChoice=document.getElementById("courseChoice");
  if(courseField)courseField.hidden=false;
+ const kindField=document.getElementById("kindField");if(kindField)kindField.hidden=true;
  document.getElementById("kind").value="otro";
  document.getElementById("title").value="Solicitud de información e inscripción en cursos";
  const updateCourseBody=()=>{const selected=courseChoice?.selectedOptions?.[0]?.textContent||"Curso no seleccionado";document.getElementById("body").value="Me interesa recibir información y solicitar admisión en el siguiente curso de EVOFORD Academy:\n\nCurso seleccionado: "+selected+"\n\nMi consulta o disponibilidad:\n";};

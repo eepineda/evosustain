@@ -32,13 +32,18 @@
   links.addEventListener("click",e=>{if(e.target.closest("a"))shut()});quick.addEventListener("click",e=>{if(e.target.closest("a"))shut()});
   search.addEventListener("input",()=>{const q=search.value.trim().toLocaleLowerCase();links.querySelectorAll("a").forEach(a=>a.hidden=!a.textContent.toLocaleLowerCase().includes(q))});
   let wasVisible=false;const onScroll=()=>{const visible=window.scrollY>220;if(visible!==wasVisible){bar.classList.toggle("is-visible",visible);wasVisible=visible}};window.addEventListener("scroll",onScroll,{passive:true});onScroll();
-  function setTheme(mode){document.documentElement.dataset.evoTheme=mode;try{localStorage.setItem("evoford-news-desktop-theme",mode)}catch(e){}drawer.querySelectorAll("[data-evo-theme]").forEach(b=>{const active=b.dataset.evoTheme===mode;b.classList.toggle("is-active",active);b.setAttribute("aria-pressed",String(active))})}
-  let saved="light";try{saved=localStorage.getItem("evoford-news-desktop-theme")==="dark"?"dark":"light"}catch(e){}setTheme(saved);
-  drawer.querySelectorAll("[data-evo-theme]").forEach(b=>b.addEventListener("click",()=>setTheme(b.dataset.evoTheme)));
   const contrast=drawer.querySelector("[data-evo-contrast]");
-  function syncContrast(){const active=document.documentElement.classList.contains("evo-high-contrast");contrast.setAttribute("aria-pressed",String(active));contrast.classList.toggle("is-active",active)}
-  try{if(localStorage.getItem("evoford-news-high-contrast")==="1")document.documentElement.classList.add("evo-high-contrast")}catch(e){}syncContrast();
-  contrast.addEventListener("click",()=>{document.documentElement.classList.toggle("evo-high-contrast");try{localStorage.setItem("evoford-news-high-contrast",document.documentElement.classList.contains("evo-high-contrast")?"1":"0")}catch(e){}syncContrast()});
+  let saved="light",contrastOn=false;
+  try{saved=localStorage.getItem("evoford-news-desktop-theme")==="dark"?"dark":"light";contrastOn=localStorage.getItem("evoford-news-high-contrast")==="1"}catch(e){}
+  function syncThemeControls(){
+   document.documentElement.dataset.evoTheme=saved;
+   document.documentElement.classList.toggle("evo-high-contrast",contrastOn);
+   drawer.querySelectorAll("[data-evo-theme]").forEach(b=>{const active=!contrastOn&&b.dataset.evoTheme===saved;b.classList.toggle("is-active",active);b.setAttribute("aria-pressed",String(active))});
+   contrast.setAttribute("aria-pressed",String(contrastOn));contrast.classList.toggle("is-active",contrastOn);
+  }
+  drawer.querySelectorAll("[data-evo-theme]").forEach(b=>b.addEventListener("click",()=>{saved=b.dataset.evoTheme;contrastOn=false;try{localStorage.setItem("evoford-news-desktop-theme",saved);localStorage.setItem("evoford-news-high-contrast","0")}catch(e){}syncThemeControls()}));
+  contrast.addEventListener("click",()=>{contrastOn=!contrastOn;try{localStorage.setItem("evoford-news-high-contrast",contrastOn?"1":"0")}catch(e){}syncThemeControls()});
+  syncThemeControls();
   drawer.querySelectorAll("[data-evo-language]").forEach(b=>b.addEventListener("click",()=>{try{localStorage.setItem("evoford-news-language",b.dataset.evoLanguage)}catch(e){}const u=new URL(location.href);u.searchParams.set("lang",b.dataset.evoLanguage);location.href=u.href}));
   window.addEventListener("evoford:languagechange",applyLanguage);window.addEventListener("storage",e=>{if(e.key==="evoford-news-language")applyLanguage()});applyLanguage();
  }

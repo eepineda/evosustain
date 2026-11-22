@@ -684,3 +684,62 @@ html.evo-pwa button:focus-visible,html.evo-pwa a:focus-visible{
   html.evo-pwa .app-bottom-nav>a {font-size:10px!important}
   html.evo-pwa .app-bottom-nav>a .nav-icon svg {width:25px!important;height:25px!important}
 }
+
+
+/* Final PWA-only mobile navigation sizing.
+   Scope by the app's evo-pwa root class rather than display-mode detection:
+   Android launchers and iOS installed apps do not report display-mode identically. */
+@media (max-width: 760px) {
+  html.evo-pwa body {
+    padding-bottom: calc(108px + env(safe-area-inset-bottom)) !important;
+  }
+  html.evo-pwa .app-bottom-nav {
+    min-height: 88px !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 4px !important;
+    padding: 10px 8px calc(10px + env(safe-area-inset-bottom)) !important;
+    background: rgba(255,255,255,.99) !important;
+    border-top: 1px solid #dfe5ec !important;
+    border-radius: 20px 20px 0 0 !important;
+    box-shadow: 0 -8px 28px rgba(16,43,78,.14) !important;
+  }
+  html.evo-pwa .app-bottom-nav > a {
+    min-width: 0 !important;
+    min-height: 68px !important;
+    padding: 6px 2px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    border-radius: 14px !important;
+    color: #52647a !important;
+    font: 750 11px/1.15 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+    text-align: center !important;
+  }
+  html.evo-pwa .app-bottom-nav .nav-icon {
+    display: grid !important;
+    place-items: center !important;
+    width: 42px !important;
+    height: 38px !important;
+    border-radius: 12px !important;
+    font-size: 27px !important;
+    line-height: 1 !important;
+  }
+  html.evo-pwa .app-bottom-nav .nav-icon svg {
+    width: 28px !important;
+    height: 28px !important;
+    stroke-width: 2 !important;
+  }
+  html.evo-pwa .app-bottom-nav > a[aria-current="page"] {
+    color: #a9232d !important;
+    background: #faecef !important;
+  }
+  html.evo-pwa .app-bottom-nav > a[aria-current="page"] .nav-icon {
+    background: #f2dce1 !important;
+  }
+}
+@media (max-width: 380px) {
+  html.evo-pwa .app-bottom-nav > a { font-size: 10px !important; }
+  html.evo-pwa .app-bottom-nav .nav-icon svg { width: 25px !important; height: 25px !important; }
+}

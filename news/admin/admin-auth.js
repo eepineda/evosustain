@@ -741,6 +741,43 @@ function exportCoursesCsv(){
  a.href=url;a.download="evoford-solicitudes-formacion.csv";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
 }
 
+let academyProjectSubmissions=[];
+const academyRubricLabels=["Problema y usuario claramente definidos","Prototipo funcional o proceso reproducible","Prueba y resultados registrados","Precisión, seguridad, privacidad y supervisión","Métrica antes/después y próximos pasos"];
+function filterAcademyProjects(){
+ const q=($("academyProjectSearch")?.value||"").trim().toLocaleLowerCase("es"),status=$("academyProjectStatus")?.value||"";
+ const rows=academyProjectSubmissions.filter(x=>(!status||x.status===status)&&[x.student_name,x.student_email,x.project_name,x.problem,x.solution].some(v=>String(v||"").toLocaleLowerCase("es").includes(q)));
+ const counts={pending_review:0,approved:0,revision_requested:0};academyProjectSubmissions.forEach(x=>{if(counts[x.status]!==undefined)counts[x.status]++;});
+ $("academyProjectStats").innerHTML=[["Pendientes",counts.pending_review],["Aprobados",counts.approved],["Con mejoras",counts.revision_requested]].map(([label,n])=>'<div class="course-stat"><strong>'+n+'</strong><span>'+label+'</span></div>').join("");
+ $("academyProjectCount").textContent=rows.length+" de "+academyProjectSubmissions.length+" proyectos";
+ $("academyProjectList").innerHTML=rows.length?rows.map(x=>{
+  const date=x.created_at?new Date(x.created_at).toLocaleString("es-GB",{dateStyle:"medium",timeStyle:"short"}):"Fecha no disponible",rubric=x.rubric||{};
+  const options=value=>[0,1,2].map(n=>'<option value="'+n+'" '+(Number(value??0)===n?'selected':'')+'>'+n+' · '+(n===0?'No demostrado':n===1?'Parcial':'Con evidencia')+'</option>').join("");
+  return '<article class="item academy-project-card"><div class="academy-project-submission"><p class="eyebrow">'+safe(date)+' · '+safe(x.status==="approved"?"Aprobado":x.status==="revision_requested"?"Necesita mejoras":"Pendiente de revisión")+'</p><h3>'+safe(x.project_name)+'</h3><p><strong>'+safe(x.student_name)+'</strong> · <a href="mailto:'+safe(x.student_email)+'">'+safe(x.student_email)+'</a></p><p class="muted">Curso: '+safe(x.course_slug)+' · Test: '+(x.quiz_score===null||x.quiz_score===undefined?'Sin nota':safe(x.quiz_score)+'/5')+'</p><details><summary>Ver proyecto y evidencia</summary><h4>Problema</h4><p>'+safe(x.problem).replace(/\n/g,"<br>")+'</p><h4>Solución propuesta</h4><p>'+safe(x.solution).replace(/\n/g,"<br>")+'</p><h4>Cómo medirá el resultado</h4><p>'+safe(x.measurement).replace(/\n/g,"<br>")+'</p><h4>Resultado / evidencia aportada</h4><p>'+safe(x.evidence||"No aportada").replace(/\n/g,"<br>")+'</p></details></div><div class="academy-project-review"><label>Resultado de la revisión<select data-project-status="'+safe(x.id)+'"><option value="pending_review" '+(x.status==="pending_review"?"selected":"")+'>Pendiente</option><option value="approved" '+(x.status==="approved"?"selected":"")+'>Aprobar proyecto</option><option value="revision_requested" '+(x.status==="revision_requested"?"selected":"")+'>Solicitar mejoras</option></select></label><div class="academy-rubric"><strong>Rúbrica · 0 a 2 por criterio</strong>'+academyRubricLabels.map((label,i)=>'<label>'+safe(label)+'<select data-project-rubric="'+safe(x.id)+'" data-criterion="'+i+'">'+options(rubric[String(i)])+'</select></label>').join("")+'</div><p class="academy-project-total">Puntuación: <strong data-project-total="'+safe(x.id)+'">'+(x.final_score??Object.values(rubric).reduce((a,b)=>a+Number(b||0),0))+'/10</strong></p><label>Comentarios para el alumno<textarea data-project-notes="'+safe(x.id)+'" rows="4" maxlength="4000" placeholder="Resumen de la evaluación y recomendaciones…">'+safe(x.reviewer_notes||"")+'</textarea></label><button type="button" data-save-project-review="'+safe(x.id)+'">Guardar y publicar resultado</button></div></article>';
+ }).join(""):'<p class="muted">No hay proyectos con estos filtros.</p>';
+ $("academyProjectList").querySelectorAll("[data-project-rubric]").forEach(sel=>sel.addEventListener("change",()=>updateProjectTotal(sel.dataset.projectRubric)));
+}
+function updateProjectTotal(id){
+ const total=Array.from($("academyProjectList").querySelectorAll('[data-project-rubric="'+id+'"]')).reduce((n,s)=>n+Number(s.value||0),0);
+ const node=$("academyProjectList").querySelector('[data-project-total="'+id+'"]');if(node)node.textContent=total+"/10";
+}
+async function loadAcademyProjects(){
+ const root=$("academyProjectList");if(!root)return;root.innerHTML='<p class="muted">Cargando proyectos…</p>';
+ const {data,error}=await client.from("academy_project_submissions").select("*").order("created_at",{ascending:false});
+ if(error){root.innerHTML='<p class="muted">No se pudieron cargar los proyectos: '+safe(error.message)+'</p>';return;}
+ academyProjectSubmissions=data||[];filterAcademyProjects();
+}
+async function saveAcademyProjectReview(id){
+ const item=academyProjectSubmissions.find(x=>x.id===id);if(!item)return;
+ const rubric={};$("academyProjectList").querySelectorAll('[data-project-rubric="'+id+'"]').forEach(s=>rubric[s.dataset.criterion]=Number(s.value));
+ const final_score=Object.values(rubric).reduce((a,b)=>a+b,0),status=$("academyProjectList").querySelector('[data-project-status="'+id+'"]').value,reviewer_notes=$("academyProjectList").querySelector('[data-project-notes="'+id+'"]').value.trim();
+ if(status==="approved"&&final_score<8&&!confirm("La puntuación es "+final_score+"/10. El objetivo recomendado es 8/10. ¿Quieres aprobarlo igualmente?"))return;
+ if(status==="revision_requested"&&!reviewer_notes){say("globalMessage","Añade comentarios para indicar al alumno qué debe mejorar.");return;}
+ const button=$("academyProjectList").querySelector('[data-save-project-review="'+id+'"]');button.disabled=true;
+ const {error}=await client.from("academy_project_submissions").update({rubric,final_score,status,reviewer_notes,reviewed_by:currentUser.email,reviewed_at:new Date().toISOString(),updated_at:new Date().toISOString()}).eq("id",id);
+ button.disabled=false;if(error){say("globalMessage","No se pudo guardar la evaluación: "+error.message);return;}
+ say("globalMessage",status==="approved"?"Proyecto aprobado. El resultado ya está disponible para el alumno.":status==="revision_requested"?"Se han guardado las indicaciones de mejora para el alumno.":"Revisión guardada.");
+ await loadAcademyProjects();
+}
 async function loadCourses(){
  const root=$("courseEnquiryList");if(!root)return;
  root.innerHTML='<p class="muted">Cargando solicitudes…</p>';
@@ -1069,6 +1106,10 @@ function wire(){
   $("refreshSubmissionsBtn").addEventListener("click",loadSubmissions);
   $("refreshDirectoryBtn").addEventListener("click",loadDirectoryAdmin);
   $("refreshCoursesBtn").addEventListener("click",loadCourses);
+  $("refreshAcademyProjectsBtn")?.addEventListener("click",loadAcademyProjects);
+  $("academyProjectSearch")?.addEventListener("input",filterAcademyProjects);
+  $("academyProjectStatus")?.addEventListener("change",filterAcademyProjects);
+  $("academyProjectList")?.addEventListener("click",e=>{const b=e.target.closest("[data-save-project-review]");if(b)saveAcademyProjectReview(b.dataset.saveProjectReview);});
   $("refreshAcademyStudentsBtn")?.addEventListener("click",loadAcademyStudents);
   $("academyStudentSearch")?.addEventListener("input",filterAcademyStudents);
   $("academyStudentStatus")?.addEventListener("change",filterAcademyStudents);
@@ -1161,7 +1202,7 @@ function wire(){
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
     ["overview","articles","opinionAuthors","briefing","inbox","sources","submissions","directory","courses","ads","printEdition"].forEach(k=>{const panel=$(k+"Tab");if(panel)panel.hidden=k!==b.dataset.tab;});
-    const tabLoaders={articles:loadArticles,opinionAuthors:loadOpinionAuthorsAdmin,briefing:loadBriefings,inbox:loadInbox,sources:loadSources,submissions:loadSubmissions,overview:loadOverview,directory:loadDirectoryAdmin,courses:async()=>{await Promise.all([loadCourses(),loadAcademyStudents()]);},ads:loadAds,printEdition:loadPrintAccess};
+    const tabLoaders={articles:loadArticles,opinionAuthors:loadOpinionAuthorsAdmin,briefing:loadBriefings,inbox:loadInbox,sources:loadSources,submissions:loadSubmissions,overview:loadOverview,directory:loadDirectoryAdmin,courses:async()=>{await Promise.all([loadCourses(),loadAcademyStudents(),loadAcademyProjects()]);},ads:loadAds,printEdition:loadPrintAccess};
     const loader=tabLoaders[b.dataset.tab];
     if(loader)loadAdminTabOnce(b.dataset.tab,loader);
   }));

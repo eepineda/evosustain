@@ -9,9 +9,9 @@
   <meta name="robots" content="noindex,nofollow">
   <title>Acceso editorial | Evoford News</title>
   <link rel="stylesheet" href="./admin.css?v=20261121-richtext1">
-  <link rel="stylesheet" href="./modern-admin.css?v=20261122-admissions1">
+  <link rel="stylesheet" href="./modern-admin.css?v=20261122-project-review1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="/news/admin/admin-auth.js?v=20261122-admissions1"></script>
+  <script defer src="/news/admin/admin-auth.js?v=20261122-project-review1"></script>
   <script defer src="/news/admin/article-management.js?v=20261121-5"></script>
 </head>
 <body>
@@ -209,6 +209,12 @@
           <div class="article-filters"><label class="filter-search">Buscar alumno<input id="academyStudentSearch" type="search" placeholder="Nombre, correo o curso…"></label><label class="filter-status">Estado<select id="academyStudentStatus"><option value="">Todos los estados</option><option value="active">Activos</option><option value="suspended">Suspendidos</option><option value="completed">Finalizados</option></select></label><p id="academyStudentCount" class="muted" aria-live="polite">Cargando alumnos…</p></div>
           <div id="academyStudentList" class="list"><p class="muted">Pulsa Actualizar alumnos para consultar las matrículas.</p></div>
           <div id="academyProgressDialog" class="academy-progress-dialog" hidden role="dialog" aria-modal="true" aria-labelledby="academyProgressTitle"><div class="academy-progress-backdrop" data-close-academy-progress></div><section class="academy-progress-window"><button type="button" class="academy-progress-close" data-close-academy-progress aria-label="Cerrar">×</button><p class="eyebrow">SEGUIMIENTO ACADÉMICO</p><h3 id="academyProgressTitle">Progreso del alumno</h3><p id="academyProgressCourse" class="muted"></p><div id="academyProgressSummary"></div><div id="academyProgressLessons" class="academy-progress-lessons"></div><div class="actions"><button type="button" class="secondary" data-close-academy-progress>Cerrar</button></div></section></div>
+        </section>
+        <section class="panel academy-project-review-panel">
+          <div class="section-head"><div><p class="eyebrow">EVALUACIÓN FINAL · EVOFORD ACADEMY</p><h3>Proyectos entregados</h3><p class="muted">El sistema recoge el proyecto y la nota del test. Revisa la evidencia, completa la rúbrica y publica el resultado final para el alumno.</p></div><button type="button" id="refreshAcademyProjectsBtn" class="secondary">Actualizar proyectos</button></div>
+          <div id="academyProjectStats" class="course-stats"></div>
+          <div class="article-filters"><label class="filter-search">Buscar proyecto<input id="academyProjectSearch" type="search" placeholder="Alumno, correo o proyecto…"></label><label class="filter-status">Estado<select id="academyProjectStatus"><option value="">Todos los estados</option><option value="pending_review">Pendientes de revisión</option><option value="approved">Aprobados</option><option value="revision_requested">Necesitan mejoras</option></select></label><p id="academyProjectCount" class="muted">Pulsa Actualizar proyectos.</p></div>
+          <div id="academyProjectList" class="list"><p class="muted">Pulsa Actualizar proyectos para consultar las entregas.</p></div>
         </section>
       </section>
       <section id="adsTab" class="tabview" hidden>

@@ -10,7 +10,7 @@
   if(section&&rows.length){
    const old=section.querySelector(".academy-featured-course"),grid=section.querySelector(".academy-course-grid");
    if(old&&grid){
-    const c=rows[0],mods=Array.isArray(c.curriculum)?c.curriculum:[],lessons=mods.reduce((n,m)=>n+(m.lessons?.length||0),0);
+    const c=rows[0],mods=Array.isArray(c.curriculum)?c.curriculum:[],lessons=c.lesson_count||mods.reduce((n,m)=>n+(m.lessons?.length||0),0),moduleCount=c.module_count||mods.length;
     old.outerHTML='<article class="academy-featured-course"><div class="course-feature-top"><span class="course-live">'+status(c.status)+'</span><span class="course-number">01</span></div><div class="course-feature-body"><div class="course-symbol">EV</div><div><span class="academy-overline">'+esc(c.category||"EVOFORD ACADEMY")+'</span><h3>'+esc(title(c))+'</h3><p>'+esc(summary(c))+'</p><div class="course-tags"><span>'+mods.length+' '+(en()?"modules":"módulos")+'</span><span>'+lessons+' '+(en()?"lessons":"lecciones")+'</span><span>'+esc(c.language||"es").toUpperCase()+'</span></div>'+programme(c)+'<a class="academy-primary" href="'+href(c.slug)+'">'+(en()?"Request information":"Solicitar información")+' ↗</a></div></div></article>';
     const next=document.createElement("div");next.className="academy-course-grid";next.innerHTML=rows.slice(1).map((x,i)=>'<article class="academy-course-card"><div class="course-card-top"><span class="course-soon">'+status(x.status)+'</span><span>'+String(i+2).padStart(2,"0")+'</span></div><div class="course-symbol">EV</div><h3>'+esc(title(x))+'</h3><p>'+esc(summary(x))+'</p>'+programme(x)+'<a class="academy-course-request" href="'+href(x.slug)+'">'+(en()?"Request information":"Solicitar información")+' ↗</a></article>').join("");grid.replaceWith(next);
    }
@@ -26,7 +26,7 @@
  async function init(){
   if(!window.supabase)return;
   const db=window.supabase.createClient(URL,KEY);
-  const {data,error}=await db.from("academy_courses").select("slug,title,title_en,category,summary,summary_en,language,status,curriculum,display_order").in("status",["available","coming_soon"]).order("display_order").order("created_at");
+  const {data,error}=await db.from("academy_courses").select("slug,title,title_en,category,summary,summary_en,language,status,curriculum,module_count,lesson_count,display_order").in("status",["available","coming_soon"]).order("display_order").order("created_at");
   if(error||!data?.length)return;rows=data;render();
   document.querySelectorAll("[data-language]").forEach(b=>b.addEventListener("click",()=>setTimeout(render,0)));
  }

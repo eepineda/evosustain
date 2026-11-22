@@ -1,0 +1,48 @@
+/* EVOFORD Academy mobile app experience */
+:root{--academy-ink:#102b4e;--academy-red:#b32632;--academy-gold:#e8bd78}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+button,a,input,textarea,select{touch-action:manipulation}
+@media(max-width:760px){
+body{background:#f3f6fa}
+.academy-gate{min-height:100svh;padding:calc(14px + env(safe-area-inset-top)) 14px calc(18px + env(safe-area-inset-bottom));background:radial-gradient(circle at 90% 0%,#e8eef6,transparent 34%),#f3f6fa}
+.academy-gate-header{align-items:center;margin:0 auto 18px;gap:10px}
+.academy-gate-brand{font-size:13px;letter-spacing:.12em}.academy-gate-brand small{font-size:9px}
+.academy-language button{min-width:42px;min-height:40px;padding:9px}
+.academy-gate-card,.academy-gate-card.academy-gate-card-wide{width:100%;max-width:none;margin:0;padding:22px 17px;border-radius:20px;box-shadow:0 12px 34px #102b4e12}
+.academy-gate-card h1{font-size:clamp(27px,8vw,34px);line-height:1.08}.academy-gate-card p{font-size:14px;line-height:1.6}
+.academy-form{gap:9px}.academy-form label{font-size:12px}
+.academy-form input,.academy-form textarea{min-height:48px;padding:13px 12px;border-radius:11px;font-size:16px}.academy-form textarea{min-height:110px}
+.academy-form button,.academy-gate-card section>button{min-height:48px;border-radius:12px;font-size:14px}
+.academy-links{display:grid;grid-template-columns:1fr;gap:5px}.academy-links button{min-height:42px;text-align:left;font-size:13px}
+.academy-course-grid{grid-template-columns:1fr;gap:12px;margin:18px 0}.academy-course-card{min-height:0;padding:17px;border-radius:16px}
+.academy-course-card h2{font-size:21px}.academy-course-card p{font-size:13px}
+.academy-course-open,.academy-dashboard-logout{min-height:46px;border-radius:11px;font-size:13px}.academy-dashboard-logout{width:100%;margin-top:18px}
+.academy-privacy{margin:18px 0 0;font-size:10px}
+.virtual-shell{width:100%;margin:0;padding:0 0 calc(18px + env(safe-area-inset-bottom))}
+.v-top{position:sticky;z-index:30;top:0;align-items:center;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;background:#ffffffed;border-bottom:1px solid #dfe5ec;backdrop-filter:blur(14px)}
+.v-brand{font-size:12px;letter-spacing:.04em;white-space:nowrap}.v-top-actions{gap:6px}
+.v-my-courses,.v-lang button{min-height:38px;padding:8px 9px;border-radius:9px;font-size:11px}
+.v-hero{margin:12px 12px 10px;padding:23px 19px;border-radius:18px}.v-kicker{font-size:9px;letter-spacing:.12em}
+.v-hero h1{font-size:clamp(29px,8vw,39px);line-height:1.04;margin:10px 0}.v-hero p{font-size:14px;line-height:1.6}
+.v-meta{gap:6px;margin-top:14px}.v-meta span{padding:7px 9px;font-size:10px}
+.v-prereq{margin:10px 12px 12px;padding:17px;border-radius:16px}.v-prereq-head h2{font-size:23px}
+.v-prereq-head>p,.v-prereq-grid p,.v-prereq-grid li{font-size:13px}.v-prereq-grid{gap:9px;margin-top:14px}
+.v-prereq-grid article{padding:14px;border-radius:12px}.v-prereq-grid h3{margin:8px 0 5px;font-size:15px}.v-prereq-note{font-size:12px}
+.v-progress{position:sticky;z-index:20;top:58px;margin:0 12px 12px;padding:12px 14px;border-radius:13px;box-shadow:0 5px 18px #102b4e0b}
+.v-progress-head{font-size:12px}.v-track{height:7px;margin-top:8px}
+.v-layout{display:flex;flex-direction:column;gap:10px;margin:0 12px}
+.v-layout>aside{order:0;width:100%;padding:13px;border-radius:14px}.v-layout>.v-content{order:1;width:100%;padding:17px 15px;border-radius:16px;min-height:0}
+.v-panel h2{font-size:19px;margin-bottom:9px}
+.v-modules{display:flex;gap:8px;max-height:none;overflow-x:auto;overflow-y:hidden;padding:2px 1px 8px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.v-module{flex:0 0 min(76vw,270px);min-height:58px;padding:10px 12px;border-radius:11px;font-size:12px;line-height:1.35;scroll-snap-align:start}
+.v-footnote{font-size:11px;line-height:1.5}.v-content h2,.v-content h3{scroll-margin-top:120px}
+.v-content p,.v-content li{font-size:14px;line-height:1.65}.v-content ol,.v-content ul{padding-left:21px}
+.v-content input,.v-content textarea,.v-content select{max-width:100%;min-height:46px;font-size:16px}.v-content textarea{min-height:110px}
+.v-actions{position:sticky;z-index:25;bottom:calc(8px + env(safe-area-inset-bottom));display:grid;grid-template-columns:.85fr 1.3fr .85fr;gap:7px;margin:18px -5px 0;padding:10px 8px calc(10px + env(safe-area-inset-bottom));border:1px solid #dfe5ec;border-radius:15px;background:#ffffffed;box-shadow:0 8px 30px #102b4e1c;backdrop-filter:blur(14px)}
+.v-btn{min-height:46px;padding:10px 8px;border-radius:11px;font-size:12px;line-height:1.2}.v-actions .v-btn:disabled{opacity:.4}
+.v-worked,.v-method,.v-capstone-rubric,.v-practical-lab{margin:14px 0;padding:15px;border-radius:13px}
+.v-lab-grid{grid-template-columns:1fr!important;gap:10px}.v-practical-lab pre,.v-practical-lab code{font-size:11px;line-height:1.55;overflow-wrap:anywhere;white-space:pre-wrap}
+.v-callout{padding:13px;font-size:13px}.v-result{font-size:13px;line-height:1.55}
+}
+@media(max-width:390px){.v-brand{font-size:10px}.v-my-courses{font-size:10px;padding:7px}.v-lang button{min-width:32px;padding:7px}.v-hero h1{font-size:29px}.v-actions{grid-template-columns:.8fr 1.35fr .8fr;gap:5px}.v-btn{font-size:11px;padding:9px 5px}}
+@media(display-mode:standalone){body{overscroll-behavior-y:contain}.v-top{padding-top:calc(10px + env(safe-area-inset-top))}}

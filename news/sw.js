@@ -1,12 +1,14 @@
 /* Evoford News service worker: cache-first static assets, network-first pages, no API caching. */
 "use strict";
-const VERSION = "evoford-news-pwa-v42";
+const VERSION = "evoford-news-pwa-v43";
 const SHELL = VERSION + "-shell";
 const STATIC = VERSION + "-static";
 const PRECACHE = [
   "/news/",
   "/news/offline.html",
   "/news/manifest.webmanifest",
+  "/news/academy.webmanifest",
+  "/news/assets/academy-mobile.css?v=1",
   "/news/icons/icon-192.svg",
   "/news/icons/icon-512.svg",
   "/news/assets/style.css?v=20261114-ads2",

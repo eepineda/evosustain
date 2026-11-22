@@ -807,3 +807,40 @@ html.evo-pwa #historia-rd .timeline-lower>*{flex:0 0 min(34vw,150px)!important;m
  html.evo-pwa .directory-grid,html.evo-pwa .directory-categories,html.evo-pwa .directory-cards{grid-template-columns:minmax(0,1fr)!important}
  html.evo-pwa .app-bottom-nav{max-width:none!important;left:0!important;right:0!important;width:100%!important;transform:none!important}
 }
+
+
+/* FINAL MOBILE LAYOUT — applies to narrow screens whether opened as an installed PWA or in a mobile browser. Desktop rules remain untouched. */
+@media (max-width:760px){
+ html,body{max-width:100%;overflow-x:hidden}
+ body{padding-bottom:calc(82px + env(safe-area-inset-bottom))!important}
+ .masthead{padding:7px 15px 0!important}
+ .masthead .nav{display:none!important}
+ .masthead .brand{font-size:25px!important;text-align:left!important;padding:4px 0 9px!important}
+ .wrap,main.wrap,main.directory-wrap{width:auto!important;max-width:none!important;margin:0!important;padding-left:15px!important;padding-right:15px!important;box-sizing:border-box!important}
+ .frontpage{margin:14px 0 24px!important;padding:14px!important}
+ .frontpage-grid{display:block!important}
+ .featured-story{display:flex!important;flex-direction:column!important;min-width:0!important;overflow:hidden!important;border-radius:15px!important}
+ .featured-story .feature-visual{min-height:185px!important}
+ .featured-story .feature-copy{padding:17px!important}
+ .frontpage-aside{margin-top:12px!important}
+ .country-grid,.cards,.directory-grid,.directory-categories,.directory-cards,.startup-categories,.startup-stories,.party-grid,.politics-topics,.politics-stories{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:12px!important}
+ .country-card,.directory-card,.startup-category,.startup-stories .story{min-width:0!important;width:100%!important}
+ .directory-header,.directory-wrap{width:auto!important;max-width:none!important}
+ .directory-tools{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:9px!important}
+ .directory-tools input,.directory-tools select{width:100%!important;min-width:0!important;min-height:46px!important;font-size:16px!important}
+ .directory-hero{padding:18px!important}
+ .directory-hero h1{font-size:clamp(27px,7vw,36px)!important;line-height:1.12!important}
+ .startup-feature{display:flex!important;flex-direction:column!important;align-items:stretch!important;width:100%!important;max-width:none!important;gap:14px!important}
+ .startup-art,.startup-copy{width:100%!important;max-width:none!important;min-width:0!important}
+ .startup-art{min-height:165px!important}
+ .startup-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
+ .history-hero{grid-template-columns:minmax(0,1fr)!important;padding:17px!important}
+ .history-grid{grid-template-columns:minmax(0,1fr)!important}
+ #historia-rd .history-infographic{max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+ #historia-rd .timeline-top,#historia-rd .timeline-decade-bar,#historia-rd .timeline-lower{min-width:900px!important}
+ main.academy-home{width:100%!important;max-width:none!important;margin:0!important;padding:14px 15px calc(96px + env(safe-area-inset-bottom))!important;box-sizing:border-box!important}
+ main.academy-home .academy-course-grid,main.academy-home .academy-area-grid,main.academy-home .academy-steps{grid-template-columns:minmax(0,1fr)!important}
+ main.academy-home .academy-featured-course,main.academy-home .academy-course-card{min-width:0!important;width:100%!important}
+ .app-bottom-nav{left:0!important;right:0!important;width:100%!important;max-width:none!important;transform:none!important}
+}
+@media(max-width:390px){.startup-facts{grid-template-columns:minmax(0,1fr)!important}.section-head h2{font-size:21px!important}}

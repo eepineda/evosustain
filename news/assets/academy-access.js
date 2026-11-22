@@ -104,6 +104,32 @@
     if(inviteFlow){view("password");return;}
     await showDashboard();
   };
+  window.evofordAcademySubmitProject = async payload => {
+    if(!currentUser)throw new Error(tr("Tu sesión ha caducado. Vuelve a iniciar sesión.","Your session has expired. Please sign in again."));
+    const project={
+      user_id:currentUser.id,
+      student_name:String(currentUser.user_metadata?.full_name||currentUser.user_metadata?.name||currentUser.email||"Alumno").slice(0,180),
+      student_email:String(currentUser.email||"").slice(0,254),
+      course_slug:currentCourseSlug,
+      project_name:String(payload.project_name||"").trim(),
+      problem:String(payload.problem||"").trim(),
+      solution:String(payload.solution||"").trim(),
+      measurement:String(payload.measurement||"").trim(),
+      evidence:String(payload.evidence||"").trim().slice(0,8000),
+      quiz_score:Number.isInteger(payload.quiz_score)?payload.quiz_score:null
+    };
+    if(project.project_name.length<2||project.problem.length<10||project.solution.length<10||project.measurement.length<5)
+      throw new Error(tr("Completa todos los campos del proyecto antes de enviarlo.","Complete all project fields before submitting."));
+    const {data,error}=await client.from("academy_project_submissions").insert(project).select("id,status,created_at").single();
+    if(error)throw error;
+    return data;
+  };
+  window.evofordAcademyGetProjectReview = async () => {
+    if(!currentUser)return null;
+    const {data,error}=await client.from("academy_project_submissions").select("id,project_name,status,final_score,reviewer_notes,reviewed_at,created_at").eq("user_id",currentUser.id).eq("course_slug",currentCourseSlug).order("created_at",{ascending:false}).limit(1).maybeSingle();
+    if(error)throw error;
+    return data||null;
+  };
   window.evofordAcademySaveLesson = async index => {
     if(!currentUser)return;
     const {error}=await client.from("academy_progress").upsert({

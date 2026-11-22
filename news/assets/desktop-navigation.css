@@ -1,44 +1,34 @@
-/* EVOFORD NEWS desktop-only sticky editorial navigation */
+/* EVOFORD NEWS desktop scroll navigation */
 @media(min-width:761px) and (display-mode:browser){
  .evo-scrollbar{position:fixed;z-index:1200;top:0;left:0;right:0;height:58px;display:flex;align-items:center;gap:24px;padding:0 max(28px,calc((100vw - 1100px)/2));background:#091b2b;color:#f7f9fc;box-shadow:0 5px 22px #07182725;transform:translateY(-110%);opacity:0;transition:transform .24s ease,opacity .24s ease}
  .evo-scrollbar.is-visible{transform:translateY(0);opacity:1}
  .evo-menu-trigger{display:flex;align-items:center;gap:4px;flex:0 0 auto;border:0;background:transparent;color:#fff;cursor:pointer;padding:10px 8px;font:650 11px/1 system-ui}
- .evo-menu-trigger span{position:absolute;width:17px;height:1.5px;background:currentColor;transform:translateY(-5px)}
- .evo-menu-trigger span:nth-child(2){transform:none}.evo-menu-trigger span:nth-child(3){transform:translateY(5px)}
- .evo-menu-trigger b{margin-left:22px;font-size:11px}
- .evo-mini-brand,.evo-drawer-brand{font:800 17px/1 system-ui;letter-spacing:-.5px;color:#fff;text-decoration:none;white-space:nowrap}
- .evo-mini-brand em,.evo-drawer-brand em{font-style:normal;color:#e04b55}
- .evo-quick-links{display:flex;align-items:center;gap:clamp(12px,2vw,27px);min-width:0;overflow-x:auto;scrollbar-width:none;white-space:nowrap}
- .evo-quick-links::-webkit-scrollbar{display:none}
- .evo-quick-links a{color:#d3dce5;text-decoration:none;text-transform:uppercase;font:700 10px/1 system-ui;letter-spacing:.07em}
- .evo-quick-links a:hover{color:#fff}
- .evo-drawer-overlay{position:fixed;z-index:1300;inset:0;background:rgba(4,14,24,.48);backdrop-filter:blur(2px)}
- .evo-drawer{position:fixed;z-index:1301;inset:0 auto 0 0;width:min(360px,88vw);box-sizing:border-box;padding:25px 27px 22px;background:#fff;color:#14283d;box-shadow:12px 0 45px #07182724;overflow-y:auto;transform:translateX(-105%);transition:transform .28s cubic-bezier(.2,.75,.25,1);display:flex;flex-direction:column;gap:20px}
- .evo-drawer.is-open{transform:translateX(0)}
- .evo-drawer-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:17px;border-bottom:1px solid #e4e8ed}
- .evo-drawer-brand{color:#102b4e;font-size:20px}
- .evo-drawer-close{border:0;background:transparent;color:#14283d;font-size:30px;line-height:1;cursor:pointer}
- .evo-drawer-search{display:flex;align-items:center;gap:10px;padding:11px 13px;background:#f1f3f5;border:1px solid #e2e6eb;border-radius:3px}
- .evo-drawer-search span{font-size:22px;color:#506174}.evo-drawer-search input{width:100%;border:0;outline:0;background:transparent;color:#14283d;font:14px system-ui}
- .evo-drawer-caption{color:#718096;font:750 9px/1.2 system-ui;letter-spacing:.15em}
- .evo-drawer-links{display:flex;flex-direction:column}
- .evo-drawer-links a{display:block;padding:11px 2px;border-bottom:1px solid #edf0f3;color:#14283d;text-decoration:none;text-transform:uppercase;font:700 12px/1.2 system-ui;letter-spacing:.035em}
- .evo-drawer-links a:hover{color:#b52d3c;padding-left:7px}
- .evo-drawer-links a[hidden]{display:none}
- .evo-drawer-tools{display:grid;grid-template-columns:1fr 1fr;gap:8px}
- .evo-drawer-tools>.evo-drawer-caption{grid-column:1/-1;margin-bottom:3px}
- .evo-drawer-tools>button{padding:10px 9px;border:1px solid #dce2e8;border-radius:3px;background:#fff;color:#14283d;text-align:left;font:600 11px system-ui;cursor:pointer}
- .evo-drawer-tools>button[data-evo-contrast]{grid-column:1/-1;display:flex;justify-content:space-between}
- .evo-drawer-tools>button i{width:27px;height:15px;border-radius:20px;background:#cbd3dc}
- .evo-drawer-languages{grid-column:1/-1;display:flex;gap:8px}.evo-drawer-languages a{padding:7px 12px;border:1px solid #dce2e8;border-radius:3px;color:#14283d;text-decoration:none;font:700 10px system-ui}
- .evo-drawer-foot{margin-top:auto;padding-top:15px;border-top:1px solid #e4e8ed;color:#7a8795;font:11px/1.5 system-ui}
- body.evo-drawer-open{overflow:hidden}
- html[data-evo-theme="dark"] body,html[data-evo-theme="dark"] .masthead,html[data-evo-theme="dark"] main,html[data-evo-theme="dark"] footer{background:#0b1c2b!important;color:#e6edf4!important}
- html[data-evo-theme="dark"] .evo-drawer{background:#10283d;color:#edf3f8}
- html[data-evo-theme="dark"] .evo-drawer-brand,html[data-evo-theme="dark"] .evo-drawer-close,html[data-evo-theme="dark"] .evo-drawer-links a,html[data-evo-theme="dark"] .evo-drawer-tools>button,html[data-evo-theme="dark"] .evo-drawer-languages a{color:#edf3f8}
- html[data-evo-theme="dark"] .evo-drawer-tools>button,html[data-evo-theme="dark"] .evo-drawer-languages a{background:#17334b;border-color:#34516a}
- html.evo-high-contrast body{background:#000!important;color:#fff!important}
+ .evo-menu-trigger span{position:absolute;width:17px;height:1.5px;background:currentColor;transform:translateY(-5px)}.evo-menu-trigger span:nth-child(2){transform:none}.evo-menu-trigger span:nth-child(3){transform:translateY(5px)}.evo-menu-trigger b{margin-left:22px}
+ .evo-mini-brand,.evo-drawer-brand{font:800 17px/1 system-ui;letter-spacing:-.5px;color:#fff;text-decoration:none;white-space:nowrap}.evo-mini-brand em,.evo-drawer-brand em{font-style:normal;color:#e04b55}
+ .evo-quick-links{display:flex;align-items:center;gap:clamp(12px,2vw,27px);min-width:0;overflow-x:auto;scrollbar-width:none;white-space:nowrap}.evo-quick-links::-webkit-scrollbar{display:none}.evo-quick-links a{color:#d3dce5;text-decoration:none;text-transform:uppercase;font:700 10px/1 system-ui;letter-spacing:.07em}
+ .evo-drawer-overlay{position:fixed;z-index:1300;inset:0;background:rgba(4,14,24,.55);backdrop-filter:blur(3px)}.evo-drawer-overlay[hidden]{display:none!important}
+ .evo-drawer{position:fixed;z-index:1301;inset:0 auto 0 0;width:min(360px,88vw);box-sizing:border-box;padding:25px 27px 22px;background:#fff;color:#14283d;box-shadow:12px 0 45px #07182724;overflow-y:auto;transform:translateX(-105%);transition:transform .28s cubic-bezier(.2,.75,.25,1);display:flex;flex-direction:column;gap:18px}
+ .evo-drawer.is-open{transform:translateX(0)}.evo-drawer-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:17px;border-bottom:1px solid #e4e8ed}.evo-drawer-brand{color:#102b4e;font-size:20px}.evo-drawer-close{border:0;background:transparent;color:#14283d;font-size:30px;line-height:1;cursor:pointer}
+ .evo-drawer-search{display:flex;align-items:center;gap:10px;padding:11px 13px;background:#f1f3f5;border:1px solid #e2e6eb;border-radius:5px}.evo-drawer-search input{width:100%;border:0;outline:0;background:transparent;color:#14283d;font:14px system-ui}
+ .evo-drawer-caption{color:#718096;font:750 9px/1.2 system-ui;letter-spacing:.15em}.evo-drawer-links{display:flex;flex-direction:column}.evo-drawer-links a{display:block;padding:10px 2px;border-bottom:1px solid #edf0f3;color:#14283d;text-decoration:none;text-transform:uppercase;font:700 12px/1.2 system-ui}.evo-drawer-links a:hover{color:#b52d3c;padding-left:7px}.evo-drawer-links a[hidden]{display:none}
+ .evo-drawer-tools{display:grid;grid-template-columns:1fr 1fr;gap:8px}.evo-drawer-tools>.evo-drawer-caption{grid-column:1/-1}.evo-drawer-tools>button{padding:10px 9px;border:1px solid #dce2e8;border-radius:4px;background:#fff;color:#14283d;text-align:left;font:600 11px system-ui;cursor:pointer}.evo-drawer-tools>button[data-evo-contrast]{grid-column:1/-1;display:flex;justify-content:space-between}.evo-drawer-tools>button i{width:27px;height:15px;border-radius:20px;background:#cbd3dc}.evo-drawer-tools>button.is-active i{background:#16865d}
+ .evo-drawer-languages{grid-column:1/-1;display:flex;gap:8px}.evo-drawer-languages button{padding:7px 12px;border:1px solid #dce2e8;border-radius:4px;background:#fff;color:#14283d;font:700 10px system-ui;cursor:pointer}
+ .evo-drawer-foot{margin-top:auto;padding-top:15px;border-top:1px solid #e4e8ed;color:#7a8795;font:11px/1.5 system-ui}body.evo-drawer-open{overflow:hidden}
+ /* Dark theme: explicitly restyle newspaper surfaces and text, not only the page canvas. */
+ html[data-evo-theme="dark"] body{background:#0d1722!important;color:#e8edf3!important}
+ html[data-evo-theme="dark"] .masthead,html[data-evo-theme="dark"] .wrap,html[data-evo-theme="dark"] main,html[data-evo-theme="dark"] #articleView{color:#e8edf3!important}
+ html[data-evo-theme="dark"] .masthead .brand,html[data-evo-theme="dark"] .nav a,html[data-evo-theme="dark"] .section-head h2,html[data-evo-theme="dark"] #articleView h1,html[data-evo-theme="dark"] #articleView .article-body,html[data-evo-theme="dark"] #articleView .article-body p,html[data-evo-theme="dark"] #articleView .article-body p.article-opening,html[data-evo-theme="dark"] #articleView .article-body p.article-subheading,html[data-evo-theme="dark"] .topics a{color:#edf2f7!important}
+ html[data-evo-theme="dark"] .topline,html[data-evo-theme="dark"] .edition,html[data-evo-theme="dark"] .dek,html[data-evo-theme="dark"] .lead-meta,html[data-evo-theme="dark"] .brief p,html[data-evo-theme="dark"] .story-copy p,html[data-evo-theme="dark"] .section-head span,html[data-evo-theme="dark"] #articleView .lead-meta{color:#b8c4d1!important}
+ html[data-evo-theme="dark"] .story,html[data-evo-theme="dark"] .opinion,html[data-evo-theme="dark"] .reader-tools,html[data-evo-theme="dark"] .reader-results,html[data-evo-theme="dark"] .saved-stories-panel,html[data-evo-theme="dark"] #articleView .dek,html[data-evo-theme="dark"] #articleView .article-body p.article-related{background:#172535!important;color:#e8edf3!important;border-color:#34475b!important}
+ html[data-evo-theme="dark"] .reader-search,html[data-evo-theme="dark"] .reader-search-row select,html[data-evo-theme="dark"] .newsletter-form>input,html[data-evo-theme="dark"] .newsletter-form select{background:#0f1d2b!important;color:#edf2f7!important;border-color:#43566a!important}
+ html[data-evo-theme="dark"] footer{background:#07111c!important;color:#e8edf3!important}
+ html[data-evo-theme="dark"] .evo-drawer{background:#10283d;color:#edf3f8}html[data-evo-theme="dark"] .evo-drawer-brand,html[data-evo-theme="dark"] .evo-drawer-close,html[data-evo-theme="dark"] .evo-drawer-links a,html[data-evo-theme="dark"] .evo-drawer-tools>button,html[data-evo-theme="dark"] .evo-drawer-languages button{color:#edf3f8;background:#17334b;border-color:#34516a}
+ /* High contrast is independent of light/dark and uses readable black/yellow/white. */
+ html.evo-high-contrast body,html.evo-high-contrast main,html.evo-high-contrast .wrap{background:#000!important;color:#fff!important}
  html.evo-high-contrast .evo-scrollbar{background:#000;border-bottom:2px solid #ffeb00}
+ html.evo-high-contrast .masthead,html.evo-high-contrast .masthead .brand,html.evo-high-contrast .nav a,html.evo-high-contrast #articleView h1,html.evo-high-contrast #articleView .article-body p,html.evo-high-contrast .section-head h2,html.evo-high-contrast .topics a{color:#fff!important}
+ html.evo-high-contrast .story,html.evo-high-contrast .opinion,html.evo-high-contrast .reader-tools,html.evo-high-contrast .reader-results{background:#000!important;color:#fff!important;border:1px solid #ffeb00!important}
+ html.evo-high-contrast a,html.evo-high-contrast .kicker{color:#ffeb00!important}
  html.evo-high-contrast .evo-drawer{background:#000;color:#fff;border-right:2px solid #ffeb00}
  html.evo-high-contrast .evo-drawer-links a,html.evo-high-contrast .evo-drawer-brand,html.evo-high-contrast .evo-drawer-close{color:#fff}
 }

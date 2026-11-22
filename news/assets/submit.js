@@ -8,6 +8,10 @@ if(submissionParams.get("colaboracion")==="experta"){
  const kindField=document.getElementById("kindField");if(kindField)kindField.hidden=true;
  document.getElementById("title").value="Propuesta de colaboración experta";
 }
+const requestedType=submissionParams.get("tipo");
+if(["noticia","nota_prensa","opinion","otro"].includes(requestedType)&&!submissionParams.has("colaboracion"))document.getElementById("kind").value=requestedType;
+const proposalType=submissionParams.get("propuesta");
+if(proposalType==="tema"||proposalType==="entrevista"){document.getElementById("kind").value="otro";document.getElementById("title").value=proposalType==="tema"?"Propuesta de tema editorial":"Propuesta de entrevista";}
 const courseRequest=submissionParams.get("curso")==="interes";
 if(courseRequest){
  const courseIntro=document.getElementById("course-intro");

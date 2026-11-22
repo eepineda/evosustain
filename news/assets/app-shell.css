@@ -743,3 +743,24 @@ html.evo-pwa button:focus-visible,html.evo-pwa a:focus-visible{
   html.evo-pwa .app-bottom-nav > a { font-size: 10px !important; }
   html.evo-pwa .app-bottom-nav .nav-icon svg { width: 25px !important; height: 25px !important; }
 }
+
+
+/* Tu República: Dominican flag mark and compact, fully readable label in the PWA bar. */
+@media (max-width:760px) {
+  html.evo-pwa .app-bottom-nav a[data-primary-section="3"] .nav-icon {
+    width:40px!important;
+    height:36px!important;
+    font-family:system-ui,-apple-system,"Segoe UI",sans-serif!important;
+    font-size:25px!important;
+    line-height:1!important;
+  }
+  html.evo-pwa .app-bottom-nav a[data-primary-section="3"] .nav-label {
+    max-width:none!important;
+    width:auto!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    white-space:nowrap!important;
+    font-size:9px!important;
+    letter-spacing:-.25px!important;
+  }
+}

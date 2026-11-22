@@ -221,7 +221,7 @@
 <label class="field full">Requirements<textarea id="academyCourseRequirementsEn" rows="2"></textarea></label>
 <label class="field full">Programa del curso<textarea id="academyCourseCurriculum" rows="12" placeholder="Módulo 1: Introducción&#10;- Lección 1: Conceptos básicos&#10;- Lección 2: Primer ejercicio&#10;&#10;Módulo 2: Aplicación práctica&#10;- Lección 1: Proyecto guiado"></textarea><small>Escribe un módulo por línea con «Módulo 1: título» y sus lecciones debajo con «- Lección 1: título». Se guardará como programa estructurado.</small></label>
 <label class="field">Estado<select id="academyCourseStatus"><option value="draft">Borrador · Solo editorial</option><option value="coming_soon">Próximamente · Visible en catálogo</option><option value="available">Disponible · Visible y admite solicitudes</option><option value="closed">Cerrado · No admite solicitudes</option></select></label>
-<label class="field">Orden en catálogo<input id="academyCourseOrder" type="number" min="0" max="9999" value="100"></label>
+<label class="field">Orden en catálogo<input id="academyCourseOrder" type="number" min="0" max="9999" value="100"></label><label class="field">Número de módulos<input id="academyCourseModuleCount" type="number" min="0" max="500" value="0"></label><label class="field">Número de lecciones<input id="academyCourseLessonCount" type="number" min="0" max="2000" value="0"></label>
 </div><div class="actions"><button type="submit" id="saveAcademyCourseBtn">Guardar curso y programa</button></div><p id="academyCourseMessage" class="message" role="status"></p>
 </form>
 <div id="academyCatalogList" class="list"><p class="muted">Cargando catálogo…</p></div>

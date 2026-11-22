@@ -1,6 +1,6 @@
 /* Evoford News service worker: cache-first static assets, network-first pages, no API caching. */
 "use strict";
-const VERSION = "evoford-news-pwa-v61";
+const VERSION = "evoford-news-pwa-v62";
 const SHELL = VERSION + "-shell";
 const STATIC = VERSION + "-static";
 const PRECACHE = [
@@ -8,7 +8,7 @@ const PRECACHE = [
   "/news/offline.html",
   "/news/manifest.webmanifest",
   "/news/academy.webmanifest",
-  "/news/assets/app-navigation.css?v=20261122-nav4",
+  "/news/assets/app-navigation.css?v=20261122-nav5",
   "/news/assets/app-navigation.js?v=20261122-nav6",
   "/news/assets/academy-mobile.css?v=20261122-academy3",
   "/news/icons/icon-192.svg",

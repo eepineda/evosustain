@@ -844,3 +844,28 @@ html.evo-pwa #historia-rd .timeline-lower>*{flex:0 0 min(34vw,150px)!important;m
  .app-bottom-nav{left:0!important;right:0!important;width:100%!important;max-width:none!important;transform:none!important}
 }
 @media(max-width:390px){.startup-facts{grid-template-columns:minmax(0,1fr)!important}.section-head h2{font-size:21px!important}}
+
+
+/* MOBILE TOUCH TARGETS — larger, readable actions and controls across all PWA sections. */
+@media(max-width:760px){
+ :where(button,input[type=button],input[type=submit],input[type=reset],select,[role=button],.btn,.button,.primary-button,.secondary-button,.action-button,.cta,.academy-actions a,.course-card a,.academy-course-card a,.academy-featured-course a,.directory-card a,.directory-result a,.official-link,.startup-copy a,.startup-card a,.hero-actions a,.filter-button,.view-toggle button,.language-switch button){
+  min-height:48px!important;box-sizing:border-box!important;
+ }
+ :where(button,input[type=button],input[type=submit],input[type=reset],.btn,.button,.primary-button,.secondary-button,.action-button,.cta,.academy-actions a,.course-card a,.academy-course-card a,.academy-featured-course a,.official-link,.startup-copy a,.startup-card a,.hero-actions a,.filter-button){
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  padding:12px 17px!important;font-size:15px!important;line-height:1.25!important;
+  border-radius:11px!important;white-space:normal!important;text-align:center!important;
+ }
+ :where(input:not([type=checkbox]):not([type=radio]),select,textarea){
+  min-height:49px!important;padding:12px 14px!important;font-size:16px!important;line-height:1.35!important;
+  border-radius:11px!important;box-sizing:border-box!important;
+ }
+ :where(input[type=checkbox],input[type=radio]){width:20px!important;height:20px!important;min-width:20px!important;min-height:20px!important}
+ :where(.academy-actions,.hero-actions,.action-row,.button-row){display:flex!important;flex-wrap:wrap!important;gap:10px!important}
+ :where(.academy-actions a,.hero-actions a,.action-row a,.button-row a){flex:1 1 145px!important;min-width:0!important}
+ :where(.directory-tools button,.directory-tools select,.directory-tools input){width:100%!important;min-height:49px!important}
+ nav.app-bottom-nav{min-height:76px!important}
+ nav.app-bottom-nav>a{min-height:64px!important;padding:6px 3px!important;font-size:12px!important}
+ nav.app-bottom-nav .nav-icon{width:36px!important;height:34px!important}
+ nav.app-bottom-nav .nav-icon svg{width:27px!important;height:27px!important}
+}

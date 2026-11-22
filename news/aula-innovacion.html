@@ -339,4 +339,6 @@ function academyRender(){
 document.querySelectorAll("[data-language]").forEach(b=>b.addEventListener("click",()=>{academyLang=b.dataset.language==="en"?"en":"es";try{localStorage.setItem("evoford-news-language",academyLang);}catch(e){}academyRender();}));
 academyRender();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/academy-catalog.js?v=20261122-catalog1"></script>
 </body></html>

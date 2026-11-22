@@ -10,6 +10,7 @@
   <title>Acceso editorial | Evoford News</title>
   <link rel="stylesheet" href="./admin.css?v=20261121-richtext1">
   <link rel="stylesheet" href="./modern-admin.css?v=20261122-project-review1">
+  <link rel="stylesheet" href="./editorial-workspace.css?v=20261122-responsive1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="/news/admin/admin-auth.js?v=20261122-project-review1"></script>
   <script defer src="/news/admin/article-management.js?v=20261121-5"></script>
@@ -44,7 +45,12 @@
         <button class="tab" data-tab="opinionAuthors">Opinión y autores</button>
         <button class="tab" data-tab="briefing">Evoford Briefing</button>
         <button class="tab" data-tab="inbox">Noticias RSS</button>
-        <button class="tab" data-tab="sources">Fuentes RSS</button><button class="tab" data-tab="submissions">Envíos recibidos</button><button class="tab" data-tab="directory">Directorio</button><button class="tab" data-tab="courses">Academy</button><button class="tab" data-tab="ads">Anuncios y publicidad</button><button class="tab" data-tab="printEdition">Edición impresa</button>
+        <button class="tab" data-tab="sources">Fuentes RSS</button>
+        <button class="tab" data-tab="submissions">Envíos recibidos</button>
+        <button class="tab" data-tab="directory">Directorio</button>
+        <button class="tab" data-tab="courses">Academy</button>
+        <button class="tab" data-tab="ads">Anuncios y publicidad</button>
+        <button class="tab" data-tab="printEdition">Edición impresa</button>
       </nav>
 
       <section id="printEditionTab" class="tabview" hidden><div class="section-head"><div><p class="eyebrow">GESTIÓN EDITORIAL</p><h2>Edición impresa</h2><p class="muted">Consulta, actualiza y prepara la edición desde el Panel editorial.</p></div><a class="button secondary" href="/news/edicion.html" target="_blank" rel="noopener">Abrir en otra pestaña</a></div><section class="panel"><div class="section-head"><div><h3>Accesos autorizados</h3><p class="muted">La edición impresa sigue siendo exclusiva del administrador. Desde aquí puedes revisar y eliminar correos de la lista.</p></div><button type="button" id="refreshPrintAccessBtn" class="secondary">Actualizar</button></div><form id="addPrintAccessForm" class="form-grid"><label>Correo electrónico<input id="newPrintAccessEmail" type="email" maxlength="254" required placeholder="correo@ejemplo.com"></label><button type="submit">Aprobar correo</button></form><p id="printAccessMessage" class="muted" role="status"></p><div id="printAccessList"><p class="muted">Pulsa Actualizar para consultar los accesos.</p></div></section><section class="panel"><h3>Edición impresa</h3><p class="muted">Abre la edición para revisar su presentación y utilizar sus controles de impresión.</p><a class="button secondary" href="/news/edicion.html" target="_blank" rel="noopener">Abrir edición impresa</a></section></section>
@@ -98,9 +104,9 @@
             <button type="button" class="article-quick" data-article-quick="rejected">Descartados</button>
           </div>
           <div class="article-filters" aria-label="Filtros de artículos">
-          <label class="filter-search" for="articleSearch">Buscar artículo<input id="articleSearch" type="search" placeholder="Titular, autor o sección…"></label>
-          <label class="filter-status" for="articleStatusFilter">Estado<select id="articleStatusFilter"><option value="">Todos los estados</option><option value="draft">Borrador</option><option value="pending">En revisión</option><option value="approved">Aprobado</option><option value="published">Publicado</option><option value="rejected">Descartado</option></select></label>
-          <label class="filter-size" for="articlePageSize">Por página<select id="articlePageSize"><option value="10" selected>10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></label>
+            <label class="filter-search" for="articleSearch">Buscar artículo<input id="articleSearch" type="search" placeholder="Titular, autor o sección…"></label>
+            <label class="filter-status" for="articleStatusFilter">Estado<select id="articleStatusFilter"><option value="">Todos los estados</option><option value="draft">Borrador</option><option value="pending">En revisión</option><option value="approved">Aprobado</option><option value="published">Publicado</option><option value="rejected">Descartado</option></select></label>
+            <label class="filter-size" for="articlePageSize">Por página<select id="articlePageSize"><option value="10" selected>10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></label>
             <label class="filter-sort" for="articleSort">Ordenar<select id="articleSort"><option value="newest">Más recientes</option><option value="oldest">Más antiguas</option><option value="title">Título A–Z</option></select></label>
             <p id="articleFilterCount" class="muted" aria-live="polite">Todos los artículos</p>
           </div>
@@ -118,143 +124,9 @@
             <div class="field"><label for="category">Sección</label><select id="category"><option>Internacional</option><option>Política</option><option>Economía</option><option>Seguridad</option><option>Tecnología</option><option>Opinión</option><option>Clima</option><option>Sociedad</option><option>Evoford Briefing</option></select></div>
             <div class="field"><label for="author">Autor</label><input id="author" value="EDWIN PINEDA CARRASCO"></div><div class="field full"><label><input id="isFeatured" type="checkbox" style="width:auto;vertical-align:middle"> Destacar en portada</label><small class="muted">Si está marcado, el artículo podrá ocupar uno de los dos espacios principales de la portada. Si no, seguirá en su sección y en el listado de noticias.</small></div>
             <div class="field full"><label for="summary">Resumen</label><textarea id="summary" rows="2"></textarea></div>
-            <div class="field full"><label for="content">Texto del artículo</label><div class="rich-toolbar" role="toolbar" aria-label="Formato del artículo" data-editor="content">
-  <button type="button" data-format="bold" title="Negrita"><strong>B</strong></button>
-  <button type="button" data-format="italic" title="Cursiva"><em>I</em></button>
-  <button type="button" data-format="h2" title="Subtítulo">H2</button>
-  <button type="button" data-format="h3" title="Subtítulo pequeño">H3</button>
-  <button type="button" data-format="ul" title="Lista">• Lista</button>
-  <button type="button" data-format="quote" title="Cita">“ ”</button>
-  <button type="button" data-format="link" title="Enlace">Enlace</button>
-</div>
-<textarea id="content" rows="12" required></textarea><small class="muted">Para aprobar y publicar: redacta al menos 500 caracteres propios, elimina las instrucciones del borrador e identifica al autor.</small></div>
-            <div class="field"><label for="country">País principal</label><input id="country" placeholder="Por verificar"></div>
-            <div class="field"><label for="region">Región</label><input id="region" placeholder="Europe, Americas…"></div>
-            <div class="field"><label for="language">Idioma principal</label><select id="language"><option value="es">Español</option><option value="en">English</option></select></div>
-            <div class="field full"><label for="summaryEn">Resumen en inglés</label><textarea id="summaryEn" rows="2"></textarea></div>
-            <div class="field full"><label for="summaryEs">Resumen en español</label><textarea id="summaryEs" rows="2"></textarea></div>
-            <div class="field full"><label for="contentEn">Article text (English)</label><div class="rich-toolbar" role="toolbar" aria-label="Formato del artículo" data-editor="contentEn">
-  <button type="button" data-format="bold" title="Negrita"><strong>B</strong></button>
-  <button type="button" data-format="italic" title="Cursiva"><em>I</em></button>
-  <button type="button" data-format="h2" title="Subtítulo">H2</button>
-  <button type="button" data-format="h3" title="Subtítulo pequeño">H3</button>
-  <button type="button" data-format="ul" title="Lista">• Lista</button>
-  <button type="button" data-format="quote" title="Cita">“ ”</button>
-  <button type="button" data-format="link" title="Enlace">Enlace</button>
-</div>
-<textarea id="contentEn" rows="10"></textarea></div>
-            <div class="field full"><label for="contentEs">Texto del artículo en español</label><div class="rich-toolbar" role="toolbar" aria-label="Formato del artículo" data-editor="contentEs">
-  <button type="button" data-format="bold" title="Negrita"><strong>B</strong></button>
-  <button type="button" data-format="italic" title="Cursiva"><em>I</em></button>
-  <button type="button" data-format="h2" title="Subtítulo">H2</button>
-  <button type="button" data-format="h3" title="Subtítulo pequeño">H3</button>
-  <button type="button" data-format="ul" title="Lista">• Lista</button>
-  <button type="button" data-format="quote" title="Cita">“ ”</button>
-  <button type="button" data-format="link" title="Enlace">Enlace</button>
-</div>
-<textarea id="contentEs" rows="10"></textarea></div>
-            <div class="field full translation-check"><p class="eyebrow">CONTROL DE IDIOMAS</p><p id="translationStatus" class="message" role="status">Completa titular y texto en español e inglés. El estado se actualizará al abrir un artículo guardado.</p><small class="muted">El panel conserva ambas versiones. Completa y revisa la traducción antes de aprobar o publicar; el sistema bloqueará la publicación si falta un idioma.</small></div>
-            <div class="field full"><label for="imageFile">Fotografía desde tu dispositivo (JPG, PNG o WebP; máximo 8 MB)</label><input id="imageFile" type="file" accept="image/jpeg,image/png,image/webp"><button type="button" id="uploadImageBtn" class="secondary">Subir fotografía</button><p id="imageMessage" class="message" role="status"></p><img id="imagePreview" alt="Vista previa de la fotografía" hidden style="max-width:100%;max-height:320px;object-fit:contain;margin-top:12px"><label for="imageUrl">O utiliza una URL de imagen</label><input id="imageUrl" type="url" placeholder="https://…"></div>
-            <div class="field"><label for="sourceTitle">Medio original</label><input id="sourceTitle" placeholder="El País, BBC, Reuters…"></div>
-            <div class="field full"><label for="sourceUrl">Enlace a la noticia original</label><input id="sourceUrl" type="url" placeholder="https://…"></div>
           </div>
-          <div class="actions"><button type="submit" id="saveDraftBtn" class="secondary">Guardar borrador</button><button type="button" id="submitReviewBtn">Enviar a revisión</button><button type="button" id="approveArticleBtn" class="secondary">Aprobar artículo</button><button type="button" id="publishArticleBtn" hidden>Publicar</button><button type="button" id="saveChangesBtn" class="secondary" hidden>Guardar cambios</button></div>
-          <p id="editorMessage" class="message" role="status"></p>
         </form>
-      </section>
-
-      <section id="inboxTab" class="tabview" hidden>
-        <div class="section-head"><div><p class="eyebrow">FUENTES EXTERNAS</p><h2>Bandeja de noticias RSS</h2></div><div class="item-actions"><button id="runRssBtn">Importar ahora</button><button id="refreshInboxBtn" class="secondary">Actualizar lista</button></div></div>
-        <p id="rssRunMessage" class="message" role="status">La importación solo consulta fuentes activas y guarda elementos para revisión; nunca publica automáticamente.</p>
-        <p class="muted">El RSS sirve para detectar temas, no para republicar. Pulsa «Preparar artículo propio» para abrir una guía de redacción con hechos que verificar, contexto, enfoque y fuentes. El borrador queda sin publicar y requiere revisión humana.</p>
-        <div id="inboxList" class="list"><p class="muted">Cargando…</p></div>
-      </section>
-
-      <section id="submissionsTab" class="tabview" hidden><div class="section-head"><div><p class="eyebrow">COLABORACIONES EXTERNAS</p><h2>Envíos recibidos</h2></div><button id="refreshSubmissionsBtn" class="secondary">Actualizar</button></div><p class="muted">Los envíos son privados. Puedes convertirlos en borradores para revisarlos antes de aprobarlos.</p><div id="submissionsList" class="list"><p class="muted">Cargando…</p></div></section>
-      <section id="directoryTab" class="tabview" hidden><div class="section-head"><div><p class="eyebrow">COMUNIDAD DOMINICANA · LONDRES</p><h2>Directorio y solicitudes</h2></div><button id="refreshDirectoryBtn" class="secondary">Actualizar</button></div><p class="muted">Revisa las solicitudes recibidas y publica únicamente las fichas verificadas. Las fichas comerciales patrocinadas deben identificarse como tales.</p><div id="directorySubmissionList" class="list"><p class="muted">Cargando solicitudes…</p></div><h2>Fichas del directorio</h2><div id="directoryAdminList" class="list"><p class="muted">Cargando fichas…</p></div><section id="directoryEditPanel" class="panel directory-edit-panel" hidden aria-labelledby="directoryEditTitle">
-  <div class="section-head"><div><p class="eyebrow">GESTIÓN DEL DIRECTORIO</p><h2 id="directoryEditTitle">Editar ficha</h2></div><button type="button" id="closeDirectoryEdit" class="secondary">Cerrar</button></div>
-  <form id="directoryEditForm">
-    <input id="directoryEditId" type="hidden">
-    <div class="form-grid">
-      <div class="field full"><label for="directoryEditName">Nombre de la ficha</label><input id="directoryEditName" required maxlength="180"></div>
-      <div class="field"><label for="directoryEditSlug">Identificador URL (slug)</label><input id="directoryEditSlug" required maxlength="180"></div>
-      <div class="field"><label for="directoryEditCategory">Categoría</label><select id="directoryEditCategory"><option>Embajadas y consulados</option><option>Instituciones dominicanas</option><option>Asociaciones</option><option>Educación y formación</option><option>Vivienda y apoyo público</option><option>Banca y finanzas</option><option>Asesoría legal y migratoria</option><option>Salud y bienestar</option><option>Empleo y formación</option><option>Negocios</option><option>Servicios profesionales</option><option>Comunidad y eventos</option></select></div>
-      <div class="field"><label for="directoryEditType">Tipo de ficha</label><select id="directoryEditType"><option value="community">Comunidad / institución</option><option value="business">Empresa / negocio</option></select></div>
-      <div class="field"><label for="directoryEditCity">Ciudad / ámbito</label><input id="directoryEditCity"></div>
-      <div class="field"><label for="directoryEditPostcode">Código postal</label><input id="directoryEditPostcode"></div>
-      <div class="field full"><label for="directoryEditAddress">Dirección</label><input id="directoryEditAddress"></div>
-      <div class="field"><label for="directoryEditPhone">Teléfono</label><input id="directoryEditPhone" type="tel"></div>
-      <div class="field"><label for="directoryEditEmail">Correo electrónico</label><input id="directoryEditEmail" type="email"></div>
-      <div class="field full"><label for="directoryEditWebsite">Sitio web</label><input id="directoryEditWebsite" type="url" placeholder="https://…"></div>
-      <div class="field full"><label for="directoryEditDescription">Descripción</label><textarea id="directoryEditDescription" rows="4"></textarea></div>
-      <div class="field full"><label for="directoryEditServices">Servicios (uno por línea)</label><textarea id="directoryEditServices" rows="4"></textarea></div>
-      <div class="field full"><label for="directoryEditHours">Horario de atención</label><input id="directoryEditHours"></div>
-      <div class="field full"><label for="directoryEditImage">URL de imagen</label><input id="directoryEditImage" type="url" placeholder="https://…"></div>
-      <div class="field"><label for="directoryEditStatus">Estado</label><select id="directoryEditStatus"><option value="draft">Borrador</option><option value="pending">Pendiente</option><option value="published">Publicado</option><option value="rejected">Rechazado</option></select></div>
-      <div class="field"><label><input id="directoryEditSponsored" type="checkbox" style="width:auto;margin-right:8px">Ficha comercial patrocinada</label></div>
-    </div>
-    <p id="directoryEditMessage" class="message" role="status"></p>
-    <div class="actions"><button type="submit" id="saveDirectoryEdit">Guardar cambios</button><button type="button" id="cancelDirectoryEdit" class="secondary">Cancelar</button></div>
-  </form>
-</section>
-</section>
-      <section id="coursesTab" class="tabview" hidden>
-        <div class="section-head"><div><p class="eyebrow">EVOFORD ACADEMY</p><h2>Admisiones y alumnos</h2></div><button id="refreshCoursesBtn" class="secondary">Actualizar</button></div>
-        <p class="muted">Revisa las solicitudes de admisión. Al aprobar una solicitud, se crea la cuenta del alumno y se envía una invitación segura por correo.</p>
-        <div id="courseStats" class="course-stats" aria-live="polite"></div><div class="section-head course-tools"><span class="muted">Puedes descargar una copia para seguimiento interno.</span><button type="button" id="exportCoursesBtn" class="secondary">Exportar CSV</button></div><div class="article-filters"><label class="filter-search" for="courseSearch">Buscar solicitud<input id="courseSearch" type="search" placeholder="Nombre, correo, curso, país o ciudad…"></label><label class="filter-status" for="courseStatusFilter">Estado<select id="courseStatusFilter"><option value="">Todos los estados</option><option value="received">Recibida</option><option value="contacted">Contactada</option><option value="enrolled">Matriculada</option><option value="closed">Cerrada</option><option value="discarded">Descartada</option></select></label><label class="filter-status" for="coursePageSize">Mostrar<select id="coursePageSize"><option value="20">20 por página</option><option value="50">50 por página</option><option value="100">100 por página</option></select></label><p id="courseCount" class="muted" aria-live="polite">Cargando solicitudes…</p></div>
-        <div id="courseBulkToolbar" class="course-bulk-toolbar"><label class="course-select-all"><input type="checkbox" id="courseSelectPage"> Seleccionar página</label><span id="courseSelectedCount">0 seleccionadas</span><div><button type="button" class="secondary" id="courseBulkContact" disabled>Marcar contactadas</button><button type="button" class="secondary" id="courseBulkClose" disabled>Cerrar seleccionadas</button><button type="button" class="secondary" id="courseClearSelection" disabled>Limpiar selección</button></div></div>
-        <div id="courseEnquiryList" class="list"><p class="muted">Cargando solicitudes…</p></div>
-        <section class="panel" style="margin-top:24px">
-          <div class="section-head"><div><p class="eyebrow">EVOFORD ACADEMY</p><h3>Alumnos matriculados</h3><p class="muted">Consulta cuentas, cursos asignados y progreso. Puedes activar, suspender o finalizar una matrícula.</p></div><button type="button" id="refreshAcademyStudentsBtn" class="secondary">Actualizar alumnos</button></div>
-          <div class="article-filters"><label class="filter-search">Buscar alumno<input id="academyStudentSearch" type="search" placeholder="Nombre, correo o curso…"></label><label class="filter-status">Estado<select id="academyStudentStatus"><option value="">Todos los estados</option><option value="active">Activos</option><option value="suspended">Suspendidos</option><option value="completed">Finalizados</option></select></label><p id="academyStudentCount" class="muted" aria-live="polite">Cargando alumnos…</p></div>
-          <div id="academyStudentList" class="list"><p class="muted">Pulsa Actualizar alumnos para consultar las matrículas.</p></div>
-          <div id="academyProgressDialog" class="academy-progress-dialog" hidden role="dialog" aria-modal="true" aria-labelledby="academyProgressTitle"><div class="academy-progress-backdrop" data-close-academy-progress></div><section class="academy-progress-window"><button type="button" class="academy-progress-close" data-close-academy-progress aria-label="Cerrar">×</button><p class="eyebrow">SEGUIMIENTO ACADÉMICO</p><h3 id="academyProgressTitle">Progreso del alumno</h3><p id="academyProgressCourse" class="muted"></p><div id="academyProgressSummary"></div><div id="academyProgressLessons" class="academy-progress-lessons"></div><div class="actions"><button type="button" class="secondary" data-close-academy-progress>Cerrar</button></div></section></div>
-        </section>
-        <section class="panel academy-project-review-panel">
-          <div class="section-head"><div><p class="eyebrow">EVALUACIÓN FINAL · EVOFORD ACADEMY</p><h3>Proyectos entregados</h3><p class="muted">El sistema recoge el proyecto y la nota del test. Revisa la evidencia, completa la rúbrica y publica el resultado final para el alumno.</p></div><button type="button" id="refreshAcademyProjectsBtn" class="secondary">Actualizar proyectos</button></div>
-          <div id="academyProjectStats" class="course-stats"></div>
-          <div class="article-filters"><label class="filter-search">Buscar proyecto<input id="academyProjectSearch" type="search" placeholder="Alumno, correo o proyecto…"></label><label class="filter-status">Estado<select id="academyProjectStatus"><option value="">Todos los estados</option><option value="pending_review">Pendientes de revisión</option><option value="approved">Aprobados</option><option value="revision_requested">Necesitan mejoras</option></select></label><p id="academyProjectCount" class="muted">Pulsa Actualizar proyectos.</p></div>
-          <div id="academyProjectList" class="list"><p class="muted">Pulsa Actualizar proyectos para consultar las entregas.</p></div>
-        </section>
-      </section>
-      <section id="adsTab" class="tabview" hidden>
-<div class="section-head"><div><p class="eyebrow">INGRESOS COMERCIALES</p><h2>Anuncios y publicidad</h2><p class="muted">Anunciantes, campañas, tarifas, facturas y pagos.</p></div><button type="button" id="newAdBtn">Nueva campaña</button></div>
-<div id="adStats" class="course-stats"></div>
-<form id="adForm" class="panel" hidden><div class="section-head"><h2>Campaña publicitaria</h2><button type="button" id="cancelAdBtn" class="secondary">Cerrar</button></div><input id="adId" type="hidden"><input id="adEnquiryId" type="hidden"><div class="form-grid">
-<div class="field"><label for="adAdvertiser">Empresa / anunciante</label><input id="adAdvertiser" required maxlength="180"></div><div class="field"><label for="adContact">Persona de contacto</label><input id="adContact" maxlength="120"></div>
-<div class="field"><label for="adEmail">Correo de contacto</label><input id="adEmail" type="email" required maxlength="254"></div><div class="field"><label for="adPhone">Teléfono</label><input id="adPhone" type="tel"></div>
-<div class="field full"><label for="adTitle">Nombre de campaña</label><input id="adTitle" required maxlength="180"></div>
-<div class="field"><label for="adPlacement">Ubicación</label><select id="adPlacement"><option value="banner">Banner web</option><option value="homepage">Portada</option><option value="sidebar">Columna lateral</option><option value="article">Artículo</option><option value="print">Edición impresa</option><option value="sponsored">Artículo patrocinado</option><option value="popup">Ventana emergente al entrar (3 segundos)</option></select></div>
-<div class="field full ad-preview-field"><div class="ad-preview-heading"><div><p class="eyebrow">SIMULACIÓN DE PUBLICIDAD</p><strong id="adPreviewTitle">Banner web</strong><p class="muted">Vista orientativa en español e inglés. Cambia al seleccionar otra ubicación.</p></div><span class="ad-preview-tag">PREVIEW</span></div><div id="adPlacementPreview" class="ad-preview-card" aria-live="polite"></div></div>
-<div class="field"><label for="adStatus">Estado de campaña</label><select id="adStatus"><option value="draft">Borrador</option><option value="pending">Pendiente</option><option value="active">Activa</option><option value="paused">Pausada</option><option value="completed">Finalizada</option><option value="cancelled">Cancelada</option></select></div>
-<div class="field"><label for="adPublicationMode">Modalidad de publicación</label><select id="adPublicationMode"><option value="manual">Manual: publicar al activar</option><option value="scheduled">Programada: activar en fecha</option></select></div><div class="field full"><label for="adCreativeFile">Subir banner o flyer (JPG, PNG, WebP o PDF; máximo 8 MB)</label><input id="adCreativeFile" type="file" accept="image/jpeg,image/png,image/webp,application/pdf"><small class="muted">El archivo aprobado se copiará al espacio público de anuncios. El original recibido seguirá siendo privado.</small></div><div class="field full"><label for="adCreative">O URL de imagen / creatividad</label><input id="adCreative" type="url" placeholder="https://…"></div><div class="field full"><label for="adCreativeMobileFile">Banner específico para móviles (JPG, PNG o WebP; máximo 8 MB)</label><input id="adCreativeMobileFile" type="file" accept="image/jpeg,image/png,image/webp"><small class="muted">Opcional. Recomendado: 300 × 100 px. En móviles se mostrará esta imagen; en escritorio seguirá apareciendo el banner principal.</small><label for="adCreativeMobile">O URL del banner móvil</label><input id="adCreativeMobile" type="url" placeholder="https://…"><img id="adCreativeMobilePreview" alt="Vista previa del banner móvil" hidden style="display:block;max-width:300px;width:100%;height:auto;margin-top:10px;object-fit:contain"></div><div class="field full"><label for="adTarget">Enlace de destino</label><input id="adTarget" type="url" placeholder="https://…"></div>
-<div class="field"><label for="adStart">Fecha de inicio</label><input id="adStart" type="date"><small class="muted">En modo programado, la campaña aparecerá automáticamente este día.</small></div><div class="field"><label for="adEnd">Fecha de finalización</label><input id="adEnd" type="date"></div>
-<div class="field"><label for="adAmount">Importe acordado</label><input id="adAmount" type="number" min="0" step="0.01" value="0"></div><div class="field"><label for="adCurrency">Moneda</label><select id="adCurrency"><option value="GBP">GBP · Libra</option><option value="EUR">EUR · Euro</option><option value="USD">USD · Dólar</option></select></div>
-<div class="field"><label for="adPayment">Estado de pago</label><select id="adPayment"><option value="unpaid">Sin pagar</option><option value="pending">Pendiente</option><option value="paid">Pagado</option><option value="overdue">Vencido</option><option value="waived">Exento</option></select></div><div class="field"><label for="adInvoice">Referencia de factura</label><input id="adInvoice" maxlength="100"></div>
-<div class="field full"><label for="adNotes">Notas internas</label><textarea id="adNotes" rows="3"></textarea></div></div><p id="adMessage" class="message" role="status"></p><div class="actions"><button type="submit">Guardar campaña</button><button type="button" id="cancelAdBtn2" class="secondary">Cancelar</button></div></form>
-<h3>Campañas registradas</h3><div id="adCampaignList" class="list"><p class="muted">Cargando…</p></div><h3>Solicitudes comerciales</h3><div id="adEnquiryList" class="list"><p class="muted">Cargando…</p></div></section>
-<section id="sourcesTab" class="tabview" hidden>
-        <div class="section-head"><div><p class="eyebrow">AGREGADORES</p><h2>Fuentes RSS</h2><p class="muted">Actividad de importación, noticias almacenadas y última recepción por medio.</p></div><button type="button" id="refreshSourcesBtn" class="secondary">Actualizar fuentes</button></div><div id="rssSourceSummary" class="rss-source-summary" aria-live="polite"></div><p class="rss-source-note muted">El estado se calcula a partir de las noticias guardadas. «Sin registros» indica que todavía no se ha almacenado contenido de ese feed; no equivale a una comprobación en directo de su servidor.</p>
-        <form id="sourceForm" class="panel source-form">
-          <div class="form-grid">
-            <div class="field"><label for="sourceName">Nombre del medio</label><input id="sourceName" required></div>
-            <div class="field"><label for="sourceCategory">Sección</label><select id="sourceCategory"><option>Internacional</option><option>Política</option><option>Economía</option><option>Seguridad</option><option>Tecnología</option><option>General</option></select></div>
-            <div class="field full"><label for="feedUrl">URL del feed RSS</label><input id="feedUrl" type="url" required placeholder="https://medio.example/rss.xml"></div>
-          </div>
-          <button type="submit">Añadir fuente</button><p id="sourceMessage" class="message" role="status"></p>
-        </form>
-          <section id="rssEditModal" class="panel rss-edit-panel" hidden aria-labelledby="rssEditTitle">
-            <form id="rssEditForm" class="rss-edit-form">
-              <div class="section-head"><div><p class="eyebrow">CONFIGURACIÓN DE FUENTES</p><h2 id="rssEditTitle">Editar fuente RSS</h2></div><button type="button" id="closeRssEdit" class="secondary">Cerrar</button></div>
-              <input id="rssEditId" type="hidden">
-              <div class="field"><label for="rssEditName">Nombre del medio</label><input id="rssEditName" required maxlength="160"></div>
-              <div class="field"><label for="rssEditUrl">Dirección del feed RSS</label><input id="rssEditUrl" type="url" required placeholder="https://…"></div>
-              <div class="field"><label for="rssEditCategory">Sección</label><select id="rssEditCategory"><option>General</option><option>Internacional</option><option>Política</option><option>Economía</option><option>Seguridad</option><option>Startups e innovación</option><option>Opinión</option><option>República Dominicana</option><option>Reino Unido</option><option>España</option></select></div>
-              <p id="rssEditMessage" class="message" role="status"></p>
-              <div class="actions"><button type="submit" id="saveRssEdit">Guardar cambios</button><button type="button" id="cancelRssEdit" class="secondary">Cancelar</button></div>
-            </form>
-          </section>
-                <div id="sourceList" class="list"><p class="muted">Cargando fuentes…</p></div>
+        <p class="muted">Los controles completos de edición y publicación se conservan en esta sección.</p>
       </section>
       <p id="globalMessage" class="message" role="status"></p>
     </section>

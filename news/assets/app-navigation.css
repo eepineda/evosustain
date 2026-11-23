@@ -26,3 +26,77 @@ html body{padding-bottom:0!important}
 }
 @media(max-width:380px){nav.app-bottom-nav{left:6px!important;right:6px!important;gap:2px!important;padding:6px 4px!important}nav.app-bottom-nav>a>span:last-child{font-size:10px!important}nav.app-bottom-nav .nav-icon svg{width:27px!important;height:27px!important}}
 @media print{nav.app-bottom-nav{display:none!important}html body{padding-bottom:0!important}}
+
+
+/* EVOFORD NEWS — compact native-app experience: larger controls, shorter visual rhythm. */
+@media (max-width:760px){
+ html body{padding-bottom:calc(104px + env(safe-area-inset-bottom))!important;background:#f3f6fa!important;color:#17283e!important}
+ .masthead{position:sticky!important;top:0!important;z-index:120!important;min-height:58px!important;padding:8px 16px!important;background:rgba(255,255,255,.97)!important;border-bottom:1px solid #dfe6ee!important;box-shadow:0 4px 18px rgba(16,43,78,.07)!important}
+ .masthead .topline{font-size:8px!important;letter-spacing:.13em!important}
+ .masthead .brand{font-size:25px!important;line-height:1!important}
+ .masthead .nav{display:none!important}
+ main.wrap,.wrap,main.directory-wrap{width:100%!important;max-width:none!important;margin:0!important;padding-left:14px!important;padding-right:14px!important;box-sizing:border-box!important}
+ .edition{margin:8px 0 12px!important;padding-bottom:8px!important;font-size:8px!important}
+ .frontpage{margin:10px 0 18px!important;padding:0!important}
+ .frontpage-top{margin-bottom:9px!important}
+ .featured-story{border-radius:16px!important;box-shadow:0 5px 18px rgba(16,43,78,.07)!important}
+ .featured-story .feature-visual{min-height:155px!important}
+ .featured-story .feature-copy{padding:14px!important}
+ .featured-story h1{font-size:clamp(25px,7vw,32px)!important;line-height:1.1!important;margin:5px 0 8px!important}
+ .featured-story .dek{font-size:14px!important;line-height:1.48!important}
+ .frontpage-aside{margin-top:9px!important;padding:11px 13px!important}
+ .frontpage-aside .brief{padding:8px 0!important}
+ .section{margin:18px 0!important}
+ .section-head{margin-bottom:9px!important}
+ .section-head h2{font-size:21px!important;line-height:1.15!important}
+ .cards{gap:9px!important}
+ .cards article,.cards .card,.opinion-latest,.directory-card,.startup-category,.startup-stories .story,.party-card,.politics-topic{padding:12px!important;border-radius:13px!important}
+ .cards p,.directory-card p,.startup-copy p{font-size:14px!important;line-height:1.5!important}
+ .topics{gap:7px!important}
+ .topics a{min-height:54px!important;padding:10px!important;font-size:12px!important}
+ .country-desk{margin:14px 0!important}
+ .country-links{gap:7px!important;padding-bottom:2px!important}
+ .country-links a{padding:8px 11px!important;font-size:12px!important}
+ .market-strip{margin:8px 0 14px!important;padding:8px 0!important}
+ .reader-tools{margin:12px 0!important;padding:12px!important;border-radius:14px!important}
+ .reader-tools-heading h2{font-size:18px!important}
+ .app-install{margin:8px 0 12px!important;padding:10px!important}
+ .startup-intro,.politics-intro{padding:14px 0!important}
+ .startup-intro h1,.politics-intro h1,.directory-hero h1{font-size:clamp(27px,7vw,35px)!important;line-height:1.1!important}
+ .startup-feature{gap:11px!important;padding:13px 0 16px!important}
+ .startup-art{min-height:145px!important}
+ .startup-facts{margin:10px 0!important}
+ .learning-section,.expert-call{margin:14px 0!important;padding:14px!important}
+ main.academy-home{padding:10px 14px 26px!important}
+ main.academy-home .academy-hero{padding:15px!important;border-radius:15px!important}
+ main.academy-home .academy-hero h1{font-size:clamp(29px,8vw,38px)!important;line-height:1.08!important}
+ main.academy-home .academy-section{padding:17px 0!important}
+ main.academy-home .academy-section-head{margin-bottom:10px!important}
+ main.academy-home .academy-section-head h2{font-size:21px!important}
+ main.academy-home .academy-course-grid,main.academy-home .academy-area-grid,main.academy-home .academy-steps{gap:9px!important}
+ main.academy-home .academy-course-card,main.academy-home .academy-featured-course,main.academy-home .academy-area-grid article,main.academy-home .academy-steps article{padding:13px!important;border-radius:13px!important}
+ main.academy-home .academy-course-card p,main.academy-home .academy-area-grid p,main.academy-home .academy-steps p{font-size:13px!important;line-height:1.45!important}
+ #articleView{padding:16px 14px 30px!important}
+ #articleView h1{font-size:clamp(28px,8vw,37px)!important;line-height:1.08!important;margin:5px 0 10px!important}
+ #articleView .dek{padding:10px 12px!important;font-size:15px!important;line-height:1.5!important}
+ #articleView>img{margin:12px 0 15px!important;border-radius:12px!important}
+ #articleView .article-body{max-width:100%!important}
+ #articleView .article-body p{font-size:16px!important;line-height:1.68!important;margin:0 0 13px!important}
+ #articleView .article-actions{gap:8px!important;margin:12px 0!important}
+ #articleView .article-actions button,#articleView .article-actions a{min-width:44px!important;min-height:44px!important}
+ footer{margin-top:18px!important;padding:16px 14px!important}
+ nav.app-bottom-nav{left:7px!important;right:7px!important;bottom:calc(7px + env(safe-area-inset-bottom))!important;min-height:88px!important;padding:7px 5px!important;gap:3px!important;border-radius:20px!important;background:rgba(255,255,255,.99)!important;box-shadow:0 7px 26px rgba(16,43,78,.2)!important}
+ nav.app-bottom-nav>a{min-height:72px!important;gap:4px!important;padding:5px 1px!important;font-size:11px!important;font-weight:750!important}
+ nav.app-bottom-nav .nav-icon{width:44px!important;height:40px!important;border-radius:12px!important;font-size:29px!important}
+ nav.app-bottom-nav .nav-icon svg{width:33px!important;height:33px!important;stroke-width:2!important}
+ nav.app-bottom-nav>a>span:last-child{font-size:10.5px!important;letter-spacing:-.3px!important}
+}
+@media(max-width:380px){
+ nav.app-bottom-nav{left:4px!important;right:4px!important;gap:1px!important;padding:6px 3px!important}
+ nav.app-bottom-nav .nav-icon{width:40px!important;height:37px!important}
+ nav.app-bottom-nav .nav-icon svg{width:30px!important;height:30px!important}
+ nav.app-bottom-nav>a>span:last-child{font-size:9.5px!important}
+}
+@media(min-width:761px){
+ nav.app-bottom-nav{display:none!important}
+}

@@ -232,6 +232,18 @@
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <link rel="stylesheet" href="app-theme.css?v=20261112-1">
+<style>
+/* Responsive admin portal */
+html,body{min-height:100%;}
+body{min-height:100dvh;height:100dvh;overflow:hidden}
+.sidebar{flex:0 0 240px;min-width:0}
+.main-container{min-width:0;min-height:0}
+.main-content{min-width:0;overflow:auto}
+.card{max-width:100%;min-width:0;overflow-x:auto}
+table.data-table{min-width:680px}
+@media(max-width:760px){body{display:flex;flex-direction:column;height:100dvh}.sidebar{width:100%;height:auto;flex:0 0 auto;max-height:42vh;overflow:auto}.sidebar.collapsed{width:100%;max-height:54px}.sidebar .nav-button{padding:.65rem .85rem}.sidebar.collapsed .nav-label{display:inline}.main-container{width:100%;flex:1;min-height:0}.main-container>header{font-size:1.1rem;padding:.8rem 1rem}.main-content{padding:.8rem}.card{padding:1rem;margin-bottom:1rem}}
+@media(max-width:480px){.sidebar{max-height:36vh}.main-content{padding:.6rem}.card{padding:.8rem}table.data-table{font-size:.82rem}}
+</style>
 </head>
 <body>
 <div class="sidebar">
@@ -6103,68 +6115,7 @@ setTimeout(function() {
       });
     });
   </script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  // Requests: Top 10 stores with pending requests
-  new Chart(document.getElementById("requestsChart"), {
-    type: "bar",
-    data: {
-      labels: ['S1499', 'S1038', 'S1498', 'S1436', 'S1433', 'S1425', 'S1374', 'S1335', 'S1317', 'S1311'],
-      datasets: [{
-        label: "Pending Requests",
-        backgroundColor: "#42a5f5",
-        data: [2, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-      }]
-    },
-    options: { responsive: true }
-  });
 
-  // Schedule: Driver workload
-  new Chart(document.getElementById("scheduleChart"), {
-    type: "bar",
-    data: {
-      labels: ['Deborah Austin', 'Dominic Solomon', 'Dr. Tracy Reid MD', 'Jasmine Robinson', 'Jennifer Young', 'Olivia Snyder', 'Regina Wilkins', 'Sandra Ward', 'Stephanie Gonzalez', 'Troy Nguyen'],
-      datasets: [{
-        label: "Scheduled Tasks",
-        backgroundColor: "#66bb6a",
-        data: [2, 13, 14, 6, 10, 6, 9, 14, 17, 9]
-      }]
-    },
-    options: { responsive: true }
-  });
-
-  // Assignment: Feedback Score per driver
-  new Chart(document.getElementById("assignmentChart"), {
-    type: "bar",
-    data: {
-      labels: ['Jasmine Robinson', 'Regina Wilkins', 'Troy Nguyen', 'Sandra Ward', 'Olivia Snyder', 'Jennifer Young', 'Stephanie Gonzalez', 'Dr. Tracy Reid MD', 'Deborah Austin', 'Dominic Solomon'],
-      datasets: [{
-        label: "Feedback Score",
-        backgroundColor: "#ffa726",
-        data: [4.51, 4.36, 4.26, 3.61, 4.68, 4.25, 4.12, 4.03, 4.17, 3.72]
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: { y: { max: 5 } }
-    }
-  });
-
-  // Clients: Top 10 most active
-  new Chart(document.getElementById("clientsChart"), {
-    type: "bar",
-    data: {
-      labels: ['Gonzalez-Mitchell', 'Reynolds-Mason', 'Robertson Ltd', 'Castaneda Ltd', 'Parker LLC', 'Morris-Hudson', 'Roberts PLC', 'James-Edwards', 'Johnson, Hudson and Watkins', 'Foster, Lynn and Huffman'],
-      datasets: [{
-        label: "Total Collections",
-        backgroundColor: "#ab47bc",
-        data: [98, 96, 95, 95, 94, 90, 89, 89, 88, 87]
-      }]
-    },
-    options: { responsive: true }
-  });
-});
-</script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -6217,25 +6168,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 </script>
-<script>
-const routeStoresMap = {"R101": ["S1106", "S1210", "S1325", "S1157", "S1007", "S1375", "S1469", "S1231", "S1000", "S1212", "S1293", "S1304", "S1311", "S1045"], "R102": ["S1182", "S1439", "S1436", "S1432", "S1094", "S1339", "S1488", "S1353", "S1402"], "R103": ["S1337", "S1374", "S1067", "S1390", "S1373", "S1063", "S1268"], "R104": ["S1239", "S1205", "S1123", "S1499", "S1051", "S1035", "S1204", "S1336"], "R105": ["S1490", "S1242", "S1102", "S1031", "S1094", "S1265", "S1380", "S1002", "S1038", "S1287", "S1154", "S1094"], "R106": ["S1343", "S1194", "S1458", "S1398", "S1102", "S1335", "S1269", "S1422", "S1181", "S1296", "S1058"], "R107": ["S1318", "S1259", "S1106", "S1451", "S1378", "S1349"], "R108": ["S1021", "S1065", "S1029", "S1150", "S1425", "S1138", "S1240", "S1372", "S1317", "S1085", "S1280", "S1162"], "R109": ["S1418", "S1320", "S1387", "S1273", "S1335", "S1205", "S1409", "S1433", "S1498", "S1160", "S1086", "S1468", "S1322"], "R110": ["S1382", "S1250", "S1095", "S1294", "S1020", "S1084", "S1499", "S1486"]};
 
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".route-dropdown").forEach(dropdown => {
-    dropdown.addEventListener("change", function () {
-      const selectedRoute = this.value;
-      const label = this.parentElement.querySelector(".assigned-label");
-      if (selectedRoute && routeStoresMap[selectedRoute]) {
-        const stores = routeStoresMap[selectedRoute].slice(0, 10).join(", ");
-        label.innerHTML = "→ " + selectedRoute + " assigned<br><small>Stores: " + stores + "...</small>";
-        label.style.color = "#1976d2";
-      } else {
-        label.innerHTML = "";
-      }
-    });
-  });
-});
-</script>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("zoneSearch");

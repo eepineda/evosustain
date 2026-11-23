@@ -206,3 +206,56 @@ html body{padding-bottom:0!important}
  html.evo-pwa nav.app-bottom-nav .nav-icon svg,html body nav.app-bottom-nav .nav-icon svg{width:33px!important;height:33px!important}
  html.evo-pwa nav.app-bottom-nav>a>span:last-child,html body nav.app-bottom-nav>a>span:last-child{font-size:9.5px!important}
 }
+
+
+/* 2026-11-23 — mobile scale refinement: balanced, readable density */
+@media(max-width:760px){
+ html.evo-pwa body,html body{padding-bottom:calc(96px + env(safe-area-inset-bottom))!important}
+ html.evo-pwa nav.app-bottom-nav,html body nav.app-bottom-nav{
+  min-height:78px!important;height:78px!important;padding:5px 5px!important;
+  left:10px!important;right:10px!important;bottom:calc(7px + env(safe-area-inset-bottom))!important;
+  border-radius:18px!important;gap:2px!important
+ }
+ html.evo-pwa nav.app-bottom-nav>a,html body nav.app-bottom-nav>a{
+  height:66px!important;min-height:66px!important;gap:3px!important;padding:3px 1px!important;
+  font-size:10px!important
+ }
+ html.evo-pwa nav.app-bottom-nav .nav-icon,html body nav.app-bottom-nav .nav-icon{
+  width:39px!important;height:37px!important;font-size:27px!important
+ }
+ html.evo-pwa nav.app-bottom-nav .nav-icon svg,html body nav.app-bottom-nav .nav-icon svg{
+  width:30px!important;height:30px!important
+ }
+ html.evo-pwa nav.app-bottom-nav>a>span:last-child,html body nav.app-bottom-nav>a>span:last-child{
+  font-size:10px!important;line-height:1.1!important
+ }
+ /* Consistent editorial scale */
+ html.evo-pwa main,html body main{font-size:15px!important}
+ html.evo-pwa main p,html body main p{font-size:15px!important;line-height:1.55!important}
+ html.evo-pwa main h1,html body main h1{font-size:clamp(27px,6.5vw,32px)!important;line-height:1.12!important}
+ html.evo-pwa main h2,html body main h2{font-size:22px!important;line-height:1.18!important}
+ html.evo-pwa main h3,html body main h3{font-size:18px!important;line-height:1.2!important}
+ html.evo-pwa main small,html body main small{font-size:11px!important}
+ html.evo-pwa .directory-hero,html body .directory-hero{padding:17px!important}
+ html.evo-pwa .directory-hero h1,html body .directory-hero h1{font-size:clamp(27px,6.5vw,32px)!important;line-height:1.12!important}
+ html.evo-pwa .directory-hero p,html body .directory-hero p{font-size:15px!important;line-height:1.5!important}
+ html.evo-pwa .directory-origin,html body .directory-origin{padding:15px!important}
+ html.evo-pwa .directory-origin h2,html body .directory-origin h2{font-size:21px!important}
+ html.evo-pwa .directory-region,html body .directory-region,
+ html.evo-pwa .directory-card,html body .directory-card{padding:14px!important}
+ html.evo-pwa .politics-intro h1,html.evo-pwa .startup-intro h1,
+ html.evo-pwa .academy-hero h1,html body .politics-intro h1,
+ html body .startup-intro h1,html body .academy-hero h1{font-size:clamp(27px,6.5vw,32px)!important}
+ html.evo-pwa .politics-intro p,html.evo-pwa .startup-intro p,
+ html.evo-pwa .academy-hero>p,html body .politics-intro p,
+ html body .startup-intro p,html body .academy-hero>p{font-size:15px!important;line-height:1.55!important}
+ html.evo-pwa .history-hero h2,html body .history-hero h2{font-size:25px!important}
+ html.evo-pwa .startup-copy h2,html body .startup-copy h2{font-size:21px!important}
+ html.evo-pwa .academy-section-head h2,html body .academy-section-head h2{font-size:21px!important}
+ html.evo-pwa .course-feature-body h3,html body .course-feature-body h3{font-size:19px!important}
+ html.evo-pwa .academy-course-card h2,html body .academy-course-card h2{font-size:17px!important}
+ html.evo-pwa .academy-course-card p,html body .academy-course-card p{font-size:13px!important}
+ html.evo-pwa button,html body button,
+ html.evo-pwa input,html body input,
+ html.evo-pwa select,html body select{font-size:14px!important}
+}

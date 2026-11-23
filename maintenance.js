@@ -1,6 +1,12 @@
 (function () {
-  // Keep the private editorial panel accessible while the public site is in maintenance mode.
-  if (location.pathname.startsWith("/news/admin/")) {
+  // Keep operational demos, the public portfolio and the private editorial panel accessible during public-site maintenance.
+  // These routes are independent showcase/working areas and must not be replaced by the global maintenance screen.
+  const pathname = location.pathname;
+  if (
+    pathname.startsWith("/news/admin/") ||
+    pathname.startsWith("/app/") ||
+    pathname.startsWith("/edwin-portfolio/")
+  ) {
     document.documentElement.classList.remove("evo-maintenance-checking");
     return;
   }

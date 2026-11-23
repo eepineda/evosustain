@@ -9,6 +9,21 @@
  document.querySelectorAll(".masthead nav.nav").forEach(nav=>{nav.innerHTML=items.map(([es,eng,href])=>'<a href="'+href+'"'+(href===file?' aria-current="page"':'')+' data-es="'+es.replace(/&/g,"&amp;")+'" data-en="'+eng.replace(/&/g,"&amp;")+'">'+(en?eng:es)+'</a>').join("");nav.setAttribute("aria-label",en?"News sections":"Secciones de EVOFORD NEWS")});
  document.querySelectorAll(".app-bottom-nav").forEach(nav=>{let links=[...nav.querySelectorAll("a")],home=links.find(a=>a.getAttribute("data-primary-section")==="0"||/portada|home/i.test(a.textContent)||/index\.html/.test(a.getAttribute("href")||""));if(!home){home=document.createElement("a");home.innerHTML='<span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="'+mobile[0][3]+'"/></svg></span><span class="nav-label"></span>';nav.insertBefore(home,nav.firstChild)}home.href=mobile[0][2];home.setAttribute("data-primary-section","0");links=[...nav.querySelectorAll("a")];links.forEach(a=>{const h=a.getAttribute("href")||"",t=a.textContent.toLowerCase();let i=a===home?0:/aula-innovacion\.html/.test(h)||/academy/.test(t)?1:/startups\.html/.test(h)||/startups/.test(t)?2:/tu-republica\.html/.test(h)||h.includes("dHUtcmVwdWJsaWNh")?3:/directory\.html/.test(h)||h.includes("ZGlyZWN0b3J5")?4:-1;if(i<0)return;const m=mobile[i],label=a.querySelector(".nav-label")||a.querySelector("span:last-child");a.setAttribute("data-primary-section",String(i));a.setAttribute("aria-label",en?m[1]:m[0]);if(label)label.textContent=en?m[1]:m[0]});nav.setAttribute("aria-label",en?"EVOFORD NEWS main navigation":"Navegación principal de EVOFORD NEWS")})}
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",apply);else apply();
+ // Academy: tapping its primary tab always returns to the top of the Academy page.
+ document.addEventListener("click",function(e){
+  const a=e.target.closest('.app-bottom-nav a[data-primary-section="1"]');
+  if(!a)return;
+  const target=new URL(a.href,location.href);
+  const isAcademy=/\/aula-innovacion\.html$/.test(location.pathname);
+  if(isAcademy){
+   e.preventDefault();
+   if(location.hash)history.replaceState(null,"",location.pathname+location.search);
+   window.scrollTo({top:0,behavior:"smooth"});
+  }else{
+   target.hash="academy-top";
+   a.href=target.pathname+target.search+target.hash;
+  }
+ },true);
  // Sincronizar el menú cuando site.js cambia el idioma sin recargar la página.
  window.addEventListener("evoford:languagechange",apply);
  document.addEventListener("click",e=>{if(e.target.closest("[data-language]"))setTimeout(apply,0)});

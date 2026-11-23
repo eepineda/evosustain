@@ -100,3 +100,109 @@ html body{padding-bottom:0!important}
 @media(min-width:761px){
  nav.app-bottom-nav{display:none!important}
 }
+
+
+/* 2026-11-23 — definitive mobile-app layer.
+   Higher specificity than the legacy .evo-pwa shell rules above. */
+@media (max-width:760px){
+ html.evo-pwa body,html body{padding-bottom:calc(112px + env(safe-area-inset-bottom))!important}
+ html.evo-pwa nav.app-bottom-nav,html body nav.app-bottom-nav{
+  position:fixed!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  left:8px!important;right:8px!important;bottom:calc(8px + env(safe-area-inset-bottom))!important;top:auto!important;
+  width:auto!important;max-width:none!important;min-height:92px!important;height:92px!important;
+  padding:8px 5px!important;gap:2px!important;align-items:center!important;
+  border:1px solid #dce4ed!important;border-radius:20px!important;background:rgba(255,255,255,.98)!important;
+  box-shadow:0 8px 28px rgba(16,43,78,.22)!important;z-index:2147483000!important;
+ }
+ html.evo-pwa nav.app-bottom-nav>a,html body nav.app-bottom-nav>a{
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+  min-width:0!important;width:100%!important;height:76px!important;min-height:76px!important;
+  gap:5px!important;padding:4px 1px!important;border-radius:13px!important;
+  color:#526174!important;text-decoration:none!important;font:700 11px/1.15 system-ui,Arial,sans-serif!important;
+ }
+ html.evo-pwa nav.app-bottom-nav>a[aria-current=page],html body nav.app-bottom-nav>a[aria-current=page]{background:#edf2f8!important;color:#102b4e!important}
+ html.evo-pwa nav.app-bottom-nav .nav-icon,html body nav.app-bottom-nav .nav-icon{
+  display:grid!important;place-items:center!important;width:46px!important;height:44px!important;
+  font-size:32px!important;line-height:1!important;border-radius:12px!important;background:transparent!important;
+ }
+ html.evo-pwa nav.app-bottom-nav .nav-icon svg,html body nav.app-bottom-nav .nav-icon svg{
+  display:block!important;width:36px!important;height:36px!important;max-width:none!important;max-height:none!important;
+  stroke:currentColor!important;stroke-width:2!important;fill:none!important;
+ }
+ html.evo-pwa nav.app-bottom-nav>a>span:last-child,html body nav.app-bottom-nav>a>span:last-child{
+  display:block!important;width:100%!important;max-width:100%!important;overflow:visible!important;
+  white-space:nowrap!important;text-align:center!important;font-size:10.5px!important;letter-spacing:-.25px!important;
+ }
+ /* App-like page rhythm: preserve content, remove desktop-sized whitespace. */
+ html.evo-pwa main.wrap,html.evo-pwa main.directory-wrap,html.evo-pwa main.academy-home,
+ html body main.wrap,html body main.directory-wrap{
+  box-sizing:border-box!important;width:100%!important;max-width:100%!important;
+  margin:0!important;padding-left:13px!important;padding-right:13px!important;
+ }
+ html.evo-pwa .politics-intro,html.evo-pwa .startup-intro,html.evo-pwa .academy-hero{
+  padding:17px 0 15px!important;margin:0!important;
+ }
+ html.evo-pwa .politics-intro h1,html.evo-pwa .startup-intro h1,html.evo-pwa .academy-hero h1{
+  font-size:clamp(29px,8vw,36px)!important;line-height:1.08!important;margin:8px 0!important;
+ }
+ html.evo-pwa .politics-intro p,html.evo-pwa .startup-intro p,html.evo-pwa .academy-hero>p{
+  font-size:14px!important;line-height:1.5!important;margin:7px 0!important;
+ }
+ html.evo-pwa .politics-nav,html.evo-pwa .startup-nav,html.evo-pwa .academy-local-nav{
+  display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;gap:9px!important;
+  margin:0 -13px!important;padding:10px 13px!important;white-space:nowrap!important;
+  scrollbar-width:none!important;border-bottom:1px solid #e0e6ed!important;
+ }
+ html.evo-pwa .politics-nav a,html.evo-pwa .startup-nav a,html.evo-pwa .academy-local-nav a{
+  flex:0 0 auto!important;min-height:38px!important;padding:10px 12px!important;
+  border-radius:999px!important;background:#fff!important;border:1px solid #e0e6ed!important;font-size:10px!important;
+ }
+ html.evo-pwa .history-section,html.evo-pwa .academy-section,html.evo-pwa .section{margin:15px 0!important;padding:14px 0!important}
+ html.evo-pwa .history-section-head h2,html.evo-pwa .academy-section-head h2,html.evo-pwa .section-head h2{font-size:21px!important;line-height:1.15!important}
+ html.evo-pwa .history-hero{display:flex!important;flex-direction:column!important;gap:8px!important;padding:15px!important;margin:10px 0!important;border-radius:15px!important}
+ html.evo-pwa .history-hero h2{font-size:27px!important;line-height:1.08!important}
+ html.evo-pwa .history-hero p{font-size:13px!important;line-height:1.5!important}
+ html.evo-pwa .history-map{max-height:145px!important;max-width:230px!important;align-self:center!important}
+ html.evo-pwa .history-infographic{max-width:100%!important;overflow-x:auto!important}
+ html.evo-pwa .history-grid{display:grid!important;grid-template-columns:1fr!important;gap:0!important}
+ html.evo-pwa .history-period{padding:13px 0!important}
+ html.evo-pwa .history-period h3{font-size:20px!important}
+ html.evo-pwa .startup-feature{padding:12px 0 16px!important;gap:10px!important}
+ html.evo-pwa .startup-art{min-height:130px!important}
+ html.evo-pwa .startup-copy h2{font-size:23px!important}
+ html.evo-pwa .startup-copy p{font-size:14px!important;line-height:1.5!important}
+ html.evo-pwa .startup-facts{margin:10px 0!important}
+ html.evo-pwa .startup-fact{padding:9px 0!important}
+ html.evo-pwa .startup-categories,html.evo-pwa .startup-stories{gap:9px!important}
+ html.evo-pwa .startup-category,html.evo-pwa .startup-stories .story{padding:12px!important}
+ html.evo-pwa .academy-hero{padding:18px 0 14px!important}
+ html.evo-pwa .academy-actions{gap:8px!important;margin-top:14px!important}
+ html.evo-pwa .academy-primary,html.evo-pwa .academy-secondary{min-height:44px!important;padding:11px 13px!important}
+ html.evo-pwa .academy-highlights{gap:6px!important;margin-top:13px!important}
+ html.evo-pwa .academy-local-nav{margin-top:8px!important}
+ html.evo-pwa .academy-section{padding:16px 0!important}
+ html.evo-pwa .academy-section-head{display:block!important;margin-bottom:12px!important}
+ html.evo-pwa .academy-section-head>p{margin-top:6px!important;font-size:12px!important}
+ html.evo-pwa .academy-featured-course{padding:14px!important;border-radius:14px!important}
+ html.evo-pwa .course-feature-body{grid-template-columns:44px minmax(0,1fr)!important;gap:10px!important;margin-top:12px!important}
+ html.evo-pwa .course-symbol{width:40px!important;height:40px!important}
+ html.evo-pwa .course-feature-body h3{font-size:21px!important;line-height:1.12!important}
+ html.evo-pwa .course-feature-body p{font-size:13px!important;line-height:1.5!important}
+ html.evo-pwa .academy-course-grid{grid-template-columns:1fr!important;gap:9px!important;margin:12px 0!important}
+ html.evo-pwa .academy-course-card{padding:13px!important;border-radius:13px!important}
+ html.evo-pwa .academy-course-card h2{font-size:18px!important}
+ html.evo-pwa .academy-course-card p{font-size:12px!important;line-height:1.45!important}
+ html.evo-pwa .directory-wrap{padding:0 12px!important}
+ html.evo-pwa .directory-hero{padding:15px!important;margin:10px 0!important;border-radius:14px!important}
+ html.evo-pwa .directory-origin{padding:13px!important;margin:10px 0!important;gap:8px!important}
+ html.evo-pwa .directory-region-grid{grid-template-columns:1fr!important;gap:9px!important}
+ html.evo-pwa .directory-region{padding:13px!important}
+ html.evo-pwa .directory-tools{margin:12px 0!important}
+ html.evo-pwa .directory-grid{grid-template-columns:1fr!important;gap:9px!important}
+ html.evo-pwa .directory-card{padding:13px!important}
+}
+@media(max-width:380px){
+ html.evo-pwa nav.app-bottom-nav .nav-icon,html body nav.app-bottom-nav .nav-icon{width:41px!important;height:40px!important}
+ html.evo-pwa nav.app-bottom-nav .nav-icon svg,html body nav.app-bottom-nav .nav-icon svg{width:33px!important;height:33px!important}
+ html.evo-pwa nav.app-bottom-nav>a>span:last-child,html body nav.app-bottom-nav>a>span:last-child{font-size:9.5px!important}
+}

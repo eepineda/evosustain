@@ -285,3 +285,60 @@ footer{border-top:3px solid #b3212d!important}
  .country-grid{grid-template-columns:1fr!important}
  .frontpage{padding-top:15px!important}
 }
+
+/* Desktop front-page contrast fix — presentation only. */
+@media (min-width:761px) {
+  html:not([data-evo-theme="dark"]):not(.evo-high-contrast) .frontpage {
+    background:#fff!important;
+    color:#172536!important;
+  }
+  html:not([data-evo-theme="dark"]):not(.evo-high-contrast) .feature-card {
+    background:#fff!important;
+    color:#172536!important;
+  }
+  html:not([data-evo-theme="dark"]):not(.evo-high-contrast) .feature-card .feature-copy,
+  html:not([data-evo-theme="dark"]):not(.evo-high-contrast) .feature-card .feature-copy h1,
+  html:not([data-evo-theme="dark"]):not(.evo-high-contrast) .feature-card .feature-copy h2,
+  html:not([data-evo-theme="dark"]):not(.evo-high-contrast) .feature-card .feature-copy h1 a,
+  html:not([data-evo-theme="dark"]):not(.evo-high-contrast) .feature-card .feature-copy h2 a {
+    color:#102b4e!important;
+    -webkit-text-fill-color:#102b4e!important;
+    text-decoration:none!important;
+    opacity:1!important;
+  }
+  html:not([data-evo-theme="dark"]):not(.evo-high-contrast) .feature-card .feature-copy .dek {
+    color:#465568!important;
+    -webkit-text-fill-color:#465568!important;
+    opacity:1!important;
+  }
+  html:not([data-evo-theme="dark"]):not(.evo-high-contrast) .feature-card .feature-meta {
+    color:#536273!important;
+    opacity:1!important;
+  }
+  html:not([data-evo-theme="dark"]):not(.evo-high-contrast) .feature-card .feature-cta,
+  html:not([data-evo-theme="dark"]):not(.evo-high-contrast) .feature-card .feature-cta:visited,
+  html:not([data-evo-theme="dark"]):not(.evo-high-contrast) .feature-card .feature-cta:hover,
+  html:not([data-evo-theme="dark"]):not(.evo-high-contrast) .feature-card .feature-cta:focus-visible {
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    min-height:36px!important;
+    padding:10px 14px!important;
+    background:#102b4e!important;
+    color:#fff!important;
+    -webkit-text-fill-color:#fff!important;
+    text-decoration:none!important;
+    opacity:1!important;
+    visibility:visible!important;
+  }
+  html:not([data-evo-theme="dark"]):not(.evo-high-contrast) .frontpage-aside,
+  html:not([data-evo-theme="dark"]):not(.evo-high-contrast) .brief-link {
+    color:#172536!important;
+  }
+  html:not([data-evo-theme="dark"]):not(.evo-high-contrast) .brief-link b {
+    color:#102b4e!important;
+  }
+  html:not([data-evo-theme="dark"]):not(.evo-high-contrast) .brief-link p {
+    color:#465568!important;
+  }
+}

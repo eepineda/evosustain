@@ -234,8 +234,8 @@ body{min-height:100dvh;height:auto;}
   let stops = Array.from({ length: 100 }, (_, i) => ({
     id: i + 1,
     label: `Stop ${i + 1}, London, UK`,
-    lat: 51.5 + Math.random() * 0.1,
-    lon: -0.15 + Math.random() * 0.1,
+    lat: 51.5 + (i % 10) * 0.005,
+    lon: -0.15 + Math.floor(i / 10) * 0.005,
     status: 'pending', // pending, confirmed, delayed, noted
   }));
 

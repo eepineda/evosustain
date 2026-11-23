@@ -89,6 +89,8 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
 @media(max-width:780px){.hero{grid-template-columns:1fr;gap:25px;padding-top:45px}.hero-card{max-width:420px}.portrait{min-height:300px}.grid-2,.edu-grid,.cta{grid-template-columns:1fr}.card-grid,.blog-grid{grid-template-columns:1fr 1fr}.nav{padding:10px 0;align-items:flex-start;flex-direction:column}.nav-actions{width:100%}.btn,.btn-primary{font-size:.82rem;padding:8px 11px}}
 @media(max-width:520px){.card-grid,.blog-grid,.logo-grid{grid-template-columns:1fr}.hero h1{font-size:3.25rem}.hero-stats{display:grid;gap:8px}.stat{border:0;padding:0}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media(max-width:780px){.container{width:min(var(--max),calc(100% - 28px))}.hero{gap:28px}.career-item{grid-template-columns:110px 1fr}.project-card{min-width:0}}
+@media(max-width:520px){.nav-actions{gap:6px}.ecosystem-links{font-size:10px;gap:10px}.hero h1{overflow-wrap:anywhere}.portrait{min-height:260px}.career-item{grid-template-columns:1fr}.career-education-heading{margin-left:-27px}.section-head{gap:9px}.section-head h2{font-size:1.45rem}}
 </style>
 </head>
 <body>
@@ -652,6 +654,7 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
 
     function renderTimeline() {
       const box = document.getElementById('timelineBox');
+      if (!box) return;
       box.innerHTML = '';
       content[lang].timeline.items.forEach((item, idx) => {
         const el = document.createElement('article');
@@ -667,6 +670,7 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
 
     function renderLogos() {
       const box = document.getElementById('logosBox');
+      if (!box) return;
       box.innerHTML = '';
       content[lang].logos.items.forEach(([name, sub]) => {
         const el = document.createElement('div');
@@ -690,6 +694,7 @@ footer{margin-top:35px;border-top:1px solid var(--line);padding:22px 0;color:var
 
     function renderEducation() {
       const box = document.getElementById('educationBox');
+      if (!box) return;
       box.innerHTML = '';
       content[lang].education.items.forEach(item => {
         const li = document.createElement('li');
@@ -747,7 +752,8 @@ function renderBlog() {
     document.getElementById('langEn').addEventListener('click', () => selectLang('en'));
     document.getElementById('langEs').addEventListener('click', () => selectLang('es'));
     document.getElementById('themeBtn').addEventListener('click', toggleTheme);
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (theme === 'auto') applyTheme(); });
+    const colorScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    if (colorScheme.addEventListener) colorScheme.addEventListener('change', () => { if (theme === 'auto') applyTheme(); });
 
     renderAll();
     setupReveal();

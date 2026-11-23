@@ -155,6 +155,14 @@
     }
   </script>
   <link rel="stylesheet" href="app-theme.css?v=20261112-1">
+<style>
+/* Responsive demo frame: fit the available viewport instead of clipping on phones */
+html,body{min-height:100%;}
+body{min-height:100dvh;height:auto;}
+.device-frame,.app-frame{width:min(100vw,380px);height:min(100dvh,740px);max-height:100dvh;}
+@media(max-width:600px){body,html{width:100%;min-height:100dvh;height:100dvh;overflow:hidden}.device-frame,.app-frame{width:100%;height:100dvh;max-height:100dvh;border:0;border-radius:0;box-shadow:none}.status-bar{flex:0 0 24px}main,.screen{min-height:0}.app-container,.screen{min-width:0}}
+@media(max-height:600px) and (max-width:900px){.device-frame,.app-frame{height:100dvh;max-height:100dvh}.card{padding:.75rem}}
+</style>
 </head>
 <body>
   <div class="device-frame">

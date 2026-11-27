@@ -17,10 +17,16 @@ async function exportPng(){
  var preview=window.open("about:blank","_blank");
  if(!preview){alert(lang==="en"?"Allow pop-ups for this page and try again.":"Permite las ventanas emergentes para esta página y vuelve a intentarlo.");return;}
  preview.document.write("<!doctype html><title>EVOFORD NEWS · PNG</title><body style='font:16px Arial;padding:28px;color:#142c43'><h1>EVOFORD NEWS</h1><p>Generando imágenes PNG…</p></body>");
- async function loadScript(src){return new Promise(function(resolve,reject){var script=document.createElement("script");script.src=src;script.async=true;script.onload=resolve;script.onerror=function(){reject(new Error("No se pudo cargar "+src));};document.head.appendChild(script);});}
+ async function loadScript(src,marker){
+ var response=await fetch(src,{cache:"no-store",credentials:"same-origin"});
+ if(!response.ok)throw new Error("El servidor respondió "+response.status+" al solicitar "+src);
+ var type=response.headers.get("content-type")||"",source=await response.text();
+ if(!/javascript|ecmascript|text\/plain/i.test(type)||!source.includes(marker))throw new Error("La dirección no está entregando el motor JavaScript esperado: "+response.url+" ("+type+")");
+ var script=document.createElement("script");script.textContent=source;document.head.appendChild(script);
+}
  try{
-  if(!window.EvoPrintController||!window.EvoPrintController.createDocument)await loadScript("/news/assets/edition-print-v13.js?v=16");
-  if(!window.pdfjsLib)await loadScript("https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js");
+  if(!window.EvoPrintController||!window.EvoPrintController.createDocument)await loadScript("/news/assets/edition-print-v13.js?v=17","window.EvoPrintController");
+  if(!window.pdfjsLib)await loadScript("https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js","pdfjsLib");
  }catch(loadError){preview.document.body.innerHTML="<h2>"+t.missing+"</h2><p>"+String(loadError.message||loadError)+"</p>";alert(t.missing+" "+loadError.message);return;}
  if(!window.EvoPrintController||!window.EvoPrintController.createDocument||!window.pdfjsLib){preview.document.body.innerHTML="<h2>"+t.missing+"</h2>";alert(t.missing);return;}
  if(document.getElementById("lead").querySelector(".loading")){alert(t.loading);return;}

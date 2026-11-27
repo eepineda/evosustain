@@ -213,6 +213,11 @@ async function printEdition(){
   }));
   if(document.fonts&&document.fonts.ready)await document.fonts.ready;
   await ensurePrintController();
+  if(!window.jspdf||!window.jspdf.jsPDF){
+   try{await loadEditionScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");}
+   catch(firstError){await loadEditionScript("https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js");}
+  }
+  if(!window.jspdf||!window.jspdf.jsPDF)throw new Error("No se pudo cargar jsPDF desde los servidores de respaldo.");
   const pdfDoc=await window.EvoPrintController.createDocument();
   if(!pdfDoc)throw new Error("El generador no ha devuelto ningún documento PDF.");
   const pdfUrl=URL.createObjectURL(pdfDoc.output("blob"));

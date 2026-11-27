@@ -6,8 +6,7 @@ var lang=function(){return document.documentElement.lang==="en"?"en":"es";};
 var $=function(s,r){return (r||document).querySelector(s);};
 var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
 function paper(){return select&&select.value==="A3"?"a3":"a4";}
-function plain(n){if(!n)return "";var value=typeof n.innerText==="string"?n.innerText:"";if(!value.trim())value=n.textContent||"";return value.replace(/\u00a0/g," ").replace(/[\t ]+/g," ").replace(/\s*
-\s*/g," ").trim();}
+function plain(n){if(!n)return "";var value=typeof n.innerText==="string"?n.innerText:"";if(!value.trim())value=n.textContent||"";return value.replace(/\u00a0/g," ").replace(/[\t ]+/g," ").replace(/\s*\n\s*/g," ").trim();}
 function clean(s){return String(s||"").replace(/[\u2010-\u2015]/g,"-").replace(/[\u2018\u2019]/g,"'").replace(/[\u201c\u201d]/g,'"').replace(/\u2026/g,"...");}
 function getImage(url){
  if(!url||!/^https:\/\//i.test(url))return Promise.resolve(null);

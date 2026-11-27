@@ -14,6 +14,9 @@ function download(blob,name){
 }
 async function exportPng(){
  var lang=language(),t=messages[lang],old=button.textContent;
+ var preview=window.open("about:blank","_blank");
+ if(!preview){alert(lang==="en"?"Allow pop-ups for this page and try again.":"Permite las ventanas emergentes para esta página y vuelve a intentarlo.");return;}
+ preview.document.write("<!doctype html><title>EVOFORD NEWS · PNG</title><body style='font:16px Arial;padding:28px;color:#142c43'><h1>EVOFORD NEWS</h1><p>Generando imágenes PNG…</p></body>");
  if(!window.EvoPrintController||!window.EvoPrintController.createDocument||!window.pdfjsLib){alert(t.missing);return;}
  if(document.getElementById("lead").querySelector(".loading")){alert(t.loading);return;}
  button.disabled=true;button.textContent=t.busy;
@@ -25,6 +28,8 @@ async function exportPng(){
   var pdf=await window.pdfjsLib.getDocument({data:bytes}).promise;
   var date=new Date().toISOString().slice(0,10);
   var format=(document.getElementById("paperSize").value==="A3"?"A3":"A4");
+  var gallery=preview.document.body;
+  gallery.innerHTML="<h1 style='font:700 24px Georgia;color:#142c43'>EVOFORD NEWS · "+format+" · PNG</h1><p>Haz clic en cada imagen para guardar su archivo.</p>";
   for(var i=1;i<=pdf.numPages;i++){
    var page=await pdf.getPage(i);
    var viewport=page.getViewport({scale:2.5});
@@ -36,12 +41,19 @@ async function exportPng(){
    var blob=await new Promise(function(resolve){canvas.toBlob(resolve,"image/png");});
    if(!blob)throw new Error("PNG encoding failed");
    var name="Evoford-News-"+format+"-"+(lang==="en"?"EN":"ES")+"-"+date+"-pagina-"+String(i).padStart(2,"0")+".png";
-   download(blob,name);
+   var imageUrl=URL.createObjectURL(blob);
+   var card=preview.document.createElement("section");
+   card.style.cssText="margin:24px 0;padding:16px;border:1px solid #d5dbe1;max-width:900px";
+   var link=preview.document.createElement("a");link.href=imageUrl;link.download=name;link.textContent="Descargar "+name;link.style.cssText="display:inline-block;margin-bottom:12px;color:#142c43;font-weight:bold";
+   var image=preview.document.createElement("img");image.src=imageUrl;image.alt=name;image.style.cssText="display:block;width:100%;height:auto;border:1px solid #ddd";
+   card.appendChild(link);card.appendChild(image);gallery.appendChild(card);
    canvas.width=canvas.height=1;
   }
   if(pdf.destroy)await pdf.destroy();
  }catch(error){
-  console.error("Evoford PNG export:",error);alert(t.error);
+  console.error("Evoford PNG export:",error);
+  if(!preview.closed)preview.document.body.innerHTML="<h2>"+t.error+"</h2><p>"+String(error.message||error).replace(/[&<>]/g," ")+"</p>";
+  alert((t.error)+" "+(error.message||""));
  }finally{
   button.disabled=false;button.textContent=old;
  }

@@ -182,13 +182,14 @@ async function loadEditionScript(src,expectedMarker){
  if(!response.ok)throw new Error("El servidor respondió "+response.status+" al solicitar "+src);
  const contentType=response.headers.get("content-type")||"";
  const source=await response.text();
- if(!/javascript|ecmascript|text\/plain/i.test(contentType)||!source.includes("window.EvoPrintController")){
-  throw new Error("La dirección del generador no está entregando JavaScript. Respuesta: "+contentType+" · "+response.url);
+ if(!/javascript|ecmascript|text\/plain/i.test(contentType)||(expectedMarker&&!source.includes(expectedMarker))){
+  throw new Error("La dirección no está entregando el motor JavaScript esperado. Respuesta: "+contentType+" · "+response.url);
  }
  const script=document.createElement("script");
  script.textContent=source;
  document.head.appendChild(script);
- if(!window.EvoPrintController||!window.EvoPrintController.createDocument)throw new Error("El archivo se recibió, pero el controlador no se pudo inicializar. Revisa la consola del navegador.");
+ if(expectedMarker==="window.EvoPrintController"&&(!window.EvoPrintController||!window.EvoPrintController.createDocument))throw new Error("El archivo se recibió, pero el controlador no se pudo inicializar. Revisa la consola del navegador.");
+ if(expectedMarker==="jsPDF"&&(!window.jspdf||!window.jspdf.jsPDF))throw new Error("El motor jsPDF no se pudo inicializar.");
 }
 async function ensurePrintController(){
  if(window.EvoPrintController&&window.EvoPrintController.createDocument)return;

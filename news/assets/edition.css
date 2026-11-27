@@ -651,3 +651,47 @@
 .toolbar[hidden] {
   display: none !important;
 }
+
+
+/* EVOFORD NEWS · Portada de periódico editorial · alcance exclusivo edicion.html */
+body.print-edition .newspaper{width:min(1240px,calc(100% - 40px));margin:26px auto;padding:30px 42px 24px;background:#fff;box-shadow:0 8px 36px rgba(16,43,78,.12)}
+body.print-edition .paper-topline{font-size:9px;letter-spacing:.09em;color:#525b65;padding-bottom:8px}
+body.print-edition .paper-masthead{padding:9px 0 8px}
+body.print-edition .paper-kicker{font-size:11px;letter-spacing:.025em;color:#4e5964}
+body.print-edition .paper-brand{font-size:clamp(58px,8.8vw,112px);font-weight:900;letter-spacing:-.065em;line-height:.92;color:#111827}
+body.print-edition .paper-brand span{color:#17669a;font-weight:800}
+body.print-edition .paper-motto{font-size:12px;letter-spacing:.04em;color:#4b5563;margin-top:8px}
+body.print-edition .paper-rule{height:6px;border-top:3px solid #142c43;border-bottom:1px solid #142c43}
+body.print-edition .paper-sections{font-size:10px;letter-spacing:.095em;color:#142c43;padding:9px 0;border-bottom:1px solid #aeb8c3}
+body.print-edition .lead{padding:20px 0 18px;border-bottom:3px double #142c43}
+body.print-edition .lead-headline{display:grid;grid-template-columns:minmax(0,1fr);padding-bottom:13px}
+body.print-edition .lead-headline h1{font-size:clamp(38px,5.3vw,66px);line-height:.98;letter-spacing:-.045em;max-width:1060px;margin:7px 0 10px;color:#101820}
+body.print-edition .lead-headline .summary{font-size:clamp(16px,1.75vw,21px);line-height:1.34;max-width:940px;color:#3e4852}
+body.print-edition .lead-content{grid-template-columns:minmax(0,2fr) minmax(235px,.9fr);gap:20px;border-top:1px solid #263747;padding-top:13px}
+body.print-edition .lead-photo img{height:clamp(270px,36vw,440px);object-fit:cover}
+body.print-edition .lead-sidebar{border-left:1px solid #aab4bf;padding-left:16px}
+body.print-edition .sidebar-heading{color:#142c43;border-bottom:2px solid #142c43}
+body.print-edition .side-story{padding:13px 0;border-bottom:1px solid #c4cbd2}
+body.print-edition .side-number{color:#a43442}
+body.print-edition .side-story h2{font-size:clamp(17px,1.8vw,21px);line-height:1.08}
+body.print-edition .side-story p{font-size:12.5px;line-height:1.35;color:#4e5964}
+body.print-edition .category{color:#a43442;font-size:9px;letter-spacing:.12em}
+body.print-edition .byline{font-size:9px;color:#65717d;letter-spacing:.07em}
+body.print-edition .full-article{display:grid;grid-template-columns:minmax(175px,.7fr) minmax(0,1.7fr);gap:26px;padding:22px 0;border-bottom:1px solid #aab4bf}
+body.print-edition .full-article-heading{border-top:3px solid #142c43;padding-top:9px}
+body.print-edition .full-article-heading>span{font:700 9px Arial,sans-serif;letter-spacing:.12em;color:#a43442}
+body.print-edition .full-article-heading h2{font:700 25px/1.08 Georgia,serif;color:#142c43;margin:8px 0}
+body.print-edition .full-article-body{columns:2;column-gap:24px;column-rule:1px solid #d5dbe1;font:13px/1.52 Georgia,serif;color:#28333e}
+body.print-edition .full-article-body p{margin:0 0 10px;break-inside:avoid}
+body.print-edition .full-article-body h2,body.print-edition .full-article-body h3{break-after:avoid;color:#142c43}
+body.print-edition .secondary-area{padding-top:20px}
+body.print-edition .section-label{border-color:#142c43;color:#142c43}
+body.print-edition .story-grid{grid-template-columns:repeat(3,minmax(0,1fr));column-gap:22px}
+body.print-edition .story{padding:13px 0 16px;border-bottom:1px solid #bdc5cd}
+body.print-edition .story img{height:140px;object-fit:cover}
+body.print-edition .story h2{font-size:21px;line-height:1.08;color:#111827}
+body.print-edition .story p{font-size:13px;line-height:1.38;color:#4b5563}
+body.print-edition .paper-footer{border-top:3px double #142c43;color:#606b76;font-size:9px}
+body.print-edition .paper-footer strong{color:#142c43}
+@media(max-width:760px){body.print-edition .newspaper{width:100%;margin:0;padding:18px 16px}.paper-brand{font-size:clamp(44px,12vw,76px)}body.print-edition .lead-content{grid-template-columns:1fr}.lead-sidebar{border-left:0;border-top:2px solid #142c43;padding:12px 0 0}.full-article{grid-template-columns:1fr!important;gap:12px!important}.full-article-body{columns:1!important}.story-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:0 14px}}
+@media print{body.print-edition .newspaper{width:100%;margin:0;padding:0;box-shadow:none}body.print-edition .paper-brand{font-size:57pt}body.print-edition .lead-headline h1{font-size:34pt}body.print-edition .lead-photo img{height:92mm;max-height:92mm}body.print-edition .full-article{grid-template-columns:32mm 1fr;gap:8mm;padding:7mm 0}body.print-edition .full-article-body{font-size:9pt;line-height:1.42;column-gap:7mm}body.print-edition .full-article-heading h2{font-size:17pt}body.print-edition .story-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:0 7mm}body.print-edition .story img{height:27mm}body.print-edition .story h2{font-size:12pt}body.print-edition .story p{font-size:8.5pt}body.print-edition .paper-footer{margin-top:8mm}}

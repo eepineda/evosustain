@@ -7,10 +7,12 @@ var messages={
  en:{busy:"Generating PNG pages…",missing:"The export engine did not load. Refresh the page.",loading:"The edition is still loading.",error:"Could not generate PNG. Please try again."}
 };
 function language(){return document.documentElement.lang==="en"?"en":"es";}
-function download(blob,name){
- var url=URL.createObjectURL(blob),a=document.createElement("a");
- a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
- setTimeout(function(){URL.revokeObjectURL(url);},1500);
+function blobToDataUrl(blob){
+ return new Promise(function(resolve,reject){var reader=new FileReader();reader.onload=function(){resolve(String(reader.result||""));};reader.onerror=function(){reject(new Error("No se pudo preparar el archivo PNG."));};reader.readAsDataURL(blob);});
+}
+async function download(blob,name){
+ var dataUrl=await blobToDataUrl(blob),a=document.createElement("a");
+ a.href=dataUrl;a.download=name;document.body.appendChild(a);a.click();a.remove();
 }
 async function exportPng(){
  var lang=language(),t=messages[lang],old=button.textContent;
@@ -52,7 +54,7 @@ async function exportPng(){
    var blob=await new Promise(function(resolve){canvas.toBlob(resolve,"image/png");});
    if(!blob)throw new Error("PNG encoding failed");
    var name="Evoford-News-"+format+"-"+(lang==="en"?"EN":"ES")+"-"+date+"-pagina-"+String(i).padStart(2,"0")+".png";
-   var imageUrl=URL.createObjectURL(blob);
+   var imageUrl=await blobToDataUrl(blob);
    var card=preview.document.createElement("section");
    card.style.cssText="margin:24px 0;padding:16px;border:1px solid #d5dbe1;max-width:900px";
    var link=preview.document.createElement("a");link.href=imageUrl;link.download=name;link.textContent="Descargar "+name;link.style.cssText="display:inline-block;margin-bottom:12px;color:#142c43;font-weight:bold";

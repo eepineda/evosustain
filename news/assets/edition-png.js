@@ -25,7 +25,7 @@ async function exportPng(){
  var script=document.createElement("script");script.textContent=source;document.head.appendChild(script);
 }
  try{
-  if(!window.EvoPrintController||!window.EvoPrintController.createDocument)await loadScript("/news/assets/edition-print-v13.js?v=17","window.EvoPrintController");
+  if(!window.EvoPrintController||!window.EvoPrintController.createDocument)await loadScript("/news/assets/edition-print-v13.js?v=18","window.EvoPrintController");
   if(!window.pdfjsLib)await loadScript("https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js","pdfjsLib");
  }catch(loadError){preview.document.body.innerHTML="<h2>"+t.missing+"</h2><p>"+String(loadError.message||loadError)+"</p>";alert(t.missing+" "+loadError.message);return;}
  if(!window.EvoPrintController||!window.EvoPrintController.createDocument||!window.pdfjsLib){preview.document.body.innerHTML="<h2>"+t.missing+"</h2>";alert(t.missing);return;}

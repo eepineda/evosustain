@@ -193,7 +193,7 @@ async function loadEditionScript(src,expectedMarker){
 }
 async function ensurePrintController(){
  if(window.EvoPrintController&&window.EvoPrintController.createDocument)return;
- await loadEditionScript("/news/assets/edition-print-v13.js?v=17","window.EvoPrintController");
+ await loadEditionScript("/news/assets/edition-print-v13.js?v=18","window.EvoPrintController");
  if(!window.EvoPrintController||!window.EvoPrintController.createDocument)throw new Error("El generador se descargó, pero no inicializó EvoPrintController. Revisa la publicación de edition-print-v13.js.");
 }
 async function printEdition(){

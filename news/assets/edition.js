@@ -107,9 +107,9 @@ let accessPanel=null;
 function showAccessPanel(message){
  if(!accessPanel){
   accessPanel=document.createElement("section");
-  accessPanel.id="editionAccess";
-  accessPanel.style.cssText="max-width:560px;margin:48px auto;padding:28px;background:#fff;border:1px solid #dbe2ea;border-radius:8px;color:#17283c;font:15px Arial,sans-serif;line-height:1.5";
-  accessPanel.innerHTML='<h1 style="color:#102b4e">Edición impresa privada</h1><p>Acceso reservado a los correos autorizados por Evoford News.</p><form id="editionLoginForm"><label for="editionEmail">Correo electrónico</label><input id="editionEmail" type="email" required autocomplete="email" style="display:block;width:100%;padding:12px;margin:8px 0 14px;border:1px solid #cbd5e1;border-radius:4px;box-sizing:border-box"><button type="submit" style="padding:11px 16px;background:#102b4e;color:#fff;border:0;border-radius:4px;font-weight:700">Enviar enlace de acceso</button></form><p id="editionAccessMessage" role="status"></p>';
+  accessPanel.id="editionAccess";\n  accessPanel.className="edition-access";
+  accessPanel.style.cssText="";
+  accessPanel.innerHTML='<div class="edition-access__masthead"><span>EL PERIÓDICO GLOBAL · INFORMACIÓN CON CONTEXTO</span><strong>EVOFORD NEWS</strong><em>Noticias para entender el mundo</em></div><p class="edition-access__eyebrow">EDICIÓN IMPRESA</p><h1>Acceso editorial</h1><p>Acceso reservado a los correos autorizados por Evoford News.</p><form id="editionLoginForm"><label for="editionEmail">Correo electrónico</label><input id="editionEmail" type="email" required autocomplete="email" style="display:block;width:100%;padding:12px;margin:8px 0 14px;border:1px solid #cbd5e1;border-radius:4px;box-sizing:border-box"><button type="submit" style="padding:11px 16px;background:#102b4e;color:#fff;border:0;border-radius:4px;font-weight:700">Enviar enlace de acceso</button></form><p id="editionAccessMessage" role="status"></p>';
   document.body.insertBefore(accessPanel,document.body.firstChild);
   const loginForm=accessPanel.querySelector("#editionLoginForm");
   const emailInput=accessPanel.querySelector("#editionEmail");
@@ -176,12 +176,18 @@ function syncPrintPaper(){
 }
 $("paperSize").addEventListener("change",syncPrintPaper);
 window.addEventListener("beforeprint",syncPrintPaper);
-function loadEditionScript(src){
- return new Promise((resolve,reject)=>{
-  const script=document.createElement("script");script.src=src;script.async=true;
-  script.onload=()=>resolve();script.onerror=()=>reject(new Error("No se pudo cargar el archivo: "+src));
-  document.head.appendChild(script);
- });
+async function loadEditionScript(src){
+ const response=await fetch(src,{cache:"no-store",credentials:"same-origin"});
+ if(!response.ok)throw new Error("El servidor respondió "+response.status+" al solicitar "+src);
+ const contentType=response.headers.get("content-type")||"";
+ const source=await response.text();
+ if(!/javascript|ecmascript|text\/plain/i.test(contentType)||!source.includes("window.EvoPrintController")){
+  throw new Error("La dirección del generador no está entregando JavaScript. Respuesta: "+contentType+" · "+response.url);
+ }
+ const script=document.createElement("script");
+ script.textContent=source;
+ document.head.appendChild(script);
+ if(!window.EvoPrintController||!window.EvoPrintController.createDocument)throw new Error("El archivo se recibió, pero el controlador no se pudo inicializar. Revisa la consola del navegador.");
 }
 async function ensurePrintController(){
  if(window.EvoPrintController&&window.EvoPrintController.createDocument)return;
@@ -207,6 +213,11 @@ async function printEdition(){
   }));
   if(document.fonts&&document.fonts.ready)await document.fonts.ready;
   await ensurePrintController();
+  if(!window.jspdf||!window.jspdf.jsPDF){
+   try{await loadEditionScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");}
+   catch(firstError){await loadEditionScript("https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js");}
+  }
+  if(!window.jspdf||!window.jspdf.jsPDF)throw new Error("No se pudo cargar jsPDF desde los servidores de respaldo.");
   const pdfDoc=await window.EvoPrintController.createDocument();
   if(!pdfDoc)throw new Error("El generador no ha devuelto ningún documento PDF.");
   const pdfUrl=URL.createObjectURL(pdfDoc.output("blob"));

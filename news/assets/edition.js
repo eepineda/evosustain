@@ -107,7 +107,8 @@ let accessPanel=null;
 function showAccessPanel(message){
  if(!accessPanel){
   accessPanel=document.createElement("section");
-  accessPanel.id="editionAccess";\n  accessPanel.className="edition-access";
+  accessPanel.id="editionAccess";
+  accessPanel.className="edition-access";
   accessPanel.style.cssText="";
   accessPanel.innerHTML='<div class="edition-access__masthead"><span>EL PERIÓDICO GLOBAL · INFORMACIÓN CON CONTEXTO</span><strong>EVOFORD NEWS</strong><em>Noticias para entender el mundo</em></div><p class="edition-access__eyebrow">EDICIÓN IMPRESA</p><h1>Acceso editorial</h1><p>Acceso reservado a los correos autorizados por Evoford News.</p><form id="editionLoginForm"><label for="editionEmail">Correo electrónico</label><input id="editionEmail" type="email" required autocomplete="email" style="display:block;width:100%;padding:12px;margin:8px 0 14px;border:1px solid #cbd5e1;border-radius:4px;box-sizing:border-box"><button type="submit" style="padding:11px 16px;background:#102b4e;color:#fff;border:0;border-radius:4px;font-weight:700">Enviar enlace de acceso</button></form><p id="editionAccessMessage" role="status"></p>';
   document.body.insertBefore(accessPanel,document.body.firstChild);
@@ -176,22 +177,23 @@ function syncPrintPaper(){
 }
 $("paperSize").addEventListener("change",syncPrintPaper);
 window.addEventListener("beforeprint",syncPrintPaper);
-async function loadEditionScript(src){
+async function loadEditionScript(src,expectedMarker){
  const response=await fetch(src,{cache:"no-store",credentials:"same-origin"});
  if(!response.ok)throw new Error("El servidor respondió "+response.status+" al solicitar "+src);
  const contentType=response.headers.get("content-type")||"";
  const source=await response.text();
- if(!/javascript|ecmascript|text\/plain/i.test(contentType)||!source.includes("window.EvoPrintController")){
-  throw new Error("La dirección del generador no está entregando JavaScript. Respuesta: "+contentType+" · "+response.url);
+ if(!/javascript|ecmascript|text\/plain/i.test(contentType)||(expectedMarker&&!source.includes(expectedMarker))){
+  throw new Error("La dirección no está entregando el motor JavaScript esperado. Respuesta: "+contentType+" · "+response.url);
  }
  const script=document.createElement("script");
  script.textContent=source;
  document.head.appendChild(script);
- if(!window.EvoPrintController||!window.EvoPrintController.createDocument)throw new Error("El archivo se recibió, pero el controlador no se pudo inicializar. Revisa la consola del navegador.");
+ if(expectedMarker==="window.EvoPrintController"&&(!window.EvoPrintController||!window.EvoPrintController.createDocument))throw new Error("El archivo se recibió, pero el controlador no se pudo inicializar. Revisa la consola del navegador.");
+ if(expectedMarker==="jsPDF"&&(!window.jspdf||!window.jspdf.jsPDF))throw new Error("El motor jsPDF no se pudo inicializar.");
 }
 async function ensurePrintController(){
  if(window.EvoPrintController&&window.EvoPrintController.createDocument)return;
- await loadEditionScript("/news/assets/edition-print-v13.js?v=16");
+ await loadEditionScript("/news/assets/edition-print-v13.js?v=17","window.EvoPrintController");
  if(!window.EvoPrintController||!window.EvoPrintController.createDocument)throw new Error("El generador se descargó, pero no inicializó EvoPrintController. Revisa la publicación de edition-print-v13.js.");
 }
 async function printEdition(){
@@ -214,8 +216,8 @@ async function printEdition(){
   if(document.fonts&&document.fonts.ready)await document.fonts.ready;
   await ensurePrintController();
   if(!window.jspdf||!window.jspdf.jsPDF){
-   try{await loadEditionScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");}
-   catch(firstError){await loadEditionScript("https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js");}
+   try{await loadEditionScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js","jsPDF");}
+   catch(firstError){await loadEditionScript("https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js","jsPDF");}
   }
   if(!window.jspdf||!window.jspdf.jsPDF)throw new Error("No se pudo cargar jsPDF desde los servidores de respaldo.");
   const pdfDoc=await window.EvoPrintController.createDocument();

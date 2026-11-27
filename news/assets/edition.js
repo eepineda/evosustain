@@ -178,23 +178,31 @@ $("paperSize").addEventListener("change",syncPrintPaper);
 window.addEventListener("beforeprint",syncPrintPaper);
 async function printEdition(){
  const button=$("printBtn");button.disabled=true;
+ const preview=window.open("about:blank","_blank");
+ if(!preview){button.disabled=false;alert("El navegador ha bloqueado la vista previa. Permite las ventanas emergentes para esta página y vuelve a intentarlo.");return;}
  try{
+  preview.document.write("<!doctype html><title>EVOFORD NEWS · PDF</title><body style='font:16px Arial;padding:32px;color:#142c43'>Preparando el PDF…</body>");
   await editionLoadPromise;
   if($("lead").querySelector(".loading"))throw new Error("La edición todavía se está cargando. Inténtalo de nuevo en unos segundos.");
   syncPrintPaper();
   await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
- const images=Array.from(document.querySelectorAll(".newspaper img"));
- images.forEach(img=>{img.loading="eager";});
- await Promise.all(images.map(img=>{
-  if(img.complete&&img.naturalWidth)return Promise.resolve();
-  if(typeof img.decode==="function")return img.decode().catch(()=>{});
-  return new Promise(resolve=>{img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true});});
- }));
- if(document.fonts&&document.fonts.ready)await document.fonts.ready;
-  if(!window.EvoPrintController||!window.EvoPrintController.print)throw new Error("No se ha cargado el generador PDF.");
-  await window.EvoPrintController.print();
- }catch(error){alert(error.message||"No se pudo preparar la edición para imprimir.");}
- finally{button.disabled=false;}
+  const images=Array.from(document.querySelectorAll(".newspaper img"));
+  images.forEach(img=>{img.loading="eager";});
+  await Promise.all(images.map(img=>{
+   if(img.complete&&img.naturalWidth)return Promise.resolve();
+   if(typeof img.decode==="function")return img.decode().catch(()=>{});
+   return new Promise(resolve=>{img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true});});
+  }));
+  if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+  if(!window.EvoPrintController||!window.EvoPrintController.createDocument)throw new Error("No se ha cargado el generador PDF.");
+  const pdfDoc=await window.EvoPrintController.createDocument();
+  if(!pdfDoc)throw new Error("El generador no ha devuelto ningún documento PDF.");
+  const pdfUrl=URL.createObjectURL(pdfDoc.output("blob"));
+  preview.location.replace(pdfUrl);
+ }catch(error){
+  if(!preview.closed){preview.document.body.innerHTML="<h2>No se pudo generar el PDF</h2><p>"+String(error.message||error).replace(/[&<>]/g," ")+"</p>";}
+  alert(error.message||"No se pudo preparar la edición PDF.");
+ }finally{button.disabled=false;}
 }
 $("printBtn").addEventListener("click",printEdition);
 $("languageToggle").addEventListener("click",()=>{language=language==="es"?"en":"es";try{localStorage.setItem("evoford-news-language",language)}catch(e){}applyLanguage();render();});

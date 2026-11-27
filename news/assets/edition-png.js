@@ -38,12 +38,14 @@ async function exportPng(){
   if(!doc)throw new Error("The shared PDF document was not created");
   window.pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
   var bytes=new Uint8Array(doc.output("arraybuffer"));
-  var pdf=await window.pdfjsLib.getDocument({data:bytes}).promise;
+  var pdf=await window.pdfjsLib.getDocument({data:bytes,disableWorker:true}).promise;
+  if(!pdf.numPages)throw new Error("El documento PDF no contiene páginas.");
   var date=new Date().toISOString().slice(0,10);
   var format=(document.getElementById("paperSize").value==="A3"?"A3":"A4");
   var gallery=preview.document.body;
-  gallery.innerHTML="<h1 style='font:700 24px Georgia;color:#142c43'>EVOFORD NEWS · "+format+" · PNG</h1><p>Haz clic en cada imagen para guardar su archivo.</p>";
+  gallery.innerHTML="<h1 style='font:700 24px Georgia;color:#142c43'>EVOFORD NEWS · "+format+" · PNG</h1><p id='pngProgress'>Preparando "+pdf.numPages+" página(s)…</p>";
   for(var i=1;i<=pdf.numPages;i++){
+   var progress=preview.document.getElementById("pngProgress");if(progress)progress.textContent="Generando página "+i+" de "+pdf.numPages+"…";
    var page=await pdf.getPage(i);
    var viewport=page.getViewport({scale:2.5});
    var canvas=document.createElement("canvas");
@@ -51,10 +53,9 @@ async function exportPng(){
    var ctx=canvas.getContext("2d",{alpha:false});
    ctx.fillStyle="#ffffff";ctx.fillRect(0,0,canvas.width,canvas.height);
    await page.render({canvasContext:ctx,viewport:viewport,background:"#ffffff"}).promise;
-   var blob=await new Promise(function(resolve){canvas.toBlob(resolve,"image/png");});
-   if(!blob)throw new Error("PNG encoding failed");
+   var imageUrl;try{imageUrl=canvas.toDataURL("image/png");}catch(encodeError){throw new Error("No se pudo convertir la página "+i+" a PNG: "+encodeError.message);}
+   if(!imageUrl||imageUrl==="data:,")throw new Error("La página "+i+" no pudo codificarse como PNG.");
    var name="Evoford-News-"+format+"-"+(lang==="en"?"EN":"ES")+"-"+date+"-pagina-"+String(i).padStart(2,"0")+".png";
-   var imageUrl=await blobToDataUrl(blob);
    var card=preview.document.createElement("section");
    card.style.cssText="margin:24px 0;padding:16px;border:1px solid #d5dbe1;max-width:900px";
    var link=preview.document.createElement("a");link.href=imageUrl;link.download=name;link.textContent="Descargar "+name;link.style.cssText="display:inline-block;margin-bottom:12px;color:#142c43;font-weight:bold";
@@ -62,6 +63,7 @@ async function exportPng(){
    card.appendChild(link);card.appendChild(image);gallery.appendChild(card);
    canvas.width=canvas.height=1;
   }
+  var progress=preview.document.getElementById("pngProgress");if(progress)progress.textContent=pdf.numPages+" página(s) PNG generadas. Haz clic en cada imagen para guardarla.";
   if(pdf.destroy)await pdf.destroy();
  }catch(error){
   console.error("Evoford PNG export:",error);

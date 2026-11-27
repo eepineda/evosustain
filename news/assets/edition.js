@@ -176,6 +176,18 @@ function syncPrintPaper(){
 }
 $("paperSize").addEventListener("change",syncPrintPaper);
 window.addEventListener("beforeprint",syncPrintPaper);
+function loadEditionScript(src){
+ return new Promise((resolve,reject)=>{
+  const script=document.createElement("script");script.src=src;script.async=true;
+  script.onload=()=>resolve();script.onerror=()=>reject(new Error("No se pudo cargar el archivo: "+src));
+  document.head.appendChild(script);
+ });
+}
+async function ensurePrintController(){
+ if(window.EvoPrintController&&window.EvoPrintController.createDocument)return;
+ await loadEditionScript("/news/assets/edition-print-v13.js?v=16");
+ if(!window.EvoPrintController||!window.EvoPrintController.createDocument)throw new Error("El generador se descargó, pero no inicializó EvoPrintController. Revisa la publicación de edition-print-v13.js.");
+}
 async function printEdition(){
  const button=$("printBtn");button.disabled=true;
  const preview=window.open("about:blank","_blank");
@@ -194,7 +206,7 @@ async function printEdition(){
    return new Promise(resolve=>{img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true});});
   }));
   if(document.fonts&&document.fonts.ready)await document.fonts.ready;
-  if(!window.EvoPrintController||!window.EvoPrintController.createDocument)throw new Error("No se ha cargado el generador PDF.");
+  await ensurePrintController();
   const pdfDoc=await window.EvoPrintController.createDocument();
   if(!pdfDoc)throw new Error("El generador no ha devuelto ningún documento PDF.");
   const pdfUrl=URL.createObjectURL(pdfDoc.output("blob"));

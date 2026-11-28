@@ -3,6 +3,7 @@
   // These routes are independent showcase/working areas and must not be replaced by the global maintenance screen.
   const pathname = location.pathname;
   if (
+    pathname === "/news/enviar.html" ||
     pathname.startsWith("/news/admin/") ||
     pathname.startsWith("/app/") ||
     pathname.startsWith("/edwin-portfolio/")
